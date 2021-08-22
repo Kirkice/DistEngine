@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{7e409db7-50b7-4b37-b916-5d720f817e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\DistMath">
+      <UniqueIdentifier>{ff7c5514-806a-495e-a1f2-8a5bbdf43783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\DistMath\include">
+      <UniqueIdentifier>{dce7d88d-242f-4d0b-b8b7-2cdd6d5ce9b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\DistMath\src">
+      <UniqueIdentifier>{9d3ec848-f5c6-456d-a48b-c3edbd6cda03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Core">
+      <UniqueIdentifier>{3d87c785-92a0-4279-9759-e79a71792a98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Core\include">
+      <UniqueIdentifier>{6ca5979c-3c13-4adb-8f8f-ee3e3c0a4fb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Core\src">
+      <UniqueIdentifier>{fd63a032-6ba2-4c40-ac1c-82f59f661ec9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\DistMath\include\DistMathPublic.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Assert.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\PCH.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\AppConfig.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Vector2.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Vector3.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Matrix.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Quaternion.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Vector4.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\DistMath.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Uint.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Int.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Half.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\UByte.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Random.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\Core\src\Assert.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\PCH.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Vector2.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Vector3.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Vector4.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Matrix.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Quaternion.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Uint.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Int.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\DistMath\src\Random.cpp">
+      <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
