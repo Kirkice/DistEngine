@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="common\Core\include\AppConfig.h" />
     <ClInclude Include="common\Core\include\Assert.h" />
+    <ClInclude Include="common\Core\include\InterfacePointers.h" />
     <ClInclude Include="common\Core\include\PCH.h" />
     <ClInclude Include="common\DistMath\include\DistMath.h" />
     <ClInclude Include="common\DistMath\include\DistMathPublic.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="common\DistMath\include\Vector2.h" />
     <ClInclude Include="common\DistMath\include\Vector3.h" />
     <ClInclude Include="common\DistMath\include\Vector4.h" />
+    <ClInclude Include="common\Render\include\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp" />

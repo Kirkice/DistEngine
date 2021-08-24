@@ -22,6 +22,15 @@
     <Filter Include="common\Core\src">
       <UniqueIdentifier>{fd63a032-6ba2-4c40-ac1c-82f59f661ec9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\Render">
+      <UniqueIdentifier>{f7c2e130-7b4e-4a01-a2c7-97d7f4d5c931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Render\include">
+      <UniqueIdentifier>{0df4230f-4df2-4234-8d5d-453f5eda8170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\Render\src">
+      <UniqueIdentifier>{b728b590-19a0-457a-8e67-f62c4ae35331}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\DistMath\include\DistMathPublic.h">
@@ -68,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="common\DistMath\include\Random.h">
       <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SkyBox.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\InterfacePointers.h">
+      <Filter>common\Core\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

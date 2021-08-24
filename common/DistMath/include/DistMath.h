@@ -63,12 +63,13 @@ namespace math
 		return result;
 	}
 
-	// Rounds a float
+	// Rounds a float		
 	inline float Round(float r)
 	{
 		return (r > 0.0f) ? std::floorf(r + 0.5f) : std::ceilf(r - 0.5f);
 	} 
 
+	//返回小数部分
 	inline float Frac(float x)
 	{
 		float intPart;
