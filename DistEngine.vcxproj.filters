@@ -84,6 +84,18 @@
     <ClInclude Include="common\Core\include\InterfacePointers.h">
       <Filter>common\Core\include</Filter>
     </ClInclude>
+    <ClInclude Include="common\Render\include\ShaderCompiler.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\MurmurHash.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Containers.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\D3D12.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp">
@@ -115,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="common\DistMath\src\Random.cpp">
       <Filter>common\DistMath\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\D3D12.cpp">
+      <Filter>common\Render\src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
