@@ -99,6 +99,18 @@ typedef uint32_t bool32;
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
 
+// DirectX Tex
+#include "..\..\..\externals\DirectXTex July 2017\\Include\\DirectXTex.h"
+#ifdef _DEBUG
+#pragma comment(lib, "..\..\..\externals\DirectXTex July 2017\\Lib 2017\\Debug\\DirectXTex.lib")
+#else
+#pragma comment(lib, "..\..\..\externals\DirectXTex July 2017\\Lib 2017\\Release\\DirectXTex.lib")
+#endif
+
+// Pix for Windows
+#define USE_PIX
+#include "..\..\..\externals\WinPixEventRuntime\\Include\\WinPixEventRuntime\\pix3.h"
+#pragma comment(lib, "..\..\..\externals\WinPixEventRuntime\\bin\\WinPixEventRuntime.lib")
 
 // Un-define min and max from the windows headers
 #ifdef min

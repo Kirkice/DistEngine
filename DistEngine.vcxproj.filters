@@ -96,6 +96,81 @@
     <ClInclude Include="common\Render\include\D3D12.h">
       <Filter>common\Render\include</Filter>
     </ClInclude>
+    <ClInclude Include="common\Render\include\BRDF.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Camera.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\D3D12Helpers.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\D3D12Upload.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\D3D12Error.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\DXRHelper.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Flitering.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\GraphicsTypes.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Utility.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Expections.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Model.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Serialization.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\FileIO.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\PostProcessingHelper.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Profiler.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Timer.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Sampling.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SphericalGaussian.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SphericalHarmonics.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\ShadowHelper.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Spectrum.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SpriteFont.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SpriteRenderer.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\SwapChain.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\Textures.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp">

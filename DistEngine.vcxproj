@@ -22,9 +22,14 @@
     <ClInclude Include="common\Core\include\AppConfig.h" />
     <ClInclude Include="common\Core\include\Assert.h" />
     <ClInclude Include="common\Core\include\Containers.h" />
+    <ClInclude Include="common\Core\include\Expections.h" />
+    <ClInclude Include="common\Core\include\FileIO.h" />
     <ClInclude Include="common\Core\include\InterfacePointers.h" />
     <ClInclude Include="common\Core\include\MurmurHash.h" />
     <ClInclude Include="common\Core\include\PCH.h" />
+    <ClInclude Include="common\Core\include\Serialization.h" />
+    <ClInclude Include="common\Core\include\Timer.h" />
+    <ClInclude Include="common\Core\include\Utility.h" />
     <ClInclude Include="common\DistMath\include\DistMath.h" />
     <ClInclude Include="common\DistMath\include\DistMathPublic.h" />
     <ClInclude Include="common\DistMath\include\Half.h" />
@@ -37,9 +42,29 @@
     <ClInclude Include="common\DistMath\include\Vector2.h" />
     <ClInclude Include="common\DistMath\include\Vector3.h" />
     <ClInclude Include="common\DistMath\include\Vector4.h" />
+    <ClInclude Include="common\Render\include\BRDF.h" />
+    <ClInclude Include="common\Render\include\Camera.h" />
     <ClInclude Include="common\Render\include\D3D12.h" />
+    <ClInclude Include="common\Render\include\D3D12Error.h" />
+    <ClInclude Include="common\Render\include\D3D12Helpers.h" />
+    <ClInclude Include="common\Render\include\D3D12Upload.h" />
+    <ClInclude Include="common\Render\include\DXRHelper.h" />
+    <ClInclude Include="common\Render\include\Flitering.h" />
+    <ClInclude Include="common\Render\include\GraphicsTypes.h" />
+    <ClInclude Include="common\Render\include\Model.h" />
+    <ClInclude Include="common\Render\include\PostProcessingHelper.h" />
+    <ClInclude Include="common\Render\include\Profiler.h" />
+    <ClInclude Include="common\Render\include\Sampling.h" />
     <ClInclude Include="common\Render\include\ShaderCompiler.h" />
+    <ClInclude Include="common\Render\include\ShadowHelper.h" />
     <ClInclude Include="common\Render\include\SkyBox.h" />
+    <ClInclude Include="common\Render\include\Spectrum.h" />
+    <ClInclude Include="common\Render\include\SphericalGaussian.h" />
+    <ClInclude Include="common\Render\include\SphericalHarmonics.h" />
+    <ClInclude Include="common\Render\include\SpriteFont.h" />
+    <ClInclude Include="common\Render\include\SpriteRenderer.h" />
+    <ClInclude Include="common\Render\include\SwapChain.h" />
+    <ClInclude Include="common\Render\include\Textures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp" />
