@@ -68,7 +68,7 @@ namespace render
 	void GetTextureData(const Texture& texture, TextureData<UByte4N>& textureData, bool srgb = false);
 	void GetTextureData(const Texture& texture, TextureData<UShort4N>& textureData);
 	void GetTextureData(const Texture& texture, TextureData<Half4>& textureData);
-	void GetTextureData(const Texture& texture, TextureData<Vector4>& textureData);
+	void GetTextureData(const Texture& texture, TextureData<math::Vector4>& textureData);
 
 	void SaveTextureAsDDS(const Texture& texture, const wchar* filePath);
 	void SaveTextureAsEXR(const Texture& texture, const wchar* filePath);
@@ -78,7 +78,7 @@ namespace render
 	void SaveTextureAsTIFF(const Texture& texture, const wchar* filePath);
 	void SaveTextureAsTIFF(const TextureData<UShort4N>& texture, const wchar* filePath);
 
-	Vector2 MapXYSToDirection(uint64 x, uint64 y, uint64 s, uint64 width, uint64 height);
+	Vector3 MapXYSToDirection(uint64 x, uint64 y, uint64 s, uint64 width, uint64 height);
 
 	// == Texture Sampling Functions ==================================================================
 

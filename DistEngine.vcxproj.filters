@@ -171,6 +171,21 @@
     <ClInclude Include="common\Render\include\Textures.h">
       <Filter>common\Render\include</Filter>
     </ClInclude>
+    <ClInclude Include="common\Render\include\ArHosekSkyModel.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\TinyEXR.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_Spectral.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_RGB.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_CIEXYZ.h">
+      <Filter>common\Render\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp">
@@ -204,6 +219,69 @@
       <Filter>common\DistMath\src</Filter>
     </ClCompile>
     <ClCompile Include="common\Render\src\D3D12.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Camera.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\D3D12Helpers.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\D3D12Upload.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\D3D12Error.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\DXRHelper.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\GraphicsTypes.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Model.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\PostProcessingHelper.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Profiler.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Sampling.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\SphericalGaussian.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\SphericalHarmonics.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\ShaderCompiler.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\ShadowHelper.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Skybox.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Spectrum.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\SpriteFont.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\SpriteRenderer.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\SwapChain.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\Textures.cpp">
+      <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Render\src\ArHosekSkyModel.cpp">
       <Filter>common\Render\src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -29,6 +29,7 @@
     <ClInclude Include="common\Core\include\PCH.h" />
     <ClInclude Include="common\Core\include\Serialization.h" />
     <ClInclude Include="common\Core\include\Timer.h" />
+    <ClInclude Include="common\Core\include\TinyEXR.h" />
     <ClInclude Include="common\Core\include\Utility.h" />
     <ClInclude Include="common\DistMath\include\DistMath.h" />
     <ClInclude Include="common\DistMath\include\DistMathPublic.h" />
@@ -42,6 +43,10 @@
     <ClInclude Include="common\DistMath\include\Vector2.h" />
     <ClInclude Include="common\DistMath\include\Vector3.h" />
     <ClInclude Include="common\DistMath\include\Vector4.h" />
+    <ClInclude Include="common\Render\include\ArHosekSkyModel.h" />
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_CIEXYZ.h" />
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_RGB.h" />
+    <ClInclude Include="common\Render\include\ArHosekSkyModelData_Spectral.h" />
     <ClInclude Include="common\Render\include\BRDF.h" />
     <ClInclude Include="common\Render\include\Camera.h" />
     <ClInclude Include="common\Render\include\D3D12.h" />
@@ -77,7 +82,28 @@
     <ClCompile Include="common\DistMath\src\Vector2.cpp" />
     <ClCompile Include="common\DistMath\src\Vector3.cpp" />
     <ClCompile Include="common\DistMath\src\Vector4.cpp" />
+    <ClCompile Include="common\Render\src\ArHosekSkyModel.cpp" />
+    <ClCompile Include="common\Render\src\Camera.cpp" />
     <ClCompile Include="common\Render\src\D3D12.cpp" />
+    <ClCompile Include="common\Render\src\D3D12Error.cpp" />
+    <ClCompile Include="common\Render\src\D3D12Helpers.cpp" />
+    <ClCompile Include="common\Render\src\D3D12Upload.cpp" />
+    <ClCompile Include="common\Render\src\DXRHelper.cpp" />
+    <ClCompile Include="common\Render\src\GraphicsTypes.cpp" />
+    <ClCompile Include="common\Render\src\Model.cpp" />
+    <ClCompile Include="common\Render\src\PostProcessingHelper.cpp" />
+    <ClCompile Include="common\Render\src\Profiler.cpp" />
+    <ClCompile Include="common\Render\src\Sampling.cpp" />
+    <ClCompile Include="common\Render\src\ShaderCompiler.cpp" />
+    <ClCompile Include="common\Render\src\ShadowHelper.cpp" />
+    <ClCompile Include="common\Render\src\Skybox.cpp" />
+    <ClCompile Include="common\Render\src\Spectrum.cpp" />
+    <ClCompile Include="common\Render\src\SphericalGaussian.cpp" />
+    <ClCompile Include="common\Render\src\SphericalHarmonics.cpp" />
+    <ClCompile Include="common\Render\src\SpriteFont.cpp" />
+    <ClCompile Include="common\Render\src\SpriteRenderer.cpp" />
+    <ClCompile Include="common\Render\src\SwapChain.cpp" />
+    <ClCompile Include="common\Render\src\Textures.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
