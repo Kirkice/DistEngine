@@ -186,6 +186,63 @@
     <ClInclude Include="common\Render\include\ArHosekSkyModelData_CIEXYZ.h">
       <Filter>common\Render\include</Filter>
     </ClInclude>
+    <ClInclude Include="common\DistMath\include\Box.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Color.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\CutCone.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Cylinder.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\EulerAngles.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\FixedCapsule.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\fixedPoint.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\OrientedBox.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\PerlinNoise.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Plane.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Point.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Point3D.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Quad.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Rect.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Rectf.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Segment.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Sphere.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Tetrahedron.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\DistMath\include\Interpolation.h">
+      <Filter>common\DistMath\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp">
