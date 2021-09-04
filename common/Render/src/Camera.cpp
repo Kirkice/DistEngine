@@ -21,7 +21,7 @@ namespace render
 	{
 		nearZ = nearClip;
 		farZ = farClip;
-		world = Float4x4();
+		world = Float4x4();		
 		view = Float4x4();
 		position = Vector3(0.0f, 0.0f, 0.0f); 
 		orientation = Quaternion();
@@ -57,7 +57,7 @@ namespace render
 	{
 		return world.Right();
 	}
-
+	 
 	Vector3 Camera::Left() const
 	{
 		return world.Left();
@@ -70,20 +70,20 @@ namespace render
 		position = eye;
 		orientation = Quaternion(XMQuaternionRotationMatrix(world.ToSIMD()));
 
-		WorldMatrixChanged();
+		WorldMatrixChanged(); 
 	}
-
+	 
 	void Camera::SetWorldMatrix(const Float4x4& newWorld)
 	{
 		world = newWorld;
 		position = world.Translation();
 		orientation = Quaternion(XMQuaternionRotationMatrix(world.ToSIMD()));
-
+		 
 		WorldMatrixChanged();
 	}
 
 	void Camera::SetPosition(const Vector3& newPosition)
-	{
+	{ 
 		position = newPosition;
 		world.SetTranslation(newPosition);
 
@@ -129,13 +129,13 @@ namespace render
 		xMin = minX;
 		xMax = maxX;
 		yMin = minY;
-		yMax = maxY;
+		yMax = maxY; 
 
-		CreateProjection();
+		CreateProjection(); 
 	}
 
 	void OrthographicCamera::CreateProjection()
-	{
+	{ 
 		projection = Float4x4(XMMatrixOrthographicOffCenterLH(xMin, xMax, yMin, yMax, nearZ, farZ));
 		viewProjection = view * projection;
 	}

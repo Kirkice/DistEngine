@@ -45,7 +45,7 @@ namespace render
 
 		static ID3D12CommandAllocator* CmdAllocators[NumCmdAllocators] = { };
 		static Fence FrameFence;
-
+		 
 		static GrowableList<IUnknown*> DeferredReleases[RenderLatency];
 		static bool ShuttingDown = false;
 

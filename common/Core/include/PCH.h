@@ -9,7 +9,7 @@
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
 #pragma once
-#include "AppConfig.h"
+#include "../../../Engine/AppConfig.h"
 
 // Add common controls 6.0 DLL to the manifest
 #if defined _M_IX86
