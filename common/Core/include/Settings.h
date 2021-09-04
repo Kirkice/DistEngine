@@ -313,7 +313,7 @@ namespace core
 
 		Vector3 val;
 		Vector3 oldVal;
-		Vector3 spherical;
+		Vector2 spherical;
 
 		std::string buttonName;
 		std::string childName;

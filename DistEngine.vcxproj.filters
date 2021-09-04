@@ -31,6 +31,18 @@
     <Filter Include="common\Render\src">
       <UniqueIdentifier>{b728b590-19a0-457a-8e67-f62c4ae35331}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{f0fa7ff6-5233-4609-bb59-5e564b0f43b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ImGUI">
+      <UniqueIdentifier>{93f18999-26fa-42a9-9bd7-9bd131278e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ImGUI\include">
+      <UniqueIdentifier>{85b735ed-df91-4682-81bb-bde649c030d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ImGUI\src">
+      <UniqueIdentifier>{41e22354-3a82-4920-8089-75f987675f87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\DistMath\include\DistMathPublic.h">
@@ -40,9 +52,6 @@
       <Filter>common\Core\include</Filter>
     </ClInclude>
     <ClInclude Include="common\Core\include\PCH.h">
-      <Filter>common\Core\include</Filter>
-    </ClInclude>
-    <ClInclude Include="common\Core\include\AppConfig.h">
       <Filter>common\Core\include</Filter>
     </ClInclude>
     <ClInclude Include="common\DistMath\include\Vector2.h">
@@ -243,6 +252,45 @@
     <ClInclude Include="common\DistMath\include\Interpolation.h">
       <Filter>common\DistMath\include</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\AppConfig.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\AppSettings.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\App.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Input.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Settings.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\Window.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imconfig.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imgui.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imgui_internal.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imstb_rectpack.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imstb_textedit.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ImGUI\include\imstb_truetype.h">
+      <Filter>common\ImGUI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Core\include\ImGuiHelper.h">
+      <Filter>common\Core\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\Core\src\Assert.cpp">
@@ -340,6 +388,45 @@
     </ClCompile>
     <ClCompile Include="common\Render\src\ArHosekSkyModel.cpp">
       <Filter>common\Render\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\FileIO.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\Input.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\MurmurHash.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\Settings.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\Timer.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\TinyEXR.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\Utility.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\Window.cpp">
+      <Filter>common\Core\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ImGUI\src\imgui.cpp">
+      <Filter>common\ImGUI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ImGUI\src\imgui_demo.cpp">
+      <Filter>common\ImGUI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ImGUI\src\imgui_draw.cpp">
+      <Filter>common\ImGUI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ImGUI\src\imgui_widgets.cpp">
+      <Filter>common\ImGUI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Core\src\ImGuiHelper.cpp">
+      <Filter>common\Core\src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
