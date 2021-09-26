@@ -30,8 +30,8 @@ namespace render
 	{
 		Float4x4 ShadowMatrix;
 		float CascadeSplits[NumCascades] = { };
-		Vector4 CascadeOffsets[NumCascades];
-		Vector4 CascadeScales[NumCascades];
+		math::Vector4 CascadeOffsets[NumCascades];
+		math::Vector4 CascadeScales[NumCascades];
 	};
 
 	struct EVSMConstants

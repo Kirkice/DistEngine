@@ -49,7 +49,7 @@ namespace core
 		return ImColor(v.x, v.y, v.z);
 	}
 
-	inline ImColor ToImColor(Vector4 v)
+	inline ImColor ToImColor(math::Vector4 v)
 	{
 		return ImColor(v.x, v.y, v.z, v.w);
 	}

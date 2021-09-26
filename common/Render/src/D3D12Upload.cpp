@@ -22,7 +22,7 @@ namespace render
 	{
 		enum ConvertRootParams : uint32
 		{
-			ConvertParams_StandardDescriptors = 0,
+			ConvertParams_StandardDescriptors = 0, 
 			ConvertParams_UAV,
 			ConvertParams_CBuffer,
 

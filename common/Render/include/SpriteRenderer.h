@@ -63,8 +63,8 @@ namespace render
 	struct SpriteDrawData
 	{
 		SpriteTransform Transform;
-		Vector4 Color;
-		Vector4 DrawRect;
+		math::Vector4 Color;
+		math::Vector4 DrawRect;
 	};
 
 	class SpriteRenderer
@@ -89,7 +89,7 @@ namespace render
 		void Render(ID3D12GraphicsCommandList* cmdList,
 			const Texture* texture,
 			const SpriteTransform& transform,
-			const Vector4& color = Vector4(1, 1, 1, 1),
+			const math::Vector4& color = math::Vector4(1, 1, 1, 1),
 			const Vector4* drawRect = NULL);
 
 		void RenderBatch(ID3D12GraphicsCommandList* cmdList,
@@ -101,7 +101,7 @@ namespace render
 			const SpriteFont& font,
 			const wchar* text,
 			Vector2 position,
-			const Vector4& color = Vector4(1, 1, 1, 1));
+			const math::Vector4& color = math::Vector4(1, 1, 1, 1));
 
 		void End();
 

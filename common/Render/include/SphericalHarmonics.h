@@ -19,9 +19,9 @@ namespace render
 	struct Texture;
 
 	// Constants
-	static const float CosineA0 = 1.0f * Pi;
-	static const float CosineA1 = (2.0f * Pi) / 3.0f;
-	static const float CosineA2 = (0.25f * Pi);
+	static const float CosineA0 = 1.0f * math::DIST_Pi;
+	static const float CosineA1 = (2.0f * math::DIST_Pi) / 3.0f;
+	static const float CosineA2 = (0.25f * math::DIST_Pi);
 
 	template<typename T, uint64 N> class SH
 	{
@@ -204,7 +204,7 @@ namespace render
 	// For proper alignment with shader constant buffers
 	struct ShaderSH9Color
 	{
-		Vector4 Coefficients[9];
+		math::Vector4 Coefficients[9];
 
 		ShaderSH9Color() 
 		{
@@ -213,7 +213,7 @@ namespace render
 		ShaderSH9Color(const SH9Color& sh9Clr)
 		{
 			for (uint32 i = 0; i < 9; ++i)
-				Coefficients[i] = Vector4(sh9Clr.Coefficients[i], 0.0f);
+				Coefficients[i] = math::Vector4(sh9Clr.Coefficients[i], 0.0f);
 		}
 	};
 
