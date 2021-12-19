@@ -7,7 +7,7 @@
 
 ScreenShot:
 <p align="center">
-  <img height="632px" width="1139px" src="https://i.imgur.com/NUXVEsY.png">
+  <img height="401px" width="743px" src="https://i.imgur.com/NUXVEsY.png">
 </p>
 
 
