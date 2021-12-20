@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../DistEngine/Core/;../DistEngine/Core/Mathf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../DistEngine/Core/;../DistEngine/Core/Mathf;E:\Engine\EngineLearning\DistEngine\ModelLoader\fbxsdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,10 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="SkinnedData.h" />
   </ItemGroup>

@@ -13,12 +13,18 @@
     <ClCompile Include="SkinnedData.cpp">
       <Filter>ModelImport</Filter>
     </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>ModelImport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoadM3d.h">
       <Filter>ModelImport</Filter>
     </ClInclude>
     <ClInclude Include="SkinnedData.h">
+      <Filter>ModelImport</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxLoader.h">
       <Filter>ModelImport</Filter>
     </ClInclude>
   </ItemGroup>
