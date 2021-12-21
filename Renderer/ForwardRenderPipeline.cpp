@@ -11,7 +11,7 @@ ForwardRenderer::ForwardRenderer(HINSTANCE hInstance) : GraphicsCore(hInstance)
 {
 }
 
-ForwardRenderer::~ForwardRenderer()
+ForwardRenderer::~ForwardRenderer() 
 {
 	if (md3dDevice != nullptr)
 		FlushCommandQueue();

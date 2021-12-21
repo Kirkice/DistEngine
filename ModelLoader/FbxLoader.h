@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fbxsdk.h>
+#include <map>
 #include "d3dUtil.h"
 #include "Mathf.h"
 #include "UploadBuffer.h"
@@ -32,14 +33,20 @@ namespace ModelLoader
 			UINT FaceCount = 0;
 		};
 
-		void LoadFbxModel(const std::string filename,
-			std::vector<Vertex>& vertices,
-			std::vector<USHORT>& indices);
+		void LoadFbxModel(const std::string filename, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, std::vector<Subset>& subsets);
 
 	private:
-		void ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, int VertexIndex, int IndiceIndex);
-		void GetVerticesCount(FbxNode* node, UINT* numVertices);
-		void GetIndicesCount(FbxNode* node, UINT* numTriangles);
+		//void SetMaterials(UINT numMaterials, std::vector<FbxMaterialData>& mats);
+		//void SetSubsetTable(UINT numSubsets, std::vector<Subset>& subsets);
+		void ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, int& VertexIndex, int& IndiceIndex);
+		void GetVerticesAndIndicesCount(
+			FbxNode* node, 
+			UINT& numVertices, 
+			UINT& numTriangles, 
+			UINT& numSubMeshs, 
+			std::map<int, int>& mesh_vertices_start_count_map,
+			std::map<int, int>& mesh_triangles_start_count_map
+		);
 	};
 }
 

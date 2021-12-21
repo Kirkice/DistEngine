@@ -7,9 +7,7 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 
 
-void FbxLoader::LoadFbxModel(const std::string filename,
-	std::vector<Vertex>& vertices,
-	std::vector<USHORT>& indices)
+void FbxLoader::LoadFbxModel(const std::string filename, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, std::vector<Subset>& subsets)
 {
 	const char* lFilename = filename.c_str();
 	// Initialize the SDK manager. This object handles all our memory management.
@@ -41,11 +39,14 @@ void FbxLoader::LoadFbxModel(const std::string filename,
 
 	if (lRootNode)
 	{
+		UINT numSubMeshs = 0;
 		UINT numVertices = 0;
 		UINT numTriangles = 0;
 
-		GetVerticesCount(lRootNode, &numVertices);
-		GetIndicesCount(lRootNode, &numTriangles);
+		std::map<int, int> mesh_vertices_start_count_map;
+		std::map<int, int> mesh_triangles_start_count_map;
+
+		GetVerticesAndIndicesCount(lRootNode, numVertices, numTriangles, numSubMeshs, mesh_vertices_start_count_map, mesh_triangles_start_count_map);
 
 		vertices.resize(numVertices);
 		indices.resize(numTriangles * 3);
@@ -59,13 +60,14 @@ void FbxLoader::LoadFbxModel(const std::string filename,
 }
 
 
-void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, int VertexIndex, int IndiceIndex)
+void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, int& VertexIndex, int& IndiceIndex)
 {
 	if (node->GetChildCount())
 	{
 		for (int i = 0; i < node->GetChildCount(); i++)
 		{
-			if (node->GetChild(i)->GetMesh())
+			FbxNodeAttribute* na = node->GetNodeAttributeByIndex(i);
+			if (na->GetAttributeType() == FbxNodeAttribute::eMesh)
 			{
 				FbxMesh* mesh = node->GetChild(i)->GetMesh();
 				int cpCount1 = mesh->GetControlPointsCount();
@@ -115,6 +117,7 @@ void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, s
 					}
 				}
 			}
+
 			ReadFbxChildNode(node->GetChild(i), vertices, indices, VertexIndex, IndiceIndex);
 		}
 	}
@@ -126,39 +129,88 @@ void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, s
 /// </summary>
 /// <param name="node"></param>
 /// <param name="numVertices"></param>
-void FbxLoader::GetVerticesCount(FbxNode* node, UINT* numVertices)
+void FbxLoader::GetVerticesAndIndicesCount(
+	FbxNode* node,
+	UINT& numVertices,
+	UINT& numTriangles,
+	UINT& numSubMeshs,
+	std::map<int, int>& mesh_vertices_start_count_map,
+	std::map<int, int>& mesh_triangles_start_count_map
+)
 {
 	if (node->GetChildCount())
 	{
 		for (int i = 0; i < node->GetChildCount(); i++)
 		{
-			if (node->GetChild(i)->GetMesh())
+			FbxNodeAttribute* na = node->GetNodeAttributeByIndex(i);
+			if (na->GetAttributeType() == FbxNodeAttribute::eMesh)
 			{
 				FbxMesh* mesh = node->GetChild(i)->GetMesh();
+
 				numVertices += mesh->GetControlPointsCount();
+				mesh_vertices_start_count_map[numSubMeshs] = mesh->GetControlPointsCount();
+
+				numTriangles += mesh->GetPolygonVertexCount();
+				mesh_triangles_start_count_map[numTriangles] = mesh->GetPolygonVertexCount();
+
+				numSubMeshs++;
 			}
-			GetIndicesCount(node->GetChild(i), numVertices);
+
+			GetVerticesAndIndicesCount(node->GetChild(i), numVertices, numTriangles, numSubMeshs, mesh_vertices_start_count_map, mesh_triangles_start_count_map);
 		}
 	}
 }
 
-/// <summary>
-/// 获取模型索引数据
-/// </summary>
-/// <param name="node"></param>
-/// <param name="numTriangles"></param>
-void FbxLoader::GetIndicesCount(FbxNode* node, UINT* numTriangles)
-{
-	if (node->GetChildCount())
-	{
-		for (int i = 0; i < node->GetChildCount(); i++)
-		{
-			if (node->GetChild(i)->GetMesh())
-			{
-				FbxMesh* mesh = node->GetChild(i)->GetMesh();
-				numTriangles += mesh->GetPolygonVertexCount();
-			}
-			GetIndicesCount(node->GetChild(i), numTriangles);
-		}
-	}
-}
+//void readMesh(FbxMesh* mesh)
+//{
+//	int ctrlcount = mesh->GetControlPointsCount();
+//	FbxVector4* ctrlpoints = mesh->GetControlPoints();
+//	for (int i = 0; i < ctrlcount; i++)
+//	{
+//		Point p;
+//		p.x = ctrlpoints[i].mData[0];
+//		p.y = ctrlpoints[i].mData[1];
+//		p.z = ctrlpoints[i].mData[2];
+//		triangleVertexVec.push_back(p);
+//	}
+//	int pvcount = mesh->GetPolygonVertexCount();
+//	int pcount = mesh->GetPolygonCount();
+//	for (int i = 0; i < pcount; i++)
+//	{
+//		int psize = mesh->GetPolygonSize(i);
+//		for (int j = 0; j < psize; j++)
+//			triangleIndexVec.push_back(TriangleIndexCount + mesh->GetPolygonVertex(i, j));
+//	}
+//	TriangleVertexCount += ctrlcount;          //加上上一个node的控制点个数
+//	TriangleIndexCount += ctrlcount;
+//}
+//
+//
+//void parseNode(FbxNode* node)              //如何加载fbx文件获得RootNode此处省略
+//{
+//	int count = node->GetChildCount();
+//	parseNodeAttribute(node);
+//
+//	for (int i = 0; i < count; i++)
+//	{
+//		FbxNode* son = node->GetChild(i);
+//		parseNode(node->GetChild(i));
+//	}
+//}
+//
+//void parseNodeAttribute(FbxNode* node)
+//{
+//	int nacount = node->GetNodeAttributeCount();
+//	for (int i = 0; i < nacount; i++)
+//	{
+//		FbxNodeAttribute* na = node->GetNodeAttributeByIndex(i);
+//		if (na->GetAttributeType() == FbxNodeAttribute::eMesh)
+//		{
+//			FbxMesh* mesh = (FbxMesh*)na;
+//			readMesh(mesh);
+//		}
+//	}
+//}
+
+//http://t.zoukankan.com/nafio-p-9137423.html
+//https://blog.csdn.net/lemon1235/article/details/88982564
