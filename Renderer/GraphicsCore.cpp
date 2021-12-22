@@ -5,6 +5,7 @@
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+using namespace ModelLoader;
 
 GraphicsCore::GraphicsCore(HINSTANCE hInstance): D3DApp(hInstance)
 {
@@ -34,6 +35,7 @@ bool GraphicsCore::Initialize()
 		mCommandList.Get(),
 		mClientWidth, mClientHeight);
 
+	LoadModel();
 	LoadTextures();
 	BuildRootSignature();
 	BuildSsaoRootSignature();
@@ -134,14 +136,14 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	//Æ½ÐÐ¹âÐý×ª
+	//Æ½ï¿½Ð¹ï¿½ï¿½ï¿½×ª
 	XMMATRIX rot_dir = XMMatrixRotationX((mDirectionLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mDirectionLightsAngle[1] /180) * Mathf::Pi) * XMMatrixRotationZ((mDirectionLightsAngle[2]/180) * Mathf::Pi);
 
 	XMVECTOR lightDir = XMLoadFloat3(&mDirectionLightsDir);
 	lightDir = XMVector3TransformNormal(lightDir, rot_dir);
 	XMStoreFloat3(&mRotatedLightDirections, lightDir);
 
-	//¾Û¹âµÆÐý×ª
+	//ï¿½Û¹ï¿½ï¿½ï¿½ï¿½×ª
 	XMMATRIX rot_spot = XMMatrixRotationX((mSpotLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mSpotLightsAngle[1] / 180) * Mathf::Pi) * XMMatrixRotationZ((mSpotLightsAngle[2] / 180) * Mathf::Pi);
 	XMVECTOR lightSpot = XMLoadFloat3(&mSpotLightsDir);
 	lightSpot = XMVector3TransformNormal(lightSpot, rot_spot);
@@ -828,6 +830,17 @@ void GraphicsCore::BuildShapeGeometry()
 	mGeometries[geo->Name] = std::move(geo);
 }
 
+void GraphicsCore::LoadModel()
+{
+	std::vector<FbxLoader::Vertex> vertices;
+	std::vector<std::uint16_t> indices;
+	std::vector<FbxLoader::Subset> mFbxSubsets;
+
+	std::string mFbxModelPath = "Models\\51703.fbx";
+	FbxLoader mFbxLoader;
+
+	mFbxLoader.LoadFbxModel(mFbxModelPath, vertices, indices, mFbxSubsets);
+}
 
 void GraphicsCore::BuildPSOs()
 {

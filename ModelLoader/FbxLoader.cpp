@@ -66,8 +66,7 @@ void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, s
 	{
 		for (int i = 0; i < node->GetChildCount(); i++)
 		{
-			FbxNodeAttribute* na = node->GetNodeAttributeByIndex(i);
-			if (na->GetAttributeType() == FbxNodeAttribute::eMesh)
+			if (node->GetChild(i)->GetMesh())
 			{
 				FbxMesh* mesh = node->GetChild(i)->GetMesh();
 				int cpCount1 = mesh->GetControlPointsCount();
@@ -125,7 +124,7 @@ void FbxLoader::ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, s
 }
 
 /// <summary>
-/// »ñÈ¡Ä£ÐÍ¶¥µãÊý¾Ý
+/// ï¿½ï¿½È¡Ä£ï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="node"></param>
 /// <param name="numVertices"></param>
@@ -142,16 +141,15 @@ void FbxLoader::GetVerticesAndIndicesCount(
 	{
 		for (int i = 0; i < node->GetChildCount(); i++)
 		{
-			FbxNodeAttribute* na = node->GetNodeAttributeByIndex(i);
-			if (na->GetAttributeType() == FbxNodeAttribute::eMesh)
+			if (node->GetChild(i)->GetMesh())
 			{
 				FbxMesh* mesh = node->GetChild(i)->GetMesh();
-
+				std::string meshName = node->GetChild(i)->GetName();
 				numVertices += mesh->GetControlPointsCount();
 				mesh_vertices_start_count_map[numSubMeshs] = mesh->GetControlPointsCount();
 
-				numTriangles += mesh->GetPolygonVertexCount();
-				mesh_triangles_start_count_map[numTriangles] = mesh->GetPolygonVertexCount();
+				numTriangles += mesh->GetPolygonCount();
+				mesh_triangles_start_count_map[numTriangles] = mesh->GetPolygonCount();
 
 				numSubMeshs++;
 			}
@@ -181,12 +179,12 @@ void FbxLoader::GetVerticesAndIndicesCount(
 //		for (int j = 0; j < psize; j++)
 //			triangleIndexVec.push_back(TriangleIndexCount + mesh->GetPolygonVertex(i, j));
 //	}
-//	TriangleVertexCount += ctrlcount;          //¼ÓÉÏÉÏÒ»¸önodeµÄ¿ØÖÆµã¸öÊý
+//	TriangleVertexCount += ctrlcount;          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½nodeï¿½Ä¿ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½
 //	TriangleIndexCount += ctrlcount;
 //}
 //
 //
-//void parseNode(FbxNode* node)              //ÈçºÎ¼ÓÔØfbxÎÄ¼þ»ñµÃRootNode´Ë´¦Ê¡ÂÔ
+//void parseNode(FbxNode* node)              //ï¿½ï¿½Î¼ï¿½ï¿½ï¿½fbxï¿½Ä¼ï¿½ï¿½ï¿½ï¿½RootNodeï¿½Ë´ï¿½Ê¡ï¿½ï¿½
 //{
 //	int count = node->GetChildCount();
 //	parseNodeAttribute(node);

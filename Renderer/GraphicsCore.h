@@ -10,6 +10,7 @@
 #include "SkinnedData.h"
 #include "LoadM3d.h"
 #include "Ssao.h"
+#include "FbxLoader.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -23,9 +24,9 @@ namespace Renderer
 		RenderItem() = default;
 		RenderItem(const RenderItem& rhs) = delete;
 
-		//ÊÀ½ç×ø±ê 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		XMFLOAT4X4 World = Mathf::Identity4x4();
-		//ÎÆÀí×ø±ê
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		XMFLOAT4X4 TexTransform = Mathf::Identity4x4();
 
 		int NumFramesDirty = gNumFrameResources;
@@ -42,7 +43,7 @@ namespace Renderer
 		int BaseVertexLocation = 0;
 	};
 
-	//äÖÈ¾²ã¼¶
+	//ï¿½ï¿½È¾ï¿½ã¼¶
 	enum class RenderLayer : int
 	{
 		Opaque = 0,
@@ -85,6 +86,7 @@ namespace Renderer
 		void BuildDescriptorHeaps();
 		void BuildShadersAndInputLayout();
 		void BuildShapeGeometry();
+		void LoadModel();
 		void BuildPSOs();
 		void BuildFrameResources();
 		void BuildMaterials();
@@ -163,12 +165,12 @@ namespace Renderer
 		float BackGroundScale[4] = { 1.5f, 1.5f, 1.5f, 1.5f };
 
 
-		//äÖÈ¾Ä¿±ê²ÎÊý
+		//ï¿½ï¿½È¾Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½
 		float TargetTransform[3] = { 0.0f, 1.0f, 0.0f};
 		float TargetScale[3] = { 1.0f, 1.0f, 1.0f};
 		float TargetRotationAngle[3] = { 0,0,0 };
 
-		//Camera ²ÎÊý
+		//Camera ï¿½ï¿½ï¿½ï¿½
 		float mCamFov = 45;
 		float mCamClipN = 0.3;
 		float mCamClipF = 1000;
