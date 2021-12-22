@@ -105,7 +105,7 @@ void ForwardRenderer::ForwardRender()
 	mCommandQueue->Signal(mFence.Get(), mCurrentFence);
 }
 
-//äÖÈ¾ÒõÓ°ÌùÍ¼
+//ï¿½ï¿½È¾ï¿½ï¿½Ó°ï¿½ï¿½Í¼
 void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 {
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
@@ -116,27 +116,27 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 	DrawSceneToShadowMap();
 }
 
-//äÖÈ¾Éî¶È·¨Ïß
+//ï¿½ï¿½È¾ï¿½ï¿½È·ï¿½ï¿½ï¿½
 void ForwardRenderer::DrawDepthNormal()
 {
 	DrawNormalsAndDepth();
 }
 
-////äÖÈ¾Íâ¹´±ß
+////ï¿½ï¿½È¾ï¿½â¹´ï¿½ï¿½
 void ForwardRenderer::DrawOutLine()
 {
 	mCommandList->SetPipelineState(mPSOs["outline"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
 
-//äÖÈ¾²»Í¸Ã÷ÎïÌå
+//ï¿½ï¿½È¾ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void ForwardRenderer::DrawOpaque()
 {
 	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
 
-//äÖÈ¾Ìì¿ÕÇò
+//ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 void ForwardRenderer::DrawSkyBox()
 {
 	if (renderSkyBox)
@@ -163,23 +163,23 @@ void ForwardRenderer::DrawImgui()
 }
 
 
-//»æÖÆUI
+//ï¿½ï¿½ï¿½ï¿½UI
 void ForwardRenderer::DrawEditor()
 {
 	// Start the Dear ImGui frame
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	//¾­µäÅäÉ« 
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É« 
 	ImGui::StyleColorsClassic();
 
-	//»æÖÆ²Ëµ¥
+	//ï¿½ï¿½ï¿½Æ²Ëµï¿½
 	ForwardRenderer::DrawMenuEditor();
-	//»æÖÆÍ¼ÐÎÏîUI
+	//ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½UI
 	ForwardRenderer::DrawGraphicsItemEditor();
-	////»æÖÆäÖÈ¾ÏîUI
+	////ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½UI
 	ForwardRenderer::DrawRenderItemEditor();
-	////»æÖÆÈÕÖ¾
+	////ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
 	ForwardRenderer::DrawConsoleEditor();
 
 	mCommandList->SetDescriptorHeaps(1, mSrvHeap.GetAddressOf());
@@ -187,7 +187,7 @@ void ForwardRenderer::DrawEditor()
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
 }
 
-//»æÖÆ²Ëµ¥
+//ï¿½ï¿½ï¿½Æ²Ëµï¿½
 void ForwardRenderer::DrawMenuEditor()
 {
 	ImGui::SetNextWindowBgAlpha(1.0f);
@@ -217,7 +217,7 @@ void ForwardRenderer::DrawMenuEditor()
 	}
 }
 
-//»æÖÆGraphics Item Editor
+//ï¿½ï¿½ï¿½ï¿½Graphics Item Editor
 void ForwardRenderer::DrawGraphicsItemEditor()
 {
 	//Graphics Item
@@ -225,7 +225,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 	ImGui::Begin("Graphics Item");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(320, 1080), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(320, mClientHeight), ImGuiCond_Always);
 
 	//Camera
 	if (ImGui::CollapsingHeader("MainCamera"))
@@ -305,15 +305,15 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 	ImGui::End();
 }
 
-//»æÖÆRender Item Editor
+//ï¿½ï¿½ï¿½ï¿½Render Item Editor
 void ForwardRenderer::DrawRenderItemEditor()
 {
 	//Render Item
 	ImGui::SetNextWindowBgAlpha(1.0f);
 	ImGui::Begin("RenderItem Properties");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 1620, main_viewport->WorkPos.y), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(300, 1080), ImGuiCond_Always);
+	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(300, mClientHeight), ImGuiCond_Always);
 
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -359,8 +359,8 @@ void ForwardRenderer::DrawConsoleEditor()
 	ImGui::SetNextWindowBgAlpha(1.0f);
 	ImGui::Begin("Console");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + 900), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(1300, 100), ImGuiCond_Always);
+	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 180), ImGuiCond_Always);
 	if (ImGui::SmallButton("[Debug] Add 5 entries"))
 	{
 		static int counter = 0;
