@@ -836,10 +836,47 @@ void GraphicsCore::LoadModel()
 	std::vector<std::uint16_t> indices;
 	std::vector<FbxLoader::Subset> mFbxSubsets;
 
-	std::string mFbxModelPath = "Models\\51703.fbx";
+	std::string mFbxModelPath = "Models\\Sample.fbx";
 	FbxLoader mFbxLoader;
 
 	mFbxLoader.LoadFbxModel(mFbxModelPath, vertices, indices, mFbxSubsets);
+
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	auto geo = std::make_unique<MeshGeometry>();
+	geo->Name = "Sample";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, geo->VertexBufferUploader);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(Vertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	for (UINT i = 0; i < (UINT)mFbxSubsets.size(); ++i)
+	{
+		SubmeshGeometry submesh;
+		std::string name = "sm_" + std::to_string(i);
+
+		submesh.IndexCount = (UINT)mFbxSubsets[i].FaceCount * 3;
+		submesh.StartIndexLocation = mFbxSubsets[i].FaceStart * 3;
+		submesh.BaseVertexLocation = 0;
+
+		geo->DrawArgs[name] = submesh;
+	}
+
+	mGeometries[geo->Name] = std::move(geo);
 }
 
 void GraphicsCore::BuildPSOs()
@@ -873,6 +910,7 @@ void GraphicsCore::BuildPSOs()
 	opaquePsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
+
 
 	//
 	// 	PSO for OutLine
@@ -1200,6 +1238,24 @@ void GraphicsCore::BuildRenderItems()
 
 	//mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem.get());
 	//mAllRitems.push_back(std::move(gridRitem));
+
+	//auto fbxRitem = std::make_unique<RenderItem>();
+
+	//XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+	//XMMATRIX modelRot = XMMatrixRotationY(Mathf::Pi);
+	//XMMATRIX modelOffset = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+
+	//XMStoreFloat4x4(&fbxRitem->World, modelScale * modelRot * modelOffset);
+	//fbxRitem->ObjCBIndex = 2;
+	//fbxRitem->Mat = mMaterials["sphere"].get();
+	//fbxRitem->Geo = mGeometries["Sample"].get();
+	//fbxRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//fbxRitem->IndexCount = fbxRitem->Geo->DrawArgs["sm_0"].IndexCount;
+	//fbxRitem->StartIndexLocation = fbxRitem->Geo->DrawArgs["sm_0"].StartIndexLocation;
+	//fbxRitem->BaseVertexLocation = fbxRitem->Geo->DrawArgs["sm_0"].BaseVertexLocation;
+
+	//mRitemLayer[(int)RenderLayer::Opaque].push_back(fbxRitem.get());
+	//mAllRitems.push_back(std::move(fbxRitem));
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

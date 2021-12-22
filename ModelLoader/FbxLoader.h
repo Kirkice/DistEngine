@@ -38,14 +38,14 @@ namespace ModelLoader
 	private:
 		//void SetMaterials(UINT numMaterials, std::vector<FbxMaterialData>& mats);
 		//void SetSubsetTable(UINT numSubsets, std::vector<Subset>& subsets);
-		void ReadFbxChildNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<USHORT>& indices, int& VertexIndex, int& IndiceIndex);
-		void GetVerticesAndIndicesCount(
-			FbxNode* node, 
-			UINT& numVertices, 
-			UINT& numTriangles, 
-			UINT& numSubMeshs, 
-			std::map<int, int>& mesh_vertices_start_count_map,
-			std::map<int, int>& mesh_triangles_start_count_map
+		void GetVerticesAndIndicesData(
+			FbxNode* node,
+			UINT& numVertices,
+			UINT& numTriangles,
+			UINT& numSubMeshs,
+			std::vector<Vertex>& vertices,
+			std::vector<USHORT>& indices,
+			std::vector<Subset>& subsets
 		);
 	};
 }
