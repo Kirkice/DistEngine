@@ -90,7 +90,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     outSurfaceData.Albedo                               = diffuseAlbedo;
     outSurfaceData.Metallic                             = Metallic;
     outSurfaceData.Smoothness                           = Smoothness;
-    outSurfaceData.Normal                               = N;
+    outSurfaceData.Normal                               = bumpedNormalW;
     outSurfaceData.Occlusion                            = Occlusion;
 
     outSurfaceData.Emission                             = emission;
@@ -374,4 +374,11 @@ float3 DistGlobalIllumination(InputData inputData, half3 albedo, half metallic, 
     return                                              IndirectResult;
 }
 
+float3 DistShadow(InputData inputData, half3 outColor)
+{
+    half Shadow                                         = inputData.ShadowCoord;
+    PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
+    Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
+    return                                              lerp(outColor * half3(0.2,0.2,0.2),outColor,Shadow);
+}
 #endif

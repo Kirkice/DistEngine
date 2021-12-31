@@ -332,9 +332,9 @@ float3 TransformWorldToHClipDir(float3 directionWS, bool doNormalize = false)
 // Transforms normal from object to world space
 float3 TransformObjectToWorldNormal(float3 normalOS, bool doNormalize = true)
 {
-    float3 normalWS                                                     = mul(normalOS, (float3x3)GetWorldToObjectMatrix());
+    float3 normalWS                                                     = mul(normalOS, (float3x3)GetObjectToWorldMatrix());
     if (doNormalize)
-        return                                                          SafeNormalize(normalWS);
+        return                                                          normalize(normalWS);
 
     return                                                              normalWS;
 }
@@ -343,7 +343,7 @@ float3 TransformObjectToWorldNormal(float3 normalOS, bool doNormalize = true)
 float3 TransformWorldToObjectNormal(float3 normalWS, bool doNormalize = true)
 {
     // Normal need to be multiply by inverse transpose
-    float3 normalOS                                                     = mul(normalWS, (float3x3)GetObjectToWorldMatrix());
+    float3 normalOS                                                     = mul(normalWS, (float3x3)GetWorldToObjectMatrix());
     if (doNormalize)
         return                                                          SafeNormalize(normalOS);
 

@@ -81,7 +81,9 @@ float4 PS(VertexOut pin) : SV_Target
     DistLightingPhysicallyBased(inputData, surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, surfaceData.Emission.rgb, outColor.rgb);
     outColor.rgb                                       +=  DistGlobalIllumination(inputData, surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, inputData.bakedGI.rgb);
 
-    outColor.rgb                                       += surfaceData.Emission.rgb;
+    outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
+
+    // outColor.rgb                                       += surfaceData.Emission.rgb;
     outColor.rgb                                        = pow(outColor.rgb,(1/2.2));
     return outColor;
 }
