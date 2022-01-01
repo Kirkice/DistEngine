@@ -162,12 +162,12 @@ namespace Renderer
 
 		float BackGroundTransform[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		float BackGroundRotation = 0.0f;
-		float BackGroundScale[4] = { 1.5f, 1.5f, 1.5f, 1.5f };
+		float BackGroundScale[4] = { 0.6f, 0.6f, 0.6f, 0.6f };
 
 
 		//��ȾĿ�����
 		float TargetTransform[3] = { 0.0f, 1.0f, 0.0f};
-		float TargetScale[3] = { 1.0f, 1.0f, 1.0f};
+		float TargetScale[3] = { 2.0f, 2.0f, 2.0f};
 		float TargetRotationAngle[3] = { 0,0,0 };
 
 		//Camera ����
@@ -186,7 +186,7 @@ namespace Renderer
 		float mDirectionLightsColor[3] = {1,1,1};
 		float mDirectionLightsAngle[3] = {0,0,0};
 		float mDirectionLightsScale[3] = { 1,1,1 };
-		float mDirectionLightsStrength = 1;
+		float mDirectionLightsStrength = 3;
 		bool mDirectionLightsCastShadow = true;
 		bool mDirectionLightsActive = true;
 

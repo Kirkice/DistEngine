@@ -263,7 +263,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Text("Settings");
 			ImGui::Checkbox("Direction Enable", &mDirectionLightsActive);
 			ImGui::ColorEdit3("(D)Color", mDirectionLightsColor);
-			ImGui::DragFloat("(D)Intensity", &mDirectionLightsStrength, 0.003f, 0, 3);
+			ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f,10);
 			ImGui::Checkbox("Cast Shadow", &mDirectionLightsCastShadow);
 			ImGui::TreePop();
 		}
