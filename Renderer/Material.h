@@ -16,7 +16,7 @@ namespace Renderer
 		Vector4 SkyBoxTint = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float SkyBoxExposure = 1;
 		float SkyBoxRotation = 0;
-		bool ACES = false;
+		float ACES = 1;
 
 		Vector4 BaseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float Smoothness = 0.5f;

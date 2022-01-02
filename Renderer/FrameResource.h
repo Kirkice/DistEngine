@@ -74,7 +74,7 @@ struct SkyBoxMaterialData
 	Vector4 SkyBoxTint = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float SkyBoxExposure = 1;
 	float SkyBoxRotation = 0;
-	bool ACES = false;
+	float ACES = 1;
 };
 
 struct PBRMaterialData

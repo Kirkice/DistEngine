@@ -202,7 +202,8 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 		Material* mat = e.second.get();
 		if (mat->NumFramesDirty > 0)
 		{
-			PBRDemo_UpdateMaterialBuffer(mat, currMaterialBuffer);
+			if (mat->MatCBIndex > 0)
+				PBRDemo_UpdateMaterialBuffer(mat, currMaterialBuffer);
 		}
 	}
 

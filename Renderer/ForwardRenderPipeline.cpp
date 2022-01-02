@@ -78,16 +78,13 @@ void ForwardRenderer::ForwardRender()
 
 	ForwardRenderer::DrawOpaque();
 
+	//SkyBox
 	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
-
 	ForwardRenderer::DrawSkyBox();
 
 	//mCommandList->SetPipelineState(mPSOs["debug"].Get());
 	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Debug]);
-
-
-
 
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -415,7 +412,28 @@ void ForwardRenderer::DrawLightSettings()
 {
 	//Render Item
 	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetWindowSize(ImVec2(180, 500), ImGuiCond_Always);
 	ImGui::Begin("Light Settings", &show_lightSetting_panel);
-	
+
+	Material* currentMat = mMaterials["sky"].get();
+
+	//ImGui::Text("Environment");
+
+	//ImGui::ColorEdit3("Shadow Color", EnvironmentShadowColor);
+
+	ImGui::Text("SkyBox");
+
+	float colorMain[4] = { currentMat->SkyBoxTint.x,currentMat->SkyBoxTint.y,currentMat->SkyBoxTint.z,1 };
+	ImGui::ColorEdit3("Tint", colorMain);
+	currentMat->SkyBoxTint = Vector4(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
+
+	ImGui::SliderFloat("Exposure", &currentMat->SkyBoxExposure, 0, 8);
+	ImGui::SliderFloat("Rotation", &currentMat->SkyBoxRotation, 0, 360);
+
+	bool UseAces = (bool)currentMat->ACES;
+	ImGui::Checkbox("Aces Enable", &UseAces);
+	currentMat->ACES = (int)UseAces;
+
+	currentMat->NumFramesDirty++;
 	ImGui::End();
 }
