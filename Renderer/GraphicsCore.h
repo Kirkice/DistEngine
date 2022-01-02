@@ -11,6 +11,7 @@
 #include "LoadM3d.h"
 #include "Ssao.h"
 #include "FbxLoader.h"
+#include "RendererCore.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -19,41 +20,7 @@ using namespace Renderer;
 
 namespace Renderer
 {
-	struct RenderItem
-	{
-		RenderItem() = default;
-		RenderItem(const RenderItem& rhs) = delete;
-
-		//�������� 
-		XMFLOAT4X4 World = Mathf::Identity4x4();
-		//��������
-		XMFLOAT4X4 TexTransform = Mathf::Identity4x4();
-
-		int NumFramesDirty = gNumFrameResources;
-
-		UINT ObjCBIndex = -1;
-
-		Material* Mat = nullptr;
-		MeshGeometry* Geo = nullptr;
-
-		D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-		UINT IndexCount = 0;
-		UINT StartIndexLocation = 0;
-		int BaseVertexLocation = 0;
-	};
-
-	//��Ⱦ�㼶
-	enum class RenderLayer : int
-	{
-		Opaque = 0,
-		Transparent = 1,
-		Debug = 2,
-		Sky = 3,
-		Count
-	};
-
-	class GraphicsCore : public D3DApp
+	class GraphicsCore : public RenderCore
 	{
 	public:
 		GraphicsCore(HINSTANCE hInstance);
@@ -115,6 +82,7 @@ namespace Renderer
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 		std::unordered_map<std::string, std::unique_ptr<Material>> mMaterials;
 		std::unordered_map<std::string, std::unique_ptr<Texture>> mTextures;
+		std::unordered_map<std::string, std::unique_ptr<Texture>> mSkyTextures;
 		std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 		std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
@@ -170,7 +138,7 @@ namespace Renderer
 		float TargetScale[3] = { 2.0f, 2.0f, 2.0f};
 		float TargetRotationAngle[3] = { 0,0,0 };
 
-		//Camera ����
+		//Camera
 		float mCamFov = 45;
 		float mCamClipN = 0.3;
 		float mCamClipF = 1000;

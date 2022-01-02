@@ -69,6 +69,14 @@ struct SsaoConstants
     float SurfaceEpsilon = 0.05f;
 };
 
+struct SkyBoxMaterialData
+{
+	Vector4 SkyBoxTint = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float SkyBoxExposure = 1;
+	float SkyBoxRotation = 0;
+	bool ACES = false;
+};
+
 struct PBRMaterialData
 {
     Vector4 BaseColor = (1, 1, 1, 1);
@@ -96,7 +104,7 @@ struct NPRMaterialData
 	float OutLineWidth = 0.5f;
 	DirectX::XMFLOAT4 OutLineColor = { 0, 0, 0, 1 };
 
-	//ÒõÓ°
+	//ï¿½ï¿½Ó°
 	float shadowRange_1st = 0.5f;
 	float shadowFeather_1st = 0.5f;
 	DirectX::XMFLOAT4 shadowColor_1st = { 1,1,1,1 };
@@ -104,21 +112,21 @@ struct NPRMaterialData
 	float shadowFeather_2nd = 0.5f;
 	DirectX::XMFLOAT4 shadowColor_2nd = { 1,1,1,1 };
 
-	//±ßÔµ¹â
+	//ï¿½ï¿½Ôµï¿½ï¿½
 	float rimRange = 0.5f;
 	float rimFeather = 0.5f;
 	DirectX::XMFLOAT4 rimColor = { 1,1,1,1 };
 
-	//×Ô·¢¹â
+	//ï¿½Ô·ï¿½ï¿½ï¿½
 	float emissStrength = 0.5f;
 	DirectX::XMFLOAT4 emissColor = { 1,1,1,1 };
 
-	//¸ß¹â
+	//ï¿½ß¹ï¿½
 	float specularRange = 0.5;
 	float specularFeather = 0.5f;
 	DirectX::XMFLOAT4 specularColor = { 1,1,1,1 };
 
-	//µØÃæÒõÓ°ÑÕÉ«
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½É«
 	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
 };
 
@@ -156,6 +164,6 @@ public:
     std::unique_ptr<UploadBuffer<SkinnedConstants>> SkinnedCB = nullptr;
     std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 	std::unique_ptr<UploadBuffer<PBRMaterialData>> PBRMaterialBuffer = nullptr;
-
+    std::unique_ptr<UploadBuffer<SkyBoxMaterialData>> SkyBoxMaterialBuffer = nullptr;
     UINT64 Fence = 0;
 };

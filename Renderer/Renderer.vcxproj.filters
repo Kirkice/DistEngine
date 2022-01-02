@@ -37,6 +37,9 @@
     <ClCompile Include="ForwardRenderPipeline.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
+    <ClCompile Include="RendererCore.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ssao.h">
@@ -61,6 +64,9 @@
       <Filter>Runtime</Filter>
     </ClInclude>
     <ClInclude Include="ForwardRenderPipeline.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererCore.h">
       <Filter>Runtime</Filter>
     </ClInclude>
   </ItemGroup>

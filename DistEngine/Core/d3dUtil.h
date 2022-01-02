@@ -105,11 +105,11 @@ struct MaterialConstants
     float Metallic = 0.85f;
 	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 
-    //Ãè±ß
+    //ï¿½ï¿½ï¿½
 	float OutLineWidth = 0.5f;
     DirectX::XMFLOAT4 OutLineColor = { 0, 0, 0, 1 };
 
-    //ÒõÓ°
+    //ï¿½ï¿½Ó°
     float shadowRange_1st = 0.5f;
     float shadowFeather_1st = 0.5f;
     DirectX::XMFLOAT4 shadowColor_1st = { 1,1,1,1 };
@@ -117,21 +117,21 @@ struct MaterialConstants
 	float shadowFeather_2nd = 0.5f;
     DirectX::XMFLOAT4 shadowColor_2nd = { 1,1,1,1 };
 
-    //±ßÔµ¹â
+    //ï¿½ï¿½Ôµï¿½ï¿½
     float rimRange = 0.5f;
     float rimFeather = 0.5f;
     DirectX::XMFLOAT4 rimColor = { 1,1,1,1 };
 
-    //×Ô·¢¹â
+    //ï¿½Ô·ï¿½ï¿½ï¿½
     float emissStrength = 0.5f;
     DirectX::XMFLOAT4 emissColor = { 1,1,1,1 };
 
-    //¸ß¹â
+    //ï¿½ß¹ï¿½
     float specularRange = 0.5;
     float specularFeather = 0.5f;
     DirectX::XMFLOAT4 specularColor = { 1,1,1,1 };
 
-	//µØÃæÒõÓ°ÑÕÉ«
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½É«
 	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
 };
 

@@ -13,6 +13,11 @@ namespace Renderer
 		int MatCBIndex = -1;
 		int NumFramesDirty = gNumFrameResources;
 
+		Vector4 SkyBoxTint = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float SkyBoxExposure = 1;
+		float SkyBoxRotation = 0;
+		bool ACES = false;
+
 		Vector4 BaseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float Smoothness = 0.5f;
 		float Metallic = 0.5;

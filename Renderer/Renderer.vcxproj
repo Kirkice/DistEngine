@@ -147,6 +147,7 @@
     <ClCompile Include="FrameResource.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="RendererCore.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Ssao.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshGeometry.h" />
+    <ClInclude Include="RendererCore.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Ssao.h" />
   </ItemGroup>

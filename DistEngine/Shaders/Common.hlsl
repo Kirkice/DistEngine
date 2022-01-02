@@ -78,8 +78,17 @@ struct PBRMaterialData
     uint                                                                                LUTMapIndex;
 };
 
+struct SkyBoxMaterialData
+{
+    float4                                                                              SkyBoxTint;
+    float                                                                               SkyBoxExposure;
+    float                                                                               SkyBoxRotation;
+    float                                                                               ACES;
+};
+
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);
 
+StructuredBuffer<SkyBoxMaterialData> gSkyMaterialData                                   : register(t0, space2);
 //TEXTURES
 TextureCube gCubeIBL                                                                    : register(t0);
 TextureCube gCubeMap                                                                    : register(t1);

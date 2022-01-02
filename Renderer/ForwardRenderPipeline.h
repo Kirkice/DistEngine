@@ -21,33 +21,36 @@ namespace Renderer
 		~ForwardRenderer();
 
 	private:
+		//Light Setting Panel
+		bool show_lightSetting_panel = false;
+
 		virtual void Draw(const GameTimer& gt)override;
 
-		//Ç°ÏîäÖÈ¾
+		//Ç°ï¿½ï¿½ï¿½ï¿½È¾
 		void ForwardRender();
 
-		//äÖÈ¾ÒõÓ°ÌùÍ¼
+		//ï¿½ï¿½È¾ï¿½ï¿½Ó°ï¿½ï¿½Í¼
 		void DrawShadowMap(ID3D12Resource* matBuffer);
 
-		//äÖÈ¾Éî¶È·¨Ïß
+		//ï¿½ï¿½È¾ï¿½ï¿½È·ï¿½ï¿½ï¿½
 		void DrawDepthNormal();
 
-		////äÖÈ¾Íâ¹´±ß
+		////ï¿½ï¿½È¾ï¿½â¹´ï¿½ï¿½
 		void DrawOutLine();
 
-		//äÖÈ¾²»Í¸Ã÷ÎïÌå
+		//ï¿½ï¿½È¾ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		void DrawOpaque();
 
-		//äÖÈ¾Ìì¿ÕÇò
+		//ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 		void DrawSkyBox();
 
-		//äÖÈ¾Í¸Ã÷ÎïÌå
+		//ï¿½ï¿½È¾Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		void DrawTransparent();
 
-		//äÖÈ¾ºó´¦Àí
+		//ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½
 		void DrawPostProcessing();
 
-		//äÖÈ¾Imgui
+		//ï¿½ï¿½È¾Imgui
 		void DrawImgui();
 
 		//Imgui - Editor
@@ -67,5 +70,7 @@ namespace Renderer
 
 		//Imgui - Overlay Profile
 		void DrawOverLayProfile();
+
+		void DrawLightSettings();
 	};
 }

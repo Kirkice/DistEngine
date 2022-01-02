@@ -78,6 +78,9 @@ void ForwardRenderer::ForwardRender()
 
 	ForwardRenderer::DrawOpaque();
 
+	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
+
 	ForwardRenderer::DrawSkyBox();
 
 	//mCommandList->SetPipelineState(mPSOs["debug"].Get());
@@ -170,16 +173,21 @@ void ForwardRenderer::DrawEditor()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	//������ɫ 
+	//Draw Stylize
 	ImGui::StyleColorsClassic();
 
-	//���Ʋ˵�
+	//Draw Menu
 	ForwardRenderer::DrawMenuEditor();
-	//����ͼ����UI
+
+	//Draw Light Setting
+	if (show_lightSetting_panel)
+		ForwardRenderer::DrawLightSettings();
+
+	//Draw Graphics Item
 	ForwardRenderer::DrawGraphicsItemEditor();
-	////������Ⱦ��UI
+	////Render Item
 	ForwardRenderer::DrawRenderItemEditor();
-	////������־
+	////Console
 	ForwardRenderer::DrawConsoleEditor();
 
 	mCommandList->SetDescriptorHeaps(1, mSrvHeap.GetAddressOf());
@@ -211,6 +219,7 @@ void ForwardRenderer::DrawMenuEditor()
 		}
 		if (ImGui::BeginMenu("Window"))
 		{
+			ImGui::MenuItem("Light Settings", NULL, &show_lightSetting_panel);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -399,4 +408,14 @@ void ForwardRenderer::DrawOverLayProfile()
 	//	}
 	//}
 	//ImGui::End();
+}
+
+//Light Settings
+void ForwardRenderer::DrawLightSettings()
+{
+	//Render Item
+	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::Begin("Light Settings", &show_lightSetting_panel);
+	
+	ImGui::End();
 }

@@ -8,7 +8,7 @@ using namespace Mathf;
 
 namespace Renderer
 {
-	//平行光
+	//DirectionLight
 	struct DirectionLight
 	{
 		Vector3 Direction = { 0.0f, 0.0f, 0.0f };
@@ -19,7 +19,7 @@ namespace Renderer
 		float Active = 1;
 	};
 
-	//点光源
+	//PointLight
 	struct PointLight
 	{
 		Vector3 Color = { 0.5f, 0.5f, 0.5f };
@@ -31,7 +31,7 @@ namespace Renderer
 		float Active = 1;
 	};
 
-	//聚光灯
+	//SpotLight
 	struct SpotLight
 	{
 		Vector3 Color = { 0.5f, 0.5f, 0.5f };
