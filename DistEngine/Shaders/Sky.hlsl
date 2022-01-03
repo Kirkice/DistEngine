@@ -58,6 +58,7 @@ float4 PS(VertexOut pin) : SV_Target
 	float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
 	color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
 
+	// color													= pow(color.rgb,0.454545);
 	if(matData.ACES > 0.5)
 		color 												= aces_approx(color);
 

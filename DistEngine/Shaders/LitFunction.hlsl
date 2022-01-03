@@ -108,6 +108,19 @@ LightingDotProducts CalculateLigthingDotProducts( float3 L, float3 N, float3 V )
 	return                                              dots;
 }
 
+// SurfaceProperties
+struct SurfaceProperties
+{
+    float3 												N;
+    float3 												V;
+    float3 												c_diff;
+    float3 												c_spec;
+    float 												roughness;
+    float 												alpha; // roughness squared
+    float 												alphaSqr; // alpha squared
+    float 												NdotV;
+};
+
 //FUNCTIONS
 inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out SurfaceData outSurfaceData)
 {
@@ -866,6 +879,77 @@ float3 RED_GlobalIllumination(InputData inputData, half3 albedo, half metallic, 
     return                                              outAmbient;
 }
 
+//------------------------------- Dist ImageBasedLighting  ---------------------------------------------
+
+// Shlick's approximation of Fresnel
+float3 Fresnel_Shlick(float3 F0, float3 F90, float cosine)
+{
+    return 												lerp(F0, F90, Pow5(1.0 - cosine));
+}
+
+float Fresnel_Shlick(float F0, float F90, float cosine)
+{
+    return 												lerp(F0, F90, Pow5(1.0 - cosine));
+}
+
+//aces_approx
+float3 aces_approx(float3 v)
+{
+    v 														*= 0.6f;
+    float a 												= 2.51f;
+    float b 												= 0.03f;
+    float c 												= 2.43f;
+    float d 												= 0.59f;
+    float e 												= 0.14f;
+    return 													clamp((v*(a*v+b))/(v*(c*v+d)+e), 0.0f, 1.0f);
+}
+
+// Diffuse irradiance
+float3 Diffuse_IBL(SurfaceProperties Surface)
+{
+    // Assumption:  L = N
+
+    //return Surface.c_diff * irradianceIBLTexture.Sample(defaultSampler, Surface.N);
+
+    // This is nicer but more expensive, and specular can often drown out the diffuse anyway
+    float LdotH 											= saturate(dot(Surface.N, normalize(Surface.N + Surface.V)));
+    float fd90 												= 0.5 + 2.0 * Surface.roughness * LdotH * LdotH;
+    float3 DiffuseBurley 									= Surface.c_diff * Fresnel_Shlick(1, fd90, Surface.NdotV);
+	float3 IBLColor											= pow(gCubeIBL.Sample(gsamLinearWrap, Surface.N).rgb,1);
+    return 													DiffuseBurley * aces_approx(IBLColor);
+}
+
+// Approximate specular IBL by sampling lower mips according to roughness.  Then modulate by Fresnel. 
+float3 Specular_IBL(SurfaceProperties Surface)
+{
+	float perceptualRoughness 								= PerceptualSmoothnessToPerceptualRoughness(1 - Surface.roughness);
+	float mip 												= PerceptualRoughnessToMipmapLevel(perceptualRoughness);
+    float3 specular 										= Fresnel_Shlick(Surface.c_spec, 1, Surface.NdotV);
+	float3 CubeMapColor										= pow(gCubeMap.SampleLevel(gsamLinearWrap, reflect(-Surface.V, Surface.N), mip).rgb,1);
+    return 													specular * CubeMapColor;
+}
+
+float3 Dist_ImageBasedLighting(float3 baseColor,float smoothness, half metallic, float occlusion, float3 emissive,float3 N,float3 V)
+{
+	SurfaceProperties 										Surface;
+    Surface.N 												= N;
+    Surface.V 												= V;
+    Surface.NdotV = saturate(dot(Surface.N, Surface.V));
+    Surface.c_diff 											= baseColor.rgb * (1 - kDielectricSpecular) * (1 - metallic) * occlusion;
+    Surface.c_spec 											= lerp(kDielectricSpecular, baseColor.rgb, metallic) * occlusion;
+    Surface.roughness 										= 1 - smoothness;
+    Surface.alpha 											= (1- smoothness) * (1- smoothness);
+    Surface.alphaSqr 										= Surface.alpha * Surface.alpha;
+
+    // Begin accumulating light starting with emissive
+    float3 colorAccum 										= emissive;
+
+	    // Add IBL
+    colorAccum 												+= Diffuse_IBL(Surface);
+    colorAccum 												+= Specular_IBL(Surface);
+
+	return 													colorAccum;
+}
 //----------------------------  Shadow  ---------------------------------------
 float3 DistShadow(InputData inputData, half3 outColor)
 {

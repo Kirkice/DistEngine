@@ -271,7 +271,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	sphere->EmissionSrvHeapIndex = 3;
 	sphere->LUTSrvHeapIndex = 4;
 	sphere->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	sphere->Smoothness = 0.1f;
+	sphere->Smoothness = 0.45f;
 	sphere->Metallic = 0.0f;
 	sphere->Occlusion = 1.0f;
 	sphere->EmissionColor = Vector4(0, 0, 0, 1);
@@ -302,7 +302,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	SphereAu->MsoSrvHeapIndex = 2;
 	SphereAu->EmissionSrvHeapIndex = 3;
 	SphereAu->LUTSrvHeapIndex = 4;
-	SphereAu->BaseColor = Vector4(1.0f, 0.7f, 0.05f, 1.0f);
+	SphereAu->BaseColor = Vector4(1.0f, 0.77f, 0.44f, 1.0f);
 	SphereAu->Smoothness = 0.25f;
 	SphereAu->Metallic = 0.91f;
 	SphereAu->Occlusion = 1.0f;
@@ -318,7 +318,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	SphereCu->MsoSrvHeapIndex = 2;
 	SphereCu->EmissionSrvHeapIndex = 3;
 	SphereCu->LUTSrvHeapIndex = 4;
-	SphereCu->BaseColor = Vector4(0.99f, 0.42f, 0.24f, 1.0f);
+	SphereCu->BaseColor = Vector4(0.95f, 0.63f, 0.54f, 1.0f);
 	SphereCu->Smoothness = 0.25f;
 	SphereCu->Metallic = 0.91f;
 	SphereCu->Occlusion = 1.0f;
