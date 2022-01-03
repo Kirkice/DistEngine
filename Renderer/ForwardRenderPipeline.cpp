@@ -195,7 +195,7 @@ void ForwardRenderer::DrawEditor()
 //���Ʋ˵�
 void ForwardRenderer::DrawMenuEditor()
 {
-	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetNextWindowBgAlpha(0.8f);
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -227,7 +227,7 @@ void ForwardRenderer::DrawMenuEditor()
 void ForwardRenderer::DrawGraphicsItemEditor()
 {
 	//Graphics Item
-	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetNextWindowBgAlpha(0.8f);
 	ImGui::Begin("Graphics Item");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y), ImGuiCond_Always);
@@ -315,7 +315,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 void ForwardRenderer::DrawRenderItemEditor()
 {
 	//Render Item
-	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetNextWindowBgAlpha(0.8f);
 	ImGui::Begin("RenderItem Properties");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y), ImGuiCond_Always);
@@ -362,7 +362,7 @@ void ForwardRenderer::DrawRenderItemEditor()
 
 void ForwardRenderer::DrawConsoleEditor()
 {
-	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetNextWindowBgAlpha(0.8f);
 	ImGui::Begin("Console");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180), ImGuiCond_Always);
@@ -411,7 +411,7 @@ void ForwardRenderer::DrawOverLayProfile()
 void ForwardRenderer::DrawLightSettings()
 {
 	//Render Item
-	ImGui::SetNextWindowBgAlpha(1.0f);
+	ImGui::SetNextWindowBgAlpha(0.8f);
 	ImGui::SetWindowSize(ImVec2(180, 500), ImGuiCond_Always);
 	ImGui::Begin("Light Settings", &show_lightSetting_panel);
 

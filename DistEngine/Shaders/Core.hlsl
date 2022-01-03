@@ -9,7 +9,7 @@
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
 #include "Common.hlsl"
-#include "Random.hlsl"
+#include "SH.hlsl"
 
 #ifndef CORE_INCLUDED
 #define CORE_INCLUDED

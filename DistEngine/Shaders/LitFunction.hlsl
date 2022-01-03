@@ -61,6 +61,53 @@ struct BRDFData
     half                                                roughness2MinusOne;    // roughness^2 - 1.0
 };
 
+/// <summary>
+/// LightingDotProducts
+/// </summary>
+struct LightingDotProducts
+{
+	float                                               NoL;
+	float                                               NoV;
+	float                                               NoH;
+	float                                               LoH;
+	float                                               VoH;
+};
+
+/// <summary>
+/// BRDFParams
+/// </summary>
+struct BRDFParams
+{
+	float3                                              Albedo;
+	float3                                              Specularity;
+	float                                               Roughness;
+	float                                               Metalness;
+};
+
+/// <summary>
+/// LightingComponents
+/// </summary>
+struct LightingComponents
+{
+	float3                                              Diffuse;
+	float3                                              Specular;
+};
+
+// CalculateLigthingDotProducts
+LightingDotProducts CalculateLigthingDotProducts( float3 L, float3 N, float3 V )
+{
+	LightingDotProducts dots;
+
+	float3 H                                            = normalize(V + L);
+	dots.NoL                                            = saturate( dot(N, L) );
+	dots.NoV                                            = clamp( dot(N, V), 1e-5, 1.0 );
+	dots.NoH                                            = saturate( dot(N, H) );
+	dots.LoH                                            = saturate( dot(L, H) );
+	dots.VoH                                            = saturate( dot(V, H ) );
+
+	return                                              dots;
+}
+
 //FUNCTIONS
 inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out SurfaceData outSurfaceData)
 {
@@ -374,6 +421,452 @@ float3 DistGlobalIllumination(InputData inputData, half3 albedo, half metallic, 
     return                                              IndirectResult;
 }
 
+
+//----------------------------  RED ENGINE PBR  ---------------------------------------
+
+float Pow5( float x )
+{
+	float x2                                            = x * x;
+	float x5                                            = x2 * x2 * x;
+	return                                              x5;
+}
+
+// Schlick approximation to Fresnel
+float3 SchlickFresnel(float3 f0, float f90, float u)
+{
+	return                                              f0 + ((float3)f90 - f0) * Pow5( 1-u );
+}
+float SchlickFresnel(float f0, float f90, float u)
+{
+	return                                              f0 + (f90 - f0) * Pow5( 1-u );
+}
+
+// Disney diffuse BRDF as in: http://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
+// with the conservation correction factor from: 
+float3 RED_DiffuseBRDF(float NdotV, float NdotL, float LdotH, float3 albedo, float roughness)
+{
+	// Disney diffuse with energy correction factor from Frostbite
+	float energyBias                                    = 0.5 * roughness;
+	float energyFactor                                  = -0.337748344 * roughness + 1.0; // lerp( 1.0, 1.0 / 1.51, roughness );
+
+	float fd90                                          = energyBias + 2.0 * LdotH * LdotH * roughness;
+	float lightScatter                                  = SchlickFresnel(1.0f, fd90, NdotL);
+	float viewScatter                                   = SchlickFresnel( 1.0f, fd90, NdotV);
+	return                                              albedo * ( lightScatter * viewScatter * energyFactor * INV_PI );
+}
+
+float3 FuncF(float3 f0, float f90, float u)
+{
+	return                                              SchlickFresnel(f0, f90, u);
+}
+
+float FuncD(float NdotH, float roughness)
+{
+	float alpha                                         = roughness * roughness;
+	float alpha2                                        = alpha * alpha;
+
+	float NH                                            = saturate(NdotH);
+	float NH2                                           = NH * NH;
+
+	float b                                             = NH2 * (alpha2 - 1) + 1;
+	return                                              alpha2 / (PI * b * b);
+}
+
+float FuncG(float roughness, float NoV, float NoL )
+{
+	float alphaG                                        = roughness * roughness;
+	float alphaG2                                       = alphaG * alphaG;
+
+	// Original formulation of G_SmithGGX Correlated
+	float NdotV2                                        = NoV * NoV;
+	float NdotL2                                        = NoL * NoL;
+	float lambda_v                                      = sqrt( alphaG2 * (1 - NdotL2) / NdotL2 + 1 );
+	float lambda_l                                      = sqrt( alphaG2 * (1 - NdotV2) / NdotV2 + 1 );
+	return                                              (2 / (lambda_v + lambda_l));
+}
+
+float ComputeSpecularHorizonOcclusion( float NoL )
+{
+	// Horizon fading trick from http://marmosetco.tumblr.com/post/81245981087
+	const float                                         horizonFade = 1.3;
+	// horizon occlusion with falloff, should be computed for direct specular too
+	float horizon                                       = min( 1.0 + horizonFade * NoL, 1.0 );
+	return                                              horizon * horizon;
+}
+
+float3 RED_SpecularBRDF(float NdotH, float NdotV, float NdotL, float VdotH, float3 specularity, float roughness)
+{
+	float d, v;
+
+	// straight-copy Disney model:
+	// - alpha = roughness^2 parametrization 
+	// - GGX for D
+	// - height-correlated Smith for G
+	// - Schlick approx for F
+
+	d                                                   = FuncD(NdotH, roughness);
+	v                                                   = FuncG(roughness, NdotV, NdotL);
+
+	// Not multiplying it with NoL in here to avoid floating point precision issues at small grazing angles. 
+	// It abbreviates with NoL multiplication from the rendering equation.
+	v                                                   /= (4.0 * NdotV /* NdotL */);
+
+	const float horizon                                 = ComputeSpecularHorizonOcclusion( NdotL );
+
+	float3 spec                                         = FuncF(specularity, 1.0, VdotH) * min( d * v * horizon, 1e2f ); //clamp to prevent high specvular blobs at night
+	return spec;
+}
+
+LightingComponents BRDF(float3 L, float3 N, float3 V, BRDFParams params, float NoL, float LoH )
+{
+	LightingDotProducts dots                            = CalculateLigthingDotProducts( L, N, V );
+
+	LightingComponents ret;
+	ret.Diffuse		                                    = RED_DiffuseBRDF( dots.NoV, NoL, LoH, params.Albedo, params.Roughness );
+	ret.Specular	                                    = RED_SpecularBRDF( dots.NoH, dots.NoV, NoL, dots.VoH, params.Specularity, params.Roughness );
+
+	return ret;
+}
+
+float3 CalculateLighting( float3 L, float3 N, float3 V, float3 lightColor, BRDFParams params )
+{
+	LightingComponents brdf                             = BRDF( L, N, V, params, saturate(dot(N, L)), saturate(dot(L, normalize(L + V))) );
+
+	// no NdotL term for specular as it cancels out with the denominator in SpecularBRDF
+	return                                              (brdf.Diffuse * saturate( dot( N, L ) ) + brdf.Specular) * lightColor;
+}
+
+float3 CalculateLighting( float3 L, float3 N, float3 V, float3 lightColor, float3 albedo, float roughness, float specularity )
+{
+	// BRDF params initialization
+	BRDFParams                                          params;
+	params.Albedo                                       = albedo;
+	params.Roughness                                    = roughness;
+	params.Specularity                                  = specularity;
+
+	return CalculateLighting( L, N, V, lightColor, params );
+}
+
+float3 RED_SBS_CalculateLighting(float3 baseColor, float roughness, float metalness, float3 N, float3 V)
+{
+    Light mainLight                                     = GetMainLight();
+	return                                              CalculateLighting( mainLight.direction, N, V, mainLight.color, baseColor, roughness, metalness );
+}
+
+
+float3x3 BuildCubeFaceNormalRotation( int faceIdx ) // cp77 shouldn't be here (not related to lighting)
+{
+	if ( 0 == faceIdx )		                            return float3x3( float3( 0, 0, 1 ), float3( 0, -1, 0 ), float3( -1, 0, 0 ) );
+	if ( 1 == faceIdx )		                            return float3x3( float3( 0, 0, -1 ), float3( 0, -1, 0 ), float3( 1, 0, 0 ) );
+	if ( 2 == faceIdx )		                            return float3x3( float3( 1, 0, 0 ), float3( 0, 0, 1 ), float3( 0, 1, 0 ) );
+	if ( 3 == faceIdx )		                            return float3x3( float3( 1, 0, 0 ), float3( 0, 0, -1 ), float3( 0, -1, 0 ) );
+	if ( 4 == faceIdx )		                            return float3x3( float3( 1, 0, 0 ), float3( 0, -1, 0 ), float3( 0, 0, 1 ) );
+							                            return float3x3( float3( -1, 0, 0 ), float3( 0, -1, 0 ), float3( 0, 0, -1 ) );
+}
+
+float3 IntegrateDiffuse(float CubemapLevel, float3 pointingNormal, int numSidePoints = 63 )
+{
+	float4 colAccum                                     = float4(0,0,0,0);
+
+	for ( int face_idx = 0; face_idx < 6; ++face_idx )
+	{
+		float3x3 faceRotation                           = BuildCubeFaceNormalRotation( face_idx );			
+
+		for ( int i=0; i<numSidePoints; i+=1 )
+		for ( int j=0; j<numSidePoints; j+=1 )
+		{
+			float3 currNormalUnnorm                     = 2 * float3( (i+0.5)/numSidePoints - 0.5, (j+0.5)/numSidePoints - 0.5, 0.5 );
+			float3 currNormal                           = mul( faceRotation, normalize( currNormalUnnorm ) );
+			float currSolidAngle                        = 4.0 / (numSidePoints * numSidePoints * pow( dot(currNormalUnnorm, currNormalUnnorm), 1.5 ) );
+			float weight                                = currSolidAngle * saturate( dot( pointingNormal, currNormal ) );
+
+			float3 cubemapValue                         = gCubeMap.SampleLevel(gsamLinearWrap,currNormal, CubemapLevel).rgb;
+			colAccum                                    += float4( weight * cubemapValue, weight );
+		}
+	}
+	
+	return                                              colAccum.xyz / max(0.001, colAccum.w );		// colAccum sums up to approx PI here
+}
+
+float3 CalculateReflectionDominantDirUnnorm( float3 N, float3 R, float roughness )
+{
+	return                                              lerp( R, N, 0.75 * roughness * roughness );
+}
+
+float3 CalculateReflectionDominantDirNorm( float3 N, float3 R, float roughness )
+{
+	return                                              normalize( CalculateReflectionDominantDirUnnorm( N, R, roughness ) );
+}
+
+float CalcImportanceSamplingMipLevel( float3 N, float3 H, float3 L, float paramRoughness, uint sampleCount, float width, float mipRange )
+{
+	float NdotH                                         = saturate ( dot (N, H) );
+	float LdotH                                         = saturate ( dot (L, H) );
+	float D_GGX_Divide_Pi                               = FuncD( NdotH, paramRoughness );
+	float pdf                                           = D_GGX_Divide_Pi * NdotH /( 4* LdotH );
+	float omegaS                                        = 1.0 / ( float(sampleCount) * pdf );
+	float omegaP                                        = 4.0 * PI / (6.0 * width * width );
+	float mipLevel                                      = clamp (0.5 * log2 ( omegaS / omegaP ), 0.0, mipRange );
+	return                                              mipLevel;
+}
+
+// Hammersley - random 2d points distribution
+float2 Hammersley(uint i, uint N) 
+{
+	float vradicalInverse_VdC                           = 0;
+	{
+		uint bits                                       = i;
+		bits                                            = (bits << 16u) | (bits >> 16u);
+		bits                                            = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+		bits                                            = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+		bits                                            = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+		bits                                            = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+		vradicalInverse_VdC                             = float(bits) * 2.3283064365386963e-10; // / 0x100000000
+	}
+
+	return                                              float2( float(i)/float(N), vradicalInverse_VdC );
+}
+
+// Calculates GGX microfacet normal.
+// Xi - random 2d value
+float3 ImportanceSampleGGX( float2 Xi, float Roughness )
+{
+	float a                                             = Roughness * Roughness;
+	float Phi                                           = 2 * PI * Xi.x;
+	float CosTheta                                      = sqrt( (1 - Xi.y) / (1 + (a*a - 1) * Xi.y) );
+	float SinTheta                                      = sqrt( 1 - CosTheta * CosTheta );
+	float3 H;
+	H.x                                                 = SinTheta * cos( Phi );
+	H.y                                                 = SinTheta * sin( Phi );
+	H.z                                                 = CosTheta;
+
+	return H;
+}
+
+// based on "Building an Orthonormal Basis, Revisited" (2017) paper
+// by T. Duff, J. Burgess, P. Christensen, C. Hery, A. Kensler, M. Liani, and R. Villemin
+void BuildOrthonormalBasis( in float3 n, out float3 u, out float3 v )
+{
+    const float s                                       = n.z < 0.0 ? -1.0 : 1.0;
+    const float a                                       = -1.0f / (s + n.z);
+    u                                                   = float3( 1.0f + s * n.x * n.x * a, s * n.x * n.y * a, -s * n.x);
+    v                                                   = float3( n.x * n.y * a, s + n.y * n.y * a, -n.y);
+}
+
+float3 ImportanceSampleGGX( float2 Xi, float Roughness , float3 N )
+{
+	float3 tangentX, tangentY;
+	BuildOrthonormalBasis( N, tangentX, tangentY );
+
+	float3 H                                            = ImportanceSampleGGX( Xi, Roughness );
+
+	// Tangent to world space
+	return                                              tangentX * H.x + tangentY * H.y + N * H.z;
+}
+
+float3 SplitSum_PrefilterEnvMap(float Roughness , float3 N, float3 V, uint NumSamples, float cubeResolution, float cubeMipRange )
+{
+	float3 PrefilteredColor = float3(0,0,0);
+	float TotalWeight = 0;
+	for( uint i = 0u; i < NumSamples; i++ )
+	{
+		float2 Xi                                       = Hammersley( i, NumSamples );
+		float3 H                                        = ImportanceSampleGGX( Xi, Roughness , N );
+		float3 L                                        = 2.0 * dot( V, H ) * H - V;
+		
+		// small hack in order to not have missing reflection in very steep angles
+		// checked to visual differece at a few roughness levels and it's insignificant
+		// original line: float NoL = saturate( dot( N, L ) );				
+		float NoL                                       = saturate( lerp( 0.075 * (1 - Roughness), 1, dot( N, L ) ) );
+		
+		if( NoL > 0.0 )		
+		{
+			float currMipLevel                          = CalcImportanceSamplingMipLevel( N, H, L, Roughness, NumSamples, cubeResolution, cubeMipRange );
+
+			float3 cubeMapValue                         = gCubeMap.SampleLevel(gsamLinearWrap,L, currMipLevel).rgb;
+			PrefilteredColor                            += cubeMapValue * NoL;
+			TotalWeight                                 += NoL;
+		}
+	}
+	return PrefilteredColor / TotalWeight;
+}
+
+void GetSplitSumNormalView( float NoV, out float3 outN, out float3 outV )
+{
+	float3 V;
+	V.x                                                 = sqrt( 1.0f - NoV * NoV ); // sin
+	V.y                                                 = 0;
+	V.z                                                 = NoV; // cos
+
+	outN                                                = float3(0,0,1);
+	outV                                                = V;
+}
+
+/// GGX split sum approximation - calculate ambient BRDF
+float2 SplitSum_IntegrateBRDF( float Roughness , float NoV, uint NumSamples = 1024u )
+{
+	float3 N, V;
+	GetSplitSumNormalView( NoV, N, V );
+
+	float A = 0.0;
+	float B = 0.0;
+	for( uint i = 0u; i < NumSamples; i++ )
+	{
+
+		float2 Xi                                       = Hammersley( i, NumSamples );
+
+		float3 H                                        = ImportanceSampleGGX( Xi, Roughness , N );
+		float3 L                                        = 2.0 * dot( V, H ) * H - V;
+		float NoL                                       = saturate( dot( N, L ) );
+		float NoH                                       = saturate( dot( N, H ) );
+		float VoH                                       = saturate( dot( V, H ) );
+		if( NoL > 0.0 )
+		{
+			float G                                     = FuncG( Roughness, NoV, NoL );
+			G                                           /= (4.0 * NoV);
+			float G_Vis                                 = G * (VoH / NoH);
+			float Fc                                    = Pow5( 1.0 - VoH );
+			A                                           += (1.0 - Fc) * G_Vis;
+			B                                           += Fc * G_Vis;
+		}
+	}
+	return float2( A, B ) * ( 4.0 / float(NumSamples) );
+}
+
+void ImportanceSampleCosDir( in float2 u, in float3 N, out float3 L, out float NdotL , out float pdf )
+{
+	float3                                              tangentX, tangentY;
+	BuildOrthonormalBasis( N, tangentX, tangentY);
+
+	float u1                                            = u.x;
+	float u2                                            = u.y;
+
+	float r                                             = sqrt(u1);
+	float phi                                           = u2 * PI * 2;
+
+	float3 local                                        = float3(r * cos( phi ), r * sin( phi ), sqrt(max(0.0f, 1.0f-u1)));
+	L                                                   = tangentX * local.y + tangentY * local.x + N * local.z;
+
+	NdotL                                               = local.z;
+	pdf                                                 = NdotL * INV_PI ;
+}
+
+float IntegrateAmbientLightingDFG( in float3 V, in float3 N, in float roughness, uint sampleCount = 64 )
+{
+	float NdotV                                         = saturate ( dot (N, V) );
+	float acc                                           = 0;
+	float accWeight                                     = 0;
+
+	for ( uint i=0u; i<sampleCount ; ++i )
+	{
+
+		float2 u                                        = frac( 0.5 + Hammersley( i, sampleCount ) );
+
+
+		float3 L;
+		float NdotL;
+		float pdf;		
+		ImportanceSampleCosDir (u, N, L, NdotL, pdf );
+		if (NdotL > 0)
+		{
+			float LdotH                                 = saturate(dot(L, normalize(V + L)));
+			float3 albedo                               = float3(1, 1, 1);
+			acc                                         += RED_DiffuseBRDF(NdotV, NdotL, LdotH, albedo, roughness).x;
+		}
+
+		accWeight                                       += 1.0;
+	}
+
+	return                                              acc * (1.0 / accWeight );
+}
+
+float3 IntegrateFullAmbientBRDF( float NoV, float roughness, uint numAmbientSamples, uint numReflectionSamples )
+{
+	NoV			                                        = max( 0.001, NoV );			//< this is here to get rid of steep angle artifacts in substance
+	roughness	                                        = max( 2.0/255.0, roughness );
+
+	float2 reflectionScaleBias                          = SplitSum_IntegrateBRDF( roughness, NoV, numReflectionSamples );	
+	
+	float3 N, V;
+	GetSplitSumNormalView( NoV, N, V );
+	float ambientScale                                  = IntegrateAmbientLightingDFG( V, N, roughness, numAmbientSamples );
+
+	return                                              float3( reflectionScaleBias.x, reflectionScaleBias.y, ambientScale );
+}
+
+float3 RED_SBS_ImageBasedLighting(float maxLod, float3 albedo, float3 N, float3 V, float roughness)
+{
+	float NoV                                           = saturate( dot( N, V ) );
+	
+	float3 lavaAmbient                                  = float3(0,0,0);
+
+    int sampleCubeNumSamples                            = 8;
+    int sampleCubeMipOffset                             = 4;
+    float sampleCubeLevel                               = maxLod - sampleCubeMipOffset;		
+    lavaAmbient                                         = IntegrateDiffuse(sampleCubeLevel, N, sampleCubeNumSamples );
+	
+	float3 lavaReflection                               = float3(0,0,0);
+	{
+		float3 reflV                                    = V;
+		{
+			// we want to perform some bending here, but since we don't have functions which would integrate reflection based on
+			// R vector, then let's just manipulate the view vector
+			// yyyyyyyyyyyyyyy check if this shit is correct enough
+			
+			float3 R                                    = reflect( -V, N );
+			R                                           = CalculateReflectionDominantDirNorm( N, R, roughness );
+			reflV                                       = reflect( -R, N );
+		}
+	
+		float cubeResolution = pow( 2, maxLod - 1 ); // approx cube resolution (we're dealing with panorama here)
+		float cubeMipRange = maxLod - 3;			
+		uint sampleCubeNumSamples = 256u;
+		lavaReflection = SplitSum_PrefilterEnvMap(roughness, N, reflV, sampleCubeNumSamples, cubeResolution, cubeMipRange );
+	}
+
+	float3 ambientBRDF = IntegrateFullAmbientBRDF( NoV, roughness, 128u, 128u );
+	
+	float3 outAmbient = albedo * lavaAmbient * ambientBRDF.z;
+	float3 outReflection = (ambientBRDF.x + ambientBRDF.y) * lavaReflection;
+
+    return outReflection * outAmbient;
+}
+
+float3 RED_GlobalIllumination(InputData inputData, half3 albedo, half metallic, half smoothness, half3 bakeGI)
+{
+    float NdotV                                         = saturate(dot(inputData.NormalW, inputData.ViewW));
+
+	float3 lavaAmbient                                  = float3(0,0,0);
+
+    int sampleCubeNumSamples                            = 8;
+    float mip_roughness                                 = (1 - smoothness) * (1.7 - 0.7 * (1 - smoothness));
+    half mip                                            = mip_roughness * 6;
+    lavaAmbient                                         = IntegrateDiffuse(mip, inputData.NormalW, sampleCubeNumSamples);
+    float roughness                                     = (1 - smoothness) * (1 - smoothness);
+
+    float3 F0                                           = half3(0.08, 0.08, 0.08);
+    F0                                                  = lerp(F0 * albedo, albedo, metallic);
+	float3 ambientBRDF 									= IntegrateFullAmbientBRDF( NdotV, 1 - smoothness, 128u, 128u );
+    float3 Flast                                        = fresnelSchlickRoughness(max(NdotV, 0.0), F0, roughness);
+    float kdLast                                        = (1 - Flast) * (1 - metallic);
+	float3 outAmbient 									= albedo * lavaAmbient * ambientBRDF.zzz * kdLast;
+
+    // float mip_roughness                                 = (1 - smoothness) * (1.7 - 0.7 * (1 - smoothness));
+    // float3 reflectVec                                   = reflect(-inputData.ViewW, inputData.NormalW);
+    // half mip                                            = mip_roughness * 6;
+
+    // float4 rgbm                                         = gCubeMap.SampleLevel(gsamLinearWrap,reflectVec, mip);
+
+    // PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
+    // uint lutIndex                                       = matData.LUTMapIndex;
+    // float2 envBDRF                                      = gTextureMaps[lutIndex].Sample(gsamAnisotropicWrap, float2(lerp(0, 0.99, NdotV.x), lerp(0, 0.99, roughness))).rg;
+    // float3 iblSpecularResult                            = rgbm.rgb * (Flast * envBDRF.r + envBDRF.g);
+    // float3 IndirectResult                               = iblDiffuseResult + iblSpecularResult;
+    
+    return                                              outAmbient;
+}
+
+//----------------------------  Shadow  ---------------------------------------
 float3 DistShadow(InputData inputData, half3 outColor)
 {
     half Shadow                                         = inputData.ShadowCoord;

@@ -70,7 +70,7 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
-float4 PS(VertexOut pin) : SV_Target
+float4 DistPBRColor(VertexOut pin)
 {
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
@@ -86,6 +86,31 @@ float4 PS(VertexOut pin) : SV_Target
     // outColor.rgb                                       += surfaceData.Emission.rgb;
     outColor.rgb                                        = pow(outColor.rgb,(1/2.2));
     return outColor;
+
+}
+
+float4 UnityPBRColor(VertexOut pin)
+{
+    SurfaceData surfaceData;
+    InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
+    InputData inputData;
+    InitializeInputData(pin, surfaceData.Normal, inputData);
+
+    float4 outColor = UniversalFragmentPBR(inputData, surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, surfaceData.Emission.rgb);
+    return outColor;
+}
+
+float4 PS(VertexOut pin) : SV_Target
+{
+    SurfaceData surfaceData;
+    InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
+    InputData inputData;
+    InitializeInputData(pin, surfaceData.Normal, inputData);
+
+    float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW);
+    outColor.rgb                                       +=  DistGlobalIllumination(inputData, surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, inputData.bakedGI.rgb);
+
+    return float4(outColor,1);
 }
 
 #endif

@@ -255,8 +255,8 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	plane->EmissionSrvHeapIndex = 3;
 	plane->LUTSrvHeapIndex = 4;
 	plane->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	plane->Smoothness = 0.1f;
-	plane->Metallic = 0.1f;
+	plane->Smoothness = 0.0f;
+	plane->Metallic = 0.0f;
 	plane->Occlusion = 1;
 	plane->EmissionColor = Vector4(0, 0, 0, 1);
 	plane->EmissionStrength = 0.0f;
@@ -271,8 +271,8 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	sphere->EmissionSrvHeapIndex = 3;
 	sphere->LUTSrvHeapIndex = 4;
 	sphere->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	sphere->Smoothness = 0.18f;
-	sphere->Metallic = 0.25f;
+	sphere->Smoothness = 0.1f;
+	sphere->Metallic = 0.0f;
 	sphere->Occlusion = 1.0f;
 	sphere->EmissionColor = Vector4(0, 0, 0, 1);
 	sphere->EmissionStrength = 0.0f;
@@ -336,8 +336,8 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	Brics->EmissionSrvHeapIndex = 3;
 	Brics->LUTSrvHeapIndex = 4;
 	Brics->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	Brics->Smoothness = 0.3f;
-	Brics->Metallic = 0.3f;
+	Brics->Smoothness = 0.1f;
+	Brics->Metallic = 0.0f;
 	Brics->Occlusion = 1.0f;
 	Brics->EmissionColor = Vector4(0, 0, 0, 1);
 	Brics->EmissionStrength = 0.0f;
@@ -353,7 +353,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	Oak->LUTSrvHeapIndex = 4;
 	Oak->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Oak->Smoothness = 0.35f;
-	Oak->Metallic = 0.1f;
+	Oak->Metallic = 0.0f;
 	Oak->Occlusion = 1.0f;
 	Oak->EmissionColor = Vector4(0, 0, 0, 1);
 	Oak->EmissionStrength = 0.0f;
@@ -369,7 +369,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	Wooden2->LUTSrvHeapIndex = 4;
 	Wooden2->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Wooden2->Smoothness = 0.15f;
-	Wooden2->Metallic = 0.15f;
+	Wooden2->Metallic = 0.0f;
 	Wooden2->Occlusion = 1.0f;
 	Wooden2->EmissionColor = Vector4(0, 0, 0, 1);
 	Wooden2->EmissionStrength = 0.0f;
@@ -385,7 +385,7 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	Wooden3->LUTSrvHeapIndex = 4;
 	Wooden3->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Wooden3->Smoothness = 0.15f;
-	Wooden3->Metallic = 0.15f;
+	Wooden3->Metallic = 0.0f;
 	Wooden3->Occlusion = 1.0f;
 	Wooden3->EmissionColor = Vector4(0, 0, 0, 1);
 	Wooden3->EmissionStrength = 0.0f;
@@ -400,8 +400,8 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	Wooden4->EmissionSrvHeapIndex = 3;
 	Wooden4->LUTSrvHeapIndex = 4;
 	Wooden4->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	Wooden4->Smoothness = 0.15f;
-	Wooden4->Metallic = 0.15f;
+	Wooden4->Smoothness = 0.9f;
+	Wooden4->Metallic = 0.01f;
 	Wooden4->Occlusion = 1.0f;
 	Wooden4->EmissionColor = Vector4(0, 0, 0, 1);
 	Wooden4->EmissionStrength = 0.0f;
