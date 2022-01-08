@@ -160,20 +160,11 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 	for (auto& e : mAllRitems)
 	{
-		// Only update the cbuffer data if the constants have changed.  
-		// This needs to be tracked per frame resource.
-		//if (e->NumFramesDirty > 0)
-		//{
 		XMFLOAT4X4* eWorldMatrix = &e->World;
-		if (e->ObjCBIndex == 2)
-		{
-			XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(BackGroundScale[0], BackGroundScale[1], BackGroundScale[2]) * XMMatrixRotationX(BackGroundRotation) * XMMatrixTranslation(BackGroundTransform[0], BackGroundTransform[1], BackGroundTransform[2]));
-		}
-		if (e->ObjCBIndex == 1)
-		{
-			XMMATRIX rotMatrix = XMMatrixRotationX((TargetRotationAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((TargetRotationAngle[1] / 180) * Mathf::Pi) * XMMatrixRotationZ((TargetRotationAngle[2] / 180) * Mathf::Pi);
-			XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(TargetScale[0], TargetScale[1], TargetScale[2]) * rotMatrix * XMMatrixTranslation(TargetTransform[0], TargetTransform[1], TargetTransform[2]));
-		}
+
+		//Gizmo Update
+		EditorGizmo_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
+
 		XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
 		XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 		XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
@@ -185,10 +176,6 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		objConstants.MaterialIndex = e->Mat->MatCBIndex;
 
 		currObjectCB->CopyData(e->ObjCBIndex, objConstants);
-
-		// Next FrameResource need to be updated too.
-	//	e->NumFramesDirty--;
-	//}
 	}
 }
 
@@ -396,6 +383,7 @@ void GraphicsCore::LoadTextures()
 {
 	PBRDemo_LoadTextures(mTextures);
 	SkyBox_LoadTextures(mSkyTextures);
+	EditorGizmo_LoadTextures(mGizmoTextures);
 }
 
 void GraphicsCore::BuildRootSignature()
@@ -537,8 +525,13 @@ void GraphicsCore::BuildDescriptorHeaps()
 	//
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	std::vector<ComPtr<ID3D12Resource>> tex2DList;
-	PBRDemo_BuildDescriptorHeaps(tex2DList, mTextures);
+	// Render Item in 3D Textures
+	std::vector<ComPtr<ID3D12Resource>> RenderTex2DList;
+	PBRDemo_BuildDescriptorHeaps(RenderTex2DList, mTextures);
+
+	//Gizmo Textures
+	std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList;
+	EditorGizmo_BuildDescriptorHeaps(GizmoTex2DList, mGizmoTextures);
 
 	ComPtr<ID3D12Resource> skyCubeMap;
 	ComPtr<ID3D12Resource> diffuseIBL;
@@ -550,11 +543,21 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-	for (UINT i = 0; i < (UINT)tex2DList.size(); ++i)
+	for (UINT i = 0; i < (UINT)GizmoTex2DList.size(); ++i)
 	{
-		srvDesc.Format = tex2DList[i]->GetDesc().Format;
-		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;
-		md3dDevice->CreateShaderResourceView(tex2DList[i].Get(), &srvDesc, hDescriptor);
+		srvDesc.Format = GizmoTex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = GizmoTex2DList[i]->GetDesc().MipLevels;
+		md3dDevice->CreateShaderResourceView(GizmoTex2DList[i].Get(), &srvDesc, hDescriptor);
+
+		// next descriptor
+		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	}
+
+	for (UINT i = 0; i < (UINT)RenderTex2DList.size(); ++i)
+	{
+		srvDesc.Format = RenderTex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = RenderTex2DList[i]->GetDesc().MipLevels;
+		md3dDevice->CreateShaderResourceView(RenderTex2DList[i].Get(), &srvDesc, hDescriptor);
 
 		// next descriptor
 		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
@@ -575,7 +578,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvDesc.Format = skyCubeMap->GetDesc().Format;
 	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
 
-	mIBLTexHeapIndex = (UINT)tex2DList.size();
+	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
 	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
@@ -638,6 +641,12 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 	mShaders["litVS"] = d3dUtil::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["litPS"] = d3dUtil::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["gizmoVS"] = d3dUtil::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["gizmoPS"] = d3dUtil::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["unitVS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["unitPS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
@@ -896,6 +905,56 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&outlinePsoDesc, IID_PPV_ARGS(&mPSOs["outline"])));
 
 	//
+	// 	PSO for EditorGizmo
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC GizmoPsoDesc = opaquePsoDesc;
+	GizmoPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	GizmoPsoDesc.pRootSignature = mRootSignature.Get();
+	GizmoPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["gizmoVS"]->GetBufferPointer()),
+		mShaders["gizmoVS"]->GetBufferSize()
+	};
+	GizmoPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["gizmoPS"]->GetBufferPointer()),
+		mShaders["gizmoPS"]->GetBufferSize()
+	};
+
+	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
+	transparencyBlendDesc.BlendEnable = true;
+	transparencyBlendDesc.LogicOpEnable = false;
+	transparencyBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	transparencyBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	transparencyBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	GizmoPsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
+
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&GizmoPsoDesc, IID_PPV_ARGS(&mPSOs["Gizmo"])));
+
+	//
+	// 	PSO for Unlit
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC UnlitPsoDesc = GizmoPsoDesc;
+	UnlitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	UnlitPsoDesc.pRootSignature = mRootSignature.Get();
+	UnlitPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["unitVS"]->GetBufferPointer()),
+		mShaders["unitVS"]->GetBufferSize()
+	};
+	UnlitPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["unitPS"]->GetBufferPointer()),
+		mShaders["unitPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&UnlitPsoDesc, IID_PPV_ARGS(&mPSOs["Unlit"])));
+
+	//
 	// PSO for PBR objects.
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC litPsoDesc = opaquePsoDesc;
@@ -923,6 +982,13 @@ void GraphicsCore::BuildPSOs()
 	litPsoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&litPsoDesc, IID_PPV_ARGS(&mPSOs["litOpaque"])));
 
+
+	//
+	// 	PSO for PBR objects (Transparent).
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC lit_trans_PsoDesc = litPsoDesc;
+	lit_trans_PsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&lit_trans_PsoDesc, IID_PPV_ARGS(&mPSOs["transparent"])));
 
 	// PSO for skinned pass.
 	//
@@ -1111,9 +1177,12 @@ void GraphicsCore::BuildFrameResources()
 
 void GraphicsCore::BuildMaterials()
 {
+	//SkyBox Mat
 	SkyBox_BuildMaterials(mMaterials);
-
+	//PBR Mat
 	PBRDemo_BuildMaterials(mMaterials);
+	//Editor Mat
+	EditorGizmo_BuildMaterials(mMaterials);
 }
 
 void GraphicsCore::BuildRenderItems()
@@ -1121,6 +1190,8 @@ void GraphicsCore::BuildRenderItems()
 	SkyBox_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 
 	PBRDemo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
+
+	EditorGizmo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

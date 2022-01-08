@@ -81,8 +81,12 @@ namespace Renderer
 
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 		std::unordered_map<std::string, std::unique_ptr<Material>> mMaterials;
+
+		//Textures
 		std::unordered_map<std::string, std::unique_ptr<Texture>> mTextures;
 		std::unordered_map<std::string, std::unique_ptr<Texture>> mSkyTextures;
+		std::unordered_map<std::string, std::unique_ptr<Texture>> mGizmoTextures;
+
 		std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 		std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
@@ -145,39 +149,5 @@ namespace Renderer
 
 		bool renderSkyBox = true;
 		float SolidColor[4] = { 0,0,0,0 };
-
-		//Light
-		//Direction Lights
-		XMFLOAT3 mRotatedLightDirections;
-		XMFLOAT3 mDirectionLightsDir = { 0.57f,-0.57f,0.57f};
-		XMFLOAT3 mDirectionLightsPos = {0,0,0};
-		float mDirectionLightsColor[3] = {1,1,1};
-		float mDirectionLightsAngle[3] = {0,0,0};
-		float mDirectionLightsScale[3] = { 1,1,1 };
-		float mDirectionLightsStrength = 3;
-		bool mDirectionLightsCastShadow = true;
-		bool mDirectionLightsActive = true;
-
-		//Point Lights
-		XMFLOAT3 mPointLightsPos = { 0,0,0 };
-		float mPointLightsColor[3] = {1,1,1};
-		float mPointLightsConstant = 1.0;
-		float mPointLightsLinear = 0.2f;
-		float mPointLightsQuadratic = 0.0f;
-		float mPointLightsRot[3] = { 0,0,0 };
-		float mPointLightsScale[3] = { 1,1,1 };
-		float mPointLightsStrength = 1;
-		bool mPointLightsActive = true;
-
-		//SpotLights
-		XMFLOAT3 mRotatedLightSpots;
-		XMFLOAT3 mSpotLightsDir = { 0.57f,-0.57f,0.57f };
-		XMFLOAT3 mSpotLightsPos = { 0,0,0 };
-		float mSpotLightsColor[3] = { 1,1,1 };
-		float mSpotLightsAngle[3] = { 0,0,0 };
-		float mSpotLightsScale[3] = { 1,1,1 };
-		float mSpotLightsCutoff = 15.0;
-		float mSpotLightsStrength = 1;
-		bool mSpotLightsActive = true;
 	};
 }

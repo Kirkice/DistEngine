@@ -7,6 +7,8 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace ModelLoader;
 
+const int GizmoCount = 6;
+
 RenderCore::RenderCore(HINSTANCE hInstance) : D3DApp(hInstance)
 {
 }
@@ -249,11 +251,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto plane = std::make_unique<Material>();
 	plane->Name = "plane";
 	plane->MatCBIndex = 1;
-	plane->DiffuseSrvHeapIndex = 0;
-	plane->NormalSrvHeapIndex = 1;
-	plane->MsoSrvHeapIndex = 2;
-	plane->EmissionSrvHeapIndex = 3;
-	plane->LUTSrvHeapIndex = 4;
+	plane->DiffuseSrvHeapIndex = GizmoCount + 0;
+	plane->NormalSrvHeapIndex = GizmoCount + 1;
+	plane->MsoSrvHeapIndex = GizmoCount + 2;
+	plane->EmissionSrvHeapIndex = GizmoCount + 3;
+	plane->LUTSrvHeapIndex = GizmoCount + 4;
 	plane->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	plane->Smoothness = 0.0f;
 	plane->Metallic = 0.0f;
@@ -265,11 +267,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto sphere = std::make_unique<Material>();
 	sphere->Name = "sphere";
 	sphere->MatCBIndex = 2;
-	sphere->DiffuseSrvHeapIndex = 5;
-	sphere->NormalSrvHeapIndex = 6;
-	sphere->MsoSrvHeapIndex = 2;
-	sphere->EmissionSrvHeapIndex = 3;
-	sphere->LUTSrvHeapIndex = 4;
+	sphere->DiffuseSrvHeapIndex = GizmoCount + 5;
+	sphere->NormalSrvHeapIndex = GizmoCount + 6;
+	sphere->MsoSrvHeapIndex = GizmoCount + 2;
+	sphere->EmissionSrvHeapIndex = GizmoCount + 3;
+	sphere->LUTSrvHeapIndex = GizmoCount + 4;
 	sphere->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->Smoothness = 0.45f;
 	sphere->Metallic = 0.0f;
@@ -281,11 +283,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto SphereAg = std::make_unique<Material>();
 	SphereAg->Name = "sphereAg";
 	SphereAg->MatCBIndex = 3;
-	SphereAg->DiffuseSrvHeapIndex = 7;
-	SphereAg->NormalSrvHeapIndex = 8;
-	SphereAg->MsoSrvHeapIndex = 2;
-	SphereAg->EmissionSrvHeapIndex = 3;
-	SphereAg->LUTSrvHeapIndex = 4;
+	SphereAg->DiffuseSrvHeapIndex = GizmoCount + 7;
+	SphereAg->NormalSrvHeapIndex = GizmoCount + 8;
+	SphereAg->MsoSrvHeapIndex = GizmoCount + 2;
+	SphereAg->EmissionSrvHeapIndex = GizmoCount + 3;
+	SphereAg->LUTSrvHeapIndex = GizmoCount + 4;
 	SphereAg->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	SphereAg->Smoothness = 0.25f;
 	SphereAg->Metallic = 0.91f;
@@ -297,11 +299,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto SphereAu = std::make_unique<Material>();
 	SphereAu->Name = "sphereAu";
 	SphereAu->MatCBIndex = 4;
-	SphereAu->DiffuseSrvHeapIndex = 7;
-	SphereAu->NormalSrvHeapIndex = 8;
-	SphereAu->MsoSrvHeapIndex = 2;
-	SphereAu->EmissionSrvHeapIndex = 3;
-	SphereAu->LUTSrvHeapIndex = 4;
+	SphereAu->DiffuseSrvHeapIndex = GizmoCount + 7;
+	SphereAu->NormalSrvHeapIndex = GizmoCount + 8;
+	SphereAu->MsoSrvHeapIndex = GizmoCount + 2;
+	SphereAu->EmissionSrvHeapIndex = GizmoCount + 3;
+	SphereAu->LUTSrvHeapIndex = GizmoCount + 4;
 	SphereAu->BaseColor = Vector4(1.0f, 0.77f, 0.44f, 1.0f);
 	SphereAu->Smoothness = 0.25f;
 	SphereAu->Metallic = 0.91f;
@@ -313,11 +315,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto SphereCu = std::make_unique<Material>();
 	SphereCu->Name = "sphereCu";
 	SphereCu->MatCBIndex = 5;
-	SphereCu->DiffuseSrvHeapIndex = 7;
-	SphereCu->NormalSrvHeapIndex = 8;
-	SphereCu->MsoSrvHeapIndex = 2;
-	SphereCu->EmissionSrvHeapIndex = 3;
-	SphereCu->LUTSrvHeapIndex = 4;
+	SphereCu->DiffuseSrvHeapIndex = GizmoCount + 7;
+	SphereCu->NormalSrvHeapIndex = GizmoCount + 8;
+	SphereCu->MsoSrvHeapIndex = GizmoCount + 2;
+	SphereCu->EmissionSrvHeapIndex = GizmoCount + 3;
+	SphereCu->LUTSrvHeapIndex = GizmoCount + 4;
 	SphereCu->BaseColor = Vector4(0.95f, 0.63f, 0.54f, 1.0f);
 	SphereCu->Smoothness = 0.25f;
 	SphereCu->Metallic = 0.91f;
@@ -330,11 +332,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto Brics = std::make_unique<Material>();
 	Brics->Name = "Brics";
 	Brics->MatCBIndex = 6;
-	Brics->DiffuseSrvHeapIndex = 9;
-	Brics->NormalSrvHeapIndex = 10;
-	Brics->MsoSrvHeapIndex = 2;
-	Brics->EmissionSrvHeapIndex = 3;
-	Brics->LUTSrvHeapIndex = 4;
+	Brics->DiffuseSrvHeapIndex = GizmoCount + 9;
+	Brics->NormalSrvHeapIndex = GizmoCount + 10;
+	Brics->MsoSrvHeapIndex = GizmoCount + 2;
+	Brics->EmissionSrvHeapIndex = GizmoCount + 3;
+	Brics->LUTSrvHeapIndex = GizmoCount + 4;
 	Brics->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Brics->Smoothness = 0.1f;
 	Brics->Metallic = 0.0f;
@@ -346,11 +348,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto Oak = std::make_unique<Material>();
 	Oak->Name = "Oak";
 	Oak->MatCBIndex = 7;
-	Oak->DiffuseSrvHeapIndex = 11;
-	Oak->NormalSrvHeapIndex = 12;
-	Oak->MsoSrvHeapIndex = 2;
-	Oak->EmissionSrvHeapIndex = 3;
-	Oak->LUTSrvHeapIndex = 4;
+	Oak->DiffuseSrvHeapIndex = GizmoCount + 11;
+	Oak->NormalSrvHeapIndex = GizmoCount + 12;
+	Oak->MsoSrvHeapIndex = GizmoCount + 2;
+	Oak->EmissionSrvHeapIndex = GizmoCount + 3;
+	Oak->LUTSrvHeapIndex = GizmoCount + 4;
 	Oak->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Oak->Smoothness = 0.35f;
 	Oak->Metallic = 0.0f;
@@ -362,11 +364,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto Wooden2 = std::make_unique<Material>();
 	Wooden2->Name = "Wooden2";
 	Wooden2->MatCBIndex = 8;
-	Wooden2->DiffuseSrvHeapIndex = 13;
-	Wooden2->NormalSrvHeapIndex = 14;
-	Wooden2->MsoSrvHeapIndex = 2;
-	Wooden2->EmissionSrvHeapIndex = 3;
-	Wooden2->LUTSrvHeapIndex = 4;
+	Wooden2->DiffuseSrvHeapIndex = GizmoCount + 13;
+	Wooden2->NormalSrvHeapIndex = GizmoCount + 14;
+	Wooden2->MsoSrvHeapIndex = GizmoCount + 2;
+	Wooden2->EmissionSrvHeapIndex = GizmoCount + 3;
+	Wooden2->LUTSrvHeapIndex = GizmoCount + 4;
 	Wooden2->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Wooden2->Smoothness = 0.15f;
 	Wooden2->Metallic = 0.0f;
@@ -378,11 +380,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto Wooden3 = std::make_unique<Material>();
 	Wooden3->Name = "Wooden3";
 	Wooden3->MatCBIndex = 9;
-	Wooden3->DiffuseSrvHeapIndex = 15;
-	Wooden3->NormalSrvHeapIndex = 16;
-	Wooden3->MsoSrvHeapIndex = 2;
-	Wooden3->EmissionSrvHeapIndex = 3;
-	Wooden3->LUTSrvHeapIndex = 4;
+	Wooden3->DiffuseSrvHeapIndex = GizmoCount + 15;
+	Wooden3->NormalSrvHeapIndex = GizmoCount + 16;
+	Wooden3->MsoSrvHeapIndex = GizmoCount + 2;
+	Wooden3->EmissionSrvHeapIndex = GizmoCount + 3;
+	Wooden3->LUTSrvHeapIndex = GizmoCount + 4;
 	Wooden3->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Wooden3->Smoothness = 0.15f;
 	Wooden3->Metallic = 0.0f;
@@ -393,12 +395,12 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 
 	auto Wooden4 = std::make_unique<Material>();
 	Wooden4->Name = "Wooden4";
-	Wooden4->MatCBIndex = 10;
-	Wooden4->DiffuseSrvHeapIndex = 17;
-	Wooden4->NormalSrvHeapIndex = 18;
-	Wooden4->MsoSrvHeapIndex = 2;
-	Wooden4->EmissionSrvHeapIndex = 3;
-	Wooden4->LUTSrvHeapIndex = 4;
+	Wooden4->MatCBIndex = GizmoCount + 10;
+	Wooden4->DiffuseSrvHeapIndex = GizmoCount + 17;
+	Wooden4->NormalSrvHeapIndex = GizmoCount + 18;
+	Wooden4->MsoSrvHeapIndex = GizmoCount + 2;
+	Wooden4->EmissionSrvHeapIndex = GizmoCount + 3;
+	Wooden4->LUTSrvHeapIndex = GizmoCount + 4;
 	Wooden4->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	Wooden4->Smoothness = 0.9f;
 	Wooden4->Metallic = 0.01f;
@@ -583,4 +585,149 @@ void RenderCore::PBRDemo_BuildRenderItems(
 
 	mRitemLayer[(int)RenderLayer::Opaque].push_back(Wooden4Ritem.get());
 	mAllRitems.push_back(std::move(Wooden4Ritem));
+}
+
+void RenderCore::PBRDemo_UpdateObjectBuffer()
+{
+
+}
+
+
+void RenderCore::EditorGizmo_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mGizmoTextures)
+{
+	std::vector<std::string> texNames =
+	{
+		"AreaLightGizmo",
+		"DirectionalLightGizmo",
+		"ParticleSystemGizmo",
+		"PointLightGizmo",
+		"SpotLightGizmo",
+		"WirePlane",
+	};
+
+	std::vector<std::wstring> texFilenames =
+	{
+		L"Icons/AreaLightGizmo.dds",
+		L"Icons/DirectionalLightGizmo.dds",
+		L"Icons/ParticleSystemGizmo.dds",
+		L"Icons/PointLightGizmo.dds",
+		L"Icons/SpotLightGizmo.dds",
+		L"Icons/WirePlane.dds",
+	};
+
+	for (int i = 0; i < (int)texNames.size(); ++i)
+	{
+		// Don't create duplicates.
+		if (mGizmoTextures.find(texNames[i]) == std::end(mGizmoTextures))
+		{
+			auto texMap = std::make_unique<Texture>();
+			texMap->Name = texNames[i];
+			texMap->Filename = texFilenames[i];
+			ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
+				mCommandList.Get(), texMap->Filename.c_str(),
+				texMap->Resource, texMap->UploadHeap));
+
+			mGizmoTextures[texMap->Name] = std::move(texMap);
+		}
+	}
+}
+
+void RenderCore::EditorGizmo_BuildDescriptorHeaps(std::vector<ComPtr<ID3D12Resource>>& tex2DList, std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures)
+{
+	tex2DList =
+	{
+		mTextures["AreaLightGizmo"]->Resource,
+		mTextures["DirectionalLightGizmo"]->Resource,
+		mTextures["ParticleSystemGizmo"]->Resource,
+		mTextures["PointLightGizmo"]->Resource,
+		mTextures["SpotLightGizmo"]->Resource,
+		mTextures["WirePlane"]->Resource,
+	};
+}
+
+void RenderCore::EditorGizmo_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials)
+{
+	auto AreaLightGizmo = std::make_unique<Material>();
+	AreaLightGizmo->Name = "AreaLightGizmo";
+	AreaLightGizmo->MatCBIndex = 10;
+	AreaLightGizmo->DiffuseSrvHeapIndex = 0;
+
+	auto DirectionalLightGizmo = std::make_unique<Material>();
+	DirectionalLightGizmo->Name = "DirectionalLightGizmo";
+	DirectionalLightGizmo->MatCBIndex = 11;
+	DirectionalLightGizmo->DiffuseSrvHeapIndex = 1;
+
+	auto ParticleSystemGizmo = std::make_unique<Material>();
+	ParticleSystemGizmo->Name = "ParticleSystemGizmo";
+	ParticleSystemGizmo->MatCBIndex = 12;
+	ParticleSystemGizmo->DiffuseSrvHeapIndex = 2;
+
+	auto PointLightGizmo = std::make_unique<Material>();
+	PointLightGizmo->Name = "PointLightGizmo";
+	PointLightGizmo->MatCBIndex = 13;
+	PointLightGizmo->DiffuseSrvHeapIndex = 3;
+
+	auto SpotLightGizmo = std::make_unique<Material>();
+	SpotLightGizmo->Name = "SpotLightGizmo";
+	SpotLightGizmo->MatCBIndex = 14;
+	SpotLightGizmo->DiffuseSrvHeapIndex = 4;
+
+	auto WirePlane = std::make_unique<Material>();
+	WirePlane->Name = "WirePlane";
+	WirePlane->MatCBIndex = 15;
+	WirePlane->DiffuseSrvHeapIndex = 5;
+
+	mMaterials["AreaLightGizmo"] = std::move(AreaLightGizmo);
+	mMaterials["DirectionalLightGizmo"] = std::move(DirectionalLightGizmo);
+	mMaterials["ParticleSystemGizmo"] = std::move(ParticleSystemGizmo);
+	mMaterials["PointLightGizmo"] = std::move(PointLightGizmo);
+	mMaterials["SpotLightGizmo"] = std::move(SpotLightGizmo);
+	mMaterials["WirePlane"] = std::move(WirePlane);
+}
+
+void RenderCore::EditorGizmo_BuildRenderItems(
+	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+	std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
+{
+	//Direction Light Gizmo
+	auto DirGizmoRitem = std::make_unique<RenderItem>();;
+	XMStoreFloat4x4(&DirGizmoRitem->World, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mDirectionLightsPos.x, mDirectionLightsPos.y,mDirectionLightsPos.z));
+
+	XMStoreFloat4x4(&DirGizmoRitem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	DirGizmoRitem->ObjCBIndex = 11;
+	DirGizmoRitem->Mat = mMaterials["DirectionalLightGizmo"].get();
+	DirGizmoRitem->Geo = mGeometries["shapeGeo"].get();
+	DirGizmoRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	DirGizmoRitem->IndexCount = DirGizmoRitem->Geo->DrawArgs["grid"].IndexCount;
+	DirGizmoRitem->StartIndexLocation = DirGizmoRitem->Geo->DrawArgs["grid"].StartIndexLocation;
+	DirGizmoRitem->BaseVertexLocation = DirGizmoRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Gizmo].push_back(DirGizmoRitem.get());
+	mAllRitems.push_back(std::move(DirGizmoRitem));
+
+	//Wire Gizmo
+	auto wireGizmoRitem = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&wireGizmoRitem->World, XMMatrixScaling(300, 1, 200) * XMMatrixTranslation(0, -0.01, 0));
+
+	XMStoreFloat4x4(&wireGizmoRitem->TexTransform, XMMatrixScaling(2000, 2000, 1.0f));
+	wireGizmoRitem->ObjCBIndex = 12;
+	wireGizmoRitem->Mat = mMaterials["WirePlane"].get();
+	wireGizmoRitem->Geo = mGeometries["shapeGeo"].get();
+	wireGizmoRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	wireGizmoRitem->IndexCount = wireGizmoRitem->Geo->DrawArgs["grid"].IndexCount;
+	wireGizmoRitem->StartIndexLocation = wireGizmoRitem->Geo->DrawArgs["grid"].StartIndexLocation;
+	wireGizmoRitem->BaseVertexLocation = wireGizmoRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Unlit].push_back(wireGizmoRitem.get());
+	mAllRitems.push_back(std::move(wireGizmoRitem));
+}
+
+void RenderCore::EditorGizmo_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix)
+{
+	switch (ObjCBIndex)
+	{
+		case 11:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mDirectionLightsPos.x, mDirectionLightsPos.y, mDirectionLightsPos.z));break;
+	}
 }

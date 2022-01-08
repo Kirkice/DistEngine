@@ -50,6 +50,8 @@ namespace Renderer
 		Transparent = 1,
 		Debug = 2,
 		Sky = 3,
+		Gizmo = 4,
+		Unlit = 5,
 		Count
 	};
 
@@ -62,6 +64,17 @@ namespace Renderer
 		~RenderCore();
 
 	public:
+		//Editor Gizmo
+		void EditorGizmo_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures);
+		void EditorGizmo_BuildDescriptorHeaps(std::vector<ComPtr<ID3D12Resource>>& tex2DList, std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures);
+		void EditorGizmo_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials);
+		void EditorGizmo_BuildRenderItems(
+			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
+		void EditorGizmo_UpdateObjectBuffer(UINT ObjCBIndex,XMFLOAT4X4* eWorldMatrix);
+
 		//SkyBox
 		void SkyBox_UpdateMaterialBuffer(Material* mat, UploadBuffer<SkyBoxMaterialData>* currMaterialBuffer);
 		void SkyBox_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mSkyTextures);
@@ -83,6 +96,7 @@ namespace Renderer
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
 			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
+		void PBRDemo_UpdateObjectBuffer();
 
 
 		//Lighting Settings
@@ -91,5 +105,39 @@ namespace Renderer
 		float SkyBoxExposure = 1;
 		float SkyBoxRotation = 0;
 		float  ACES = 1;
+
+		//Light
+		//Direction Lights
+		XMFLOAT3 mRotatedLightDirections;
+		XMFLOAT3 mDirectionLightsDir = { 0.57f,-0.57f,0.57f };
+		XMFLOAT3 mDirectionLightsPos = { 0,5,0 };
+		float mDirectionLightsColor[3] = { 1,1,1 };
+		float mDirectionLightsAngle[3] = { 0,0,0 };
+		float mDirectionLightsScale[3] = { 1,1,1 };
+		float mDirectionLightsStrength = 3;
+		bool mDirectionLightsCastShadow = true;
+		bool mDirectionLightsActive = true;
+
+		//Point Lights
+		XMFLOAT3 mPointLightsPos = { 0,0,0 };
+		float mPointLightsColor[3] = { 1,1,1 };
+		float mPointLightsConstant = 1.0;
+		float mPointLightsLinear = 0.2f;
+		float mPointLightsQuadratic = 0.0f;
+		float mPointLightsRot[3] = { 0,0,0 };
+		float mPointLightsScale[3] = { 1,1,1 };
+		float mPointLightsStrength = 1;
+		bool mPointLightsActive = true;
+
+		//SpotLights
+		XMFLOAT3 mRotatedLightSpots;
+		XMFLOAT3 mSpotLightsDir = { 0.57f,-0.57f,0.57f };
+		XMFLOAT3 mSpotLightsPos = { 0,0,0 };
+		float mSpotLightsColor[3] = { 1,1,1 };
+		float mSpotLightsAngle[3] = { 0,0,0 };
+		float mSpotLightsScale[3] = { 1,1,1 };
+		float mSpotLightsCutoff = 15.0;
+		float mSpotLightsStrength = 1;
+		bool mSpotLightsActive = true;
 	};
 }

@@ -50,6 +50,8 @@ namespace Renderer
 		//��Ⱦ����
 		void DrawPostProcessing();
 
+		void DrawGizmo();
+
 		//��ȾImgui
 		void DrawImgui();
 

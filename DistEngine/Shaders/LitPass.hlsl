@@ -126,7 +126,7 @@ float4 PS(VertexOut pin) : SV_Target
     float3 outColor                                     = Dist_ImageBasedLighting(surfaceData.Albedo.rgb,surfaceData.Smoothness, surfaceData.Metallic, surfaceData.Occlusion, surfaceData.Emission.rgb, inputData.NormalW,inputData.ViewW);
 
     outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
-    return float4(outColor,1);
+    return float4(outColor,surfaceData.Albedo.a);
 }
 
 #endif

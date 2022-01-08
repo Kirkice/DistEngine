@@ -143,7 +143,7 @@ float4 PS(VertexOut pin) : SV_Target
     // mainColor                                       = mainColor * matData.emissColor.r + (1 - matData.emissColor.r) * halfLambert;
 
     // mainColor                                       = lerp(mainColor * matData.LightShadowColor,mainColor, shadowFactor[0].x);
-    return half4(gPointLights.Color,1);
+    return half4(1,1,1,1);
 }
 
 

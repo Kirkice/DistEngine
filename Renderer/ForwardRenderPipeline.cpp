@@ -83,11 +83,17 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
 	ForwardRenderer::DrawSkyBox();
 
+	//Draw Transparent
+	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+	DrawTransparent();
+
 	//mCommandList->SetPipelineState(mPSOs["debug"].Get());
 	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Debug]);
 
-
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+	ForwardRenderer::DrawGizmo();
 
 	ForwardRenderer::DrawImgui();
 
@@ -149,7 +155,17 @@ void ForwardRenderer::DrawSkyBox()
 
 void ForwardRenderer::DrawTransparent()
 {
+	mCommandList->SetPipelineState(mPSOs["transparent"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Transparent]);
 
+	mCommandList->SetPipelineState(mPSOs["Unlit"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Unlit]);
+}
+
+void ForwardRenderer::DrawGizmo()
+{
+	mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Gizmo]);
 }
 
 void ForwardRenderer::DrawPostProcessing()
@@ -264,6 +280,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Text("Transform");
 			float dirLightPos[3] = { mDirectionLightsPos.x,mDirectionLightsPos.y,mDirectionLightsPos.z };
 			ImGui::InputFloat3("(D)Position", dirLightPos);
+			mDirectionLightsPos = XMFLOAT3(dirLightPos[0], dirLightPos[1], dirLightPos[2]);
 			ImGui::InputFloat3("(D)Rotation", mDirectionLightsAngle);
 			ImGui::InputFloat3("(D)Scale", mDirectionLightsScale);
 			ImGui::Text("Settings");
