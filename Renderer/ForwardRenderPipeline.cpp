@@ -303,7 +303,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Text("Settings");
 			ImGui::Checkbox("Point Enable", &mPointLightsActive);
 			ImGui::ColorEdit3("(P)Color", mPointLightsColor);
-			ImGui::DragFloat("(P)Intensity", &mPointLightsStrength, 0.003f, 0, 10);
+			ImGui::SliderFloat("(P)Intensity", &mPointLightsStrength, 0, 10);
 			ImGui::InputFloat("(P)Range", &mPointLightsRange);
 			ImGui::TreePop();
 		}
