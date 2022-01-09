@@ -53,8 +53,16 @@ float4 PS(VertexOut pin) : SV_Target
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
     uint diffuseMapIndex                                = matData.DiffuseMapIndex;
 
-    Light mainLight                                     = GetMainLight();
-    float4 color                                        = gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(mainLight.color,1);
+    float3 dirColor                                     = gDirectionLights.Color;
+    float3 pointColor                                   = gPointLights.Color;
+
+    float3 gizmoColor                                   = float3(1,1,1);
+
+    gizmoColor                                          = (diffuseMapIndex == 1) ? dirColor : gizmoColor;
+
+    gizmoColor                                          = (diffuseMapIndex == 3) ? pointColor : gizmoColor;
+
+    float4 color                                        = gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(gizmoColor,1);
     return color;
 }
 

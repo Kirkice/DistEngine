@@ -110,23 +110,21 @@ namespace Renderer
 		//Direction Lights
 		XMFLOAT3 mRotatedLightDirections;
 		XMFLOAT3 mDirectionLightsDir = { 0.57f,-0.57f,0.57f };
-		XMFLOAT3 mDirectionLightsPos = { 0,5,0 };
+		XMFLOAT3 mDirectionLightsPos = { -2,5,0 };
 		float mDirectionLightsColor[3] = { 1,1,1 };
 		float mDirectionLightsAngle[3] = { 0,0,0 };
 		float mDirectionLightsScale[3] = { 1,1,1 };
-		float mDirectionLightsStrength = 3;
+		float mDirectionLightsStrength = 1.2f;
 		bool mDirectionLightsCastShadow = true;
 		bool mDirectionLightsActive = true;
 
 		//Point Lights
-		XMFLOAT3 mPointLightsPos = { 0,0,0 };
+		XMFLOAT3 mPointLightsPos = { 1.5f,2,0 };
 		float mPointLightsColor[3] = { 1,1,1 };
-		float mPointLightsConstant = 1.0;
-		float mPointLightsLinear = 0.2f;
-		float mPointLightsQuadratic = 0.0f;
+		float mPointLightsRange = 3.0;
 		float mPointLightsRot[3] = { 0,0,0 };
 		float mPointLightsScale[3] = { 1,1,1 };
-		float mPointLightsStrength = 1;
+		float mPointLightsStrength = 8;
 		bool mPointLightsActive = true;
 
 		//SpotLights
@@ -136,8 +134,9 @@ namespace Renderer
 		float mSpotLightsColor[3] = { 1,1,1 };
 		float mSpotLightsAngle[3] = { 0,0,0 };
 		float mSpotLightsScale[3] = { 1,1,1 };
-		float mSpotLightsCutoff = 15.0;
+		float mSpotLightsRange = 15.0;
 		float mSpotLightsStrength = 1;
+		float mSpotLightsCutAngle = 30;
 		bool mSpotLightsActive = true;
 	};
 }

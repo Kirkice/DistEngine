@@ -297,14 +297,13 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	mMainPassCB.PointLights.Color = Vector3(mPointLightsColor[0],mPointLightsColor[1],mPointLightsColor[2]);
 	mMainPassCB.PointLights.Position = Vector3(mPointLightsPos);
-	mMainPassCB.PointLights.constantFactory = mPointLightsConstant;
-	mMainPassCB.PointLights.linearFactory = mPointLightsLinear;
-	mMainPassCB.PointLights.quadraticFactory = mPointLightsQuadratic;
+	mMainPassCB.PointLights.rangeFactory = mPointLightsRange;
 	mMainPassCB.PointLights.Strength = mPointLightsStrength;
 	mMainPassCB.PointLights.Active = (float)mPointLightsActive;
 
 	mMainPassCB.SpotLights.Color = Vector3(mSpotLightsColor[0], mSpotLightsColor[1], mSpotLightsColor[2]);
-	mMainPassCB.SpotLights.spotLightCutoff = mSpotLightsCutoff;
+	mMainPassCB.SpotLights.spotAngle = mSpotLightsCutAngle;
+	mMainPassCB.SpotLights.rangeFactory = mSpotLightsRange;
 	mMainPassCB.SpotLights.Position = Vector3(mSpotLightsPos);
 	mMainPassCB.SpotLights.spotLightsStrength = mSpotLightsStrength;
 	mMainPassCB.SpotLights.Direction = Vector3(mRotatedLightSpots); 

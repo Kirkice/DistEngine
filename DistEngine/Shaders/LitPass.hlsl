@@ -109,14 +109,13 @@ float4 REDPBRColor(VertexOut pin)
     InputData inputData;
     InitializeInputData(pin, surfaceData.Normal, inputData);
 
-    float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW);
-    outColor.rgb                                       +=  DistGlobalIllumination(inputData, surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, inputData.bakedGI.rgb);
-
+    float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW, pin.PosW); 
+    outColor                                            += RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
     outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
     return float4(outColor,1);
 }
 
-float4 PS(VertexOut pin) : SV_Target
+float4 Dist_IBL(VertexOut pin)
 {
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
@@ -124,9 +123,13 @@ float4 PS(VertexOut pin) : SV_Target
     InitializeInputData(pin, surfaceData.Normal, inputData);
 
     float3 outColor                                     = Dist_ImageBasedLighting(surfaceData.Albedo.rgb,surfaceData.Smoothness, surfaceData.Metallic, surfaceData.Occlusion, surfaceData.Emission.rgb, inputData.NormalW,inputData.ViewW);
-
     outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
-    return float4(outColor,surfaceData.Albedo.a);
+    return                                              float4(outColor,surfaceData.Albedo.a);
+}
+
+float4 PS(VertexOut pin) : SV_Target
+{
+    return REDPBRColor(pin);
 }
 
 #endif

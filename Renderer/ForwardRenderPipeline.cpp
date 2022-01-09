@@ -297,15 +297,14 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Text("Transform");
 			float pointLightPos[3] = { mPointLightsPos.x,mPointLightsPos.y,mPointLightsPos.z };
 			ImGui::InputFloat3("(P)Position", pointLightPos);
+			mPointLightsPos = XMFLOAT3(pointLightPos[0], pointLightPos[1], pointLightPos[2]);
 			ImGui::InputFloat3("(P)Rotation", mPointLightsRot);
 			ImGui::InputFloat3("(P)Scale", mPointLightsScale);
 			ImGui::Text("Settings");
 			ImGui::Checkbox("Point Enable", &mPointLightsActive);
 			ImGui::ColorEdit3("(P)Color", mPointLightsColor);
-			ImGui::DragFloat("(P)Intensity", &mPointLightsStrength, 0.003f, 0, 3);
-			ImGui::InputFloat("Constant", &mPointLightsConstant);
-			ImGui::InputFloat("Linear", &mPointLightsLinear);
-			ImGui::InputFloat("Quadratic", &mPointLightsQuadratic);
+			ImGui::DragFloat("(P)Intensity", &mPointLightsStrength, 0.003f, 0, 10);
+			ImGui::InputFloat("(P)Range", &mPointLightsRange);
 			ImGui::TreePop();
 		}
 
@@ -321,7 +320,8 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Checkbox("Spot Enable", &mSpotLightsActive);
 			ImGui::ColorEdit3("(S)Color", mSpotLightsColor);
 			ImGui::DragFloat("(S)Intensity", &mSpotLightsStrength, 0.003f, 0, 3);
-			ImGui::InputFloat("CutOff", &mSpotLightsCutoff);
+			ImGui::InputFloat("(S)Range", &mSpotLightsRange);
+			ImGui::InputFloat("Cut Angle", &mSpotLightsCutAngle);
 			ImGui::TreePop();
 		}
 	}

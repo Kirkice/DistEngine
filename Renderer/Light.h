@@ -23,10 +23,8 @@ namespace Renderer
 	struct PointLight
 	{
 		Vector3 Color = { 0.5f, 0.5f, 0.5f };
+		float rangeFactory = 1.0;
 		Vector3 Position = { 0.0f, 0.0f, 0.0f };
-		float constantFactory = 1.0;
-		float linearFactory = 0.2f;
-		float quadraticFactory = 0.0f;
 		float Strength = 1;
 		float Active = 1;
 	};
@@ -35,10 +33,11 @@ namespace Renderer
 	struct SpotLight
 	{
 		Vector3 Color = { 0.5f, 0.5f, 0.5f };
-		float spotLightCutoff = 15.0f;
+		float rangeFactory = 15.0f;
 		Vector3 Position = { 0.0f, 0.0f, 0.0f };
 		float spotLightsStrength = 1;
 		Vector3 Direction = { 0.0f, -1.0f, 0.0f }; 
+		float spotAngle = 30;
 		float spotLightsActive = 1;
 	};
 }

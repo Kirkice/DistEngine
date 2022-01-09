@@ -707,12 +707,29 @@ void RenderCore::EditorGizmo_BuildRenderItems(
 	mRitemLayer[(int)RenderLayer::Gizmo].push_back(DirGizmoRitem.get());
 	mAllRitems.push_back(std::move(DirGizmoRitem));
 
+	//Point Light Gizmo
+	auto PointGizmoRitem = std::make_unique<RenderItem>();;
+	XMStoreFloat4x4(&PointGizmoRitem->World, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mPointLightsPos.x, mPointLightsPos.y, mPointLightsPos.z));
+
+	XMStoreFloat4x4(&PointGizmoRitem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	PointGizmoRitem->ObjCBIndex = 12;
+	PointGizmoRitem->Mat = mMaterials["PointLightGizmo"].get();
+	PointGizmoRitem->Geo = mGeometries["shapeGeo"].get();
+	PointGizmoRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	PointGizmoRitem->IndexCount = PointGizmoRitem->Geo->DrawArgs["grid"].IndexCount;
+	PointGizmoRitem->StartIndexLocation = PointGizmoRitem->Geo->DrawArgs["grid"].StartIndexLocation;
+	PointGizmoRitem->BaseVertexLocation = PointGizmoRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Gizmo].push_back(PointGizmoRitem.get());
+	mAllRitems.push_back(std::move(PointGizmoRitem));
+
+
 	//Wire Gizmo
 	auto wireGizmoRitem = std::make_unique<RenderItem>();
 	XMStoreFloat4x4(&wireGizmoRitem->World, XMMatrixScaling(300, 1, 200) * XMMatrixTranslation(0, -0.01, 0));
 
 	XMStoreFloat4x4(&wireGizmoRitem->TexTransform, XMMatrixScaling(2000, 2000, 1.0f));
-	wireGizmoRitem->ObjCBIndex = 12;
+	wireGizmoRitem->ObjCBIndex = 13;
 	wireGizmoRitem->Mat = mMaterials["WirePlane"].get();
 	wireGizmoRitem->Geo = mGeometries["shapeGeo"].get();
 	wireGizmoRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -729,5 +746,6 @@ void RenderCore::EditorGizmo_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWo
 	switch (ObjCBIndex)
 	{
 		case 11:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mDirectionLightsPos.x, mDirectionLightsPos.y, mDirectionLightsPos.z));break;
+		case 12:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mPointLightsPos.x, mPointLightsPos.y, mPointLightsPos.z)); break;
 	}
 }

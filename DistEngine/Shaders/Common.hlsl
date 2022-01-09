@@ -40,10 +40,8 @@ struct DirectionLight
 struct PointLight
 {
 	float3                                                                          Color;
+	float                                                                           rangeFactory;
 	float3                                                                          Position;
-	float                                                                           constantFactory;
-	float                                                                           linearFactory;
-	float                                                                           quadraticFactory;
     float                                                                           Strength;
     float                                                                           Active;
 };
@@ -52,10 +50,11 @@ struct PointLight
 struct SpotLight
 {
 	float3                                                                          Color;
-    float                                                                           spotLightCutoff;
+    float                                                                           rangeFactory;
 	float3                                                                          Position;
     float                                                                           spotLightsStrength;
 	float3                                                                          Direction;
+    float                                                                           spotAngle;
 	float                                                                           spotLightsActive;
 };
 

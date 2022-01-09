@@ -156,6 +156,18 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     outSurfaceData.Emission                             = emission;
 }
 
+//aces_approx
+float3 aces_approx(float3 v)
+{
+    v 														*= 0.6f;
+    float a 												= 2.51f;
+    float b 												= 0.03f;
+    float c 												= 2.43f;
+    float d 												= 0.59f;
+    float e 												= 0.14f;
+    return 													clamp((v*(a*v+b))/(v*(c*v+d)+e), 0.0f, 1.0f);
+}
+
 //-------------------------------- UNITY UNIVERSAL LIT ----------------------------------------------
 half OneMinusReflectivityMetallic(half metallic)
 {
@@ -541,15 +553,15 @@ LightingComponents BRDF(float3 L, float3 N, float3 V, BRDFParams params, float N
 	return ret;
 }
 
-float3 CalculateLighting( float3 L, float3 N, float3 V, float3 lightColor, BRDFParams params )
+float3 CalculateLighting( float3 L, float atten, float3 N, float3 V, float3 lightColor, BRDFParams params )
 {
 	LightingComponents brdf                             = BRDF( L, N, V, params, saturate(dot(N, L)), saturate(dot(L, normalize(L + V))) );
 
 	// no NdotL term for specular as it cancels out with the denominator in SpecularBRDF
-	return                                              (brdf.Diffuse * saturate( dot( N, L ) ) + brdf.Specular) * lightColor;
+	return                                              (brdf.Diffuse * saturate( dot( N, L ) ) * atten + brdf.Specular) * lightColor;
 }
 
-float3 CalculateLighting( float3 L, float3 N, float3 V, float3 lightColor, float3 albedo, float roughness, float specularity )
+float3 CalculateLighting( float3 L, float atten, float3 N, float3 V, float3 lightColor, float3 albedo, float roughness, float specularity )
 {
 	// BRDF params initialization
 	BRDFParams                                          params;
@@ -557,15 +569,42 @@ float3 CalculateLighting( float3 L, float3 N, float3 V, float3 lightColor, float
 	params.Roughness                                    = roughness;
 	params.Specularity                                  = specularity;
 
-	return CalculateLighting( L, N, V, lightColor, params );
+	return CalculateLighting( L, atten, N, V, lightColor, params );
 }
 
-float3 RED_SBS_CalculateLighting(float3 baseColor, float roughness, float metalness, float3 N, float3 V)
+float3 RED_SBS_CalculateLighting(float3 baseColor, float roughness, float metalness, float3 N, float3 V, float3 PosW)
 {
     Light mainLight                                     = GetMainLight();
-	return                                              CalculateLighting( mainLight.direction, N, V, mainLight.color, baseColor, roughness, metalness );
+	float3 color                                        = CalculateLighting( mainLight.direction, mainLight.distanceAttenuation, N, V, mainLight.color, baseColor, roughness, metalness );
+
+	Light pointLight 									= GetPointLight(PosW);
+	color											   += CalculateLighting( pointLight.direction, pointLight.distanceAttenuation, N, V, pointLight.color, baseColor, roughness, metalness );
+	return												  color;
 }
 
+float3 RED_SBS_GlobalIllumination(float3 albedo, float metallic, float smoothness, float occlusion, float3 normalWS, float3 viewDirectionWS)
+{
+	float3 reflectVector 								= reflect(-viewDirectionWS, normalWS);
+    float fresnelTerm 									= Pow4(1.0 - saturate(dot(normalWS, viewDirectionWS)));
+	float3 IBLColor										= pow(gCubeIBL.Sample(gsamLinearWrap, normalWS).rgb,1);
+    float3 bakedGI										= aces_approx(IBLColor);
+	float3 indirectDiffuse 								= bakedGI * occlusion;
+
+	float perceptualRoughness 							= PerceptualSmoothnessToPerceptualRoughness(smoothness);
+    float3 indirectSpecular 							= GlossyEnvironmentReflection(reflectVector, perceptualRoughness, occlusion);
+
+	float oneMinusReflectivity 							= OneMinusReflectivityMetallic(metallic);
+	half3 c 											= indirectDiffuse * albedo * oneMinusReflectivity;
+
+	float roughness 									= max(PerceptualRoughnessToRoughness(PerceptualSmoothnessToPerceptualRoughness(smoothness)), HALF_MIN);
+    float roughness2 									= roughness * roughness;
+    float surfaceReduction 								= 1.0 / (roughness2 + 1.0);
+	float3 specular 									= lerp(kDieletricSpec.rgb, albedo, metallic);
+	float grazingTerm 									= saturate(smoothness + 1.0 - oneMinusReflectivity);
+    c 													+= surfaceReduction * indirectSpecular * lerp(lerp(kDieletricSpec.rgb, albedo, metallic), grazingTerm, fresnelTerm);
+
+	return c;
+}
 
 float3x3 BuildCubeFaceNormalRotation( int faceIdx ) // cp77 shouldn't be here (not related to lighting)
 {
@@ -845,40 +884,6 @@ float3 RED_SBS_ImageBasedLighting(float maxLod, float3 albedo, float3 N, float3 
     return outReflection * outAmbient;
 }
 
-float3 RED_GlobalIllumination(InputData inputData, half3 albedo, half metallic, half smoothness, half3 bakeGI)
-{
-    float NdotV                                         = saturate(dot(inputData.NormalW, inputData.ViewW));
-
-	float3 lavaAmbient                                  = float3(0,0,0);
-
-    int sampleCubeNumSamples                            = 8;
-    float mip_roughness                                 = (1 - smoothness) * (1.7 - 0.7 * (1 - smoothness));
-    half mip                                            = mip_roughness * 6;
-    lavaAmbient                                         = IntegrateDiffuse(mip, inputData.NormalW, sampleCubeNumSamples);
-    float roughness                                     = (1 - smoothness) * (1 - smoothness);
-
-    float3 F0                                           = half3(0.08, 0.08, 0.08);
-    F0                                                  = lerp(F0 * albedo, albedo, metallic);
-	float3 ambientBRDF 									= IntegrateFullAmbientBRDF( NdotV, 1 - smoothness, 128u, 128u );
-    float3 Flast                                        = fresnelSchlickRoughness(max(NdotV, 0.0), F0, roughness);
-    float kdLast                                        = (1 - Flast) * (1 - metallic);
-	float3 outAmbient 									= albedo * lavaAmbient * ambientBRDF.zzz * kdLast;
-
-    // float mip_roughness                                 = (1 - smoothness) * (1.7 - 0.7 * (1 - smoothness));
-    // float3 reflectVec                                   = reflect(-inputData.ViewW, inputData.NormalW);
-    // half mip                                            = mip_roughness * 6;
-
-    // float4 rgbm                                         = gCubeMap.SampleLevel(gsamLinearWrap,reflectVec, mip);
-
-    // PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
-    // uint lutIndex                                       = matData.LUTMapIndex;
-    // float2 envBDRF                                      = gTextureMaps[lutIndex].Sample(gsamAnisotropicWrap, float2(lerp(0, 0.99, NdotV.x), lerp(0, 0.99, roughness))).rg;
-    // float3 iblSpecularResult                            = rgbm.rgb * (Flast * envBDRF.r + envBDRF.g);
-    // float3 IndirectResult                               = iblDiffuseResult + iblSpecularResult;
-    
-    return                                              outAmbient;
-}
-
 //------------------------------- Dist ImageBasedLighting  ---------------------------------------------
 
 // Shlick's approximation of Fresnel
@@ -890,18 +895,6 @@ float3 Fresnel_Shlick(float3 F0, float3 F90, float cosine)
 float Fresnel_Shlick(float F0, float F90, float cosine)
 {
     return 												lerp(F0, F90, Pow5(1.0 - cosine));
-}
-
-//aces_approx
-float3 aces_approx(float3 v)
-{
-    v 														*= 0.6f;
-    float a 												= 2.51f;
-    float b 												= 0.03f;
-    float c 												= 2.43f;
-    float d 												= 0.59f;
-    float e 												= 0.14f;
-    return 													clamp((v*(a*v+b))/(v*(c*v+d)+e), 0.0f, 1.0f);
 }
 
 // Diffuse irradiance
@@ -950,6 +943,93 @@ float3 Dist_ImageBasedLighting(float3 baseColor,float smoothness, half metallic,
 
 	return 													colorAccum;
 }
+
+// Burley's diffuse BRDF
+float3 Diffuse_Burley(SurfaceProperties Surface, float LdotH, float NdotL)
+{
+    float fd90 = 0.5 + 2.0 * Surface.roughness * LdotH * LdotH;
+    return Surface.c_diff * Fresnel_Shlick(1, fd90, NdotL).x * Fresnel_Shlick(1, fd90, Surface.NdotV).x;
+}
+
+// GGX specular D (normal distribution)
+float Specular_D_GGX(SurfaceProperties Surface, float NdotH)
+{
+    float lower = lerp(1, Surface.alphaSqr, NdotH * NdotH);
+    return Surface.alphaSqr / max(1e-6, PI * lower * lower);
+}
+
+// Schlick-Smith specular geometric visibility function
+float G_Schlick_Smith(SurfaceProperties Surface, float NdotL)
+{
+    return 1.0 / max(1e-6, lerp(Surface.NdotV, 1, Surface.alpha * 0.5) * lerp(NdotL, 1, Surface.alpha * 0.5));
+}
+
+// Schlick-Smith specular visibility with Hable's LdotH approximation
+float G_Shlick_Smith_Hable(SurfaceProperties Surface, float LdotH)
+{
+    return 1.0 / lerp(LdotH * LdotH, 1, Surface.alphaSqr * 0.25);
+}
+
+// A microfacet based BRDF.
+// alpha:    This is roughness squared as in the Disney PBR model by Burley et al.
+// c_spec:   The F0 reflectance value - 0.04 for non-metals, or RGB for metals.  This is the specular albedo.
+// NdotV, NdotL, LdotH, NdotH:  vector dot products
+//  N - surface normal
+//  V - normalized view vector
+//  L - normalized direction to light
+//  H - normalized half vector (L+V)/2 -- halfway between L and V
+float3 Specular_BRDF(SurfaceProperties Surface, float LdotH, float NdotH)
+{
+    // Normal Distribution term
+    float ND = Specular_D_GGX(Surface, NdotH);
+
+    // Geometric Visibility term
+    //float GV = G_Schlick_Smith(Surface, Light);
+    float GV = G_Shlick_Smith_Hable(Surface, LdotH);
+
+    // Fresnel term
+    float3 F = Fresnel_Shlick(Surface.c_spec, 1.0, LdotH);
+
+    return ND * GV * F;
+}
+
+float3 ShadeDirectionalLight(SurfaceProperties Surface, float Shadow)
+{
+    Light mainLight                                     = GetMainLight();
+
+    // Half vector
+    float3 H = normalize(mainLight.direction + Surface.V);
+
+    // Pre-compute dot products
+    float NdotL = saturate(dot(Surface.N, mainLight.direction));
+    float LdotH = saturate(dot(mainLight.direction, H));
+    float NdotH = saturate(dot(Surface.N, H));
+
+    // Diffuse & specular factors
+    float3 diffuse = Diffuse_Burley(Surface, LdotH, NdotL);
+    float3 specular = Specular_BRDF(Surface, LdotH, NdotH);
+
+    // Directional light
+    return NdotL * Shadow * mainLight.strength * (diffuse + specular);
+}
+
+float3 Dist_DirectionalLight(float3 baseColor,float smoothness, half metallic, float occlusion, float3 emissive,float3 N,float3 V, float Shadow)
+{
+	SurfaceProperties 										Surface;
+    Surface.N 												= N;
+    Surface.V 												= V;
+    Surface.NdotV = saturate(dot(Surface.N, Surface.V));
+    Surface.c_diff 											= baseColor.rgb * (1 - kDielectricSpecular) * (1 - metallic) * occlusion;
+    Surface.c_spec 											= lerp(kDielectricSpecular, baseColor.rgb, metallic) * occlusion;
+    Surface.roughness 										= 1 - smoothness;
+    Surface.alpha 											= (1- smoothness) * (1- smoothness);
+    Surface.alphaSqr 										= Surface.alpha * Surface.alpha;
+
+    // Begin accumulating light starting with emissive
+    float3 colorAccum 										= emissive;
+	colorAccum 												= ShadeDirectionalLight(Surface, Shadow);
+	return colorAccum;
+}
 //----------------------------  Shadow  ---------------------------------------
 float3 DistShadow(InputData inputData, half3 outColor)
 {
@@ -957,5 +1037,13 @@ float3 DistShadow(InputData inputData, half3 outColor)
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
     Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
     return                                              lerp(outColor * half3(0.2,0.2,0.2),outColor,Shadow);
+}
+
+float GetShadow(InputData inputData)
+{
+	half Shadow                                         = inputData.ShadowCoord;
+    PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
+    Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
+	return 												Shadow;
 }
 #endif
