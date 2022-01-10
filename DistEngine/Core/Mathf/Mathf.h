@@ -50,7 +50,7 @@ namespace Mathf
 		return (r > 0.0f) ? std::floorf(r + 0.5f) : std::ceilf(r - 0.5f);
 	}
 
-	//·µ»ØÐ¡Êý²¿·Ö
+	//ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	inline float Frac(float x)
 	{
 		float intPart;
@@ -96,13 +96,13 @@ namespace Mathf
 		return clr;
 	}
 
-	//¼ÆËãÁÁ¶È
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	inline float ComputeLuminance(Vector3 color)
 	{
 		return Vector3::Dot(color, Vector3(0.299f, 0.587f, 0.114f));
 	}
 
-	//¼«×ø±êµ½µÑ¿¨¶û×ø±êÏµ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½êµ½ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ
 	inline void SphericalToCartesianXYZYUP(float r, float theta, float phi, Vector3& xyz)
 	{
 		xyz.x = r * std::cosf(phi) * std::sinf(theta);
@@ -110,7 +110,7 @@ namespace Mathf
 		xyz.z = r * std::sinf(theta) * std::sinf(phi);
 	}
 
-	//µÑ¿¨¶û×ø±êÏµµ½¼«×ø±ê
+	//ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	inline Vector3 SphericalToCartesian(float azimuth, float elevation)
 	{
 		Vector3 xyz;
@@ -120,7 +120,7 @@ namespace Mathf
 		return xyz;
 	}
 
-	//µÑ¿¨¶û×ø±êÏµµ½¼«×ø±ê
+	//ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	inline Vector2 CartesianToSpherical(const Vector3& xyz)
 	{
 		float elevation = std::asin(xyz.y);

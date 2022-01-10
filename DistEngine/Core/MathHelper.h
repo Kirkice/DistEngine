@@ -68,13 +68,13 @@ namespace Mathf
 		return Clamp<T>(val, T(0.0f), T(1.0f));
 	}
 
-	// Æ½·½
+	// Æ½ï¿½ï¿½
 	template<typename T> T Square(T x)
 	{
 		return x * x;
 	}
 
-	//»¡¶È < - > ¡ã
+	//ï¿½ï¿½ï¿½ï¿½ < - > ï¿½ï¿½
 	inline float DEG2RAD(const float x)
 	{
 		return ((x / 180.f) * Pi);

@@ -51,6 +51,9 @@
     <ClCompile Include="FileUtility.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Mathf\BoundingSphere.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="zconf.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingSphere.h">
+      <Filter>Mathf</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

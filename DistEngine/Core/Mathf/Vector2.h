@@ -8,7 +8,7 @@ namespace Mathf
 	struct Vector2
 	{
 		/// <summary>
-		/// ¹¹ÔìVector2 ºÍÒ»Ð©¼Ó¼õ³Ë³ý
+		/// ï¿½ï¿½ï¿½ï¿½Vector2 ï¿½ï¿½Ò»Ð©ï¿½Ó¼ï¿½ï¿½Ë³ï¿½
 		/// </summary>
 		float x, y;
 
@@ -44,27 +44,27 @@ namespace Mathf
 		DirectX::XMVECTOR ToSIMD() const;
 
 		DirectX::XMFLOAT2 ToXMFLOAT2() const;
-		//Ç¯ÖÆ
+		//Ç¯ï¿½ï¿½
 		static Vector2 Clamp(const Vector2& val, const Vector2& min, const Vector2& max);
-		//³¤¶È
+		//ï¿½ï¿½ï¿½ï¿½
 		static float Length(const Vector2& val);
-		//µã³Ë
+		//ï¿½ï¿½ï¿½
 		float Dot(const Vector2& v) const;
-		//²æ³Ë
+		//ï¿½ï¿½ï¿½
 		float CrossZ(const Vector2& vec) const;
-		//Õý½»»¯
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		float Normalize();
-		//»ñµÃÕý½»ÏòÁ¿
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Vector2 Normalized() const;
-		//ºÍÁíÒ»¸öÏòÁ¿¾àÀë
+		//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		float DistanceTo(const Vector2& v) const;
-		//¾àÀëÆ½·½
+		//ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½
 		float DistanceSquaredTo(const Vector2& v) const;
-		//Ðý×ª
+		//ï¿½ï¿½×ª
 		Vector2 Rotate(float radians) const;
-		//×ªÊý×é
+		//×ªï¿½ï¿½ï¿½ï¿½
 		float* Vector2Array(const Vector2& v);
-		//×î´óÖµ ×îÐ¡Öµ
+		//ï¿½ï¿½ï¿½Öµ ï¿½ï¿½Ð¡Öµ
 		static Vector2 Min(const Vector2& a, const Vector2& b);
 		static Vector2 Max(const Vector2& a, const Vector2& b);
 

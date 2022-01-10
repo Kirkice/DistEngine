@@ -19,6 +19,9 @@
     <ClCompile Include="glTF.cpp">
       <Filter>ModelImport</Filter>
     </ClCompile>
+    <ClCompile Include="glTFLoader.cpp">
+      <Filter>ModelImport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoadM3d.h">
@@ -36,5 +39,6 @@
     <ClInclude Include="json.hpp">
       <Filter>ModelImport</Filter>
     </ClInclude>
+    <ClInclude Include="glTFLoader.h" />
   </ItemGroup>
 </Project>

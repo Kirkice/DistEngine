@@ -150,6 +150,7 @@
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
+    <ClCompile Include="Mathf\BoundingSphere.cpp" />
     <ClCompile Include="Mathf\Matrix.cpp" />
     <ClCompile Include="Mathf\Quaternion.cpp" />
     <ClCompile Include="Mathf\Random.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GeometryGenerator.h" />
+    <ClInclude Include="Mathf\BoundingSphere.h" />
     <ClInclude Include="Mathf\Mathf.h" />
     <ClInclude Include="Mathf\Matrix.h" />
     <ClInclude Include="Mathf\Quaternion.h" />

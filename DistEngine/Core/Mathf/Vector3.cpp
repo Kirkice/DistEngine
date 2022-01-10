@@ -240,7 +240,7 @@ namespace Mathf
 		XMStoreFloat3(reinterpret_cast<XMFLOAT3*>(&result), XMVector3Normalize(a.ToSIMD()));
 		return result;
 	}
-
+	 
 	Vector3 Vector3::Clamp(const Vector3& val, const Vector3& min, const Vector3& max)
 	{
 		Vector3 retVal;

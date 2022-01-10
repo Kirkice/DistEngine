@@ -143,12 +143,14 @@
   <ItemGroup>
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="glTF.cpp" />
+    <ClCompile Include="glTFLoader.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="glTF.h" />
+    <ClInclude Include="glTFLoader.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="SkinnedData.h" />
