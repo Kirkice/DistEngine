@@ -48,6 +48,9 @@
     <ClCompile Include="Mathf\Random.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
+    <ClCompile Include="FileUtility.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -97,6 +100,18 @@
     </ClInclude>
     <ClInclude Include="Mathf\Mathf.h">
       <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="zconf.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

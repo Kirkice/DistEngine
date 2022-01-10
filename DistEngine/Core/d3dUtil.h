@@ -146,6 +146,7 @@ struct Texture
 	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
 };
 
+
 #ifndef ThrowIfFailed
 #define ThrowIfFailed(x)                                              \
 {                                                                     \
