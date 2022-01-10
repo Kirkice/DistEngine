@@ -11,6 +11,9 @@
 #include <cstdint>
 #include <math.h>
 
+#define FLT_MAX          3.402823466e+38F        // max value
+
+
 namespace Mathf
 {
 	static const float Infinity = FLT_MAX;
