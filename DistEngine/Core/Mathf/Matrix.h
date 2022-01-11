@@ -17,6 +17,8 @@ namespace Mathf
 
 		float3x3& operator*=(const float3x3& other);
 		float3x3 operator*(const float3x3& other) const;
+		Vector3 operator* (Vector3 vec);
+
 		Vector3 Up() const;
 		Vector3 Down() const;
 		Vector3 Left() const;
@@ -52,6 +54,9 @@ namespace Mathf
 
 		float4x4& operator*=(const float4x4& other);
 		float4x4 operator*(const float4x4& other) const;
+		Vector3 operator* (Vector3 vec);
+		Vector4 operator* (Vector4 vec);
+
 		Vector3 Up() const;
 		Vector3 Down() const;
 		Vector3 Left() const;

@@ -31,9 +31,10 @@ namespace Mathf
 		static Quaternion FromAxisAngle(const Vector3& axis, float angle);
 		static Quaternion FromEuler(float x, float y, float z);
 		static Quaternion Normalize(const Quaternion& q);
+		static Quaternion Slerp(Quaternion a, Quaternion b, float t);
+		static Quaternion Lerp(Quaternion a, Quaternion b, float t);
 		static float3x3 ToFloat3x3(const Quaternion& q);
 		static float4x4 ToFloat4x4(const Quaternion& q);
-
 		DirectX::XMVECTOR ToSIMD() const;
 		DirectX::XMFLOAT4 ToXMFLOAT4() const;
 	};

@@ -1,4 +1,5 @@
 #include "BoundingSphere.h"
+#include <vector>
 
 namespace Mathf
 {
@@ -27,7 +28,7 @@ namespace Mathf
 	{
 		x = xyzw.x;
 		y = xyzw.y;
-		z = xyzw.z;
+		z = xyzw.z; 
 		w = xyzw.w;
 	}
 
@@ -44,25 +45,48 @@ namespace Mathf
 		w = vec.w;
 	}
 
-	BoundingSphere BoundingSphere::Union(const BoundingSphere& rhs)
+	bool BoundingSphere::IsIntersect(const BoundingSphere& rhs)
 	{
-		float radA = GetRadius();
-		if (radA == 0.0f)
-			return rhs;
+		float dis = Vector3::Distance(this->GetCenter(), rhs.GetCenter());
+		float radiusSum = this->GetRadius() + rhs.GetRadius();
+		float radiusSub = abs(this->GetRadius() - rhs.GetRadius());
 
-		float radB = rhs.GetRadius();
-		if (radB == 0.0f)
-			return *this;
+		if (dis <= radiusSum && dis >= radiusSub)
+			return true;
+		else
+			return false;
+	}
 
-		Vector3 diff = GetCenter() - rhs.GetCenter();
-		float dist = Vector3::Length(diff);
+	bool BoundingSphere::IsContain(const BoundingSphere& rhs)
+	{
+		float dis = Vector3::Distance(this->GetCenter(), rhs.GetCenter());
+		float radiusSub = abs(this->GetRadius() - rhs.GetRadius());
 
-		// Safe normalize vector between sphere centers
-		diff = dist < 1e-6f ? Vector3(1,0,0) : diff * (1 / dist);
+		if (dis < radiusSub)
+			return true;
+		else
+			return false;
+	}
 
-		Vector3 extremeA = GetCenter() + diff * Max(radA, radB - dist);
-		Vector3 extremeB = rhs.GetCenter() - diff * Max(radB, radA - dist);
+	bool SolvingQuadratics(double a, double b, double c)
+	{
+		double delta = b * b - 4 * a * c;
+		if (delta < 0)
+			false;
+		else
+			return true;
+	}
 
-		return BoundingSphere((extremeA + extremeB) * 0.5f, Vector3::Length(extremeA - extremeB) * 0.5f);
+	bool BoundingSphere::IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length)
+	{
+		Vector3 D = rayOri * length;
+
+		Vector3 Center = this->GetCenter();
+		float R = this->GetRadius();
+		double a = (D.x * D.x) + (D.y * D.y) + (D.z * D.z);
+		double b = (2 * D.x * (rayOri.x - Center.x) + 2 * D.y * (rayOri.y - Center.y) + 2 * D.z * (rayOri.z - Center.z));
+		double c = ((rayOri.x - Center.x) * (rayOri.x - Center.x) + (rayOri.y - Center.y) * (rayOri.y - Center.y) + (rayOri.z - Center.z) * (rayOri.z - Center.z)) - R * R;
+
+		return SolvingQuadratics(a, b, c);
 	}
 }

@@ -17,6 +17,9 @@
 #include <cstdint>
 #include <DirectXMath.h>
 #include <vector>
+#include "BoundingAABB.h"
+
+using namespace Mathf;
 
 class GeometryGenerator
 {
@@ -57,6 +60,7 @@ public:
 	{
 		std::vector<Vertex> Vertices;
         std::vector<uint32> Indices32;
+		BoundingAABB AABB = BoundingAABB();
 
         std::vector<uint16>& GetIndices16()
         {

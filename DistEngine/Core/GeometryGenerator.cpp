@@ -6,6 +6,7 @@
 #include <algorithm>
 
 using namespace DirectX;
+using namespace Mathf;
 
 GeometryGenerator::MeshData GeometryGenerator::CreateBox(float width, float height, float depth, uint32 numSubdivisions)
 {
@@ -115,6 +116,7 @@ GeometryGenerator::MeshData GeometryGenerator::CreateSphere(float radius, uint32
 	Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	meshData.Vertices.push_back( topVertex );
+	meshData.AABB.AddPoint(Vector3(topVertex.Position));
 
 	float phiStep   = XM_PI/stackCount;
 	float thetaStep = 2.0f*XM_PI/sliceCount;
@@ -151,10 +153,12 @@ GeometryGenerator::MeshData GeometryGenerator::CreateSphere(float radius, uint32
 			v.TexC.y = phi / XM_PI;
 
 			meshData.Vertices.push_back( v );
+			meshData.AABB.AddPoint(Vector3(v.Position));
 		}
 	}
 
 	meshData.Vertices.push_back( bottomVertex );
+	meshData.AABB.AddPoint(Vector3(bottomVertex.Position));
 
 	//
 	// Compute indices for top stack.  The top stack was written first to the vertex buffer
@@ -337,7 +341,7 @@ GeometryGenerator::MeshData GeometryGenerator::CreateGeosphere(float radius, uin
     meshData.Vertices.resize(12);
     meshData.Indices32.assign(&k[0], &k[60]);
 
-	for(uint32 i = 0; i < 12; ++i)
+	for (uint32 i = 0; i < 12; ++i)
 		meshData.Vertices[i].Position = pos[i];
 
 	for(uint32 i = 0; i < numSubdivisions; ++i)

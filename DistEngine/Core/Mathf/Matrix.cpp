@@ -50,6 +50,11 @@ namespace Mathf
 		return float3x3(result);
 	}
 
+	Vector3 float3x3::operator*(Vector3 vec)
+	{
+		return Vector3(XMVector3TransformNormal(vec.ToSIMD(), this->ToSIMD()));
+	}
+
 	Vector3 float3x3::Up() const
 	{
 		return Vector3(_21, _22, _23);
@@ -198,6 +203,16 @@ namespace Mathf
 	{
 		XMMATRIX result = this->ToSIMD() * other.ToSIMD();
 		return float4x4(result);
+	}
+
+	Vector3 float4x4::operator*(Vector3 vec)
+	{
+		return Vector3(XMVector3Transform(vec.ToSIMD(), this->ToSIMD()));
+	}
+
+	Vector4 float4x4::operator*(Vector4 vec)
+	{
+		return Vector4(XMVector4Transform(vec.ToSIMD(), this->ToSIMD()));
 	}
 
 	Vector3 float4x4::Up() const

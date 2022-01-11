@@ -103,6 +103,16 @@ namespace Mathf
 		return Quaternion(XMQuaternionNormalize(q.ToSIMD()));
 	}
 
+	Quaternion Quaternion::Slerp(Quaternion a, Quaternion b, float t)
+	{
+		return Normalize(Quaternion(XMQuaternionSlerp(a.ToSIMD(), b.ToSIMD(), t)));
+	}
+
+	Quaternion Quaternion::Lerp(Quaternion a, Quaternion b, float t)
+	{
+		return Normalize(Quaternion(XMVectorLerp(a.ToSIMD(), b.ToSIMD(), t)));
+	}
+
 	float3x3 Quaternion::ToFloat3x3(const Quaternion& q)
 	{
 		return q.ToFloat3x3();
