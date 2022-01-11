@@ -16,6 +16,9 @@ namespace Mathf
 		Vector3 GetCenter(void) const { return Vector3(x,y,z); }
 		float GetRadius(void) const { return w; }
 
-		BoundingSphere Union(const BoundingSphere& rhs);
-	};
+		bool IsIntersect(const BoundingSphere& rhs);
+		bool IsContain(const BoundingSphere& rhs);
+
+		bool IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length = 100);
+	}; 
 }

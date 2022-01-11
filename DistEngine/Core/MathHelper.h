@@ -20,6 +20,7 @@ namespace Mathf
 	static const float Pi_4 = 0.7853981635f;
 	static const float InvPi = 0.318309886f;
 	static const float InvPi2 = 0.159154943f;
+	static const double EPSILON = 0.0000000001;
 
 	// Returns random float in [0, 1).
 	static float RandF()

@@ -54,6 +54,15 @@
     <ClCompile Include="Mathf\BoundingSphere.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
+    <ClCompile Include="Mathf\BoundingAABB.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Transform.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\BoundingOBB.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -117,6 +126,15 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\BoundingSphere.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingAABB.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingOBB.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Transform.h">
       <Filter>Mathf</Filter>
     </ClInclude>
   </ItemGroup>
