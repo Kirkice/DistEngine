@@ -34,7 +34,6 @@ namespace Renderer
 		virtual void CreateRtvAndDsvDescriptorHeaps()override;
 		virtual void OnResize()override;
 		virtual void Update(const GameTimer& gt)override;
-		void OnKeyboardInput(const GameTimer& gt);
 
 	public:
 
@@ -114,8 +113,6 @@ namespace Renderer
 		PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 		PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
-		Camera mCamera;
-
 		std::unique_ptr<ShadowMap> mShadowMap;
 
 		std::unique_ptr<Ssao> mSsao;
@@ -129,8 +126,6 @@ namespace Renderer
 		XMFLOAT4X4 mLightView = Mathf::Identity4x4();
 		XMFLOAT4X4 mLightProj = Mathf::Identity4x4();
 		XMFLOAT4X4 mShadowTransform = Mathf::Identity4x4();
-
-		POINT mLastMousePos;
 
 		float BackGroundTransform[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		float BackGroundRotation = 0.0f;
@@ -149,5 +144,8 @@ namespace Renderer
 
 		bool renderSkyBox = true;
 		float SolidColor[4] = { 0,0,0,0 };
+		
+		//Bounding
+		bool ShowBounding = false;
 	};
 }

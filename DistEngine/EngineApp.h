@@ -24,9 +24,4 @@ public:
 	EngineApp(const EngineApp& rhs) = delete;
 	EngineApp& operator=(const EngineApp& rhs) = delete;
 	~EngineApp();
-
-private:
-	virtual void OnMouseDown(WPARAM btnState, int x, int y)override;
-	virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
-	virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
 };

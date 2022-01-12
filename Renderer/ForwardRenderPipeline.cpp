@@ -93,6 +93,8 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
+	ForwardRenderer::DrawBounding();
+
 	ForwardRenderer::DrawGizmo();
 
 	ForwardRenderer::DrawImgui();
@@ -162,6 +164,15 @@ void ForwardRenderer::DrawTransparent()
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Unlit]);
 }
 
+void ForwardRenderer::DrawBounding()
+{
+	if (ShowBounding)
+	{
+		mCommandList->SetPipelineState(mPSOs["bounding"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Bounding]);
+	}
+}
+
 void ForwardRenderer::DrawGizmo()
 {
 	mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
@@ -195,6 +206,9 @@ void ForwardRenderer::DrawEditor()
 	//Draw Light Setting
 	if (show_lightSetting_panel)
 		ForwardRenderer::DrawLightSettings();
+	if (show_physicsSetting_panel)
+		ForwardRenderer::DrawPhysicsSettings();
+
 
 	//Draw Graphics Item
 	ForwardRenderer::DrawGraphicsItemEditor();
@@ -233,6 +247,7 @@ void ForwardRenderer::DrawMenuEditor()
 		if (ImGui::BeginMenu("Window"))
 		{
 			ImGui::MenuItem("Light Settings", NULL, &show_lightSetting_panel);
+			ImGui::MenuItem("Physics Settings", NULL, &show_physicsSetting_panel);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -422,6 +437,18 @@ void ForwardRenderer::DrawOverLayProfile()
 	//	}
 	//}
 	//ImGui::End();
+}
+
+void ForwardRenderer::DrawPhysicsSettings()
+{
+	//Render Item
+	ImGui::SetNextWindowBgAlpha(0.8f);
+	ImGui::SetWindowSize(ImVec2(180, 500), ImGuiCond_Always);
+	ImGui::Begin("Physics Settings", &show_physicsSetting_panel);
+
+	ImGui::Text("Bounce Range");
+	ImGui::Checkbox("Bounce Show", &ShowBounding);
+	ImGui::End();
 }
 
 //Light Settings

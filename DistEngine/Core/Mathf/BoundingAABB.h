@@ -15,6 +15,8 @@ namespace Mathf
 		Vector3 GetMax();
 		Vector3 GetCenter();
 
+		void Update(float4x4 mat);
+
 		bool IsIntersect(const BoundingAABB& aabb);
 		bool IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length = 100);
 	};

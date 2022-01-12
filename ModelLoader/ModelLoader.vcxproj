@@ -145,6 +145,7 @@
     <ClCompile Include="glTF.cpp" />
     <ClCompile Include="glTFLoader.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
+    <ClCompile Include="PhysicsCore.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="glTFLoader.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="LoadM3d.h" />
+    <ClInclude Include="PhysicsCore.h" />
     <ClInclude Include="SkinnedData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

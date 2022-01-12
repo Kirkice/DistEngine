@@ -9,7 +9,7 @@ using namespace ModelLoader;
 
 const int GizmoCount = 6;
 
-RenderCore::RenderCore(HINSTANCE hInstance) : D3DApp(hInstance)
+RenderCore::RenderCore(HINSTANCE hInstance) : PhysicsCore(hInstance)
 {
 }
 
@@ -19,7 +19,7 @@ RenderCore::~RenderCore()
 		FlushCommandQueue();
 }
 
-//Sky Box
+//--------------------	Sky Box	--------------------
 void RenderCore::SkyBox_UpdateMaterialBuffer(Material* mat, UploadBuffer<SkyBoxMaterialData>* currMaterialBuffer)
 {
 	XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
@@ -108,7 +108,7 @@ void RenderCore::SkyBox_BuildRenderItems(
 
 
 
-//PBR Demo
+//--------------------	PBR Demo	--------------------
 void RenderCore::PBRDemo_UpdateMaterialBuffer(Material* mat, UploadBuffer<PBRMaterialData>* currMaterialBuffer)
 {
 	XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
@@ -592,7 +592,7 @@ void RenderCore::PBRDemo_UpdateObjectBuffer()
 
 }
 
-
+//--------------------	Gizmos	--------------------
 void RenderCore::EditorGizmo_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mGizmoTextures)
 {
 	std::vector<std::string> texNames =
@@ -748,4 +748,169 @@ void RenderCore::EditorGizmo_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWo
 		case 11:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mDirectionLightsPos.x, mDirectionLightsPos.y, mDirectionLightsPos.z));break;
 		case 12:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(0.03, 0.03, 0.02) * XMMatrixTranslation(mPointLightsPos.x, mPointLightsPos.y, mPointLightsPos.z)); break;
 	}
+}
+
+
+//--------------------	Bounding	--------------------
+void RenderCore::Bounding_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials)
+{
+	auto BoundingMat = std::make_unique<Material>();
+	BoundingMat->Name = "Bounding";
+	BoundingMat->MatCBIndex = 17;
+	mMaterials["Bounding"] = std::move(BoundingMat);
+}
+
+void RenderCore::Bounding_BuildRenderItems(
+	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+	std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
+{
+	auto AABBItem_Sphere = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Sphere->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(0, 1, 0));
+	XMStoreFloat4x4(&AABBItem_Sphere->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Sphere->ObjCBIndex = 14;
+	AABBItem_Sphere->Mat = mMaterials["Bounding"].get();
+	AABBItem_Sphere->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Sphere->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Sphere->IndexCount = AABBItem_Sphere->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Sphere->StartIndexLocation = AABBItem_Sphere->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Sphere->BaseVertexLocation = AABBItem_Sphere->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Sphere.get());
+	mAllRitems.push_back(std::move(AABBItem_Sphere));
+
+
+	//Ag
+	auto AABBItem_Ag = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Ag->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(3, 1, 3));
+
+	XMStoreFloat4x4(&AABBItem_Ag->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Ag->ObjCBIndex = 15;
+	AABBItem_Ag->Mat = mMaterials["Bounding"].get();
+	AABBItem_Ag->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Ag->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Ag->IndexCount = AABBItem_Ag->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Ag->StartIndexLocation = AABBItem_Ag->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Ag->BaseVertexLocation = AABBItem_Ag->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Ag.get());
+	mAllRitems.push_back(std::move(AABBItem_Ag));
+
+	//Au
+	auto AABBItem_Au = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Au->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(-3, 1, 3));
+
+	XMStoreFloat4x4(&AABBItem_Au->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Au->ObjCBIndex = 16;
+	AABBItem_Au->Mat = mMaterials["Bounding"].get();
+	AABBItem_Au->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Au->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Au->IndexCount = AABBItem_Au->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Au->StartIndexLocation = AABBItem_Au->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Au->BaseVertexLocation = AABBItem_Au->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Au.get());
+	mAllRitems.push_back(std::move(AABBItem_Au));
+
+	//Cu
+	auto AABBItem_Cu = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Cu->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(0, 1, 3));
+
+	XMStoreFloat4x4(&AABBItem_Cu->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Cu->ObjCBIndex = 17;
+	AABBItem_Cu->Mat = mMaterials["Bounding"].get();
+	AABBItem_Cu->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Cu->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Cu->IndexCount = AABBItem_Cu->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Cu->StartIndexLocation = AABBItem_Cu->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Cu->BaseVertexLocation = AABBItem_Cu->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Cu.get());
+	mAllRitems.push_back(std::move(AABBItem_Cu));
+
+	//Brics
+	auto AABBItem_Brics = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Brics->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(3, 1, 0));
+
+	XMStoreFloat4x4(&AABBItem_Brics->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Brics->ObjCBIndex = 18;
+	AABBItem_Brics->Mat = mMaterials["Bounding"].get();
+	AABBItem_Brics->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Brics->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Brics->IndexCount = AABBItem_Brics->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Brics->StartIndexLocation = AABBItem_Brics->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Brics->BaseVertexLocation = AABBItem_Brics->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Brics.get());
+	mAllRitems.push_back(std::move(AABBItem_Brics));
+
+	//Oak
+	auto AABBItem_Oak = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Oak->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(-3, 1, 0));
+
+	XMStoreFloat4x4(&AABBItem_Oak->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Oak->ObjCBIndex = 19;
+	AABBItem_Oak->Mat = mMaterials["Bounding"].get();
+	AABBItem_Oak->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Oak->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Oak->IndexCount = AABBItem_Oak->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Oak->StartIndexLocation = AABBItem_Oak->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Oak->BaseVertexLocation = AABBItem_Oak->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Oak.get());
+	mAllRitems.push_back(std::move(AABBItem_Oak));
+
+	//Wooden2
+	auto AABBItem_Wooden2 = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Wooden2->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(0, 1, -3));
+
+	XMStoreFloat4x4(&AABBItem_Wooden2->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Wooden2->ObjCBIndex = 20;
+	AABBItem_Wooden2->Mat = mMaterials["Bounding"].get();
+	AABBItem_Wooden2->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Wooden2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Wooden2->IndexCount = AABBItem_Wooden2->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Wooden2->StartIndexLocation = AABBItem_Wooden2->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Wooden2->BaseVertexLocation = AABBItem_Wooden2->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden2.get());
+	mAllRitems.push_back(std::move(AABBItem_Wooden2));
+
+	//Wooden3
+	auto AABBItem_Wooden3 = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Wooden3->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(3, 1, -3));
+
+	XMStoreFloat4x4(&AABBItem_Wooden3->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Wooden3->ObjCBIndex = 21;
+	AABBItem_Wooden3->Mat = mMaterials["Bounding"].get();
+	AABBItem_Wooden3->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Wooden3->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Wooden3->IndexCount = AABBItem_Wooden3->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Wooden3->StartIndexLocation = AABBItem_Wooden3->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Wooden3->BaseVertexLocation = AABBItem_Wooden3->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden3.get());
+	mAllRitems.push_back(std::move(AABBItem_Wooden3));
+
+	//Wooden4
+	auto AABBItem_Wooden4 = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&AABBItem_Wooden4->World, XMMatrixScaling(2, 2, 2) * XMMatrixTranslation(-3, 1, -3));
+
+	XMStoreFloat4x4(&AABBItem_Wooden4->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	AABBItem_Wooden4->ObjCBIndex = 22;
+	AABBItem_Wooden4->Mat = mMaterials["Bounding"].get();
+	AABBItem_Wooden4->Geo = mGeometries["shapeGeo"].get();
+	AABBItem_Wooden4->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	AABBItem_Wooden4->IndexCount = AABBItem_Wooden4->Geo->DrawArgs["aabb"].IndexCount;
+	AABBItem_Wooden4->StartIndexLocation = AABBItem_Wooden4->Geo->DrawArgs["aabb"].StartIndexLocation;
+	AABBItem_Wooden4->BaseVertexLocation = AABBItem_Wooden4->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden4.get());
+	mAllRitems.push_back(std::move(AABBItem_Wooden4));
+}
+
+void RenderCore::Bounding_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix)
+{
+
 }

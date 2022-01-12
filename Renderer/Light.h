@@ -26,7 +26,7 @@ namespace Renderer
 		float rangeFactory = 1.0;
 		Vector3 Position = { 0.0f, 0.0f, 0.0f };
 		float Strength = 1;
-		float Active = 1;
+		float Active = 0;
 	};
 
 	//SpotLight
@@ -38,6 +38,6 @@ namespace Renderer
 		float spotLightsStrength = 1;
 		Vector3 Direction = { 0.0f, -1.0f, 0.0f }; 
 		float spotAngle = 30;
-		float spotLightsActive = 1;
+		float spotLightsActive = 0;
 	};
 }

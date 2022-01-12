@@ -41,6 +41,12 @@ namespace Mathf
 		return (m_min + m_max) * 0.5f;
 	}
 
+	void BoundingAABB::Update(float4x4 mat)
+	{
+		this->m_min = mat * this->m_min;
+		this->m_max = mat * this->m_max;
+	}
+
 	bool BoundingAABB::IsIntersect(const BoundingAABB& aabb)
 	{
 		return ((m_min.x >= aabb.m_min.x && m_min.x <= aabb.m_max.x) || (aabb.m_min.x >= m_min.x && aabb.m_min.x <= m_max.x)) &&

@@ -647,6 +647,9 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["unitVS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["unitPS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["boundingVS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
+
 	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
 	mShaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
@@ -693,17 +696,19 @@ void GraphicsCore::BuildShapeGeometry()
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
 	GeometryGenerator::MeshData quad = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-
+	GeometryGenerator::MeshData aabb = geoGen.CreateAABB(sphere.AABB,0);
 
 	// Cache the vertex offsets to each object in the concatenated vertex buffer.
 	UINT gridVertexOffset = 0;
 	UINT sphereVertexOffset = gridVertexOffset + (UINT)grid.Vertices.size();
 	UINT quadVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
+	UINT aabbVertexOffset = quadVertexOffset + (UINT)quad.Vertices.size();
 
 	// Cache the starting index for each object in the concatenated index buffer.
 	UINT gridIndexOffset = 0;
 	UINT sphereIndexOffset = gridIndexOffset + (UINT)grid.Indices32.size();
 	UINT quadIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
+	UINT aabbIndexOffset = quadIndexOffset + (UINT)quad.Indices32.size();
 
 	SubmeshGeometry gridSubmesh;
 	gridSubmesh.IndexCount = (UINT)grid.Indices32.size();
@@ -720,6 +725,11 @@ void GraphicsCore::BuildShapeGeometry()
 	quadSubmesh.StartIndexLocation = quadIndexOffset;
 	quadSubmesh.BaseVertexLocation = quadVertexOffset;
 
+	SubmeshGeometry aabbSubMesh;
+	aabbSubMesh.IndexCount = (UINT)aabb.Indices32.size();
+	aabbSubMesh.StartIndexLocation = aabbIndexOffset;
+	aabbSubMesh.BaseVertexLocation = aabbVertexOffset;
+
 	//
 	// Extract the vertex elements we are interested in and pack the
 	// vertices of all the meshes into one vertex buffer.
@@ -728,7 +738,8 @@ void GraphicsCore::BuildShapeGeometry()
 	auto totalVertexCount =
 		grid.Vertices.size() +
 		sphere.Vertices.size() +
-		quad.Vertices.size();
+		quad.Vertices.size() + 
+		aabb.Vertices.size();
 
 	std::vector<Vertex> vertices(totalVertexCount);
 
@@ -758,10 +769,19 @@ void GraphicsCore::BuildShapeGeometry()
 		vertices[k].TangentU = quad.Vertices[i].TangentU;
 	}
 
+	for (int i = 0; i < aabb.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = aabb.Vertices[i].Position;
+		vertices[k].Normal = aabb.Vertices[i].Normal;
+		vertices[k].TexC = aabb.Vertices[i].TexC;
+		vertices[k].TangentU = aabb.Vertices[i].TangentU;
+	}
+
 	std::vector<std::uint16_t> indices;
 	indices.insert(indices.end(), std::begin(grid.GetIndices16()), std::end(grid.GetIndices16()));
 	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
 	indices.insert(indices.end(), std::begin(quad.GetIndices16()), std::end(quad.GetIndices16()));
+	indices.insert(indices.end(), std::begin(aabb.GetIndices16()), std::end(aabb.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -789,6 +809,7 @@ void GraphicsCore::BuildShapeGeometry()
 	geo->DrawArgs["grid"] = gridSubmesh;
 	geo->DrawArgs["sphere"] = sphereSubmesh;
 	geo->DrawArgs["quad"] = quadSubmesh;
+	geo->DrawArgs["aabb"] = aabbSubMesh;
 
 	mGeometries[geo->Name] = std::move(geo);
 }
@@ -874,6 +895,25 @@ void GraphicsCore::BuildPSOs()
 	opaquePsoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
 
+	//
+	// 	PSO for Bounding
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC BoundingPsoDesc = opaquePsoDesc;
+	BoundingPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	BoundingPsoDesc.pRootSignature = mRootSignature.Get();
+	BoundingPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["boundingVS"]->GetBufferPointer()),
+		mShaders["boundingVS"]->GetBufferSize()
+	};
+	BoundingPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["boundingPS"]->GetBufferPointer()),
+		mShaders["boundingPS"]->GetBufferSize()
+	};
+	BoundingPsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	BoundingPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&BoundingPsoDesc, IID_PPV_ARGS(&mPSOs["bounding"])));
 
 	//
 	// 	PSO for OutLine
@@ -1182,6 +1222,8 @@ void GraphicsCore::BuildMaterials()
 	PBRDemo_BuildMaterials(mMaterials);
 	//Editor Mat
 	EditorGizmo_BuildMaterials(mMaterials);
+	//Bounding Mat
+	Bounding_BuildMaterials(mMaterials);
 }
 
 void GraphicsCore::BuildRenderItems()
@@ -1191,6 +1233,8 @@ void GraphicsCore::BuildRenderItems()
 	PBRDemo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 
 	EditorGizmo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
+
+	Bounding_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
@@ -1375,23 +1419,4 @@ std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsCore::GetStaticSamplers
 		anisotropicWrap, anisotropicClamp,
 		shadow
 	};
-}
-
-void GraphicsCore::OnKeyboardInput(const GameTimer& gt)
-{
-	const float dt = gt.DeltaTime();
-
-	if (GetAsyncKeyState('W') & 0x8000)
-		mCamera.Walk(10.0f * dt);
-
-	if (GetAsyncKeyState('S') & 0x8000)
-		mCamera.Walk(-10.0f * dt);
-
-	if (GetAsyncKeyState('A') & 0x8000)
-		mCamera.Strafe(-10.0f * dt);
-
-	if (GetAsyncKeyState('D') & 0x8000)
-		mCamera.Strafe(10.0f * dt);
-
-	mCamera.UpdateViewMatrix();
 }

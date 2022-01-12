@@ -23,6 +23,7 @@ namespace Renderer
 	private:
 		//Light Setting Panel
 		bool show_lightSetting_panel = false;
+		bool show_physicsSetting_panel = false;
 
 		virtual void Draw(const GameTimer& gt)override;
 
@@ -50,6 +51,8 @@ namespace Renderer
 		//��Ⱦ����
 		void DrawPostProcessing();
 
+		void DrawBounding();
+
 		void DrawGizmo();
 
 		//��ȾImgui
@@ -74,5 +77,7 @@ namespace Renderer
 		void DrawOverLayProfile();
 
 		void DrawLightSettings();
+
+		void DrawPhysicsSettings();
 	};
 }

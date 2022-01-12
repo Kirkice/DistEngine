@@ -11,6 +11,7 @@
 #include "LoadM3d.h"
 #include "Ssao.h"
 #include "FbxLoader.h"
+#include "PhysicsCore.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -52,10 +53,11 @@ namespace Renderer
 		Sky = 3,
 		Gizmo = 4,
 		Unlit = 5,
+		Bounding = 6,
 		Count
 	};
 
-	class RenderCore : public D3DApp
+	class RenderCore : public PhysicsCore
 	{
 	public:
 		RenderCore(HINSTANCE hInstance);
@@ -64,6 +66,15 @@ namespace Renderer
 		~RenderCore();
 
 	public:
+		void Bounding_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials);
+		void Bounding_BuildRenderItems(
+			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
+		void Bounding_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix);
+
+
 		//Editor Gizmo
 		void EditorGizmo_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures);
 		void EditorGizmo_BuildDescriptorHeaps(std::vector<ComPtr<ID3D12Resource>>& tex2DList, std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures);
@@ -124,8 +135,8 @@ namespace Renderer
 		float mPointLightsRange = 3.0;
 		float mPointLightsRot[3] = { 0,0,0 };
 		float mPointLightsScale[3] = { 1,1,1 };
-		float mPointLightsStrength = 8;
-		bool mPointLightsActive = true;
+		float mPointLightsStrength = 3;
+		bool mPointLightsActive = false;
 
 		//SpotLights
 		XMFLOAT3 mRotatedLightSpots;
