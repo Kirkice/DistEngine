@@ -777,6 +777,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Sphere->StartIndexLocation = AABBItem_Sphere->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Sphere->BaseVertexLocation = AABBItem_Sphere->Geo->DrawArgs["aabb"].BaseVertexLocation;
 
+	AABBItem_Sphere->AABB = AABBItem_Sphere->Geo->AABBs["sphere"];
+	AABBItem_Sphere->AABB.Update(float4x4(AABBItem_Sphere->World));
+
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Sphere.get());
 	mAllRitems.push_back(std::move(AABBItem_Sphere));
 
@@ -794,6 +797,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Ag->StartIndexLocation = AABBItem_Ag->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Ag->BaseVertexLocation = AABBItem_Ag->Geo->DrawArgs["aabb"].BaseVertexLocation;
 
+	AABBItem_Ag->AABB = AABBItem_Ag->Geo->AABBs["sphere"];
+	AABBItem_Ag->AABB.Update(float4x4(AABBItem_Ag->World));
+
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Ag.get());
 	mAllRitems.push_back(std::move(AABBItem_Ag));
 
@@ -809,6 +815,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Au->IndexCount = AABBItem_Au->Geo->DrawArgs["aabb"].IndexCount;
 	AABBItem_Au->StartIndexLocation = AABBItem_Au->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Au->BaseVertexLocation = AABBItem_Au->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	AABBItem_Au->AABB = AABBItem_Au->Geo->AABBs["sphere"];
+	AABBItem_Au->AABB.Update(float4x4(AABBItem_Au->World));
 
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Au.get());
 	mAllRitems.push_back(std::move(AABBItem_Au));
@@ -826,6 +835,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Cu->StartIndexLocation = AABBItem_Cu->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Cu->BaseVertexLocation = AABBItem_Cu->Geo->DrawArgs["aabb"].BaseVertexLocation;
 
+	AABBItem_Cu->AABB = AABBItem_Cu->Geo->AABBs["sphere"];
+	AABBItem_Cu->AABB.Update(float4x4(AABBItem_Cu->World));
+
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Cu.get());
 	mAllRitems.push_back(std::move(AABBItem_Cu));
 
@@ -841,6 +853,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Brics->IndexCount = AABBItem_Brics->Geo->DrawArgs["aabb"].IndexCount;
 	AABBItem_Brics->StartIndexLocation = AABBItem_Brics->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Brics->BaseVertexLocation = AABBItem_Brics->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	AABBItem_Brics->AABB = AABBItem_Brics->Geo->AABBs["sphere"];
+	AABBItem_Brics->AABB.Update(float4x4(AABBItem_Brics->World));
 
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Brics.get());
 	mAllRitems.push_back(std::move(AABBItem_Brics));
@@ -858,6 +873,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Oak->StartIndexLocation = AABBItem_Oak->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Oak->BaseVertexLocation = AABBItem_Oak->Geo->DrawArgs["aabb"].BaseVertexLocation;
 
+	AABBItem_Oak->AABB = AABBItem_Oak->Geo->AABBs["sphere"];
+	AABBItem_Oak->AABB.Update(float4x4(AABBItem_Oak->World));
+
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Oak.get());
 	mAllRitems.push_back(std::move(AABBItem_Oak));
 
@@ -873,6 +891,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Wooden2->IndexCount = AABBItem_Wooden2->Geo->DrawArgs["aabb"].IndexCount;
 	AABBItem_Wooden2->StartIndexLocation = AABBItem_Wooden2->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Wooden2->BaseVertexLocation = AABBItem_Wooden2->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	AABBItem_Wooden2->AABB = AABBItem_Wooden2->Geo->AABBs["sphere"];
+	AABBItem_Wooden2->AABB.Update(float4x4(AABBItem_Wooden2->World));
 
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden2.get());
 	mAllRitems.push_back(std::move(AABBItem_Wooden2));
@@ -890,6 +911,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Wooden3->StartIndexLocation = AABBItem_Wooden3->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Wooden3->BaseVertexLocation = AABBItem_Wooden3->Geo->DrawArgs["aabb"].BaseVertexLocation;
 
+	AABBItem_Wooden3->AABB = AABBItem_Wooden3->Geo->AABBs["sphere"];
+	AABBItem_Wooden3->AABB.Update(float4x4(AABBItem_Wooden3->World));
+
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden3.get());
 	mAllRitems.push_back(std::move(AABBItem_Wooden3));
 
@@ -905,6 +929,9 @@ void RenderCore::Bounding_BuildRenderItems(
 	AABBItem_Wooden4->IndexCount = AABBItem_Wooden4->Geo->DrawArgs["aabb"].IndexCount;
 	AABBItem_Wooden4->StartIndexLocation = AABBItem_Wooden4->Geo->DrawArgs["aabb"].StartIndexLocation;
 	AABBItem_Wooden4->BaseVertexLocation = AABBItem_Wooden4->Geo->DrawArgs["aabb"].BaseVertexLocation;
+
+	AABBItem_Wooden4->AABB = AABBItem_Wooden4->Geo->AABBs["sphere"];
+	AABBItem_Wooden4->AABB.Update(float4x4(AABBItem_Wooden4->World));
 
 	mRitemLayer[(int)RenderLayer::Bounding].push_back(AABBItem_Wooden4.get());
 	mAllRitems.push_back(std::move(AABBItem_Wooden4));

@@ -10,6 +10,7 @@
 #include "SkinnedData.h"
 #include "LoadM3d.h"
 #include "Ssao.h"
+#include "CopyColor.h"
 #include "FbxLoader.h"
 #include "RendererCore.h"
 
@@ -45,6 +46,7 @@ namespace Renderer
 		void UpdateMainPassCB(const GameTimer& gt);
 		void UpdateShadowPassCB(const GameTimer& gt);
 		void UpdateSsaoCB(const GameTimer& gt);
+		void UpdateCheckRay(const GameTimer& gt);
 
 		void LoadTextures();
 		void BuildRootSignature();
@@ -103,6 +105,8 @@ namespace Renderer
 		UINT mShadowMapHeapIndex = 0;
 		UINT mSsaoHeapIndexStart = 0;
 		UINT mSsaoAmbientMapIndex = 0;
+		UINT mColorAttachmentIndex = 0;
+
 
 		UINT mNullCubeSrvIndex = 0;
 		UINT mNullTexSrvIndex1 = 0;
@@ -114,8 +118,8 @@ namespace Renderer
 		PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
 		std::unique_ptr<ShadowMap> mShadowMap;
-
 		std::unique_ptr<Ssao> mSsao;
+		std::unique_ptr<CopyColor> mCopyColor;
 
 		DirectX::BoundingSphere mSceneBounds;
 

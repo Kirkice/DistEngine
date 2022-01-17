@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CopyColor.cpp" />
     <ClCompile Include="ForwardRenderPipeline.cpp" />
     <ClCompile Include="FrameResource.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Ssao.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CopyColor.h" />
     <ClInclude Include="ForwardRenderPipeline.h" />
     <ClInclude Include="FrameResource.h" />
     <ClInclude Include="GraphicsCore.h" />

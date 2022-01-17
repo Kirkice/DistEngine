@@ -5,6 +5,7 @@
 #include "SkinnedData.h"
 #include "LoadM3d.h"
 #include "FbxLoader.h"
+#include "BoundingAABB.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -28,9 +29,10 @@ public:
 public:
 
 	//Ray 
-	void ScreenPointToRay();
+	bool ScreenPointToRay(BoundingAABB aabb);
 
 	Camera mCamera;
 	POINT mLastMousePos;
+	bool isMouseDown = false;
 };
 

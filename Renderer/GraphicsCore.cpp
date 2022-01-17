@@ -35,6 +35,11 @@ bool GraphicsCore::Initialize()
 		mCommandList.Get(),
 		mClientWidth, mClientHeight);
 
+	mCopyColor = std::make_unique<CopyColor>(
+		md3dDevice.Get(),
+		mCommandList.Get(),
+		mClientWidth, mClientHeight
+		);
 	//LoadModel();
 	LoadTextures();
 	BuildRootSignature();
@@ -49,6 +54,7 @@ bool GraphicsCore::Initialize()
 
 	mSsao->SetPSOs(mPSOs["ssao"].Get(), mPSOs["ssaoBlur"].Get());
 
+	mCopyColor->SetPSOs(mPSOs["CopyColor"].Get());
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
@@ -102,6 +108,14 @@ void GraphicsCore::OnResize()
 		// Resources changed, so need to rebuild descriptors.
 		mSsao->RebuildDescriptors(mDepthStencilBuffer.Get());
 	}
+
+	if (mCopyColor!=nullptr)
+	{
+		mCopyColor->OnResize(mClientWidth, mClientHeight);
+
+		// Resources changed, so need to rebuild descriptors.
+		mCopyColor->RebuildDescriptors(mDepthStencilBuffer.Get());
+	}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -131,6 +145,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
 	UpdateSsaoCB(gt);
+	UpdateCheckRay(gt);
 }
 
 
@@ -378,6 +393,20 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 	currSsaoCB->CopyData(0, ssaoCB);
 }
 
+void GraphicsCore::UpdateCheckRay(const GameTimer& gt)
+{
+	std::vector<RenderItem*>& ritems = mRitemLayer[(int)RenderLayer::Opaque];
+	if (isMouseDown)
+	{
+		for (size_t i = 0; i < ritems.size(); ++i)
+		{
+			auto ri = ritems[i];
+			bool isHit = PhysicsCore::ScreenPointToRay(ri->AABB);
+			bool boolHit = isHit;
+		}
+	}
+}
+
 void GraphicsCore::LoadTextures()
 {
 	PBRDemo_LoadTextures(mTextures);
@@ -582,7 +611,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
+	mColorAttachmentIndex = mSsaoHeapIndexStart + 5;
+	mNullCubeSrvIndex = mColorAttachmentIndex + 1;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -615,6 +645,15 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize,
 		mRtvDescriptorSize);
+
+	mCopyColor->BuildDescriptors(
+		mDepthStencilBuffer.Get(),
+		GetCpuSrv(mColorAttachmentIndex),
+		GetGpuSrv(mColorAttachmentIndex),
+		GetRtv(SwapChainBufferCount),
+		mCbvSrvUavDescriptorSize,
+		mRtvDescriptorSize
+	);
 }
 
 void GraphicsCore::BuildShadersAndInputLayout()
@@ -805,6 +844,8 @@ void GraphicsCore::BuildShapeGeometry()
 	geo->VertexBufferByteSize = vbByteSize;
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
+
+	geo->AABBs["sphere"] = sphere.AABB;
 
 	geo->DrawArgs["grid"] = gridSubmesh;
 	geo->DrawArgs["sphere"] = sphereSubmesh;
