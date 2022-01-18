@@ -55,6 +55,7 @@ bool GraphicsCore::Initialize()
 	mSsao->SetPSOs(mPSOs["ssao"].Get(), mPSOs["ssaoBlur"].Get());
 
 	mCopyColor->SetPSOs(mPSOs["CopyColor"].Get());
+
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
@@ -611,8 +612,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mColorAttachmentIndex = mSsaoHeapIndexStart + 5;
-	mNullCubeSrvIndex = mColorAttachmentIndex + 1;
+	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
+	//mNullCubeSrvIndex = mColorAttachmentIndex + 1;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -688,6 +689,9 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 	mShaders["boundingVS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["CopyColorVS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["CopyColorPS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
@@ -1140,6 +1144,23 @@ void GraphicsCore::BuildPSOs()
 		mShaders["debugPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&mPSOs["debug"])));
+
+	//
+	// PSO for Copy Color.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC cpoyColorPsoDesc = opaquePsoDesc;
+	cpoyColorPsoDesc.pRootSignature = mRootSignature.Get();
+	cpoyColorPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["CopyColorVS"]->GetBufferPointer()),
+		mShaders["CopyColorVS"]->GetBufferSize()
+	};
+	cpoyColorPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["CopyColorPS"]->GetBufferPointer()),
+		mShaders["CopyColorPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&cpoyColorPsoDesc, IID_PPV_ARGS(&mPSOs["CopyColor"])));
 
 	//
 	// PSO for drawing normals.

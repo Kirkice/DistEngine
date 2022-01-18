@@ -77,7 +77,6 @@ namespace Renderer
 
 		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr;
-
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
