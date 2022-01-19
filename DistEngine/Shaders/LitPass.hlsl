@@ -129,6 +129,9 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
+    pin.SsaoPosH                                        /= pin.SsaoPosH.w;
+    float4 color = gSsaoMap.Sample(gsamLinearClamp, pin.SsaoPosH.xy, 0.0f).r;
+    return color;
     return REDPBRColor(pin);
 }
 
