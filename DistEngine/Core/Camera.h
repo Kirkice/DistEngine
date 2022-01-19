@@ -27,6 +27,7 @@ public:
 	XMFLOAT3 GetUp3f()const;
 	XMVECTOR GetLook()const;
 	XMFLOAT3 GetLook3f()const;
+	Vector3 ScreenToWorldPoint(Vector2 viewPortSize);
 
 	// Get frustum properties.
 	float GetNearZ()const;

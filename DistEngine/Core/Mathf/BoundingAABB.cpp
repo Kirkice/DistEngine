@@ -66,15 +66,15 @@ namespace Mathf
 		if (abs(rayDir.x) < 0.000001f) //If the ray parallel to the plane  
 		{
 			//If the ray is not within AABB box, then not intersecting  
-			if (rayOri.x < this->GetMin().x || rayOri.x > this->GetMax().x)
+			if (rayOri.x < m_min.x || rayOri.x > m_max.x)
 				return false;
 		}
 		else
 		{
 			//Compute the distance of ray to the near plane and far plane  
 			float ood = 1.0f / rayDir.x;
-			float t1 = (this->GetMin().x - rayOri.x) * ood;
-			float t2 = (this->GetMax().x - rayOri.x) * ood;
+			float t1 = (m_min.x - rayOri.x) * ood;
+			float t2 = (m_max.x - rayOri.x) * ood;
 
 			//Make t1 be intersecting with the near plane, t2 with the far plane  
 			if (t1 > t2)
@@ -96,15 +96,15 @@ namespace Mathf
 		if (abs(rayDir.y) < 0.000001f) //If the ray parallel to the plane  
 		{
 			//If the ray is not within AABB box, then not intersecting  
-			if (rayOri.y < this->GetMin().y || rayOri.y > this->GetMax().y)
+			if (rayOri.y < m_min.y || rayOri.y > m_max.y)
 				return false;
 		}
 		else
 		{
 			//Compute the distance of ray to the near plane and far plane  
 			float ood = 1.0f / rayDir.y;
-			float t1 = (this->GetMin().y - rayOri.y) * ood;
-			float t2 = (this->GetMax().y - rayOri.y) * ood;
+			float t1 = (m_min.y - rayOri.y) * ood;
+			float t2 = (m_max.y - rayOri.y) * ood;
 
 			//Make t1 be intersecting with the near plane, t2 with the far plane  
 			if (t1 > t2)
@@ -126,15 +126,15 @@ namespace Mathf
 		if (abs(rayDir.z) < 0.000001f) //If the ray parallel to the plane  
 		{
 			//If the ray is not within AABB box, then not intersecting  
-			if (rayOri.z < this->GetMin().z || rayOri.z > this->GetMax().z)
+			if (rayOri.z < m_min.z || rayOri.z > m_max.z)
 				return false;
 		}
 		else
 		{
 			//Compute the distance of ray to the near plane and far plane  
 			float ood = 1.0f / rayDir.z;
-			float t1 = (this->GetMin().z - rayOri.z) * ood;
-			float t2 = (this->GetMax().z - rayOri.z) * ood;
+			float t1 = (m_min.z - rayOri.z) * ood;
+			float t2 = (m_max.z - rayOri.z) * ood;
 
 			//Make t1 be intersecting with the near plane, t2 with the far plane  
 			if (t1 > t2)

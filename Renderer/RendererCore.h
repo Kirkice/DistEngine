@@ -36,7 +36,7 @@ namespace Renderer
 
 		Material* Mat = nullptr;
 		MeshGeometry* Geo = nullptr;
-
+		BoundingAABB AABB = BoundingAABB();
 		D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 		UINT IndexCount = 0;

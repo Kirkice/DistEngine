@@ -81,6 +81,16 @@ XMFLOAT3 Camera::GetLook3f()const
 	return mLook;
 }
 
+Vector3 Camera::ScreenToWorldPoint(Vector2 viewPortSize)
+{
+	float halfFov = mFovY / 2;
+	float halfHeight = tanf(halfFov) * mNearZ;
+	float halfWidth = halfHeight * mAspect;
+	Vector3 outPos = Vector3();
+	outPos = Vector3(viewPortSize.x * halfWidth + mPosition.x, viewPortSize.y * halfHeight + mPosition.y, mPosition.z + mNearZ);
+	return outPos;
+}
+
 float Camera::GetNearZ()const
 {
 	return mNearZ;
