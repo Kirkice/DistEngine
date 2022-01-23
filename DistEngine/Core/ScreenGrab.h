@@ -15,7 +15,7 @@
 #else
 #include <OCIdl.h>
 #endif
-
+#include <wincodec.h>
 #pragma comment(lib,"uuid.lib")
 
 

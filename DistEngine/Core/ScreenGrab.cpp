@@ -1,9 +1,11 @@
 #include "ScreenGrab.h"
 #include "DirectXHelpers.h"
-
+#include "d3dApp.h"
+#include "d3dUtil.h"
 #include "PlatformHelpers.h"
 #include "DDS.h"
 #include "LoaderHelpers.h"
+#include <wincodec.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -570,7 +572,7 @@ HRESULT DirectX::SaveWICTextureToFile(
 		return hr;
 
 	// Pick a target format
-	WICPixelFormatGUID targetGuid = {};
+	WICPixelFormatGUID targetGuid = {}; 
 	if (targetFormat)
 	{
 		targetGuid = *targetFormat;
