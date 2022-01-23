@@ -63,6 +63,9 @@
     <ClCompile Include="Mathf\BoundingOBB.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -136,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="Mathf\Transform.h">
       <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="EsramAllocator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
