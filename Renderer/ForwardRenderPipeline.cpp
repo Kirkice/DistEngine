@@ -44,8 +44,6 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.Get());
 	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
 
-	mCommandList->SetComputeRootSignature(mRootSignature.Get());
-	mCopyColor->ComputeColor(mCommandList.Get(), mCurrFrameResource);
 
 	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 

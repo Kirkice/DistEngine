@@ -37,14 +37,13 @@ void PhysicsCore::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
-	isMouseDown = true;
+
 	SetCapture(mhMainWnd);
 }
 
 
 void PhysicsCore::OnMouseUp(WPARAM btnState, int x, int y)
 {
-	isMouseDown = false;
 	ReleaseCapture();
 }
 
@@ -62,13 +61,4 @@ void PhysicsCore::OnMouseMove(WPARAM btnState, int x, int y)
 
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
-}
-
-bool PhysicsCore::ScreenPointToRay(BoundingAABB aabb)
-{
-	float cx = (mLastMousePos.x - (mClientWidth * 0.5)) / (mClientWidth * 0.5);
-	float cy = ((mClientHeight * 0.5) - mLastMousePos.y) / (mClientHeight * 0.5);
-	Vector3 DirPos = mCamera.ScreenToWorldPoint(Vector2(cx, cy));
-	Vector3 RayDir = DirPos - Vector3(mCamera.GetPosition());
-	return aabb.IsIntersectWithRay(Vector3(mCamera.GetPosition()), RayDir.Normalize(RayDir), 200);
 }

@@ -35,11 +35,6 @@ bool GraphicsCore::Initialize()
 		mCommandList.Get(),
 		mClientWidth, mClientHeight);
 
-	mCopyColor = std::make_unique<CopyColor>(
-		md3dDevice.Get(),
-		mCommandList.Get(),
-		mClientWidth, mClientHeight
-		);
 	//LoadModel();
 	LoadTextures();
 	BuildRootSignature();
@@ -53,8 +48,6 @@ bool GraphicsCore::Initialize()
 	BuildPSOs();
 
 	mSsao->SetPSOs(mPSOs["ssao"].Get(), mPSOs["ssaoBlur"].Get());
-
-	mCopyColor->SetPSOs(mPSOs["CopyColor"].Get());
 
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
@@ -109,14 +102,6 @@ void GraphicsCore::OnResize()
 		// Resources changed, so need to rebuild descriptors.
 		mSsao->RebuildDescriptors(mDepthStencilBuffer.Get());
 	}
-
-	if (mCopyColor!=nullptr)
-	{
-		mCopyColor->OnResize(mClientWidth, mClientHeight);
-
-		// Resources changed, so need to rebuild descriptors.
-		mCopyColor->RebuildDescriptors(mDepthStencilBuffer.Get());
-	}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -146,7 +131,6 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
 	UpdateSsaoCB(gt);
-	UpdateCheckRay(gt);
 }
 
 
@@ -394,20 +378,6 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 	currSsaoCB->CopyData(0, ssaoCB);
 }
 
-void GraphicsCore::UpdateCheckRay(const GameTimer& gt)
-{
-	std::vector<RenderItem*>& ritems = mRitemLayer[(int)RenderLayer::Opaque];
-	if (isMouseDown)
-	{
-		for (size_t i = 0; i < ritems.size(); ++i)
-		{
-			auto ri = ritems[i];
-			bool isHit = PhysicsCore::ScreenPointToRay(ri->AABB);
-			bool boolHit = isHit;
-		}
-	}
-}
-
 void GraphicsCore::LoadTextures()
 {
 	PBRDemo_LoadTextures(mTextures);
@@ -418,10 +388,10 @@ void GraphicsCore::LoadTextures()
 void GraphicsCore::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 3, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 3, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 4, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
@@ -613,7 +583,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
 	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
-	//mNullCubeSrvIndex = mColorAttachmentIndex + 1;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -646,15 +615,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize,
 		mRtvDescriptorSize);
-
-	mCopyColor->BuildDescriptors(
-		mDepthStencilBuffer.Get(),
-		GetCpuSrv(mColorAttachmentIndex),
-		GetGpuSrv(mColorAttachmentIndex),
-		GetRtv(SwapChainBufferCount),
-		mCbvSrvUavDescriptorSize,
-		mRtvDescriptorSize
-	);
 }
 
 void GraphicsCore::BuildShadersAndInputLayout()
@@ -689,9 +649,6 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 	mShaders["boundingVS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
-
-	mShaders["CopyColorVS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["CopyColorPS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
@@ -848,8 +805,6 @@ void GraphicsCore::BuildShapeGeometry()
 	geo->VertexBufferByteSize = vbByteSize;
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
-
-	geo->AABBs["sphere"] = sphere.AABB;
 
 	geo->DrawArgs["grid"] = gridSubmesh;
 	geo->DrawArgs["sphere"] = sphereSubmesh;
@@ -1144,23 +1099,6 @@ void GraphicsCore::BuildPSOs()
 		mShaders["debugPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&mPSOs["debug"])));
-
-	//
-	// PSO for Copy Color.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC cpoyColorPsoDesc = opaquePsoDesc;
-	cpoyColorPsoDesc.pRootSignature = mRootSignature.Get();
-	cpoyColorPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaders["CopyColorVS"]->GetBufferPointer()),
-		mShaders["CopyColorVS"]->GetBufferSize()
-	};
-	cpoyColorPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaders["CopyColorPS"]->GetBufferPointer()),
-		mShaders["CopyColorPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&cpoyColorPsoDesc, IID_PPV_ARGS(&mPSOs["CopyColor"])));
 
 	//
 	// PSO for drawing normals.

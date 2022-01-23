@@ -21,7 +21,6 @@
 #include "d3dx12.h"
 #include "DDSTextureLoader.h"
 #include "MathHelper.h"
-#include "BoundingAABB.h"
 
 namespace Renderer
 {
@@ -51,7 +50,7 @@ namespace Renderer
 		UINT VertexBufferByteSize = 0;
 		DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 		UINT IndexBufferByteSize = 0;
-		std::unordered_map<std::string, BoundingAABB> AABBs;
+
 		std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
 
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const

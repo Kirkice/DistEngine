@@ -40,9 +40,6 @@
     <ClCompile Include="RendererCore.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
-    <ClCompile Include="CopyColor.cpp">
-      <Filter>PostProcessing</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ssao.h">
@@ -71,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="RendererCore.h">
       <Filter>Runtime</Filter>
-    </ClInclude>
-    <ClInclude Include="CopyColor.h">
-      <Filter>PostProcessing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

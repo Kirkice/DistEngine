@@ -62,7 +62,7 @@ float4 PS(VertexOut pin) : SV_Target
 
     gizmoColor                                          = (diffuseMapIndex == 3) ? pointColor : gizmoColor;
 
-    float4 color                                        = gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(gizmoColor,1);
+    float4 color                                        = gGizmoTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(gizmoColor,1);
     return color;
 }
 

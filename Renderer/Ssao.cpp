@@ -21,12 +21,12 @@ Ssao::Ssao(
 
 UINT Ssao::SsaoMapWidth()const
 {
-    return mRenderTargetWidth;
+    return mRenderTargetWidth / 2;
 }
 
 UINT Ssao::SsaoMapHeight()const
 {
-    return mRenderTargetHeight;
+    return mRenderTargetHeight / 2;
 }
 
 void Ssao::GetOffsetVectors(DirectX::XMFLOAT4 offsets[14])
@@ -171,12 +171,12 @@ void Ssao::OnResize(UINT newWidth, UINT newHeight)
         // We render to ambient map at half the resolution.
         mViewport.TopLeftX = 0.0f;
         mViewport.TopLeftY = 0.0f;
-        mViewport.Width = mRenderTargetWidth;
-        mViewport.Height = mRenderTargetHeight;
+        mViewport.Width = mRenderTargetWidth / 2.0f;
+        mViewport.Height = mRenderTargetHeight / 2.0f;
         mViewport.MinDepth = 0.0f;
         mViewport.MaxDepth = 1.0f;
 
-        mScissorRect = { 0, 0, (int)mRenderTargetWidth, (int)mRenderTargetHeight};
+        mScissorRect = { 0, 0, (int)mRenderTargetWidth / 2, (int)mRenderTargetHeight / 2 };
 
         BuildResources();
     }
@@ -324,8 +324,9 @@ void Ssao::BuildResources()
         &optClear,
         IID_PPV_ARGS(&mNormalMap)));
 
-    texDesc.Width = mRenderTargetWidth;
-    texDesc.Height = mRenderTargetHeight;
+	// Ambient occlusion maps are at half resolution.
+    texDesc.Width = mRenderTargetWidth / 2;
+    texDesc.Height = mRenderTargetHeight / 2;
     texDesc.Format = Ssao::AmbientMapFormat;
 
     float ambientClearColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };

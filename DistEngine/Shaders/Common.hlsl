@@ -93,10 +93,9 @@ TextureCube gCubeIBL                                                            
 TextureCube gCubeMap                                                                    : register(t1);
 Texture2D gShadowMap                                                                    : register(t2);
 Texture2D gSsaoMap                                                                      : register(t3);
-// Texture2D gColorAttachment                                                              : register(t3);
 
-Texture2D gGizmoTextureMaps[12]                                                         : register(t3);
-Texture2D gTextureMaps[48]                                                              : register(t3);
+Texture2D gGizmoTextureMaps[12]                                                         : register(t4);
+Texture2D gTextureMaps[48]                                                              : register(t4);
 
 
 //SAMPLER

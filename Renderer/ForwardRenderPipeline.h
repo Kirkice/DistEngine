@@ -48,6 +48,9 @@ namespace Renderer
 		//��Ⱦ͸������
 		void DrawTransparent();
 
+
+
+
 		//��Ⱦ����
 		void DrawPostProcessing();
 

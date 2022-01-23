@@ -571,8 +571,6 @@ void D3DApp::CreateCommandObjects()
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 	m_vertexBufferView.SizeInBytes = vertexBufferSize;
-
-
 }
 
 void D3DApp::CreateSwapChain()
