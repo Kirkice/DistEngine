@@ -193,7 +193,7 @@ void D3DApp::OnResize()
 	mCurrBackBuffer = 0;
 
 
-
+	m_hdrScene = std::make_unique<RenderTexture>(DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < SwapChainBufferCount; i++)
@@ -265,6 +265,8 @@ void D3DApp::OnResize()
 	mScreenViewport.MaxDepth = 1.0f;
 	
 	mScissorRect = { 0, 0, mClientWidth * (long)RectWH[0], mClientHeight * (long)RectWH[1] };
+
+	m_hdrScene->SetWindow(mScissorRect);
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp
