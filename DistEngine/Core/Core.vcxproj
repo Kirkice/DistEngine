@@ -162,6 +162,7 @@
     <ClCompile Include="Mathf\Vector3.cpp" />
     <ClCompile Include="Mathf\Vector4.cpp" />
     <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="ScreenGrab.cpp" />
   </ItemGroup>
@@ -192,6 +193,7 @@
     <ClInclude Include="Mathf\Vector4.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="PlatformHelpers.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="ScreenGrab.h" />

@@ -28,7 +28,7 @@ public:
 
     UINT Width()const;
     UINT Height()const;
-	ID3D12Resource* Resource();
+	ID3D12Resource* Resource(); 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE Srv()const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE Dsv()const;
 

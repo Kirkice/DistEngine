@@ -35,10 +35,6 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
-	//m_hdrScene->BeginScene(mCommandList.Get());
-	//m_hdrScene->SetDevice(md3dDevice.Get(), m_resourceDescriptors->GetCpuHandle(Descriptors::SceneTex), m_renderDescriptors->GetCpuHandle(RTVDescriptors::HDRScene));
-	//m_hdrScene->EndScene(mCommandList.Get());
-
 	ForwardRenderer::DrawShadowMap(matBuffer);
 
 	ForwardRenderer::DrawDepthNormal();

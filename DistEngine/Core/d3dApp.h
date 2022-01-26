@@ -7,7 +7,7 @@
 
 #include "d3dUtil.h"
 #include "GameTimer.h"
-#include "RenderTexture.h"
+#include "RenderTarget.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
@@ -88,9 +88,7 @@ protected:
     // Used to keep track of the �delta-time?and game time (?.4).
     GameTimer mTimer;
 
-    //Render To Texture
-    std::unique_ptr<RenderTexture> m_hdrScene;
-
+    std::unique_ptr<RenderTarget> mRenderTarget;
     Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
     Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
     Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
