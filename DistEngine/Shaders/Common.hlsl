@@ -14,34 +14,34 @@
 
 //Lights
 #ifndef NUM_DIR_LIGHTS
-    #define NUM_DIR_LIGHTS 3
+#define NUM_DIR_LIGHTS 3
 #endif
 
 #ifndef NUM_POINT_LIGHTS
-    #define NUM_POINT_LIGHTS 0
+#define NUM_POINT_LIGHTS 0
 #endif
 
 #ifndef NUM_SPOT_LIGHTS
-    #define NUM_SPOT_LIGHTS 0
+#define NUM_SPOT_LIGHTS 0
 #endif
 
 //平行光
 struct DirectionLight
 {
-	float3                                                                          Direction;   
-	float                                                                           Strength;
-	float3                                                                          Color;       
-    float                                                                           CastShadow;             
-	float3                                                                          Position;       
-    float                                                                           Active;                     
+    float3                                                                          Direction;
+    float                                                                           Strength;
+    float3                                                                          Color;
+    float                                                                           CastShadow;
+    float3                                                                          Position;
+    float                                                                           Active;
 };
 
 //点光源
 struct PointLight
 {
-	float3                                                                          Color;
-	float                                                                           rangeFactory;
-	float3                                                                          Position;
+    float3                                                                          Color;
+    float                                                                           rangeFactory;
+    float3                                                                          Position;
     float                                                                           Strength;
     float                                                                           Active;
 };
@@ -49,13 +49,13 @@ struct PointLight
 //聚光灯
 struct SpotLight
 {
-	float3                                                                          Color;
+    float3                                                                          Color;
     float                                                                           rangeFactory;
-	float3                                                                          Position;
+    float3                                                                          Position;
     float                                                                           spotLightsStrength;
-	float3                                                                          Direction;
+    float3                                                                          Direction;
     float                                                                           spotAngle;
-	float                                                                           spotLightsActive;
+    float                                                                           spotLightsActive;
 };
 
 //PBR Material
@@ -68,12 +68,12 @@ struct PBRMaterialData
     float4                                                                              EmissionColor;
     float                                                                               EmissionStrength;
     float                                                                               ReceiveShadow;
-	float4x4                                                                            MatTransform;
+    float4x4                                                                            MatTransform;
 
-	uint                                                                                DiffuseMapIndex;
-	uint                                                                                NormalMapIndex;
-	uint                                                                                MsoMapIndex;
-	uint                                                                                EmissionMapIndex;
+    uint                                                                                DiffuseMapIndex;
+    uint                                                                                NormalMapIndex;
+    uint                                                                                MsoMapIndex;
+    uint                                                                                EmissionMapIndex;
     uint                                                                                LUTMapIndex;
 };
 
@@ -91,11 +91,12 @@ StructuredBuffer<SkyBoxMaterialData> gSkyMaterialData                           
 //TEXTURES
 TextureCube gCubeIBL                                                                    : register(t0);
 TextureCube gCubeMap                                                                    : register(t1);
-Texture2D gShadowMap                                                                    : register(t2);
-Texture2D gSsaoMap                                                                      : register(t3);
+Texture2D gRenderTarget                                                                 : register(t2);
+Texture2D gShadowMap                                                                    : register(t3);
+Texture2D gSsaoMap                                                                      : register(t4);
 
-Texture2D gGizmoTextureMaps[12]                                                         : register(t4);
-Texture2D gTextureMaps[48]                                                              : register(t4);
+Texture2D gGizmoTextureMaps[12]                                                         : register(t5);
+Texture2D gTextureMaps[48]                                                              : register(t5);
 
 
 //SAMPLER
@@ -112,11 +113,11 @@ cbuffer cbPerObject                                                             
 {
     float4x4                                                                            gWorld;
     float4x4                                                                            gInvWorld;
-	float4x4                                                                            gTexTransform;
-	uint                                                                                gMaterialIndex;
-	uint                                                                                gObjPad0;
-	uint                                                                                gObjPad1;
-	uint                                                                                gObjPad2;
+    float4x4                                                                            gTexTransform;
+    uint                                                                                gMaterialIndex;
+    uint                                                                                gObjPad0;
+    uint                                                                                gObjPad1;
+    uint                                                                                gObjPad2;
 };
 
 cbuffer cbSkinned : register(b1)
@@ -154,20 +155,20 @@ cbuffer cbPass : register(b2)
 //---------------------------------------------------------------------------------------
 float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, float3 tangentW)
 {
-	// Uncompress each component from [0,1] to [-1,1].
-	float3 normalT = 2.0f*normalMapSample - 1.0f;
-    normalT = normalize(normalT * float3(0.7,0.7, 1));
-	// Build orthonormal basis.
-	float3 N = unitNormalW;
-	float3 T = normalize(tangentW - dot(tangentW, N)*N);
-	float3 B = cross(N, T);
+    // Uncompress each component from [0,1] to [-1,1].
+    float3 normalT = 2.0f * normalMapSample - 1.0f;
+    normalT = normalize(normalT * float3(0.7, 0.7, 1));
+    // Build orthonormal basis.
+    float3 N = unitNormalW;
+    float3 T = normalize(tangentW - dot(tangentW, N) * N);
+    float3 B = cross(N, T);
 
-	float3x3 TBN = float3x3(T, B, N);
+    float3x3 TBN = float3x3(T, B, N);
 
-	// Transform from tangent space to world space.
-	float3 bumpedNormalW = mul(normalT, TBN);
+    // Transform from tangent space to world space.
+    float3 bumpedNormalW = mul(normalT, TBN);
 
-	return bumpedNormalW;
+    return bumpedNormalW;
 }
 
 //---------------------------------------------------------------------------------------
@@ -198,12 +199,12 @@ float CalcShadowFactor(float4 shadowPosH)
     };
 
     [unroll]
-    for(int i = 0; i < 9; ++i) 
+    for (int i = 0; i < 9; ++i)
     {
         percentLit += gShadowMap.SampleCmpLevelZero(gsamShadow,
             shadowPosH.xy + offsets[i], depth).r;
     }
-    
+
     return percentLit / 9.0f;
 }
 

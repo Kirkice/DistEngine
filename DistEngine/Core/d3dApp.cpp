@@ -201,27 +201,6 @@ void D3DApp::OnResize()
 		rtvHeapHandle.Offset(1, mRtvDescriptorSize);
 	}
 
-	//‰÷»æµΩŒ∆¿Ì
-	mRenderTarget = std::make_unique<RenderTarget>(DXGI_FORMAT_R32G32B32A32_FLOAT);
-	mRenderTarget->InitRenderTarget(mClientWidth, mClientHeight, md3dDevice.Get());
-	md3dDevice->CreateRenderTargetView(mRenderTarget->GetResource(), nullptr, rtvHeapHandle);
-	rtvHeapHandle.Offset(1, mRtvDescriptorSize);
-
-	//CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptorHandle(mCbvHeap->GetCPUDescriptorHandleForHeapStart());
-	//hDescriptorHandle.Offset(4, mCbvSrvDescriptorSize);
-
-	//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	//srvDesc.Format = mRenderTarget->GetFormat();
-	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	//srvDesc.Texture2D.MostDetailedMip = 0;
-	//srvDesc.Texture2D.MipLevels = 1;
-	//srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-	//srvDesc.Format = mRenderTarget->GetFormat();
-	//srvDesc.Texture2D.MipLevels = 1;
-	//md3dDevice->CreateShaderResourceView(mRenderTarget->GetResource(), &srvDesc, hDescriptorHandle);
-
 
 	// Create the depth/stencil buffer and view.
 	D3D12_RESOURCE_DESC depthStencilDesc;
@@ -283,7 +262,7 @@ void D3DApp::OnResize()
 	mScreenViewport.Height = static_cast<float>(mClientHeight) * (long)RectWH[1];
 	mScreenViewport.MinDepth = 0.0f;
 	mScreenViewport.MaxDepth = 1.0f;
-	
+
 	mScissorRect = { 0, 0, mClientWidth * (long)RectWH[0], mClientHeight * (long)RectWH[1] };
 
 }

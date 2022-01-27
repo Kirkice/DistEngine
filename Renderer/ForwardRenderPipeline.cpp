@@ -11,7 +11,7 @@ ForwardRenderer::ForwardRenderer(HINSTANCE hInstance) : GraphicsCore(hInstance)
 {
 }
 
-ForwardRenderer::~ForwardRenderer() 
+ForwardRenderer::~ForwardRenderer()
 {
 	if (md3dDevice != nullptr)
 		FlushCommandQueue();
@@ -90,7 +90,9 @@ void ForwardRenderer::ForwardRender()
 	//mCommandList->SetPipelineState(mPSOs["debug"].Get());
 	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Debug]);
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+	ForwardRenderer::DrawPostProcessing();
 
 	ForwardRenderer::DrawBounding();
 
@@ -112,7 +114,7 @@ void ForwardRenderer::ForwardRender()
 	mCommandQueue->Signal(mFence.Get(), mCurrentFence);
 }
 
-//��Ⱦ��Ӱ��ͼ
+//DrawShadowMap
 void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 {
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
@@ -123,27 +125,27 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 	DrawSceneToShadowMap();
 }
 
-//��Ⱦ��ȷ���
+//DrawDepthNormal
 void ForwardRenderer::DrawDepthNormal()
 {
 	DrawNormalsAndDepth();
 }
 
-////��Ⱦ�⹴��
+///DrawOutLine
 void ForwardRenderer::DrawOutLine()
 {
 	mCommandList->SetPipelineState(mPSOs["outline"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
 
-//��Ⱦ��͸������
+//DrawOpaque
 void ForwardRenderer::DrawOpaque()
 {
 	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
 
-//��Ⱦ�����
+//DrawSkyBox
 void ForwardRenderer::DrawSkyBox()
 {
 	if (renderSkyBox)
@@ -153,7 +155,7 @@ void ForwardRenderer::DrawSkyBox()
 	}
 }
 
-
+//Draw Transparent
 void ForwardRenderer::DrawTransparent()
 {
 	mCommandList->SetPipelineState(mPSOs["transparent"].Get());
@@ -163,6 +165,7 @@ void ForwardRenderer::DrawTransparent()
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Unlit]);
 }
 
+//Draw Bounding
 void ForwardRenderer::DrawBounding()
 {
 	if (ShowBounding)
@@ -172,24 +175,28 @@ void ForwardRenderer::DrawBounding()
 	}
 }
 
+//Draw Gizmo
 void ForwardRenderer::DrawGizmo()
 {
 	mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Gizmo]);
 }
 
+//Draw PostProcessing
 void ForwardRenderer::DrawPostProcessing()
 {
-
+	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	DrawSceneToRenderTarget();
 }
 
+//Draw Imgui
 void ForwardRenderer::DrawImgui()
 {
 	DrawEditor();
 }
 
 
-//����UI
+//DrawEditor
 void ForwardRenderer::DrawEditor()
 {
 	// Start the Dear ImGui frame
@@ -221,7 +228,7 @@ void ForwardRenderer::DrawEditor()
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
 }
 
-//���Ʋ˵�
+//DrawMenuEditor
 void ForwardRenderer::DrawMenuEditor()
 {
 	ImGui::SetNextWindowBgAlpha(0.8f);
@@ -253,7 +260,7 @@ void ForwardRenderer::DrawMenuEditor()
 	}
 }
 
-//����Graphics Item Editor
+//DrawGraphicsItemEditor
 void ForwardRenderer::DrawGraphicsItemEditor()
 {
 	//Graphics Item
@@ -275,7 +282,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 		ImGui::InputFloat3("Scale", mCamera.mScaleArray);
 		ImGui::Separator();
 		ImGui::Text("Camera");
-		ImGui::SliderFloat("FOV(Y)", &mCamFov,0,179);
+		ImGui::SliderFloat("FOV(Y)", &mCamFov, 0, 179);
 		ImGui::InputFloat("Near Clip", &mCamClipN);
 		ImGui::InputFloat("Far Clip", &mCamClipF);
 		ImGui::Checkbox("RenderSkyBox", &renderSkyBox);
@@ -300,7 +307,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 			ImGui::Text("Settings");
 			ImGui::Checkbox("Direction Enable", &mDirectionLightsActive);
 			ImGui::ColorEdit3("(D)Color", mDirectionLightsColor);
-			ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f,10);
+			ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f, 10);
 			ImGui::Checkbox("Cast Shadow", &mDirectionLightsCastShadow);
 			ImGui::TreePop();
 		}
@@ -342,7 +349,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 	ImGui::End();
 }
 
-//����Render Item Editor
+//DrawRenderItemEditor
 void ForwardRenderer::DrawRenderItemEditor()
 {
 	//Render Item

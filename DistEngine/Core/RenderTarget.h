@@ -5,22 +5,39 @@
 class RenderTarget
 {
 public:
+	RenderTarget(ID3D12Device* device, UINT width, UINT height);
 
-	RenderTarget() = default;
-	RenderTarget(DXGI_FORMAT format);
-	~RenderTarget();
+	RenderTarget(const RenderTarget& rhs) = delete;
+	RenderTarget& operator=(const RenderTarget& rhs) = delete;
+	~RenderTarget() = default;
 
-	HRESULT InitRenderTarget(UINT width, UINT height, ID3D12Device* md3dDevice);
+	UINT Width()const;
+	UINT Height()const;
 
-	int GetWidth() { return mTargetWidth; }
-	int GetHeight() { return mTargetHeight; }
-	DXGI_FORMAT GetFormat() { return mTargetFormat; }
-	ID3D12Resource* GetResource() { return mBackBuffer.Get(); }
+	ID3D12Resource* Resource();
+	CD3DX12_GPU_DESCRIPTOR_HANDLE Srv()const;
+
+	D3D12_VIEWPORT Viewport()const;
+	D3D12_RECT ScissorRect()const;
+
+	void BuildDescriptors(CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv, CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv);
 
 private:
+	void BuildDescriptors();
+	void BuildResource();
 
-	UINT mTargetWidth;
-	UINT mTargetHeight;
-	DXGI_FORMAT mTargetFormat;
-	Microsoft::WRL::ComPtr<ID3D12Resource> mBackBuffer;
+private:
+	ID3D12Device* md3dDevice = nullptr;
+
+	D3D12_VIEWPORT mViewport;
+	D3D12_RECT mScissorRect;
+
+	UINT mWidth = 0;
+	UINT mHeight = 0;
+
+	DXGI_FORMAT mTargetFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTarget;
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
 };

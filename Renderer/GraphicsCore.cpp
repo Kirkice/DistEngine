@@ -7,7 +7,7 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace ModelLoader;
 
-GraphicsCore::GraphicsCore(HINSTANCE hInstance): RenderCore(hInstance)
+GraphicsCore::GraphicsCore(HINSTANCE hInstance) : RenderCore(hInstance)
 {
 }
 
@@ -27,13 +27,14 @@ bool GraphicsCore::Initialize()
 
 	mCamera.SetPosition(0.0f, 2.0f, -15.0f);
 
-	mShadowMap = std::make_unique<ShadowMap>(md3dDevice.Get(),
-		2048, 2048);
+	//ShadowMap Init
+	mShadowMap = std::make_unique<ShadowMap>(md3dDevice.Get(), 2048, 2048);
 
-	mSsao = std::make_unique<Ssao>(
-		md3dDevice.Get(),
-		mCommandList.Get(),
-		mClientWidth, mClientHeight);
+	//SSAO Init
+	mSsao = std::make_unique<Ssao>(md3dDevice.Get(), mCommandList.Get(), mClientWidth, mClientHeight);
+
+	//RenderTarget Init
+	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
 	//LoadModel();
 	LoadTextures();
@@ -137,7 +138,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
 	//ƽ�й���ת
-	XMMATRIX rot_dir = XMMatrixRotationX((mDirectionLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mDirectionLightsAngle[1] /180) * Mathf::Pi) * XMMatrixRotationZ((mDirectionLightsAngle[2]/180) * Mathf::Pi);
+	XMMATRIX rot_dir = XMMatrixRotationX((mDirectionLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mDirectionLightsAngle[1] / 180) * Mathf::Pi) * XMMatrixRotationZ((mDirectionLightsAngle[2] / 180) * Mathf::Pi);
 
 	XMVECTOR lightDir = XMLoadFloat3(&mDirectionLightsDir);
 	lightDir = XMVector3TransformNormal(lightDir, rot_dir);
@@ -183,7 +184,7 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 {
 	auto currMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
 	for (auto& e : mMaterials)
-	{ 
+	{
 		// Only update the cbuffer data if the constants have changed.  If the cbuffer
 		// data changes, it needs to be updated for each FrameResource.
 		Material* mat = e.second.get();
@@ -202,7 +203,7 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 		Material* mat = e.second.get();
 		if (mat->NumFramesDirty > 0)
 		{
-			if(mat->MatCBIndex < 1)
+			if (mat->MatCBIndex < 1)
 				SkyBox_UpdateMaterialBuffer(mat, currMaterialBuffer_Sky);
 		}
 	}
@@ -259,7 +260,7 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
 	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
 	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
-	 
+
 	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
 	XMMATRIX T(
 		0.5f, 0.0f, 0.0f, 0.0f,
@@ -295,7 +296,7 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.DirectionLights.Position = Vector3(mDirectionLightsPos);
 	mMainPassCB.DirectionLights.Active = (int)mDirectionLightsActive;
 
-	mMainPassCB.PointLights.Color = Vector3(mPointLightsColor[0],mPointLightsColor[1],mPointLightsColor[2]);
+	mMainPassCB.PointLights.Color = Vector3(mPointLightsColor[0], mPointLightsColor[1], mPointLightsColor[2]);
 	mMainPassCB.PointLights.Position = Vector3(mPointLightsPos);
 	mMainPassCB.PointLights.rangeFactory = mPointLightsRange;
 	mMainPassCB.PointLights.Strength = mPointLightsStrength;
@@ -306,7 +307,7 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.SpotLights.rangeFactory = mSpotLightsRange;
 	mMainPassCB.SpotLights.Position = Vector3(mSpotLightsPos);
 	mMainPassCB.SpotLights.spotLightsStrength = mSpotLightsStrength;
-	mMainPassCB.SpotLights.Direction = Vector3(mRotatedLightSpots); 
+	mMainPassCB.SpotLights.Direction = Vector3(mRotatedLightSpots);
 	mMainPassCB.SpotLights.spotLightsActive = mSpotLightsActive;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
@@ -340,7 +341,7 @@ void GraphicsCore::UpdateShadowPassCB(const GameTimer& gt)
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(1, mShadowPassCB);
-} 
+}
 
 void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 {
@@ -388,10 +389,10 @@ void GraphicsCore::LoadTextures()
 void GraphicsCore::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 4, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
@@ -577,9 +578,11 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvDesc.Format = skyCubeMap->GetDesc().Format;
 	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
 
+
 	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
-	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
+	mRenderTargetIndex = mSkyTexHeapIndex + 1;
+	mShadowMapHeapIndex = mRenderTargetIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
 	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
@@ -602,6 +605,10 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 	nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
 	md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
+
+	mRenderTarget->BuildDescriptors(
+		GetCpuSrv(mRenderTargetIndex),
+		GetGpuSrv(mRenderTargetIndex));
 
 	mShadowMap->BuildDescriptors(
 		GetCpuSrv(mShadowMapHeapIndex),
@@ -696,7 +703,7 @@ void GraphicsCore::BuildShapeGeometry()
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
 	GeometryGenerator::MeshData quad = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-	GeometryGenerator::MeshData aabb = geoGen.CreateAABB(sphere.AABB,0);
+	GeometryGenerator::MeshData aabb = geoGen.CreateAABB(sphere.AABB, 0);
 
 	// Cache the vertex offsets to each object in the concatenated vertex buffer.
 	UINT gridVertexOffset = 0;
@@ -738,7 +745,7 @@ void GraphicsCore::BuildShapeGeometry()
 	auto totalVertexCount =
 		grid.Vertices.size() +
 		sphere.Vertices.size() +
-		quad.Vertices.size() + 
+		quad.Vertices.size() +
 		aabb.Vertices.size();
 
 	std::vector<Vertex> vertices(totalVertexCount);
@@ -1291,8 +1298,17 @@ void GraphicsCore::DrawSceneToShadowMap()
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
+void GraphicsCore::DrawSceneToRenderTarget()
+{
+	//mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
+	//mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
+
+	//// Change to DEPTH_WRITE.
+	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET));
+}
+
 void GraphicsCore::DrawNormalsAndDepth()
-{ 
+{
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 

@@ -59,6 +59,7 @@ namespace Renderer
 		void BuildRenderItems();
 		void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 		void DrawSceneToShadowMap();
+		void DrawSceneToRenderTarget();
 		void DrawNormalsAndDepth();
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuSrv(int index)const;
@@ -100,6 +101,7 @@ namespace Renderer
 
 		UINT mIBLTexHeapIndex = 0;
 		UINT mSkyTexHeapIndex = 0;
+		UINT mRenderTargetIndex = 0;
 		UINT mShadowMapHeapIndex = 0;
 		UINT mSsaoHeapIndexStart = 0;
 		UINT mSsaoAmbientMapIndex = 0;
@@ -113,6 +115,7 @@ namespace Renderer
 		PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 		PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
+		std::unique_ptr<RenderTarget> mRenderTarget;
 		std::unique_ptr<ShadowMap> mShadowMap;
 
 		std::unique_ptr<Ssao> mSsao;
@@ -133,8 +136,8 @@ namespace Renderer
 
 
 		//��ȾĿ�����
-		float TargetTransform[3] = { 0.0f, 1.0f, 0.0f};
-		float TargetScale[3] = { 2.0f, 2.0f, 2.0f};
+		float TargetTransform[3] = { 0.0f, 1.0f, 0.0f };
+		float TargetScale[3] = { 2.0f, 2.0f, 2.0f };
 		float TargetRotationAngle[3] = { 0,0,0 };
 
 		//Camera
@@ -144,7 +147,7 @@ namespace Renderer
 
 		bool renderSkyBox = true;
 		float SolidColor[4] = { 0,0,0,0 };
-		
+
 		//Bounding
 		bool ShowBounding = false;
 	};
