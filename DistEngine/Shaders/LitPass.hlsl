@@ -129,6 +129,7 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
+    // return gRenderTarget.SampleLevel(gsamPointClamp, pin.SsaoPosH, 0.0f);
     return REDPBRColor(pin);
 }
 

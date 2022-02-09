@@ -27,38 +27,41 @@ namespace Renderer
 
 		virtual void Draw(const GameTimer& gt)override;
 
-		//ǰ����Ⱦ
+		//ForwardRender
 		void ForwardRender();
 
-		//��Ⱦ��Ӱ��ͼ
+		//DrawShadowMap
 		void DrawShadowMap(ID3D12Resource* matBuffer);
 
-		//��Ⱦ��ȷ���
+		//DrawDepthNormal
 		void DrawDepthNormal();
 
-		////��Ⱦ�⹴��
+		// DrawRenderTarget
+		void DrawRenderTarget();
+
+		////DrawOutLine
 		void DrawOutLine();
 
-		//��Ⱦ��͸������
+		//DrawOpaque
 		void DrawOpaque();
 
-		//��Ⱦ�����
+		//DrawSkyBox
 		void DrawSkyBox();
 
-		//��Ⱦ͸������
+		//DrawTransparent
 		void DrawTransparent();
 
 
 
 
-		//��Ⱦ����
+		//DrawPostProcessing
 		void DrawPostProcessing();
 
 		void DrawBounding();
 
 		void DrawGizmo();
 
-		//��ȾImgui
+		//DrawImgui
 		void DrawImgui();
 
 		//Imgui - Editor

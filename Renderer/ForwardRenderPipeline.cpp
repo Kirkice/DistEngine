@@ -92,7 +92,10 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	ForwardRenderer::DrawPostProcessing();
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_GENERIC_READ));
+	ForwardRenderer::DrawPostProcessing();	
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_PRESENT));
 
 	ForwardRenderer::DrawBounding();
 
@@ -100,10 +103,8 @@ void ForwardRenderer::ForwardRender()
 
 	ForwardRenderer::DrawImgui();
 
-
-
 	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	ThrowIfFailed(mSwapChain->Present(0, 0));
@@ -123,6 +124,12 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 
 	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	DrawSceneToShadowMap();
+}
+
+// DrawRenderTarget
+void ForwardRenderer::DrawRenderTarget()
+{
+	DrawSceneToRenderTarget();
 }
 
 //DrawDepthNormal
@@ -185,8 +192,8 @@ void ForwardRenderer::DrawGizmo()
 //Draw PostProcessing
 void ForwardRenderer::DrawPostProcessing()
 {
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	DrawSceneToRenderTarget();
+	//mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	//DrawSceneToRenderTarget();
 }
 
 //Draw Imgui

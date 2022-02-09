@@ -33,6 +33,11 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE RenderTarget::Srv()const
 	return mhGpuSrv;
 }
 
+CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::Dsv()const
+{
+	return mhCpuSrv;
+}
+
 D3D12_VIEWPORT RenderTarget::Viewport()const
 {
 	return mViewport;

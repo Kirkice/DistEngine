@@ -1303,8 +1303,9 @@ void GraphicsCore::DrawSceneToRenderTarget()
 	//mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
 	//mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
 
-	//// Change to DEPTH_WRITE.
-	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET));
+	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	//mCommandList->ClearDepthStencilView(mRenderTarget->Dsv(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	//mCommandList->OMSetRenderTargets(0, nullptr, false, &mRenderTarget->Dsv());
 }
 
 void GraphicsCore::DrawNormalsAndDepth()
