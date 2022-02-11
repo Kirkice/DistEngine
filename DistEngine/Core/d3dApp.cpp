@@ -182,6 +182,8 @@ void D3DApp::OnResize()
 	// Release the previous resources we will be recreating.
 	for (int i = 0; i < SwapChainBufferCount; ++i)
 		mSwapChainBuffer[i].Reset();
+
+
 	mDepthStencilBuffer.Reset();
 
 	// Resize the swap chain.
@@ -200,7 +202,6 @@ void D3DApp::OnResize()
 		md3dDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, mRtvDescriptorSize);
 	}
-
 
 	// Create the depth/stencil buffer and view.
 	D3D12_RESOURCE_DESC depthStencilDesc;

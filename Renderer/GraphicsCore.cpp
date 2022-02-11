@@ -1300,12 +1300,23 @@ void GraphicsCore::DrawSceneToShadowMap()
 
 void GraphicsCore::DrawSceneToRenderTarget()
 {
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_GENERIC_READ));
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_PRESENT));
+
 	//mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
 	//mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
+
+
+	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
+	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_PRESENT));
 
 	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
 	//mCommandList->ClearDepthStencilView(mRenderTarget->Dsv(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 	//mCommandList->OMSetRenderTargets(0, nullptr, false, &mRenderTarget->Dsv());
+
+	//// Bind the pass constant buffer for the shadow map pass.
+	//UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(PassConstants));
+	//auto passCB = mCurrFrameResource->PassCB->Resource();
 }
 
 void GraphicsCore::DrawNormalsAndDepth()
