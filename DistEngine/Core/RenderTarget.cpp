@@ -38,6 +38,11 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::Dsv()const
 	return mhCpuSrv;
 }
 
+CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::Rtv()const
+{
+	return mhCpuRtv;
+}
+
 D3D12_VIEWPORT RenderTarget::Viewport()const
 {
 	return mViewport;
@@ -48,13 +53,15 @@ D3D12_RECT RenderTarget::ScissorRect()const
 	return mScissorRect;
 }
 
-void RenderTarget::BuildDescriptors(CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-	CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv)
+void RenderTarget::BuildDescriptors(
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv)
 {
 	// Save references to the descriptors. 
 	mhCpuSrv = hCpuSrv;
 	mhGpuSrv = hGpuSrv;
-
+	mhCpuRtv = hCpuRtv;
 	//  Create the descriptors
 	BuildDescriptors();
 }
