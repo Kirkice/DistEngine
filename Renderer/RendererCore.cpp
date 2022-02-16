@@ -914,3 +914,47 @@ void RenderCore::Bounding_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorld
 {
 
 }
+
+
+// Post process
+void RenderCore::Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer)
+{
+	XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
+
+	PostprocessingData matData;
+	matData.Strength = mat->Strength;
+	matData.Threshold = mat->Threshold;
+	matData.SoftKnee = mat->SoftKnee;
+	matData.Radius = mat->Radius;
+	matData.Intensity = mat->Intensity;
+	matData.Brightness = mat->Brightness;
+	matData.Contrast = mat->Contrast;
+	XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
+	matData.Hue = mat->Hue;
+	matData.Saturation = mat->Saturation;
+	matData.Value = mat->Value;
+	matData.PixelSize = mat->PixelSize;
+	matData.BlurFactory = mat->BlurFactory;
+
+	matData.EdgeWdith = mat->EdgeWdith;
+	matData.EdgeNeonFade = mat->EdgeNeonFade;
+	matData.OutLineColor = mat->OutLineColor;
+	matData.BackgroundFade = mat->BackgroundFade;
+	matData.BackgroundColor = mat->BackgroundColor;
+	matData.Temperature = mat->Temperature;
+	matData.Tint = mat->Tint;
+	matData.VignetteColor = mat->VignetteColor;
+	currMaterialBuffer->CopyData(mat->MatCBIndex, matData);
+
+	// Next FrameResource need to be updated too.
+	mat->NumFramesDirty--;
+}
+
+void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<PostProcessingMat>>& mMaterials)
+{
+	auto RGBSplitMat = std::make_unique<PostProcessingMat>();
+	RGBSplitMat->Name = "RGBSplit";
+	RGBSplitMat->MatCBIndex = 18;
+	RGBSplitMat->Strength = 0.02f;
+	mMaterials["RGBSplit"] = std::move(RGBSplitMat);
+}

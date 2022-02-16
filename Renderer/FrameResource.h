@@ -130,6 +130,55 @@ struct NPRMaterialData
 	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
 };
 
+struct PostprocessingData
+{
+    DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
+
+    //RGBSplit   Decolourize (Turn Gray)
+    float Strength = 0.02f;
+
+    //Bloom
+    float Threshold = 0.3f;
+    float SoftKnee = 0.1f;
+    float Radius = 3.5f;
+    float Intensity = 0.5f;
+
+    //Brightness And Contrast
+    float Brightness = 1.2f;
+    float Contrast = 1.0f;
+
+    //HSV
+    float Hue = 0;
+    float Saturation = 0;
+    float Value = 0;
+
+    //Mosaic
+    float PixelSize = 0.01f;
+
+    //Radial Blur
+    float BlurFactory = 0.01f;
+
+    //EdgeDetection
+    float EdgeWdith = 1.5f;
+    float EdgeNeonFade = 1.0f;
+    DirectX::XMFLOAT4 OutLineColor = {0,1.3f,2.6f,1};
+    float BackgroundFade = 0;
+    DirectX::XMFLOAT4 BackgroundColor = {0,0.35f,1,1};
+
+    //WhiteBalance
+    float Temperature = 0;
+    float Tint = 0;
+
+    //Sharpen
+    //Vignette
+    DirectX::XMFLOAT4 VignetteColor = {0,0,0,1};
+
+    //Oil Paint
+    float ResoultionValue = 2.0f;
+
+    //Relief
+};
+
 struct Vertex
 {
     XMFLOAT3 Pos;

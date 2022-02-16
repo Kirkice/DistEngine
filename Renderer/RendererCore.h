@@ -109,6 +109,10 @@ namespace Renderer
 			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
 		void PBRDemo_UpdateObjectBuffer();
 
+		//Post processing 
+		void Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer);
+		void Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<PostProcessingMat>>& mMaterials);
+
 
 		//Lighting Settings
 		float EnvironmentShadowColor[3] = { 0.3f,0.3f,0.3f };
