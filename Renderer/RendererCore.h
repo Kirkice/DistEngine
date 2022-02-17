@@ -107,7 +107,7 @@ namespace Renderer
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
 			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
-		void PBRDemo_UpdateObjectBuffer();
+		void PBRDemo_UpdateObjectBuffer(); 
 		   
 		//Post processing 
 		void Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer);
