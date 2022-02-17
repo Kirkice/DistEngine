@@ -95,7 +95,7 @@ namespace Renderer
 			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
-			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
+			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);  
 
 		//PBR Demo
 		void PBRDemo_UpdateMaterialBuffer(Material* mat, UploadBuffer<PBRMaterialData>* currMaterialBuffer);
