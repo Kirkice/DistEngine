@@ -103,7 +103,7 @@ namespace Renderer
 		void PBRDemo_BuildDescriptorHeaps(std::vector<ComPtr<ID3D12Resource>>& tex2DList, std::unordered_map<std::string, std::unique_ptr<Texture>>& mTextures);
 		void PBRDemo_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials);
 		void PBRDemo_BuildRenderItems(
-			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],   
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
 			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
