@@ -91,7 +91,7 @@ namespace Renderer
 		void SkyBox_LoadTextures(std::unordered_map<std::string, std::unique_ptr<Texture>>& mSkyTextures);
 		void SkyBox_BuildDescriptorHeaps(ComPtr<ID3D12Resource>& skyCubeMap, ComPtr<ID3D12Resource>& diffuseIBL, std::unordered_map<std::string, std::unique_ptr<Texture>>& mSkyTextures);
 		void SkyBox_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials);
-		void SkyBox_BuildRenderItems(
+		void SkyBox_BuildRenderItems( 
 			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
