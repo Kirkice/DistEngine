@@ -26,6 +26,7 @@ namespace Mathf
 		Vector3 Forward() const;
 		Vector3 Back() const;
 
+		float Get(int row, int column) const;
 		void SetXBasis(const Vector3& x);
 		void SetYBasis(const Vector3& y);
 		void SetZBasis(const Vector3& z);
@@ -36,7 +37,8 @@ namespace Mathf
 		static float3x3 ScaleMatrix(const Vector3& s);
 		static float3x3 RotationAxisAngle(const Vector3& axis, float angle);
 		static float3x3 RotationEuler(float x, float y, float z);
-
+		static float3x3 SetFromToRotation(const Vector3& from, const Vector3& to);
+		static bool LookRotationToMatrix(const Vector3& viewVec, const Vector3& upVec, float3x3* m);
 		DirectX::XMMATRIX ToSIMD() const;
 	};
 

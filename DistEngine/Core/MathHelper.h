@@ -5,7 +5,6 @@
 //***************************************************************************************
 
 #pragma once
-
 #include <Windows.h>
 #include <DirectXMath.h>
 #include <cstdint>
@@ -140,4 +139,39 @@ namespace Mathf
 
 	static DirectX::XMVECTOR RandUnitVec3();
 	static DirectX::XMVECTOR RandHemisphereUnitVec3(DirectX::XMVECTOR n);
+
+	// Returns true if the distance between f0 and f1 is smaller than epsilon
+	inline bool CompareApproximately(float f0, float f1, float epsilon = 0.000001F)
+	{
+		float dist = (f0 - f1);
+		dist = fabs(dist);
+		return dist <= epsilon;
+	}
+
+	inline bool CompareApproximatelyD(double d0, double d1, double epsilon = 0.000001)
+	{
+		double dist = (d0 - d1);
+		dist = fabs(dist);
+		return dist <= epsilon;
+	}
+
+	inline int CompareFloatRobustSignUtility(float A)
+	{
+		// The sign bit of a number is the high bit.
+		union
+		{
+			float f;
+			int i;
+		} u;
+		u.f = A;
+		return (u.i) & 0x80000000;
+	}
+
+	inline float Sign(float f)
+	{
+		if (f < 0.0F)
+			return -1.0F;
+		else
+			return 1.0;
+	}
 }

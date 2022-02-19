@@ -7,6 +7,7 @@
 #include "Matrix.h"
 #include "Quaternion.h"
 
+
 namespace Mathf
 {
 	template<typename T> void Swap(T& a, T& b)
@@ -131,4 +132,34 @@ namespace Mathf
 
 		return Vector2(azimuth, elevation);
 	}
+
+	inline Vector3 QuaternionToEuler(const Quaternion& q)
+	{
+		Vector3 euler = Vector3();
+		const double Epsilon = 0.0009765625f;
+		const double Threshold = 0.5f - Epsilon;
+
+		double TEST = q.w * q.y - q.x * q.z;
+
+		if (TEST < -Threshold || TEST > Threshold) // 奇异姿态,俯仰角为±90°
+		{
+			int sign = Sign(TEST);
+
+			euler.z = -2 * sign * (double)atan2(q.x, q.w); // yaw
+
+			euler.y = sign * (Pi / 2.0); // pitch
+
+			euler.x = 0; // roll
+
+		}
+		else
+		{
+			euler.x = atan2(2 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+			euler.y = asin(-2 * (q.x * q.z - q.w * q.y));
+			euler.z = atan2(2 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
+		}
+
+		return euler;
+	}
+
 }

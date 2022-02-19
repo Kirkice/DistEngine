@@ -164,18 +164,20 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		XMFLOAT4X4* eWorldMatrix = &e->World;
 
 		//Gizmo Update
-		EditorGizmo_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
 
 		XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
 		XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 		XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
+		
+		EditorGizmo_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
+		Post_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
 
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 		XMStoreFloat4x4(&objConstants.InvWorld, XMMatrixTranspose(InvWorld));
 		XMStoreFloat4x4(&objConstants.TexTransform, XMMatrixTranspose(texTransform));
 		objConstants.MaterialIndex = e->Mat->MatCBIndex;
-
+		
 		currObjectCB->CopyData(e->ObjCBIndex, objConstants);
 	}
 }
@@ -207,6 +209,20 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 				SkyBox_UpdateMaterialBuffer(mat, currMaterialBuffer_Sky);
 		}
 	}
+
+	auto CurrentBackBuffer_Post = mCurrFrameResource->PostMaterialBuffer.get();
+	for (auto& e : mMaterials)
+	{
+		// Only update the cbuffer data if the constants have changed.  If the cbuffer
+		// data changes, it needs to be updated for each FrameResource.
+		Material* mat = e.second.get();
+		if (mat->NumFramesDirty > 0)
+		{
+			if (mat->MatCBIndex >22)
+				Post_UpdateMaterialBuffer(mat, CurrentBackBuffer_Post);
+		}
+	}
+
 }
 
 
@@ -679,6 +695,10 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
+
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -1142,6 +1162,9 @@ void GraphicsCore::BuildPSOs()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skinnedDrawNormalsPsoDesc, IID_PPV_ARGS(&mPSOs["skinnedDrawNormals"])));
 
+
+	//Postprocessing PSO
+
 	//
 	// PSO for SSAO.
 	//
@@ -1183,6 +1206,24 @@ void GraphicsCore::BuildPSOs()
 		mShaders["ssaoBlurPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoBlurPsoDesc, IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
+
+	//
+	// 	PSO for RGBSplit
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC RGBSplitPsoDesc = opaquePsoDesc;
+	RGBSplitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	RGBSplitPsoDesc.pRootSignature = mRootSignature.Get();
+	RGBSplitPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["rgbSplitVS"]->GetBufferPointer()),
+		mShaders["rgbSplitVS"]->GetBufferSize()
+	};
+	RGBSplitPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["rgbSplitPS"]->GetBufferPointer()),
+		mShaders["rgbSplitPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RGBSplitPsoDesc, IID_PPV_ARGS(&mPSOs["RGBSplit"])));
 
 	//
 	// PSO for sky.
@@ -1232,6 +1273,8 @@ void GraphicsCore::BuildMaterials()
 	EditorGizmo_BuildMaterials(mMaterials);
 	//Bounding Mat
 	Bounding_BuildMaterials(mMaterials);
+	//Postprocessing
+	Post_BuildMaterials(mMaterials);
 }
 
 void GraphicsCore::BuildRenderItems()
@@ -1243,6 +1286,8 @@ void GraphicsCore::BuildRenderItems()
 	EditorGizmo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 
 	Bounding_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
+
+	Post_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

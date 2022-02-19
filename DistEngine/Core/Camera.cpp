@@ -132,6 +132,19 @@ float Camera::GetFarWindowHeight()const
 	return mFarWindowHeight;
 }
 
+Vector3 Camera::GetPosition()
+{
+	return Vector3(mPosition);
+}
+
+Vector3 Camera::GetEulerAngles()
+{
+	float Y = atan(mLook.x / mLook.z);
+	float X = atan(mLook.y / mLook.z);
+	float Z = atan(mLook.y / mLook.x);
+	return Vector3(X * 180, Y * 180, Z * 180);
+}
+
 void Camera::SetLens(float fovY, float aspect, float zn, float zf)
 {
 	// cache properties

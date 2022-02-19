@@ -107,6 +107,7 @@ void ForwardRenderer::ForwardRender()
 	auto passCBSwapChain = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCBSwapChain->GetGPUVirtualAddress());
 
+	ForwardRenderer::DrawPostProcessing();
 	ForwardRenderer::DrawBounding();
 	ForwardRenderer::DrawGizmo();
 	ForwardRenderer::DrawImgui();
@@ -205,8 +206,8 @@ void ForwardRenderer::DrawGizmo()
 //Draw PostProcessing
 void ForwardRenderer::DrawPostProcessing()
 {
-	//mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	//DrawSceneToRenderTarget();
+	mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
 }
 
 //Draw Imgui

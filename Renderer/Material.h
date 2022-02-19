@@ -25,22 +25,6 @@ namespace Renderer
 		Vector4 EmissionColor = { 0,0,0,1 };
 		float EmissionStrength = 0.0f;
 		float ReceiveShadow = 0;
-		XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
-
-		int DiffuseSrvHeapIndex = -1;
-		int NormalSrvHeapIndex = -1;
-		int MsoSrvHeapIndex = -1;
-		int EmissionSrvHeapIndex = -1;
-		int LUTSrvHeapIndex = -1;
-	};
-
-	struct PostProcessingMat
-	{
-		std::string Name;
-		int MatCBIndex = -1;
-		int NumFramesDirty = gNumFrameResources;
-
-		XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 
 		//RGBSplit   Decolourize (Turn Gray)
 		float Strength = 0.02f;
@@ -84,6 +68,12 @@ namespace Renderer
 		//Oil Paint
 		float ResoultionValue = 2.0f;
 
-		//Relief
+		XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
+
+		int DiffuseSrvHeapIndex = -1;
+		int NormalSrvHeapIndex = -1;
+		int MsoSrvHeapIndex = -1;
+		int EmissionSrvHeapIndex = -1;
+		int LUTSrvHeapIndex = -1;
 	};
 }

@@ -33,6 +33,9 @@ namespace Mathf
 		static Quaternion Normalize(const Quaternion& q);
 		static Quaternion Slerp(Quaternion a, Quaternion b, float t);
 		static Quaternion Lerp(Quaternion a, Quaternion b, float t);
+		static Quaternion LookRotation(const Vector3& forward, const Vector3& upwards);
+		static void MatrixToQuaternion(const float3x3& kRot, Quaternion& q);
+		static bool LookRotationToQuaternion(const Vector3& viewVec, const Vector3& upVec, Quaternion* res);
 		static float3x3 ToFloat3x3(const Quaternion& q);
 		static float4x4 ToFloat4x4(const Quaternion& q);
 		DirectX::XMVECTOR ToSIMD() const;

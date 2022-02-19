@@ -54,6 +54,7 @@ namespace Renderer
 		Gizmo = 4,
 		Unlit = 5,
 		Bounding = 6,
+		PostProcessing = 7,
 		Count
 	};
 
@@ -110,9 +111,14 @@ namespace Renderer
 		void PBRDemo_UpdateObjectBuffer(); 
 		   
 		//Post processing 
-		void Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer);
-		void Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<PostProcessingMat>>& mMaterials);
-
+		void Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer);
+		void Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials);
+		void Post_BuildRenderItems(
+			std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
+		void Post_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix);
 
 		//Lighting Settings
 		float EnvironmentShadowColor[3] = { 0.3f,0.3f,0.3f };

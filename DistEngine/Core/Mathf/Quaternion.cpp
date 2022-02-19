@@ -113,6 +113,70 @@ namespace Mathf
 		return Normalize(Quaternion(XMVectorLerp(a.ToSIMD(), b.ToSIMD(), t)));
 	}
 
+	Quaternion Quaternion::LookRotation(const Vector3& forward, const Vector3& upwards)
+	{
+		Quaternion q = Quaternion::Identity();
+		if (!LookRotationToQuaternion(forward, upwards, &q))
+		{
+			const float mag = Vector3::Magnitude(forward);
+			if (mag > EPSILON)
+			{
+				float3x3 m; 
+				m.SetFromToRotation(Vector3::zAxis, forward / mag);
+				MatrixToQuaternion(m, q);
+			}
+		}
+		return q;
+	}
+
+	void Quaternion::MatrixToQuaternion(const float3x3& kRot, Quaternion& q)
+	{
+		float fTrace = kRot._11 + kRot._22 + kRot._33;
+		float fRoot;
+
+		if (fTrace > 0.0f)
+		{
+			// |w| > 1/2, may as well choose w > 1/2
+			fRoot = sqrt(fTrace + 1.0f);   // 2w
+			q.w = 0.5f * fRoot;
+			fRoot = 0.5f / fRoot;  // 1/(4w)
+			q.x = (kRot._32 - kRot._23) * fRoot;
+			q.y = (kRot._13 - kRot._31) * fRoot;
+			q.z = (kRot._21 - kRot._12) * fRoot;
+		}
+		else
+		{
+			// |w| <= 1/2
+			int s_iNext[3] = { 1, 2, 0 };
+			int i = 0;
+			if (kRot._22 > kRot._11)
+				i = 1;
+			if (kRot._33 > kRot.Get(i, i))
+				i = 2;
+			int j = s_iNext[i];
+			int k = s_iNext[j];
+
+			fRoot = sqrt(kRot.Get(i, i) - kRot.Get(j, j) - kRot.Get(k, k) + 1.0f);
+			float* apkQuat[3] = { &q.x, &q.y, &q.z };
+			
+			*apkQuat[i] = 0.5f * fRoot;
+			fRoot = 0.5f / fRoot;
+			q.w = (kRot.Get(k, j) - kRot.Get(j, k)) * fRoot;
+			*apkQuat[j] = (kRot.Get(j, i) + kRot.Get(i, j)) * fRoot;
+			*apkQuat[k] = (kRot.Get(k, i) + kRot.Get(i, k)) * fRoot;
+		}
+		q = Normalize(q);
+	}
+
+	bool Quaternion::LookRotationToQuaternion(const Vector3& viewVec, const Vector3& upVec, Quaternion* res)
+	{
+		float3x3 m;
+		if (!float3x3::LookRotationToMatrix(viewVec, upVec, &m))
+			return false;
+		MatrixToQuaternion(m, *res);
+		return true;
+	}
+
 	float3x3 Quaternion::ToFloat3x3(const Quaternion& q)
 	{
 		return q.ToFloat3x3();

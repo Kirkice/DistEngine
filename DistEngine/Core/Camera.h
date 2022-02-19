@@ -71,6 +71,9 @@ public:
 	float mRotArray[3] = { 0.0f, 0.0f, 0.0f };
 	float mScaleArray[3] = { 1.0f, 1.0f, 1.0f };
 
+	Vector3 GetPosition();
+	Vector3 GetEulerAngles();
+
 private:
 
 	// Camera coordinate system with coordinates relative to world space.

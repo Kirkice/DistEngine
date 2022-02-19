@@ -85,6 +85,51 @@ struct SkyBoxMaterialData
     float                                                                               ACES;
 };
 
+struct PostprocessingData
+{
+    //RGBSplit   Decolourize (Turn Gray)
+    float                                                                               Strength;
+
+    //Bloom
+    float                                                                               Threshold;
+    float                                                                               SoftKnee;
+    float                                                                               Radius;
+    float                                                                               Intensity;
+
+    //Brightness And Contrast
+    float                                                                               Brightness;
+    float                                                                               Contrast;
+
+    //HSV
+    float                                                                               Hue;
+    float                                                                               Saturation;
+    float                                                                               Value;
+
+    //Mosaic
+    float                                                                               PixelSize;
+
+    //Radial Blur
+    float                                                                               BlurFactory;
+
+    //EdgeDetection
+    float                                                                               EdgeWdith;
+    float                                                                               EdgeNeonFade;
+    float4                                                                              OutLineColor;
+    float                                                                               BackgroundFade;
+    float4                                                                              BackgroundColor;
+
+    //WhiteBalance
+    float                                                                               Temperature;
+    float                                                                               Tint;
+
+    //Sharpen
+    //Vignette
+    float4                                                                              VignetteColor;
+
+    //Oil Paint
+    float                                                                               ResoultionValue;
+};
+
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);
 
 StructuredBuffer<SkyBoxMaterialData> gSkyMaterialData                                   : register(t0, space1);

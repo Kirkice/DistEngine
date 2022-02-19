@@ -3,6 +3,12 @@
 
 namespace Mathf
 {
+	const Vector3 Vector3::zero = Vector3(0, 0, 0);
+	const Vector3 Vector3::one = Vector3(1.0F, 1.0F, 1.0F);
+	const Vector3 Vector3::xAxis = Vector3(1, 0, 0);
+	const Vector3 Vector3::yAxis = Vector3(0, 1, 0);
+	const Vector3 Vector3::zAxis = Vector3(0, 0, 1);
+
 	Vector3::Vector3()
 	{
 		x = y = z = 0.0f;

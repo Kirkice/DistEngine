@@ -85,6 +85,71 @@ namespace Mathf
 		return Vector3(-_31, -_32, -_33);
 	}
 
+	float float3x3::Get(int row, int column) const
+	{
+		if (row == 1)
+		{
+			if (column == 1)
+			{
+				return _11;
+			}
+			else if (column == 2)
+			{
+				return _12;
+			}
+			else if (column == 3)
+			{
+				return _13;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else if(row == 2)
+		{
+			if (column == 1)
+			{
+				return _21;
+			}
+			else if (column == 2)
+			{
+				return _22;
+			}
+			else if (column == 3)
+			{
+				return _23;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else if(row == 3)
+		{
+			if (column == 1)
+			{
+				return _31;
+			}
+			else if (column == 2)
+			{
+				return _32;
+			}
+			else if (column == 3)
+			{
+				return _33;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 	void float3x3::SetXBasis(const Vector3& x)
 	{
 		_11 = x.x;
@@ -141,6 +206,104 @@ namespace Mathf
 	float3x3 float3x3::RotationEuler(float x, float y, float z)
 	{
 		return float3x3(XMMatrixRotationRollPitchYaw(x, y, z));
+	}
+
+	float3x3 float3x3::SetFromToRotation(const Vector3& from, const Vector3& to)
+	{ 
+		float3x3 m;
+		Vector3 v = Vector3::Cross(from, to);
+		float e = Vector3::Dot(from, to);
+		const float kEpsilon = 0.000001f;
+		if (e > 1.0 - kEpsilon)     /* "from" almost or equal to "to"-vector? */
+		{
+			/* return identity */
+			m._11 = 1.0; m._12 = 0.0; m._13 = 0.0;
+			m._21 = 0.0; m._22 = 1.0; m._23 = 0.0;
+			m._31 = 0.0; m._32 = 0.0; m._33 = 1.0;
+		}
+		else if (e < -1.0 + kEpsilon) /* "from" almost or equal to negated "to"? */
+		{
+			float invlen;
+			float fxx, fyy, fzz, fxy, fxz, fyz;
+			float uxx, uyy, uzz, uxy, uxz, uyz;
+			float lxx, lyy, lzz, lxy, lxz, lyz;
+			/* left=CROSS(from, (1,0,0)) */
+			Vector3 left(0.0f, from[2], -from[1]);
+			if (Vector3::Dot(left, left) < kEpsilon) /* was left=CROSS(from,(1,0,0)) a good choice? */
+			{
+				/* here we now that left = CROSS(from, (1,0,0)) will be a good choice */
+				left.x = -from.z; left.y = 0.0; left.z = from.x;
+			}
+			/* normalize "left" */
+			invlen = 1.0f / sqrt(Vector3::Dot(left, left));
+			left.x *= invlen;
+			left.y *= invlen;
+			left.z *= invlen;
+			Vector3 up = Vector3::Cross(left, from);
+			/* now we have a coordinate system, i.e., a basis;    */
+			/* M=(from, up, left), and we want to rotate to:      */
+			/* N=(-from, up, -left). This is done with the matrix:*/
+			/* N*M^T where M^T is the transpose of M              */
+			fxx = -from[0] * from[0]; fyy = -from[1] * from[1]; fzz = -from[2] * from[2];
+			fxy = -from[0] * from[1]; fxz = -from[0] * from[2]; fyz = -from[1] * from[2];
+
+			uxx = up[0] * up[0]; uyy = up[1] * up[1]; uzz = up[2] * up[2];
+			uxy = up[0] * up[1]; uxz = up[0] * up[2]; uyz = up[1] * up[2];
+
+			lxx = -left[0] * left[0]; lyy = -left[1] * left[1]; lzz = -left[2] * left[2];
+			lxy = -left[0] * left[1]; lxz = -left[0] * left[2]; lyz = -left[1] * left[2];
+			/* symmetric matrix */
+			m._11 = fxx + uxx + lxx; m._12 = fxy + uxy + lxy; m._13 = fxz + uxz + lxz;
+			m._21 = m._12;   m._22 = fyy + uyy + lyy; m._23 = fyz + uyz + lyz;
+			m._31 = m._13;   m._32 = m._23;   m._33 = fzz + uzz + lzz;
+		}
+		else  /* the most common case, unless "from"="to", or "from"=-"to" */
+		{
+			/* ...otherwise use this hand optimized version (9 mults less) */
+			float hvx, hvz, hvxy, hvxz, hvyz;
+			float h = (1.0f - e) / Vector3::Dot(v, v);
+			hvx = h * v[0];
+			hvz = h * v[2];
+			hvxy = hvx * v[1];
+			hvxz = hvx * v[2];
+			hvyz = hvz * v[1];
+			m._11 = e + hvx * v[0]; m._12 = hvxy - v[2];     m._13 = hvxz + v[1];
+			m._21 = hvxy + v[2];  m._22 = e + h * v[1] * v[1]; m._23 = hvyz - v[0];
+			m._31 = hvxz - v[1];  m._32 = hvyz + v[0];     m._33 = e + hvz * v[2];
+		}
+		return m;
+	}
+
+	// Right handed
+	bool float3x3::LookRotationToMatrix(const Vector3& viewVec, const Vector3& upVec, float3x3* m)
+	{
+		Vector3 z = viewVec;
+		// compute u0
+		float mag = Vector3::Magnitude(z);
+		if (mag < EPSILON)
+		{
+			m = new float3x3();
+			return false;
+		}
+		z /= mag;
+
+		Vector3 x = Vector3::Cross(upVec, z);
+		mag = Vector3::Magnitude(x);
+		if (mag < EPSILON)
+		{
+			m = new float3x3();
+			return false;
+		}
+		x /= mag;
+
+		Vector3 y(Vector3::Cross(z, x));
+		if (!Mathf::CompareApproximately(Vector3::SqrMagnitude(y), 1.0F)) 
+			return false;
+
+		m->SetXBasis(x);
+		m->SetYBasis(y);
+		m->SetZBasis(z);
+		return true;
 	}
 
 	XMMATRIX float3x3::ToSIMD() const

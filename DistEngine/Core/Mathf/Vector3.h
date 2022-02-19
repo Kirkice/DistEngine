@@ -73,5 +73,13 @@ namespace Mathf
 
 		static void StoreVector3(Vector3* pDestination, Vector3 V);
 		static void StoreVector3(Vector3* pDestination, XMVECTOR V); 
+		static float Magnitude(const Vector3& inV) { return sqrt(Dot(inV, inV)); }
+		static float SqrMagnitude(const Vector3& inV) { return Dot(inV, inV); }
+
+		static const Vector3 zero;
+		static const Vector3 one;
+		static const Vector3 xAxis;
+		static const Vector3 yAxis;
+		static const Vector3 zAxis;
 	};
 }

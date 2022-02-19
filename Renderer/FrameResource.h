@@ -132,8 +132,6 @@ struct NPRMaterialData
 
 struct PostprocessingData
 {
-    DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
-
     //RGBSplit   Decolourize (Turn Gray)
     float Strength = 0.02f;
 
@@ -214,5 +212,6 @@ public:
     std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 	std::unique_ptr<UploadBuffer<PBRMaterialData>> PBRMaterialBuffer = nullptr;
     std::unique_ptr<UploadBuffer<SkyBoxMaterialData>> SkyBoxMaterialBuffer = nullptr;
+    std::unique_ptr<UploadBuffer<PostprocessingData>> PostMaterialBuffer = nullptr;
     UINT64 Fence = 0;
 };

@@ -917,7 +917,7 @@ void RenderCore::Bounding_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorld
 
 
 // Post process
-void RenderCore::Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer)
+void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<PostprocessingData>* currMaterialBuffer)
 {
 	XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
@@ -929,7 +929,6 @@ void RenderCore::Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<
 	matData.Intensity = mat->Intensity;
 	matData.Brightness = mat->Brightness;
 	matData.Contrast = mat->Contrast;
-	XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
 	matData.Hue = mat->Hue;
 	matData.Saturation = mat->Saturation;
 	matData.Value = mat->Value;
@@ -950,11 +949,45 @@ void RenderCore::Post_UpdateMaterialBuffer(PostProcessingMat* mat, UploadBuffer<
 	mat->NumFramesDirty--;
 }
 
-void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<PostProcessingMat>>& mMaterials)
+void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials)
 {
-	auto RGBSplitMat = std::make_unique<PostProcessingMat>();
+	auto RGBSplitMat = std::make_unique<Material>();
 	RGBSplitMat->Name = "RGBSplit";
 	RGBSplitMat->MatCBIndex = 18;
 	RGBSplitMat->Strength = 0.02f;
 	mMaterials["RGBSplit"] = std::move(RGBSplitMat);
+}
+
+void RenderCore::Post_BuildRenderItems(
+	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
+	std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
+	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
+	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
+{
+	auto RGBSplitItem = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(1, 1, 1));
+	XMStoreFloat4x4(&RGBSplitItem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	RGBSplitItem->ObjCBIndex = 23;
+	RGBSplitItem->Mat = mMaterials["RGBSplit"].get();
+	RGBSplitItem->Geo = mGeometries["shapeGeo"].get();
+	RGBSplitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	RGBSplitItem->IndexCount = RGBSplitItem->Geo->DrawArgs["grid"].IndexCount;
+	RGBSplitItem->StartIndexLocation = RGBSplitItem->Geo->DrawArgs["grid"].StartIndexLocation;
+	RGBSplitItem->BaseVertexLocation = RGBSplitItem->Geo->DrawArgs["grid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RGBSplitItem.get());
+	mAllRitems.push_back(std::move(RGBSplitItem));
+}
+
+void RenderCore::Post_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix)
+{
+	Vector3 CamForward = Vector3(mCamera.GetLook3f());
+	Quaternion quaternion = Quaternion::LookRotation(CamForward, Vector3::yAxis);
+	Vector3 eulerAngles = Mathf::QuaternionToEuler(quaternion);
+	XMMATRIX RotateMatrix = XMMatrixRotationX(eulerAngles.x + -90) * XMMatrixRotationY(eulerAngles.y) * XMMatrixRotationZ(eulerAngles.z);
+
+	switch (ObjCBIndex)
+	{
+		case 23:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(1, 1, 1) * RotateMatrix); break;
+	}
 }
