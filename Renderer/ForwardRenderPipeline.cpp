@@ -15,7 +15,7 @@ ForwardRenderer::~ForwardRenderer()
 {
 	if (md3dDevice != nullptr)
 		FlushCommandQueue();
-}
+} 
 
 void ForwardRenderer::Draw(const GameTimer& gt)
 {
