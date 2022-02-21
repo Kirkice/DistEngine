@@ -139,7 +139,7 @@ TextureCube gCubeMap                                                            
 Texture2D gRenderTarget                                                                 : register(t2);
 Texture2D gShadowMap                                                                    : register(t3);
 Texture2D gSsaoMap                                                                      : register(t4);
-
+ 
 Texture2D gGizmoTextureMaps[12]                                                         : register(t5);
 Texture2D gTextureMaps[48]                                                              : register(t5);
 
