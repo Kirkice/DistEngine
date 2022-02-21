@@ -40,7 +40,7 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-return gRenderTarget.Sample(gsamLinearClamp, float2(pin.PosS.xy / pin.PosS.w));
+return gRenderTarget.Sample(gsamLinearClamp, float2(pin.PosS.xy / pin.PosS.w)); 
 }
 
 #endif
