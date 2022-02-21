@@ -965,7 +965,7 @@ void RenderCore::Post_BuildRenderItems(
 	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
 {
 	auto RGBSplitItem = std::make_unique<RenderItem>();
-	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(1, 1, 1));
+	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(1, 1, 1) * XMMatrixRotationX(-90));
 	XMStoreFloat4x4(&RGBSplitItem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	RGBSplitItem->ObjCBIndex = 23;
 	RGBSplitItem->Mat = mMaterials["RGBSplit"].get();
@@ -981,13 +981,13 @@ void RenderCore::Post_BuildRenderItems(
 
 void RenderCore::Post_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix)
 {
-	Vector3 CamForward = Vector3(mCamera.GetLook3f());
-	Quaternion quaternion = Quaternion::LookRotation(CamForward, Vector3::yAxis);
-	Vector3 eulerAngles = Mathf::QuaternionToEuler(quaternion);
-	XMMATRIX RotateMatrix = XMMatrixRotationX(eulerAngles.x + -90) * XMMatrixRotationY(eulerAngles.y) * XMMatrixRotationZ(eulerAngles.z);
+	//Vector3 CamForward = Vector3(mCamera.GetLook3f());
+	//Quaternion quaternion = Quaternion::LookRotation(CamForward, Vector3::yAxis);
+	//Vector3 eulerAngles = Mathf::QuaternionToEuler(quaternion);
+	//XMMATRIX RotateMatrix = XMMatrixRotationX(eulerAngles.x + -90) * XMMatrixRotationY(eulerAngles.y) * XMMatrixRotationZ(eulerAngles.z);
 
-	switch (ObjCBIndex)
-	{
-		case 23:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(1, 1, 1) * RotateMatrix); break;
-	}
+	//switch (ObjCBIndex)
+	//{
+	//	case 23:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(1, 1, 1) * XMMatrixRotationX(-90)); break;
+	//}
 }
