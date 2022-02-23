@@ -48,7 +48,7 @@ D3D12_VIEWPORT RenderTarget::Viewport()const
 	return mViewport;
 }
 
-D3D12_RECT RenderTarget::ScissorRect()const
+D3D12_RECT RenderTarget::ScissorRect()const 
 {
 	return mScissorRect;
 }
