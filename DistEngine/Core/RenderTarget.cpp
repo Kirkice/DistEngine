@@ -43,7 +43,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::Rtv()const
 	return mhCpuRtv;
 }
 
-D3D12_VIEWPORT RenderTarget::Viewport()const
+D3D12_VIEWPORT RenderTarget::Viewport()const  
 {
 	return mViewport;
 }
