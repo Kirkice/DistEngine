@@ -30,9 +30,9 @@ void ForwardRenderer::ForwardRender()
 	ThrowIfFailed(cmdListAlloc->Reset());
 	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.Get() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { mRenderTargetSrvDescriptorHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mRenderTargetRootSignature.Get());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
 	ForwardRenderer::DrawShadowMap(matBuffer);
@@ -42,7 +42,7 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.Get());
 	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
 
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mRenderTargetRootSignature.Get());
 
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
@@ -60,16 +60,16 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->OMSetRenderTargets(1, &mRenderTarget->Rtv(), true, &DepthStencilView());
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	skyTexDescriptor.Offset(mSkyTexHeapIndex, mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, skyTexDescriptor);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE iblTexDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE iblTexDescriptor(mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	iblTexDescriptor.Offset(mIBLTexHeapIndex, mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, iblTexDescriptor);
 
@@ -101,7 +101,7 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	auto passCBSwapChain = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCBSwapChain->GetGPUVirtualAddress());
@@ -135,7 +135,7 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 
 	mCommandList->SetGraphicsRootDescriptorTable(4, mNullSrv);
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	DrawSceneToShadowMap();
 }
 

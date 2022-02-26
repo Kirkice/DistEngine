@@ -47,9 +47,14 @@ namespace Renderer
 		void UpdateSsaoCB(const GameTimer& gt);
 
 		void LoadTextures();
+
 		void BuildRootSignature();
 		void BuildSsaoRootSignature();
+		void BuildRenderTargetRootSignature();
+
 		void BuildDescriptorHeaps();
+		void BuildRenderTargetDescriptorHeaps();
+
 		void BuildShadersAndInputLayout();
 		void BuildShapeGeometry();
 		void LoadModel();
@@ -62,8 +67,8 @@ namespace Renderer
 		void DrawSceneToRenderTarget();
 		void DrawNormalsAndDepth();
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuSrv(int index)const;
-		CD3DX12_GPU_DESCRIPTOR_HANDLE GetGpuSrv(int index)const;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const;
+		CD3DX12_GPU_DESCRIPTOR_HANDLE GetGpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const;
 		CD3DX12_CPU_DESCRIPTOR_HANDLE GetDsv(int index)const;
 		CD3DX12_CPU_DESCRIPTOR_HANDLE GetRtv(int index)const;
 
@@ -76,8 +81,10 @@ namespace Renderer
 
 		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr;
+		ComPtr<ID3D12RootSignature> mRenderTargetRootSignature = nullptr;
 
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
+		ComPtr<ID3D12DescriptorHeap> mRenderTargetSrvDescriptorHeap = nullptr;
 
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 		std::unordered_map<std::string, std::unique_ptr<Material>> mMaterials;
