@@ -24,6 +24,10 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 
+	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
+
 	void BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv, 
 		CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
@@ -42,10 +46,6 @@ private:
 	UINT mWidth = 0;
 	UINT mHeight = 0;
 
-	DXGI_FORMAT mTargetFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	DXGI_FORMAT mTargetFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTarget;
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
 };

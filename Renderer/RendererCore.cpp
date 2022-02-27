@@ -965,7 +965,7 @@ void RenderCore::Post_BuildRenderItems(
 	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
 {
 	auto RGBSplitItem = std::make_unique<RenderItem>();
-	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(1, 1, 1) * XMMatrixRotationX(-90));
+	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(100, 100, 100) * XMMatrixRotationX(-90));
 	XMStoreFloat4x4(&RGBSplitItem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	RGBSplitItem->ObjCBIndex = 23;
 	RGBSplitItem->Mat = mMaterials["RGBSplit"].get();

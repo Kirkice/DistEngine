@@ -50,7 +50,6 @@ namespace Renderer
 
 		void BuildRootSignature();
 		void BuildSsaoRootSignature();
-		void BuildRenderTargetRootSignature();
 
 		void BuildDescriptorHeaps();
 		void BuildRenderTargetDescriptorHeaps();
@@ -81,7 +80,6 @@ namespace Renderer
 
 		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr;
-		ComPtr<ID3D12RootSignature> mRenderTargetRootSignature = nullptr;
 
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 		ComPtr<ID3D12DescriptorHeap> mRenderTargetSrvDescriptorHeap = nullptr;

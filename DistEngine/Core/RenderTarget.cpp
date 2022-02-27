@@ -62,8 +62,6 @@ void RenderTarget::BuildDescriptors(
 	mhCpuSrv = hCpuSrv;
 	mhGpuSrv = hGpuSrv;
 	mhCpuRtv = hCpuRtv;
-	//  Create the descriptors
-	BuildDescriptors();
 }
 
 //BuildDescriptors

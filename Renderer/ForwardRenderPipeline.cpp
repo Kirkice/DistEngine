@@ -32,18 +32,17 @@ void ForwardRenderer::ForwardRender()
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mRenderTargetSrvDescriptorHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	mCommandList->SetGraphicsRootSignature(mRenderTargetRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
+	//Draw ShadowMap
 	ForwardRenderer::DrawShadowMap(matBuffer);
 
+	//SSAO
 	ForwardRenderer::DrawDepthNormal();
-
 	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.Get());
 	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
-
-	mCommandList->SetGraphicsRootSignature(mRenderTargetRootSignature.Get());
-
+	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
@@ -85,8 +84,14 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 	DrawTransparent();
 
+	ForwardRenderer::DrawBounding();
+	ForwardRenderer::DrawGizmo();
+
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
+
+
+
 
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -101,14 +106,19 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	auto passCBSwapChain = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCBSwapChain->GetGPUVirtualAddress());
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
+	mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
+
+	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
 	ForwardRenderer::DrawPostProcessing();
-	ForwardRenderer::DrawBounding();
-	ForwardRenderer::DrawGizmo();
 	ForwardRenderer::DrawImgui();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
