@@ -17,26 +17,21 @@
 
 struct VertexIn
 { 
-	float3 PosL                                         : POSITION;
-    float3 NormalL                                      : NORMAL;
-	float2 TexC                                         : TEXCOORD;
-	float3 TangentL                                     : TANGENT;
+	float3 PosL    										: POSITION;
+	float2 TexC    										: TEXCOORD;
 };
 
 struct VertexOut
 {
-	float4 PosH                                         : SV_POSITION;
-    float3 NormalW                                      : NORMAL;
-	float3 TangentW                                     : TANGENT;
-	float2 TexC                                         : TEXCOORD0;
-    float4 PosS                                         : TEXCOORD1;
+	float4 PosH    										: SV_POSITION;
+	float2 TexC    										: TEXCOORD;
 };
 
 VertexOut VS(VertexIn vin)
 {
 	VertexOut vout                                      = (VertexOut)0.0f;
-    vout.PosH                                           = TransformObjectToHClip(vin.PosL);
-    vout.PosS                                           = mul(float4(TransformObjectToWorld(vin.PosL),1), gViewProjTex);
+    vout.PosH 											= float4(vin.PosL, 1.0f);
+	vout.TexC 											= vin.TexC;
     return vout;
 }
 
@@ -50,8 +45,6 @@ float2 GetMosaicUV( half2 uv)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	float2 setUV										= float2(pin.PosS.xy / pin.PosS.w);
-
 	// float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + setUV.x / Scale,(Scale - 1.0) *0.5 + setUV.y /Scale);
 
 	// float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, setUV); 
@@ -75,7 +68,7 @@ float4 PS(VertexOut pin) : SV_Target
 	// outColor /= 20;
 	// return outColor;
 
-	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(setUV)); 
+	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(pin.TexC)); 
 	return textureColor;
 }
 

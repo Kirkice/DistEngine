@@ -965,15 +965,15 @@ void RenderCore::Post_BuildRenderItems(
 	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
 {
 	auto RGBSplitItem = std::make_unique<RenderItem>();
-	XMStoreFloat4x4(&RGBSplitItem->World, XMMatrixScaling(100, 100, 100) * XMMatrixRotationX(-90));
-	XMStoreFloat4x4(&RGBSplitItem->TexTransform, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	RGBSplitItem->World = Mathf::Identity4x4();
+	RGBSplitItem->TexTransform = Mathf::Identity4x4();
 	RGBSplitItem->ObjCBIndex = 23;
 	RGBSplitItem->Mat = mMaterials["RGBSplit"].get();
 	RGBSplitItem->Geo = mGeometries["shapeGeo"].get();
 	RGBSplitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	RGBSplitItem->IndexCount = RGBSplitItem->Geo->DrawArgs["grid"].IndexCount;
-	RGBSplitItem->StartIndexLocation = RGBSplitItem->Geo->DrawArgs["grid"].StartIndexLocation;
-	RGBSplitItem->BaseVertexLocation = RGBSplitItem->Geo->DrawArgs["grid"].BaseVertexLocation;
+	RGBSplitItem->IndexCount = RGBSplitItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	RGBSplitItem->StartIndexLocation = RGBSplitItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	RGBSplitItem->BaseVertexLocation = RGBSplitItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
 
 	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RGBSplitItem.get());
 	mAllRitems.push_back(std::move(RGBSplitItem));

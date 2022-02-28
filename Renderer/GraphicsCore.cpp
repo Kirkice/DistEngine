@@ -828,6 +828,7 @@ void GraphicsCore::BuildShapeGeometry()
 {
 	GeometryGenerator geoGen;
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
+	GeometryGenerator::MeshData ScreenGrid = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
 	GeometryGenerator::MeshData quad = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 	GeometryGenerator::MeshData aabb = geoGen.CreateAABB(sphere.AABB, 0);
@@ -837,12 +838,14 @@ void GraphicsCore::BuildShapeGeometry()
 	UINT sphereVertexOffset = gridVertexOffset + (UINT)grid.Vertices.size();
 	UINT quadVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
 	UINT aabbVertexOffset = quadVertexOffset + (UINT)quad.Vertices.size();
+	UINT screenGridVertexOffset = aabbVertexOffset + (UINT)aabb.Vertices.size();
 
 	// Cache the starting index for each object in the concatenated index buffer.
 	UINT gridIndexOffset = 0;
 	UINT sphereIndexOffset = gridIndexOffset + (UINT)grid.Indices32.size();
 	UINT quadIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
 	UINT aabbIndexOffset = quadIndexOffset + (UINT)quad.Indices32.size();
+	UINT screenGridIndexOffset = aabbIndexOffset + (UINT)aabb.Indices32.size();
 
 	SubmeshGeometry gridSubmesh;
 	gridSubmesh.IndexCount = (UINT)grid.Indices32.size();
@@ -864,6 +867,11 @@ void GraphicsCore::BuildShapeGeometry()
 	aabbSubMesh.StartIndexLocation = aabbIndexOffset;
 	aabbSubMesh.BaseVertexLocation = aabbVertexOffset;
 
+	SubmeshGeometry screenGridSubMesh;
+	screenGridSubMesh.IndexCount = (UINT)ScreenGrid.Indices32.size();
+	screenGridSubMesh.StartIndexLocation = screenGridIndexOffset;
+	screenGridSubMesh.BaseVertexLocation = screenGridVertexOffset;
+
 	//
 	// Extract the vertex elements we are interested in and pack the
 	// vertices of all the meshes into one vertex buffer.
@@ -873,7 +881,8 @@ void GraphicsCore::BuildShapeGeometry()
 		grid.Vertices.size() +
 		sphere.Vertices.size() +
 		quad.Vertices.size() +
-		aabb.Vertices.size();
+		aabb.Vertices.size() + 
+		ScreenGrid.Vertices.size();
 
 	std::vector<Vertex> vertices(totalVertexCount);
 
@@ -911,11 +920,20 @@ void GraphicsCore::BuildShapeGeometry()
 		vertices[k].TangentU = aabb.Vertices[i].TangentU;
 	}
 
+	for (int i = 0; i < ScreenGrid.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = ScreenGrid.Vertices[i].Position;
+		vertices[k].Normal = ScreenGrid.Vertices[i].Normal;
+		vertices[k].TexC = ScreenGrid.Vertices[i].TexC;
+		vertices[k].TangentU = ScreenGrid.Vertices[i].TangentU;
+	}
+
 	std::vector<std::uint16_t> indices;
 	indices.insert(indices.end(), std::begin(grid.GetIndices16()), std::end(grid.GetIndices16()));
 	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
 	indices.insert(indices.end(), std::begin(quad.GetIndices16()), std::end(quad.GetIndices16()));
 	indices.insert(indices.end(), std::begin(aabb.GetIndices16()), std::end(aabb.GetIndices16()));
+	indices.insert(indices.end(), std::begin(ScreenGrid.GetIndices16()), std::end(ScreenGrid.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -944,6 +962,7 @@ void GraphicsCore::BuildShapeGeometry()
 	geo->DrawArgs["sphere"] = sphereSubmesh;
 	geo->DrawArgs["quad"] = quadSubmesh;
 	geo->DrawArgs["aabb"] = aabbSubMesh;
+	geo->DrawArgs["screenGrid"] = screenGridSubMesh;
 
 	mGeometries[geo->Name] = std::move(geo);
 }
