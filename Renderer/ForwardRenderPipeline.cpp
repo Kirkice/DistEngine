@@ -115,6 +115,10 @@ void ForwardRenderer::ForwardRender()
 	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE copyColorDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	copyColorDescriptor.Offset(mCopyColorIndex, mCbvSrvUavDescriptorSize);
+	mCommandList->SetGraphicsRootDescriptorTable(4, copyColorDescriptor);
+
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 

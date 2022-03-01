@@ -35,7 +35,7 @@ bool GraphicsCore::Initialize()
 
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
-
+	mCopyColor = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 	//LoadModel();
 	LoadTextures();
 
@@ -409,10 +409,10 @@ void GraphicsCore::LoadTextures()
 void GraphicsCore::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 6, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 6, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
@@ -604,7 +604,8 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
 	mRenderTargetIndex = mSkyTexHeapIndex + 1;
-	mShadowMapHeapIndex = mRenderTargetIndex + 1;
+	mCopyColorIndex = mRenderTargetIndex + 1;
+	mShadowMapHeapIndex = mCopyColorIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
 	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
@@ -719,7 +720,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mSsaoHeapIndexStart = mSkyTexHeapIndex + 1;
 	mShadowMapHeapIndex = mSsaoHeapIndexStart + 1;
 	mRenderTargetIndex = mShadowMapHeapIndex + 1;
-	mSsaoAmbientMapIndex = mRenderTargetIndex + 3;
+	mCopyColorIndex = mRenderTargetIndex + 1;
+	mSsaoAmbientMapIndex = mCopyColorIndex + 3;
 	mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
@@ -742,6 +744,11 @@ void GraphicsCore::BuildDescriptorHeaps()
 	md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
 
 	mRenderTarget->BuildDescriptors(
+		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+		GetRtv(SwapChainBufferCount));
+
+	mCopyColor->BuildDescriptors(
 		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetRtv(SwapChainBufferCount));

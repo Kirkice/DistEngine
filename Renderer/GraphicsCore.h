@@ -107,6 +107,7 @@ namespace Renderer
 		UINT mIBLTexHeapIndex = 0;
 		UINT mSkyTexHeapIndex = 0;
 		UINT mRenderTargetIndex = 0;
+		UINT mCopyColorIndex = 0;
 		UINT mShadowMapHeapIndex = 0;
 		UINT mSsaoHeapIndexStart = 0;
 		UINT mSsaoAmbientMapIndex = 0;
@@ -121,6 +122,7 @@ namespace Renderer
 		PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
 		std::unique_ptr<RenderTarget> mRenderTarget;
+		std::unique_ptr<RenderTarget> mCopyColor;
 		std::unique_ptr<ShadowMap> mShadowMap;
 
 		std::unique_ptr<Ssao> mSsao;
