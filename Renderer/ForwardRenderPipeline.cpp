@@ -119,8 +119,8 @@ void ForwardRenderer::ForwardRender()
 	copyColorDescriptor.Offset(mCopyColorIndex, mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, copyColorDescriptor);
 
-	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+	auto PostMatBuufer = mCurrFrameResource->PostMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, PostMatBuufer->GetGPUVirtualAddress());
 
 	ForwardRenderer::DrawPostProcessing();
 	ForwardRenderer::DrawImgui();
@@ -219,8 +219,12 @@ void ForwardRenderer::DrawGizmo()
 //Draw PostProcessing
 void ForwardRenderer::DrawPostProcessing()
 {
-	mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+	// RGB Split
+	if (UseRGBSplit)
+	{
+		mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+	}
 }
 
 //Draw Imgui
@@ -248,7 +252,8 @@ void ForwardRenderer::DrawEditor()
 		ForwardRenderer::DrawLightSettings();
 	if (show_physicsSetting_panel)
 		ForwardRenderer::DrawPhysicsSettings();
-
+	if (show_postprocessingSetting_panel)
+		ForwardRenderer::DrawPostProcessingSettings();
 
 	//Draw Graphics Item
 	ForwardRenderer::DrawGraphicsItemEditor();
@@ -288,6 +293,7 @@ void ForwardRenderer::DrawMenuEditor()
 		{
 			ImGui::MenuItem("Light Settings", NULL, &show_lightSetting_panel);
 			ImGui::MenuItem("Physics Settings", NULL, &show_physicsSetting_panel);
+			ImGui::MenuItem("PostProcessing Settings", NULL, &show_postprocessingSetting_panel);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -517,6 +523,30 @@ void ForwardRenderer::DrawLightSettings()
 	bool UseAces = (bool)currentMat->ACES;
 	ImGui::Checkbox("Aces Enable", &UseAces);
 	currentMat->ACES = (int)UseAces;
+
+	currentMat->NumFramesDirty++;
+	ImGui::End();
+}
+
+//PostProcessing
+void ForwardRenderer::DrawPostProcessingSettings()
+{
+	//Render Item
+	ImGui::SetNextWindowBgAlpha(0.8f);
+	ImGui::Begin("PostProcessing Settings");
+	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+	ImGui::SetWindowSize(ImVec2(300, 800), ImGuiCond_Always);
+
+	Material* currentMat = mMaterials["RGBSplit"].get();
+
+	if (ImGui::CollapsingHeader("RGBSplit"))
+	{
+		ImGui::Checkbox("Enable RGBSplit", &UseRGBSplit);
+		if (UseRGBSplit)
+		{
+			ImGui::SliderFloat("Strength", &currentMat->Strength, 0, 1);
+		}
+	}
 
 	currentMat->NumFramesDirty++;
 	ImGui::End();

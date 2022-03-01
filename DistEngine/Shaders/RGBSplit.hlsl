@@ -13,8 +13,6 @@
 
 #include "Core.hlsl"
 
-#define Scale 											0.97
-
 struct VertexIn
 { 
 	float3 PosL    										: POSITION;
@@ -45,6 +43,8 @@ float2 GetMosaicUV( half2 uv)
 
 float4 PS(VertexOut pin) : SV_Target
 {
+	PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
+	float Scale											= 1 - matData.Strength;
 	float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
 
 	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 

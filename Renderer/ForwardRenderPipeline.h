@@ -24,6 +24,7 @@ namespace Renderer
 		//Light Setting Panel
 		bool show_lightSetting_panel = false;
 		bool show_physicsSetting_panel = false;
+		bool show_postprocessingSetting_panel = false;
 
 		virtual void Draw(const GameTimer& gt)override;
 
@@ -50,9 +51,6 @@ namespace Renderer
 
 		//DrawTransparent
 		void DrawTransparent();
-
-
-
 
 		//DrawPostProcessing
 		void DrawPostProcessing();
@@ -85,5 +83,7 @@ namespace Renderer
 		void DrawLightSettings();
 
 		void DrawPhysicsSettings();
+
+		void DrawPostProcessingSettings();
 	};
 }
