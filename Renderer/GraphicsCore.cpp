@@ -748,8 +748,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GetRtv(SwapChainBufferCount));
 
 	mCopyColor->BuildDescriptors(
-		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+		GetCpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
+		GetGpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
 		GetRtv(SwapChainBufferCount));
 }
 

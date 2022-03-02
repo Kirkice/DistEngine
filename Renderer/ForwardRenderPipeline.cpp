@@ -46,7 +46,7 @@ void ForwardRenderer::ForwardRender()
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
-
+	//-------------------------------------------- 3D -----------------------------------------------
 	//Draw Color To RenderTarget
 	mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
 	mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
@@ -89,14 +89,17 @@ void ForwardRenderer::ForwardRender()
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 
-	// Draw RGBSplit
-	DrawRGBSplit();
-
-	CopyColorPass();
 
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
+
+
+
+	//-------------------------------------------- PostProcessing -----------------------------------------------
+	mCommandList->CopyResource(mCopyColor->Resource(), mRenderTarget->Resource());
+	
+
+	//-------------------------------------------- Swap Chain -----------------------------------------------
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 
@@ -123,6 +126,7 @@ void ForwardRenderer::ForwardRender()
 	auto PostMatBuufer = mCurrFrameResource->PostMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, PostMatBuufer->GetGPUVirtualAddress());
 
+	ForwardRenderer::DrawRGBSplit();
 	ForwardRenderer::DrawImgui();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -144,36 +148,8 @@ void ForwardRenderer::ForwardRender()
 
 void ForwardRenderer::CopyColorPass()
 {
-	//Draw Color To CopyColorTarget
-	mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
-	mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
-		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	mCommandList->ClearRenderTargetView(mRenderTarget->Rtv(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	mCommandList->OMSetRenderTargets(1, &mRenderTarget->Rtv(), true, &DepthStencilView());
-
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	auto passCB = mCurrFrameResource->PassCB->Resource();
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE copyColorDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	copyColorDescriptor.Offset(mCopyColorIndex, mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, copyColorDescriptor);
-
 	mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
 //DrawShadowMap
@@ -253,40 +229,17 @@ void ForwardRenderer::DrawGizmo()
 //Draw PostProcessing
 void ForwardRenderer::DrawRGBSplit()
 {
-	//Draw Color To CopyColorTarget
-	mCommandList->RSSetViewports(1, &mCopyColor->Viewport());
-	mCommandList->RSSetScissorRects(1, &mCopyColor->ScissorRect());
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(),
-		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	mCommandList->ClearRenderTargetView(mCopyColor->Rtv(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	mCommandList->OMSetRenderTargets(1, &mCopyColor->Rtv(), true, &DepthStencilView());
-
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	auto passCB = mCurrFrameResource->PassCB->Resource();
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE copyColorDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	copyColorDescriptor.Offset(mCopyColorIndex, mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, copyColorDescriptor);
-
-	// RGB Split
+	//// RGB Split
 	if (UseRGBSplit)
 	{
 		mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
 	}
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
+	else
+	{
+		mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+	}
 }
 
 //Draw Imgui
@@ -390,7 +343,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 		ImGui::Checkbox("RenderSkyBox", &renderSkyBox);
 		ImGui::ColorEdit3("SolidColor", SolidColor);
 		ImGui::InputFloat2("ViewPort", RectXY);
-		ImGui::InputFloat2("Rect", RectWH);
+		ImGui::InputFloat2("Rect", RectWH); 
 		ImGui::Separator();
 	}
 
