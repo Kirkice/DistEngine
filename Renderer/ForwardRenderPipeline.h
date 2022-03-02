@@ -53,7 +53,7 @@ namespace Renderer
 		void DrawTransparent();
 
 		//DrawPostProcessing
-		void DrawPostProcessing();
+		void DrawRGBSplit();
 
 		void DrawBounding();
 
@@ -85,5 +85,7 @@ namespace Renderer
 		void DrawPhysicsSettings();
 
 		void DrawPostProcessingSettings();
+
+		void CopyColorPass();
 	};
 }

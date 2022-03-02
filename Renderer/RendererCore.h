@@ -118,7 +118,6 @@ namespace Renderer
 			std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials,
 			std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
 			std::vector<std::unique_ptr<RenderItem>>& mAllRitems);
-		void Post_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix);
 
 		//Lighting Settings
 		float EnvironmentShadowColor[3] = { 0.3f,0.3f,0.3f };

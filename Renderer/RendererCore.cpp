@@ -951,9 +951,14 @@ void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<Postproce
 
 void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique_ptr<Material>>& mMaterials)
 {
+	auto CopyColorMat = std::make_unique<Material>();
+	CopyColorMat->Name = "CopyColor";
+	CopyColorMat->MatCBIndex = 18;
+	mMaterials["CopyColor"] = std::move(CopyColorMat);
+
 	auto RGBSplitMat = std::make_unique<Material>();
 	RGBSplitMat->Name = "RGBSplit";
-	RGBSplitMat->MatCBIndex = 18;
+	RGBSplitMat->MatCBIndex = 19;
 	RGBSplitMat->Strength = 0.02f;
 	mMaterials["RGBSplit"] = std::move(RGBSplitMat);
 }
@@ -964,10 +969,24 @@ void RenderCore::Post_BuildRenderItems(
 	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& mGeometries,
 	std::vector<std::unique_ptr<RenderItem>>& mAllRitems)
 {
+	auto CopyColorItem = std::make_unique<RenderItem>();
+	CopyColorItem->World = Mathf::Identity4x4();
+	CopyColorItem->TexTransform = Mathf::Identity4x4();
+	CopyColorItem->ObjCBIndex = 23;
+	CopyColorItem->Mat = mMaterials["CopyColor"].get();
+	CopyColorItem->Geo = mGeometries["shapeGeo"].get();
+	CopyColorItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	CopyColorItem->IndexCount = CopyColorItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	CopyColorItem->StartIndexLocation = CopyColorItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	CopyColorItem->BaseVertexLocation = CopyColorItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(CopyColorItem.get());
+	mAllRitems.push_back(std::move(CopyColorItem));
+
 	auto RGBSplitItem = std::make_unique<RenderItem>();
 	RGBSplitItem->World = Mathf::Identity4x4();
 	RGBSplitItem->TexTransform = Mathf::Identity4x4();
-	RGBSplitItem->ObjCBIndex = 23;
+	RGBSplitItem->ObjCBIndex = 24;
 	RGBSplitItem->Mat = mMaterials["RGBSplit"].get();
 	RGBSplitItem->Geo = mGeometries["shapeGeo"].get();
 	RGBSplitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -977,17 +996,4 @@ void RenderCore::Post_BuildRenderItems(
 
 	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RGBSplitItem.get());
 	mAllRitems.push_back(std::move(RGBSplitItem));
-}
-
-void RenderCore::Post_UpdateObjectBuffer(UINT ObjCBIndex, XMFLOAT4X4* eWorldMatrix)
-{
-	//Vector3 CamForward = Vector3(mCamera.GetLook3f());
-	//Quaternion quaternion = Quaternion::LookRotation(CamForward, Vector3::yAxis);
-	//Vector3 eulerAngles = Mathf::QuaternionToEuler(quaternion);
-	//XMMATRIX RotateMatrix = XMMatrixRotationX(eulerAngles.x + -90) * XMMatrixRotationY(eulerAngles.y) * XMMatrixRotationZ(eulerAngles.z);
-
-	//switch (ObjCBIndex)
-	//{
-	//	case 23:XMStoreFloat4x4(eWorldMatrix, XMMatrixScaling(1, 1, 1) * XMMatrixRotationX(-90)); break;
-	//}
 }

@@ -174,7 +174,6 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
 		
 		EditorGizmo_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
-		Post_UpdateObjectBuffer(e->ObjCBIndex, eWorldMatrix);
 
 		ObjectConstants objConstants;
 		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
@@ -808,9 +807,11 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["copyColorVS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["copyColorPS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
+
 	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
-
 
 	mInputLayout =
 	{
@@ -1340,6 +1341,24 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoBlurPsoDesc, IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
 
 	//
+	// 	PSO for CopyColor
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
+	CopyColorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	CopyColorPsoDesc.pRootSignature = mRootSignature.Get();
+	CopyColorPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["copyColorVS"]->GetBufferPointer()),
+		mShaders["copyColorVS"]->GetBufferSize()
+	};
+	CopyColorPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["copyColorPS"]->GetBufferPointer()),
+		mShaders["copyColorPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&CopyColorPsoDesc, IID_PPV_ARGS(&mPSOs["CopyColor"])));
+
+	//
 	// 	PSO for RGBSplit
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC RGBSplitPsoDesc = opaquePsoDesc;
@@ -1356,6 +1375,8 @@ void GraphicsCore::BuildPSOs()
 		mShaders["rgbSplitPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RGBSplitPsoDesc, IID_PPV_ARGS(&mPSOs["RGBSplit"])));
+
+
 
 	//
 	// PSO for sky.
