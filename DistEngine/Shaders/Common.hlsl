@@ -57,7 +57,7 @@ struct SpotLight
     float                                                                           spotAngle;
     float                                                                           spotLightsActive;
 };
-
+ 
 //PBR Material
 struct PBRMaterialData
 {
