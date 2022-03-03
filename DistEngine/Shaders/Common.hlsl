@@ -35,7 +35,7 @@ struct DirectionLight
     float3                                                                          Position;
     float                                                                           Active;
 };
-
+ 
 //点光源
 struct PointLight
 {
