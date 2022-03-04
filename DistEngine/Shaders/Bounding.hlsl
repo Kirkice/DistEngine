@@ -35,7 +35,7 @@ VertexOut VS(VertexIn vin)
     vout.PosH                                           = TransformObjectToHClip(vin.PosL);
     return vout;
 }
-
+ 
 float4 PS(VertexOut pin) : SV_Target
 {
     return float4(0,0,1,1);
