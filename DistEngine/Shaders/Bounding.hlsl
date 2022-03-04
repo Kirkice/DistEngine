@@ -20,7 +20,7 @@ struct VertexIn
 	float2 TexC                                         : TEXCOORD;
 	float3 TangentL                                     : TANGENT;
 };
-
+ 
 struct VertexOut
 {
 	float4 PosH                                         : SV_POSITION;
