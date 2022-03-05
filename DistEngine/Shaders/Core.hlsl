@@ -21,7 +21,7 @@
 
 #define real2x2                                                                             float2x2
 #define real2x3                                                                             float2x3
-#define real3x2                                                                             float3x2
+#define real3x2                                                                             float3x2 
 #define real3x3                                                                             float3x3
 #define real3x4                                                                             float3x4
 #define real4x3                                                                             float4x3
