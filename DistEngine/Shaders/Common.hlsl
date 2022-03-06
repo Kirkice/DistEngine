@@ -12,7 +12,7 @@
 #ifndef COMMON_INCLUDE
 #define COMMON_INCLUDE
 
-//Lights
+//Lights 
 #ifndef NUM_DIR_LIGHTS
 #define NUM_DIR_LIGHTS 3
 #endif 
