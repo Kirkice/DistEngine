@@ -73,7 +73,7 @@ float GenerateHashedRandomFloat(uint2 v)
 float GenerateHashedRandomFloat(uint3 v)
 {
     return                                                                      ConstructFloat(JenkinsHash(v));
-}
+} 
 
 float GenerateHashedRandomFloat(uint4 v)
 {
