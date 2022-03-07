@@ -13,7 +13,7 @@
 #ifndef RANDOM_INCLUDED 
 #define RANDOM_INCLUDED
 
-// A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm.
+// A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm. 
 uint JenkinsHash(uint x)
 {
     x                                                                           += (x << 10u);
