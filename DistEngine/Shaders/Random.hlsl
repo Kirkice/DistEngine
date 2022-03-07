@@ -79,7 +79,7 @@ float GenerateHashedRandomFloat(uint4 v)
 {
     return                                                                      ConstructFloat(JenkinsHash(v));
 }
-
+ 
 float Hash(uint s)
 {
     s                                                                           = s ^ 2747636419u;
