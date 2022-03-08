@@ -714,6 +714,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 	mRenderTargetIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mRenderTargetIndex = mRenderTargetIndex + 5;
+	mCopyColorIndex = mRenderTargetIndex + 1;
 
 	auto nullSrv = GetCpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);
 	mNullSrv = GetGpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);

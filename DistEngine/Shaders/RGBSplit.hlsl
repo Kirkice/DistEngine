@@ -43,17 +43,17 @@ float2 GetMosaicUV( half2 uv)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
-	float Scale											= 1 - matData.Strength;
-	float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
+	// PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
+	// float Scale											= 1 - matData.Strength;
+	// float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
 
-	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 
+	// float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 
 
-	float4 shiftColor1 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.05 * (Scale - 1.0), - 0.05 *(Scale - 1.0)));
-	float4 shiftColor2 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.1 * (Scale - 1.0), - 0.1 *(Scale - 1.0)));
-	float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
-	float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
-	return 												float4(blend3DColor,textureColor.a); 
+	// float4 shiftColor1 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.05 * (Scale - 1.0), - 0.05 *(Scale - 1.0)));
+	// float4 shiftColor2 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.1 * (Scale - 1.0), - 0.1 *(Scale - 1.0)));
+	// float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
+	// float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
+	// return 												float4(blend3DColor,textureColor.a); 
 
 
 	// float2 dir 											= setUV - float2(0.5,0.5);
@@ -70,6 +70,9 @@ float4 PS(VertexOut pin) : SV_Target
 
 	// float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(pin.TexC)); 
 	// return textureColor;
+
+	float4 color 										= gCameraOpaqueTexture.Sample(gsamLinearClamp, pin.TexC); 
+	return color;
 }
 
 #endif
