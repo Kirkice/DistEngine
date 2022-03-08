@@ -607,7 +607,7 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 	mShadowMapHeapIndex = mCopyColorIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
+	mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -716,12 +716,12 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
-	mSsaoHeapIndexStart = mSkyTexHeapIndex + 1;
-	mShadowMapHeapIndex = mSsaoHeapIndexStart + 1;
-	mRenderTargetIndex = mShadowMapHeapIndex + 1;
+	mRenderTargetIndex = mSkyTexHeapIndex + 1;
 	mCopyColorIndex = mRenderTargetIndex + 1;
-	mSsaoAmbientMapIndex = mCopyColorIndex + 3;
-	mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
+	mShadowMapHeapIndex = mCopyColorIndex + 1;
+	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
+	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
+	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 

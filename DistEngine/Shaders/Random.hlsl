@@ -99,7 +99,7 @@ float2 InitRandom(float2 input)
 
     return r;
 }
-
+ 
 //From  Next Generation Post Processing in Call of Duty: Advanced Warfare [Jimenez 2014]
 // http://advances.realtimerendering.com/s2014/index.html
 float InterleavedGradientNoise(float2 pixCoord, int frameCount)

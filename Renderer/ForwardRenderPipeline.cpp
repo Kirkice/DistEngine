@@ -92,32 +92,20 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 
 
-	
+
 	//-------------------------------------------- PostProcessing -----------------------------------------------
-	mCommandList->RSSetViewports(1, &mCopyColor->Viewport());
-	mCommandList->RSSetScissorRects(1, &mCopyColor->ScissorRect());
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
-	mCommandList->ClearRenderTargetView(mCopyColor->Rtv(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-	mCommandList->OMSetRenderTargets(1, &mCopyColor->Rtv(), true, &DepthStencilView());
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	auto PostPassCB = mCurrFrameResource->PassCB->Resource();
-	mCommandList->SetGraphicsRootConstantBufferView(2, PostPassCB->GetGPUVirtualAddress());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE PostProcessingDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	PostProcessingDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, PostProcessingDescriptor);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
+	mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
 
 	auto PostMatBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, PostMatBuffer->GetGPUVirtualAddress());
 
 	ForwardRenderer::CopyColorPass();
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-
-
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColor->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 
 
 	//-------------------------------------------- Swap Chain -----------------------------------------------
