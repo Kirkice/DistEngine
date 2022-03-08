@@ -602,12 +602,10 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 
 	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
-	mRenderTargetIndex = mSkyTexHeapIndex + 1;
-	mCopyColorIndex = mRenderTargetIndex + 1;
-	mShadowMapHeapIndex = mCopyColorIndex + 1;
+	mShadowMapHeapIndex = mSkyTexHeapIndex + 3;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
+	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -714,16 +712,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvDesc.Format = skyCubeMap->GetDesc().Format;
 	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
 
-	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
-	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
-	mRenderTargetIndex = mSkyTexHeapIndex + 1;
-	mCopyColorIndex = mRenderTargetIndex + 1;
-	mShadowMapHeapIndex = mCopyColorIndex + 1;
-	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
-	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
-	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
-	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
+	mRenderTargetIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
+	mRenderTargetIndex = mRenderTargetIndex + 5;
 
 	auto nullSrv = GetCpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);
 	mNullSrv = GetGpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);
