@@ -63,7 +63,6 @@ namespace Renderer
 		void BuildRenderItems();
 		void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 		void DrawSceneToShadowMap();
-		void DrawSceneToRenderTarget();
 		void DrawNormalsAndDepth();
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const;

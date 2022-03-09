@@ -37,8 +37,11 @@ namespace Renderer
 		//DrawDepthNormal
 		void DrawDepthNormal();
 
+		//Draw SSAO
+		void DrawSSAO(ID3D12Resource* matBuffer);
+
 		// DrawRenderTarget
-		void DrawRenderTarget();
+		void DrawColorToTarget(ID3D12Resource* matBuffer);  
 
 		////DrawOutLine
 		void DrawOutLine();

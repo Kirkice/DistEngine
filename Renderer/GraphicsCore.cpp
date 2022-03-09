@@ -1488,10 +1488,6 @@ void GraphicsCore::DrawSceneToShadowMap()
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
-void GraphicsCore::DrawSceneToRenderTarget()
-{
-}
-
 void GraphicsCore::DrawNormalsAndDepth()
 {
 	mCommandList->RSSetViewports(1, &mScreenViewport);
