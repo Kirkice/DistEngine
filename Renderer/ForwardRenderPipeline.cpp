@@ -49,10 +49,6 @@ void ForwardRenderer::ForwardRender()
 	DrawColorToTarget(matBuffer);
 	
 
-
-
-
-
 	//-------------------------------------------- PostProcessing -----------------------------------------------
 	//mCommandList->RSSetViewports(1, &mCopyColor->Viewport());
 	//mCommandList->RSSetScissorRects(1, &mCopyColor->ScissorRect());
@@ -133,6 +129,11 @@ void ForwardRenderer::ForwardRender()
 // DrawColorToTarget
 void ForwardRenderer::DrawColorToTarget(ID3D12Resource* matBuffer)
 {
+	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+
 	mCommandList->RSSetViewports(1, &mRenderTarget->Viewport());
 	mCommandList->RSSetScissorRects(1, &mRenderTarget->ScissorRect());
 
@@ -176,13 +177,12 @@ void ForwardRenderer::DrawColorToTarget(ID3D12Resource* matBuffer)
 }
 
 
-
-
 //	CopyColorPass
 void ForwardRenderer::CopyColorPass()
 {
-	mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+	//mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
+	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
 }
 
 //	DrawShadowMap
@@ -201,9 +201,6 @@ void ForwardRenderer::DrawSSAO(ID3D12Resource* matBuffer)
 	ForwardRenderer::DrawDepthNormal();
 	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.Get());
 	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
-	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 }
 
 //	DrawDepthNormal

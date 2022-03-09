@@ -71,8 +71,8 @@ float4 PS(VertexOut pin) : SV_Target
 	// float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(pin.TexC)); 
 	// return textureColor;
 
-	float4 color 										= gCameraOpaqueTexture.Sample(gsamLinearClamp, pin.TexC); 
-	return color;
+	// float4 color 										= gCameraOpaqueTexture.Sample(gsamLinearClamp, pin.TexC); 
+	return float4(1,1,1,1);
 }
 
 #endif

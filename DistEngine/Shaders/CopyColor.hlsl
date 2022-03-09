@@ -35,8 +35,8 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	float4 color 										= gRenderTarget.Sample(gsamLinearClamp, pin.TexC); 
-	return color;
+	// float4 color 										= gRenderTarget.Sample(gsamLinearClamp, pin.TexC); 
+	return float4(1,1,1,1);
 }
 
 #endif
