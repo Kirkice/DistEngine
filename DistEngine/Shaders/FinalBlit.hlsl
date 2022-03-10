@@ -13,6 +13,7 @@
 
 
 Texture2D gAttachmentColor    								: register(t0);
+Texture2D gNULL												: register(t1);
 
 SamplerState gsamPointClamp 								: register(s0);
 SamplerState gsamLinearClamp 								: register(s1);

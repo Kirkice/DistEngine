@@ -726,95 +726,19 @@ void GraphicsCore::BuildDescriptorHeaps()
 	// Create the SRV heap.
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 64;
+	srvHeapDesc.NumDescriptors = 1;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
 
-	//
-	// Fill out the heap with actual descriptors.
-	//
-	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-
-	// Render Item in 3D Textures
-	std::vector<ComPtr<ID3D12Resource>> RenderTex2DList;
-	PBRDemo_BuildDescriptorHeaps(RenderTex2DList, mTextures);
-
-	//Gizmo Textures
-	std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList;
-	EditorGizmo_BuildDescriptorHeaps(GizmoTex2DList, mGizmoTextures);
-
-	//Environment Tex / CubeMap
-	ComPtr<ID3D12Resource> skyCubeMap;
-	ComPtr<ID3D12Resource> diffuseIBL;
-	SkyBox_BuildDescriptorHeaps(skyCubeMap, diffuseIBL, mSkyTextures);
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-	for (UINT i = 0; i < (UINT)GizmoTex2DList.size(); ++i)
-	{
-		srvDesc.Format = GizmoTex2DList[i]->GetDesc().Format;
-		srvDesc.Texture2D.MipLevels = GizmoTex2DList[i]->GetDesc().MipLevels;
-		md3dDevice->CreateShaderResourceView(GizmoTex2DList[i].Get(), &srvDesc, hDescriptor);
-
-		// next descriptor
-		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	}
-
-	for (UINT i = 0; i < (UINT)RenderTex2DList.size(); ++i)
-	{
-		srvDesc.Format = RenderTex2DList[i]->GetDesc().Format;
-		srvDesc.Texture2D.MipLevels = RenderTex2DList[i]->GetDesc().MipLevels;
-		md3dDevice->CreateShaderResourceView(RenderTex2DList[i].Get(), &srvDesc, hDescriptor);
-
-		// next descriptor
-		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	}
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = diffuseIBL->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = diffuseIBL->GetDesc().Format;
-	md3dDevice->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, hDescriptor);
-	hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = skyCubeMap->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = skyCubeMap->GetDesc().Format;
-	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
-
-	mRenderTargetIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
-	mRenderTargetIndex = mRenderTargetIndex + 4;
-
-	auto nullSrv = GetCpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);
-	mNullSrv = GetGpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap);
-
-	md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-	nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
-
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-	md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-
-	nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
-	md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
+	mRenderTargetIndex = 0;
 
 	mRenderTarget->BuildDescriptors(
 		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetRtv(SwapChainBufferCount));
 }
+
 
 void GraphicsCore::BuildShadersAndInputLayout()
 {

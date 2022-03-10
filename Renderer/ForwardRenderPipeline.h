@@ -21,27 +21,30 @@ namespace Renderer
 		~ForwardRenderer();
 
 	private:
-		//Light Setting Panel
+		//	Light Setting Panel
 		bool show_lightSetting_panel = false;
 		bool show_physicsSetting_panel = false;
 		bool show_postprocessingSetting_panel = false;
 
 		virtual void Draw(const GameTimer& gt)override;
 
-		//ForwardRender
+		//	ForwardRender
 		void ForwardRender();
 
-		//DrawShadowMap
+		//	DrawShadowMap
 		void DrawShadowMap(ID3D12Resource* matBuffer);
 
-		//DrawDepthNormal
+		//	DrawDepthNormal
 		void DrawDepthNormal();
 
-		//Draw SSAO
+		//	Draw SSAO
 		void DrawSSAO(ID3D12Resource* matBuffer);
 
-		// DrawRenderTarget
+		//	DrawRenderTarget
 		void DrawColorToTarget(ID3D12Resource* matBuffer);  
+
+		//	DrawFinalBlit
+		void DrawFinalBlit();
 
 		////DrawOutLine
 		void DrawOutLine();
@@ -61,6 +64,12 @@ namespace Renderer
 		void DrawBounding();
 
 		void DrawGizmo();
+
+
+
+
+
+
 
 		//DrawImgui
 		void DrawImgui();

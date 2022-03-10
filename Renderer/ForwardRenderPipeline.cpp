@@ -79,36 +79,7 @@ void ForwardRenderer::ForwardRender()
 
 
 	//-------------------------------------------- Swap Chain -----------------------------------------------
-	//mCommandList->RSSetViewports(1, &mScreenViewport);
-	//mCommandList->RSSetScissorRects(1, &mScissorRect);
-
-	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	//mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
-	//mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	//mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
-	//mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	//auto passCBSwapChain = mCurrFrameResource->PassCB->Resource();
-	//mCommandList->SetGraphicsRootConstantBufferView(2, passCBSwapChain->GetGPUVirtualAddress());
-
-	//CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	//renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
-	//mCommandList->SetGraphicsRootDescriptorTable(4, renderTargetDescriptor);
-
-	//CD3DX12_GPU_DESCRIPTOR_HANDLE copyColorDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	//copyColorDescriptor.Offset(mCopyColorIndex, mCbvSrvUavDescriptorSize);
-	//mCommandList->SetGraphicsRootDescriptorTable(4, copyColorDescriptor);
-
-	//PostMatBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
-	//mCommandList->SetGraphicsRootShaderResourceView(3, PostMatBuffer->GetGPUVirtualAddress());
-
-	//ForwardRenderer::DrawRGBSplit();
-	//ForwardRenderer::DrawImgui();
-
-	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	DrawFinalBlit();
 
 
 
@@ -176,6 +147,38 @@ void ForwardRenderer::DrawColorToTarget(ID3D12Resource* matBuffer)
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
+void ForwardRenderer::DrawFinalBlit()
+{
+	mCommandList->SetGraphicsRootSignature(mSwapChainRootSignature.Get());
+	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+	mCommandList->RSSetViewports(1, &mScreenViewport);
+	mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+	mCommandList->SetGraphicsRootDescriptorTable(2, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
+	auto passCBSwapChain = mCurrFrameResource->PassCB->Resource();
+	mCommandList->SetGraphicsRootConstantBufferView(0, passCBSwapChain->GetGPUVirtualAddress());
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE renderTargetDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	renderTargetDescriptor.Offset(mRenderTargetIndex, mCbvSrvUavDescriptorSize);
+	mCommandList->SetGraphicsRootDescriptorTable(2, renderTargetDescriptor);
+
+	mCommandList->SetPipelineState(mPSOs["FinalBlit"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+	ForwardRenderer::DrawImgui();
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+}
 
 //	CopyColorPass
 void ForwardRenderer::CopyColorPass()
