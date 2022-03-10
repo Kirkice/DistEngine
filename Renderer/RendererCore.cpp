@@ -996,4 +996,18 @@ void RenderCore::Post_BuildRenderItems(
 
 	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RGBSplitItem.get());
 	mAllRitems.push_back(std::move(RGBSplitItem));
+
+	auto FinalBlitItem = std::make_unique<RenderItem>();
+	FinalBlitItem->World = Mathf::Identity4x4();
+	FinalBlitItem->TexTransform = Mathf::Identity4x4();
+	FinalBlitItem->ObjCBIndex = 25;
+	FinalBlitItem->Mat = mMaterials["CopyColor"].get();
+	FinalBlitItem->Geo = mGeometries["shapeGeo"].get();
+	FinalBlitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	FinalBlitItem->IndexCount = FinalBlitItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	FinalBlitItem->StartIndexLocation = FinalBlitItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	FinalBlitItem->BaseVertexLocation = FinalBlitItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(FinalBlitItem.get());
+	mAllRitems.push_back(std::move(FinalBlitItem));
 }

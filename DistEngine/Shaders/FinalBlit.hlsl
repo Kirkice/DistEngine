@@ -14,7 +14,10 @@
 
 Texture2D gAttachmentColor    								: register(t0);
 
-
+SamplerState gsamPointClamp 								: register(s0);
+SamplerState gsamLinearClamp 								: register(s1);
+SamplerState gsamDepthMap 									: register(s2);
+SamplerState gsamLinearWrap 								: register(s3);
 
 
 struct VertexIn

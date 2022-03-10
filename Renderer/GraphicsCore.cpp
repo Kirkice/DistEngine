@@ -39,6 +39,7 @@ bool GraphicsCore::Initialize()
 	LoadTextures();
 
 	BuildRootSignature();
+	BuildSwapChainRootSignature();
 	BuildSsaoRootSignature();
 
 	BuildRenderTargetDescriptorHeaps();
@@ -530,7 +531,10 @@ void GraphicsCore::BuildSsaoRootSignature()
 void GraphicsCore::BuildSwapChainRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0);
+
+	CD3DX12_DESCRIPTOR_RANGE texTable1;
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
@@ -539,7 +543,7 @@ void GraphicsCore::BuildSwapChainRootSignature()
 	slotRootParameter[0].InitAsConstantBufferView(0);
 	slotRootParameter[1].InitAsConstants(1, 1);
 	slotRootParameter[2].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
-	slotRootParameter[3].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
+	slotRootParameter[3].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
 		0, // shaderRegister
@@ -868,6 +872,9 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 	mShaders["copyColorVS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["copyColorPS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["finalBlitVS"] = d3dUtil::CompileShader(L"Shaders\\FinalBlit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["finalBlitPS"] = d3dUtil::CompileShader(L"Shaders\\FinalBlit.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
@@ -1398,6 +1405,24 @@ void GraphicsCore::BuildPSOs()
 		mShaders["ssaoBlurPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoBlurPsoDesc, IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
+
+	//
+	// 	PSO for FinalBlit
+	//
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC FinalBlitPsoDesc = opaquePsoDesc;
+		FinalBlitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+		FinalBlitPsoDesc.pRootSignature = mSwapChainRootSignature.Get();
+		FinalBlitPsoDesc.VS =
+		{
+			reinterpret_cast<BYTE*>(mShaders["finalBlitVS"]->GetBufferPointer()),
+			mShaders["finalBlitVS"]->GetBufferSize()
+		};
+		FinalBlitPsoDesc.PS =
+		{
+			reinterpret_cast<BYTE*>(mShaders["finalBlitPS"]->GetBufferPointer()),
+			mShaders["finalBlitPS"]->GetBufferSize()
+		};
+		ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&FinalBlitPsoDesc, IID_PPV_ARGS(&mPSOs["FinalBlit"])));
 
 	//
 	// 	PSO for CopyColor
