@@ -731,7 +731,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
 
-	mRenderTargetIndex = 0;
+	mRenderTargetIndex = 30;
 
 	mRenderTarget->BuildDescriptors(
 		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
