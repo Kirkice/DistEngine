@@ -13,7 +13,7 @@
 #include "Random.hlsl"
 
 //-------------------------------------------------------------------------------------------------
-// Calculates the Fresnel factor using Schlick's approximation
+// Calculates the Fresnel factor using Schlick's approximation 
 //-------------------------------------------------------------------------------------------------
 float3 Fresnel(in float3 specAlbedo, in float3 h, in float3 l)
 {
