@@ -723,7 +723,7 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 void GraphicsCore::BuildDescriptorHeaps()
 {
 	//
-	// Create the SRV heap.
+	// Create the SRV heap.  
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 	srvHeapDesc.NumDescriptors = 1;
