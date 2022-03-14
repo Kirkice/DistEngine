@@ -48,8 +48,12 @@ void ForwardRenderer::ForwardRender()
 	//Draw Color To Target
 	DrawColorToTarget(matBuffer);
 	
+	//CopyColor
+	CopyColorPass();
 
-	//-------------------------------------------- PostProcessing -----------------------------------------------
+
+
+
 	//mCommandList->RSSetViewports(1, &mCopyColor->Viewport());
 	//mCommandList->RSSetScissorRects(1, &mCopyColor->ScissorRect());
 
@@ -184,8 +188,6 @@ void ForwardRenderer::DrawFinalBlit()
 void ForwardRenderer::CopyColorPass()
 {
 
-	//mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
-	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
 }
 
 //	DrawShadowMap
