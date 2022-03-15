@@ -21,12 +21,12 @@ void CopyColor::OnResize(UINT newWidth, UINT newHeight)
 		// We render to ambient map at half the resolution.
 		mViewport.TopLeftX = 0.0f;
 		mViewport.TopLeftY = 0.0f;
-		mViewport.Width = mRenderTargetWidth / 2.0f;
-		mViewport.Height = mRenderTargetHeight / 2.0f;
+		mViewport.Width = mRenderTargetWidth;
+		mViewport.Height = mRenderTargetHeight;
 		mViewport.MinDepth = 0.0f;
 		mViewport.MaxDepth = 1.0f;
 
-		mScissorRect = { 0, 0, (int)mRenderTargetWidth / 2, (int)mRenderTargetHeight / 2 };
+		mScissorRect = { 0, 0, (int)mRenderTargetWidth, (int)mRenderTargetHeight};
 
 		BuildResources();
 	}
@@ -91,26 +91,17 @@ void CopyColor::SetPSOs(ID3D12PipelineState* copyColorPso)
 	mCopyColorPso = copyColorPso;
 }
 
-void CopyColor::RenderCopyColor(ID3D12GraphicsCommandList* cmdList, FrameResource* currFrame)
+D3D12_VIEWPORT CopyColor::GetViewPort()
 {
-	cmdList->RSSetViewports(1, &mViewport);
-	cmdList->RSSetScissorRects(1, &mScissorRect);
-
-	cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColorMap.Get(),D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	float clearValue[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	cmdList->ClearRenderTargetView(mhCopyColorCpuRtv, clearValue, 0, nullptr);
-
-	cmdList->OMSetRenderTargets(1, &mhCopyColorCpuRtv, true, nullptr);
-
-	//cmdList->SetGraphicsRootDescriptorTable(2, mhNormalMapGpuSrv);
-	cmdList->SetPipelineState(mCopyColorPso);
-
-	cmdList->IASetVertexBuffers(0, 0, nullptr);
-	cmdList->IASetIndexBuffer(nullptr);
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	cmdList->DrawInstanced(6, 1, 0, 0);
-
-	cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mCopyColorMap.Get(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
+	return mViewport;
 }
+
+D3D12_RECT CopyColor::GetScissorRect()
+{
+	return mScissorRect;
+}
+
+ID3D12PipelineState* CopyColor::GetPSO()
+{
+	return mCopyColorPso;
+} 

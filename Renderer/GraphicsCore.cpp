@@ -35,6 +35,10 @@ bool GraphicsCore::Initialize()
 
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
+
+	//CopyColor Init
+	mCopyColor = std::make_unique<CopyColor>(md3dDevice.Get(), mCommandList.Get(), mClientWidth, mClientHeight);
+
 	//LoadModel();
 	LoadTextures();
 
@@ -53,6 +57,8 @@ bool GraphicsCore::Initialize()
 	BuildPSOs();
 
 	mSsao->SetPSOs(mPSOs["ssao"].Get(), mPSOs["ssaoBlur"].Get());
+
+	mCopyColor->SetPSOs(mPSOs["CopyColor"].Get());
 
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
@@ -726,17 +732,24 @@ void GraphicsCore::BuildDescriptorHeaps()
 	// Create the SRV heap.  
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 1;
+	srvHeapDesc.NumDescriptors = 2;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
 
 	mRenderTargetIndex = 30;
+	mCopyColorIndex = 30;
 
 	mRenderTarget->BuildDescriptors(
 		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
 		GetRtv(SwapChainBufferCount));
+
+	mCopyColor->BuildDescriptors(
+		GetCpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
+		GetGpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
+		GetRtv(SwapChainBufferCount));
+
 }
 
 
@@ -1353,7 +1366,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
 	CopyColorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	CopyColorPsoDesc.pRootSignature = mRootSignature.Get();
+	CopyColorPsoDesc.pRootSignature = mSwapChainRootSignature.Get();
 	CopyColorPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["copyColorVS"]->GetBufferPointer()),

@@ -10,6 +10,7 @@
 #include "SkinnedData.h"
 #include "LoadM3d.h"
 #include "Ssao.h"
+#include "CopyColor.h"
 #include "FbxLoader.h"
 #include "RendererCore.h"
 
@@ -109,6 +110,7 @@ namespace Renderer
 		UINT mIBLTexHeapIndex = 0;
 		UINT mSkyTexHeapIndex = 0;
 		UINT mRenderTargetIndex = 0;
+		UINT mCopyColorIndex = 0;
 		UINT mShadowMapHeapIndex = 0;
 		UINT mSsaoHeapIndexStart = 0;
 		UINT mSsaoAmbientMapIndex = 0;
@@ -126,6 +128,7 @@ namespace Renderer
 		std::unique_ptr<ShadowMap> mShadowMap;
 
 		std::unique_ptr<Ssao> mSsao;
+		std::unique_ptr<CopyColor> mCopyColor;
 
 		DirectX::BoundingSphere mSceneBounds;
 

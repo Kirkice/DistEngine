@@ -32,8 +32,10 @@ public:
 
 	void OnResize(UINT newWidth, UINT newHeight);
 
-	void RenderCopyColor(ID3D12GraphicsCommandList* cmdList, FrameResource* currFrame);
+	D3D12_VIEWPORT GetViewPort();
 
+	D3D12_RECT GetScissorRect();
+	ID3D12PipelineState* GetPSO();
 private:
 	void BuildResources();
 
