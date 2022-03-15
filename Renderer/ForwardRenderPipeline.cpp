@@ -49,7 +49,7 @@ void ForwardRenderer::ForwardRender()
 	DrawColorToTarget(matBuffer);
 	
 	//CopyColor
-	CopyColorPass();
+	//CopyColorPass();
 
 	//-------------------------------------------- Swap Chain -----------------------------------------------
 	DrawFinalBlit();
