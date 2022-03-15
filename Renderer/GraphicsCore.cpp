@@ -414,10 +414,10 @@ void GraphicsCore::LoadTextures()
 void GraphicsCore::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 4, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
@@ -683,15 +683,16 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 	srvDesc.Format = skyCubeMap->GetDesc().Format;
 	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
 
-
 	mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
 	mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
 	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mNullCubeSrvIndex = mSsaoHeapIndexStart + 5;
+	mRenderTargetIndex = mSsaoAmbientMapIndex + 5;
+	mNullCubeSrvIndex = mRenderTargetIndex + 1;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
+
 
 	auto nullSrv = GetCpuSrv(mNullCubeSrvIndex, mRenderTargetSrvDescriptorHeap);
 	mNullSrv = GetGpuSrv(mNullCubeSrvIndex, mRenderTargetSrvDescriptorHeap);
@@ -722,6 +723,11 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize,
 		mRtvDescriptorSize);
+
+	mRenderTarget->BuildDescriptors(
+		GetCpuSrv(mRenderTargetIndex, mRenderTargetSrvDescriptorHeap),
+		GetGpuSrv(mRenderTargetIndex, mRenderTargetSrvDescriptorHeap),
+		GetRtv(SwapChainBufferCount));
 }
 
 
@@ -729,27 +735,79 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 void GraphicsCore::BuildDescriptorHeaps()
 {
 	//
-	// Create the SRV heap.  
+	// Create the SRV heap.
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 2;
+	srvHeapDesc.NumDescriptors = 64;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
 
-	mRenderTargetIndex = 30;
-	mCopyColorIndex = 30;
+	//
+	// Fill out the heap with actual descriptors.
+	//
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	mRenderTarget->BuildDescriptors(
-		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-		GetRtv(SwapChainBufferCount));
+	// Render Item in 3D Textures
+	std::vector<ComPtr<ID3D12Resource>> RenderTex2DList;
+	PBRDemo_BuildDescriptorHeaps(RenderTex2DList, mTextures);
+
+	//Gizmo Textures
+	std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList;
+	EditorGizmo_BuildDescriptorHeaps(GizmoTex2DList, mGizmoTextures);
+
+	//Environment Tex / CubeMap
+	ComPtr<ID3D12Resource> skyCubeMap;
+	ComPtr<ID3D12Resource> diffuseIBL;
+	SkyBox_BuildDescriptorHeaps(skyCubeMap, diffuseIBL, mSkyTextures);
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+	for (UINT i = 0; i < (UINT)GizmoTex2DList.size(); ++i)
+	{
+		srvDesc.Format = GizmoTex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = GizmoTex2DList[i]->GetDesc().MipLevels;
+		md3dDevice->CreateShaderResourceView(GizmoTex2DList[i].Get(), &srvDesc, hDescriptor);
+
+		// next descriptor
+		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	}
+
+	for (UINT i = 0; i < (UINT)RenderTex2DList.size(); ++i)
+	{
+		srvDesc.Format = RenderTex2DList[i]->GetDesc().Format;
+		srvDesc.Texture2D.MipLevels = RenderTex2DList[i]->GetDesc().MipLevels;
+		md3dDevice->CreateShaderResourceView(RenderTex2DList[i].Get(), &srvDesc, hDescriptor);
+
+		// next descriptor
+		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	}
+
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = diffuseIBL->GetDesc().MipLevels;
+	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+	srvDesc.Format = diffuseIBL->GetDesc().Format;
+	md3dDevice->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, hDescriptor);
+	hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = skyCubeMap->GetDesc().MipLevels;
+	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+	srvDesc.Format = skyCubeMap->GetDesc().Format;
+	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
+
+	mCopyColorIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size() + 5;
 
 	mCopyColor->BuildDescriptors(
 		GetCpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
 		GetGpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
 		GetRtv(SwapChainBufferCount));
-
 }
 
 
@@ -1366,7 +1424,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
 	CopyColorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	CopyColorPsoDesc.pRootSignature = mSwapChainRootSignature.Get();
+	CopyColorPsoDesc.pRootSignature = mRootSignature.Get();
 	CopyColorPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["copyColorVS"]->GetBufferPointer()),
