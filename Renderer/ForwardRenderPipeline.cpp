@@ -123,6 +123,10 @@ void ForwardRenderer::DrawColorToTarget(ID3D12Resource* matBuffer)
 //	CopyColorPass
 void ForwardRenderer::CopyColorPass()
 {
+	mCommandList->SetGraphicsRootSignature(mSwapChainRootSignature.Get());
+	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
 	mCommandList->RSSetViewports(1, &mCopyColor->GetViewPort());
 	mCommandList->RSSetScissorRects(1, &mCopyColor->GetScissorRect());
 
@@ -133,7 +137,7 @@ void ForwardRenderer::CopyColorPass()
 
 	mCommandList->OMSetRenderTargets(1, &mCopyColor->CopyColorRtv(), true, nullptr);
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mRenderTargetSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(2, mRenderTarget->GpuSrv());
 
 	mCommandList->SetPipelineState(mCopyColor->GetPSO());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
@@ -144,10 +148,6 @@ void ForwardRenderer::CopyColorPass()
 
 void ForwardRenderer::DrawFinalBlit()
 {
-	mCommandList->SetGraphicsRootSignature(mSwapChainRootSignature.Get());
-	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
-
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 

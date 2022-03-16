@@ -414,10 +414,10 @@ void GraphicsCore::LoadTextures()
 void GraphicsCore::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0, 0);
 
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 4, 0);
 
 	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
@@ -688,8 +688,7 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 	mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
 	mSsaoHeapIndexStart = mShadowMapHeapIndex + 1;
 	mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-	mRenderTargetIndex = mSsaoAmbientMapIndex + 5;
-	mNullCubeSrvIndex = mRenderTargetIndex + 1;
+	mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
 	mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
 	mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
 
@@ -723,11 +722,6 @@ void GraphicsCore::BuildRenderTargetDescriptorHeaps()
 		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize,
 		mRtvDescriptorSize);
-
-	mRenderTarget->BuildDescriptors(
-		GetCpuSrv(mRenderTargetIndex, mRenderTargetSrvDescriptorHeap),
-		GetGpuSrv(mRenderTargetIndex, mRenderTargetSrvDescriptorHeap),
-		GetRtv(SwapChainBufferCount));
 }
 
 
@@ -802,7 +796,24 @@ void GraphicsCore::BuildDescriptorHeaps()
 	srvDesc.Format = skyCubeMap->GetDesc().Format;
 	md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
 
-	mCopyColorIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size() + 5;
+	mRenderTargetIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size() + 4;
+	mCopyColorIndex = mRenderTargetIndex + 1;
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC render_target_srv_desc = {};
+	render_target_srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	render_target_srv_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	render_target_srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	render_target_srv_desc.Texture2D.MostDetailedMip = 0;
+	render_target_srv_desc.Texture2D.MipLevels = 1;
+	render_target_srv_desc.Texture2D.ResourceMinLODClamp = 0.0f;
+	render_target_srv_desc.Texture2D.PlaneSlice = 0;
+	md3dDevice->CreateShaderResourceView(mRenderTarget->Resource(), &render_target_srv_desc, GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap));
+
+
+	mRenderTarget->BuildDescriptors(
+		GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+		GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+		GetRtv(SwapChainBufferCount));
 
 	mCopyColor->BuildDescriptors(
 		GetCpuSrv(mCopyColorIndex, mSrvDescriptorHeap),
@@ -1424,7 +1435,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
 	CopyColorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	CopyColorPsoDesc.pRootSignature = mRootSignature.Get();
+	CopyColorPsoDesc.pRootSignature = mSwapChainRootSignature.Get();
 	CopyColorPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["copyColorVS"]->GetBufferPointer()),
