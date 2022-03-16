@@ -11,15 +11,7 @@
 #ifndef FINALBLIT_INCLUDE
 #define FINALBLIT_INCLUDE
 
-
-Texture2D gAttachmentColor    								: register(t0);
-Texture2D gNULL												: register(t1);
-
-SamplerState gsamPointClamp 								: register(s0);
-SamplerState gsamLinearClamp 								: register(s1);
-SamplerState gsamDepthMap 									: register(s2);
-SamplerState gsamLinearWrap 								: register(s3);
-
+#include "Core.hlsl"
 
 struct VertexIn
 { 
@@ -43,7 +35,7 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	float4 color 											= gAttachmentColor.Sample(gsamLinearClamp, pin.TexC); 
+	float4 color 											= gRenderTarget.Sample(gsamLinearClamp, pin.TexC) * float4(0,1,1,1); 
 	return color;
 }
 

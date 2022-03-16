@@ -10,7 +10,6 @@
 #include "SkinnedData.h"
 #include "LoadM3d.h"
 #include "Ssao.h"
-#include "CopyColor.h"
 #include "FbxLoader.h"
 #include "RendererCore.h"
 
@@ -51,11 +50,8 @@ namespace Renderer
 
 		void BuildRootSignature();
 		void BuildSsaoRootSignature();
-		void BuildSwapChainRootSignature();
-
 
 		void BuildDescriptorHeaps();
-		void BuildRenderTargetDescriptorHeaps();
 
 		void BuildShadersAndInputLayout();
 		void BuildShapeGeometry();
@@ -82,10 +78,8 @@ namespace Renderer
 
 		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr;
-		ComPtr<ID3D12RootSignature> mSwapChainRootSignature = nullptr;
 
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-		ComPtr<ID3D12DescriptorHeap> mRenderTargetSrvDescriptorHeap = nullptr;
 
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 		std::unordered_map<std::string, std::unique_ptr<Material>> mMaterials;
@@ -128,7 +122,6 @@ namespace Renderer
 		std::unique_ptr<ShadowMap> mShadowMap;
 
 		std::unique_ptr<Ssao> mSsao;
-		std::unique_ptr<CopyColor> mCopyColor;
 
 		DirectX::BoundingSphere mSceneBounds;
 
