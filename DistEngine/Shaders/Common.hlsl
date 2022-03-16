@@ -135,6 +135,7 @@ StructuredBuffer<PBRMaterialData> gMaterialData                                 
 StructuredBuffer<SkyBoxMaterialData> gSkyMaterialData                                   : register(t0, space1);
 
 StructuredBuffer<PostprocessingData> gPostprocessingData                                : register(t0, space1);
+
 //TEXTURES
 TextureCube gCubeIBL                                                                    : register(t0);
 TextureCube gCubeMap                                                                    : register(t1);

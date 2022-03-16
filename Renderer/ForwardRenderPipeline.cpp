@@ -36,9 +36,6 @@ void ForwardRenderer::ForwardRender()
 	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
-
-
-
 	//Draw ShadowMap
 	DrawShadowMap(matBuffer);
 
@@ -51,6 +48,10 @@ void ForwardRenderer::ForwardRender()
 	//CopyColor
 	CopyColorPass();
 
+	//RGBSplit
+	DrawRGBSplit(matBuffer);
+
+	//Final Blit
 	DrawFinalBlit();
 
 	ThrowIfFailed(mCommandList->Close());
@@ -115,6 +116,7 @@ void ForwardRenderer::DrawColorToTarget(ID3D12Resource* matBuffer)
 	ForwardRenderer::DrawGizmo();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
 }
 
 //	CopyColorPass
@@ -232,18 +234,46 @@ void ForwardRenderer::DrawGizmo()
 }
 
 //	Draw PostProcessing
-void ForwardRenderer::DrawRGBSplit()
+void ForwardRenderer::DrawRGBSplit(ID3D12Resource* matBuffer)
 {
+	mCommandList->RSSetViewports(1, &mScreenViewport);
+	mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
 	//// RGB Split
 	if (UseRGBSplit)
 	{
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
 		mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
 	}
-	else
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+	if (UseRGBSplit)
 	{
-		mCommandList->SetPipelineState(mPSOs["CopyColor"].Get());
-		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 	}
 }
 

@@ -59,7 +59,7 @@ namespace Renderer
 		void DrawTransparent();
 
 		//DrawPostProcessing
-		void DrawRGBSplit();
+		void DrawRGBSplit(ID3D12Resource* matBuffer);
 
 		void DrawBounding();
 
