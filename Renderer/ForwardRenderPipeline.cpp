@@ -251,7 +251,7 @@ void ForwardRenderer::DrawRGBSplit(ID3D12Resource* matBuffer)
 	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
 
 	//// RGB Split
-	if (UseRGBSplit)
+	if (UseRGBSplit)  
 	{
 		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
