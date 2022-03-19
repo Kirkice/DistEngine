@@ -943,6 +943,10 @@ void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<Postproce
 	matData.Temperature = mat->Temperature;
 	matData.Tint = mat->Tint;
 	matData.VignetteColor = mat->VignetteColor;
+	matData.Width = mat->Width;
+	matData.Height = mat->Height;
+	matData.Smooth = mat->Smooth;
+	matData.Alpha = mat->Alpha;
 	currMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
 	// Next FrameResource need to be updated too.
@@ -961,6 +965,17 @@ void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique
 	RGBSplitMat->MatCBIndex = 19;
 	RGBSplitMat->Strength = 0.02f;
 	mMaterials["RGBSplit"] = std::move(RGBSplitMat);
+
+	auto RadialBlurMat = std::make_unique<Material>();
+	RadialBlurMat->Name = "RadialBlur";
+	RadialBlurMat->MatCBIndex = 20;
+	RadialBlurMat->BlurFactory = 0.01f;
+	mMaterials["RadialBlur"] = std::move(RadialBlurMat);
+
+	auto VignetteMat = std::make_unique<Material>();
+	VignetteMat->Name = "Vignette";
+	VignetteMat->MatCBIndex = 21;
+	mMaterials["Vignette"] = std::move(VignetteMat);
 }
 
 void RenderCore::Post_BuildRenderItems(
@@ -983,6 +998,9 @@ void RenderCore::Post_BuildRenderItems(
 	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(CopyColorItem.get());
 	mAllRitems.push_back(std::move(CopyColorItem));
 
+
+
+
 	auto RGBSplitItem = std::make_unique<RenderItem>();
 	RGBSplitItem->World = Mathf::Identity4x4();
 	RGBSplitItem->TexTransform = Mathf::Identity4x4();
@@ -997,10 +1015,47 @@ void RenderCore::Post_BuildRenderItems(
 	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RGBSplitItem.get());
 	mAllRitems.push_back(std::move(RGBSplitItem));
 
+
+
+
+	auto RadialBlurItem = std::make_unique<RenderItem>();
+	RadialBlurItem->World = Mathf::Identity4x4();
+	RadialBlurItem->TexTransform = Mathf::Identity4x4();
+	RadialBlurItem->ObjCBIndex = 25;
+	RadialBlurItem->Mat = mMaterials["RadialBlur"].get();
+	RadialBlurItem->Geo = mGeometries["shapeGeo"].get();
+	RadialBlurItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	RadialBlurItem->IndexCount = RadialBlurItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	RadialBlurItem->StartIndexLocation = RadialBlurItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	RadialBlurItem->BaseVertexLocation = RadialBlurItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(RadialBlurItem.get());
+	mAllRitems.push_back(std::move(RadialBlurItem));
+
+
+
+
+	auto VignetteItem = std::make_unique<RenderItem>();
+	VignetteItem->World = Mathf::Identity4x4();
+	VignetteItem->TexTransform = Mathf::Identity4x4();
+	VignetteItem->ObjCBIndex = 26;
+	VignetteItem->Mat = mMaterials["Vignette"].get();
+	VignetteItem->Geo = mGeometries["shapeGeo"].get();
+	VignetteItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	VignetteItem->IndexCount = VignetteItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	VignetteItem->StartIndexLocation = VignetteItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	VignetteItem->BaseVertexLocation = VignetteItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(VignetteItem.get());
+	mAllRitems.push_back(std::move(VignetteItem));
+
+
+
+
 	auto FinalBlitItem = std::make_unique<RenderItem>();
 	FinalBlitItem->World = Mathf::Identity4x4();
 	FinalBlitItem->TexTransform = Mathf::Identity4x4();
-	FinalBlitItem->ObjCBIndex = 25;
+	FinalBlitItem->ObjCBIndex = 27;
 	FinalBlitItem->Mat = mMaterials["CopyColor"].get();
 	FinalBlitItem->Geo = mGeometries["shapeGeo"].get();
 	FinalBlitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

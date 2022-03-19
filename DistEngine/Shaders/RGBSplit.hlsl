@@ -33,14 +33,6 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
-
-float2 GetMosaicUV( half2 uv)
-{
-	float pixelScale = 1.0 / 150;
-	float2 uv0 = half2(pixelScale * 1 * floor(uv.x / (pixelScale *1)), (pixelScale * 1) * floor(uv.y / (pixelScale * 1)));
-	return uv0;
-}
-
 float4 PS(VertexOut pin) : SV_Target
 {
 	PostprocessingData matData                          = gPostprocessingData[19];
@@ -54,24 +46,6 @@ float4 PS(VertexOut pin) : SV_Target
 	float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
 	float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
 	return 												float4(blend3DColor,textureColor.a); 
-
-
-	// float2 dir 											= setUV - float2(0.5,0.5);
-	// float4 outColor 									= float4(1,1,1,1);
-	// //采样SAMPLE_COUNT次
-	// for (int j = 0; j < 20; ++j)
-	// {
-	// 	float2 uv 										= setUV + 0.01 * dir * j;
-	// 	outColor 										+= gRenderTarget.Sample(gsamLinearClamp, uv);
-	// }
-	// //取平均值
-	// outColor /= 20;
-	// return outColor;
-
-	// float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(pin.TexC)); 
-	// return textureColor;
-
-	// float4 color 										= gCameraOpaqueTexture.Sample(gsamLinearClamp, pin.TexC); 
 }
 
 #endif

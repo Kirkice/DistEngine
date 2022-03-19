@@ -60,6 +60,9 @@ namespace Renderer
 
 		//DrawPostProcessing
 		void DrawRGBSplit(ID3D12Resource* matBuffer);
+		void DrawRadialBlur(ID3D12Resource* matBuffer);
+		void DrawVignette(ID3D12Resource* matBuffer);
+
 
 		void DrawBounding();
 

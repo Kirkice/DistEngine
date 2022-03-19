@@ -174,7 +174,11 @@ struct PostprocessingData
     //Oil Paint
     float ResoultionValue = 2.0f;
 
-    //Relief
+	//Vignette
+    float Width = 1.4f;
+	float Height = 0.7f;
+	float Smooth = 10;
+	float Alpha = 1;
 };
 
 struct Vertex

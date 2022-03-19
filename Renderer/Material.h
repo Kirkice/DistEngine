@@ -68,6 +68,12 @@ namespace Renderer
 		//Oil Paint
 		float ResoultionValue = 2.0f;
 
+		//Vignette
+		float Width = 1.4f;
+		float Height = 0.7f;
+		float Smooth = 10;
+		float Alpha = 1;
+
 		XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 
 		int DiffuseSrvHeapIndex = -1;

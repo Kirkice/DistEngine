@@ -1,4 +1,4 @@
-/* $Header: RGBSplit.hlsl                                           6/26/21 20:55p KirkZhu $ */
+/* $Header: CopyColor.hlsl                                           6/26/21 20:55p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *

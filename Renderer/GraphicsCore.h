@@ -154,9 +154,16 @@ namespace Renderer
 		//Bounding
 		bool ShowBounding = false;
 
+		//----------------------
 		//Postprocessing
-
+		//----------------------
 		//RGBSplit
 		bool UseRGBSplit = false;
+
+		//RadialBlur
+		bool UseRadialBlur = false;
+
+		//Vignette
+		bool UseVignette = false;
 	};
 }

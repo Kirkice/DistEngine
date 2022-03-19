@@ -708,6 +708,12 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["radialBlurVS"] = d3dUtil::CompileShader(L"Shaders\\RadialBlur.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["radialBlurPS"] = d3dUtil::CompileShader(L"Shaders\\RadialBlur.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["vignetteVS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["vignettePS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "PS", "ps_5_1");
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -1289,6 +1295,43 @@ void GraphicsCore::BuildPSOs()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RGBSplitPsoDesc, IID_PPV_ARGS(&mPSOs["RGBSplit"])));
 
+
+	//
+	// 	PSO for RadialBlur
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC RadialBlurPsoDesc = opaquePsoDesc;
+	RadialBlurPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	RadialBlurPsoDesc.pRootSignature = mRootSignature.Get();
+	RadialBlurPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["radialBlurVS"]->GetBufferPointer()),
+		mShaders["radialBlurVS"]->GetBufferSize()
+	};
+	RadialBlurPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["radialBlurPS"]->GetBufferPointer()),
+		mShaders["radialBlurPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RadialBlurPsoDesc, IID_PPV_ARGS(&mPSOs["RadialBlur"])));
+
+
+	//
+	// 	PSO for Vignette
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC vignettePsoDesc = opaquePsoDesc;
+	vignettePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	vignettePsoDesc.pRootSignature = mRootSignature.Get();
+	vignettePsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["vignetteVS"]->GetBufferPointer()),
+		mShaders["vignetteVS"]->GetBufferSize()
+	};
+	vignettePsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["vignettePS"]->GetBufferPointer()),
+		mShaders["vignettePS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&vignettePsoDesc, IID_PPV_ARGS(&mPSOs["Vignette"])));
 
 
 	//

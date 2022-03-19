@@ -128,7 +128,13 @@ struct PostprocessingData
 
     //Oil Paint
     float                                                                               ResoultionValue;
-};
+
+    //Vignette
+    float                                                                               Width;
+    float                                                                               Height;
+    float                                                                               Smooth;
+    float                                                                               Alpha;
+}; 
  
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);
 
