@@ -57,6 +57,27 @@ void ForwardRenderer::ForwardRender()
 	//Vignette
 	DrawVignette(matBuffer);
 
+	//Decolor
+	DrawDecolor(matBuffer);
+
+	//Brightness
+	DrawBrightness(matBuffer);
+
+	//HSV
+	DrawHSV(matBuffer);
+
+	//Mosaic
+	DrawMosaic(matBuffer);
+
+	//Sharpen
+	DrawSharpen(matBuffer);
+
+	//Spherize
+	DrawSpherize(matBuffer);
+
+	//WhiteBalance
+	DrawWhiteBalance(matBuffer);
+
 	//Final Blit
 	DrawFinalBlit();
 
@@ -236,34 +257,31 @@ void ForwardRenderer::DrawBounding()
 //	Draw RGBSplit
 void ForwardRenderer::DrawRGBSplit(ID3D12Resource* matBuffer)
 {
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
-
 	//// RGB Split
 	if (UseRGBSplit)
 	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
 		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
 		mCommandList->SetPipelineState(mPSOs["RGBSplit"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
-	}
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	if (UseRGBSplit)
-	{
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
@@ -280,34 +298,32 @@ void ForwardRenderer::DrawRGBSplit(ID3D12Resource* matBuffer)
 //	Draw Radial Blur
 void ForwardRenderer::DrawRadialBlur(ID3D12Resource* matBuffer)
 {
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
-
 	//// Radial Blur
 	if (UseRadialBlur)
 	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
 		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
 		mCommandList->SetPipelineState(mPSOs["RadialBlur"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
-	}
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	if (UseRadialBlur)
-	{
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
@@ -325,34 +341,31 @@ void ForwardRenderer::DrawRadialBlur(ID3D12Resource* matBuffer)
 //	Draw Vignette
 void ForwardRenderer::DrawVignette(ID3D12Resource* matBuffer)
 {
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
-
 	//// Vignette
 	if (UseVignette)
 	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
 		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
 		mCommandList->SetPipelineState(mPSOs["Vignette"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
-	}
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	if (UseVignette)
-	{
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
@@ -366,6 +379,304 @@ void ForwardRenderer::DrawVignette(ID3D12Resource* matBuffer)
 	}
 }
 
+
+
+//	Draw Decolor
+void ForwardRenderer::DrawDecolor(ID3D12Resource* matBuffer)
+{
+	//// Decolor
+	if (UseDecolor)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Decolor"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+
+//	Draw Brightness
+void ForwardRenderer::DrawBrightness(ID3D12Resource* matBuffer)
+{
+	if (UseBrightness)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Brightness"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+
+//	Draw HSV
+void ForwardRenderer::DrawHSV(ID3D12Resource* matBuffer)
+{
+	if (UseHSV)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["HSV"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+//	Draw Mosaic
+void ForwardRenderer::DrawMosaic(ID3D12Resource* matBuffer)
+{
+	if (UseMosaic)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Mosaic"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+//	Draw Sharpen
+void ForwardRenderer::DrawSharpen(ID3D12Resource* matBuffer)
+{
+	if (UseSharpen)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Sharpen"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+//	Draw Spherize
+void ForwardRenderer::DrawSpherize(ID3D12Resource* matBuffer)
+{
+	if (UseSpherize)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Spherize"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+//	Draw WhiteBalance
+void ForwardRenderer::DrawWhiteBalance(ID3D12Resource* matBuffer)
+{
+	if (UseWhiteBalance)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["WhiteBalance"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
 
 
 //	Draw Gizmo
@@ -684,20 +995,28 @@ void ForwardRenderer::DrawPostProcessingSettings()
 {
 	//Render Item
 	ImGui::SetNextWindowBgAlpha(0.8f);
-	ImGui::SetWindowSize(ImVec2(300, 800), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_Always);
 	ImGui::Begin("PostProcessing Settings", &show_postprocessingSetting_panel);
 
+
+	/// <summary>
+	/// RGBSplit
+	/// </summary>
 	if (ImGui::CollapsingHeader("RGB Split"))
 	{
 		Material* currentMat = mMaterials["RGBSplit"].get();
 		ImGui::Checkbox("Enable RGB Split", &UseRGBSplit);
 		if (UseRGBSplit)
 		{
-			ImGui::SliderFloat("Strength", &currentMat->Strength, 0, 0.3f);
+			ImGui::SliderFloat("RgbSplit Strength", &currentMat->RGBSplitStrength, 0, 0.3f);
 		}
 		currentMat->NumFramesDirty++;
 	}
 
+
+	/// <summary>
+	/// RadialBlur
+	/// </summary>
 	if (ImGui::CollapsingHeader("Radial Blur"))
 	{
 		Material* currentMat = mMaterials["RadialBlur"].get();
@@ -709,6 +1028,11 @@ void ForwardRenderer::DrawPostProcessingSettings()
 		currentMat->NumFramesDirty++;
 	}
 
+
+
+	/// <summary>
+	/// Vignette
+	/// </summary>
 	if (ImGui::CollapsingHeader("Vignette"))
 	{
 		Material* currentMat = mMaterials["Vignette"].get();
@@ -725,6 +1049,117 @@ void ForwardRenderer::DrawPostProcessingSettings()
 		}
 		currentMat->NumFramesDirty++;
 	}
+
+
+	/// <summary>
+	/// Decolor
+	/// </summary>
+	if (ImGui::CollapsingHeader("Decolor"))
+	{
+		Material* currentMat = mMaterials["Decolor"].get();
+		ImGui::Checkbox("Enable Decolor", &UseDecolor);
+		if (UseDecolor)
+		{
+			ImGui::SliderFloat("Decolor Strength", &currentMat->DecolorStrength, 0, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// Brightness
+	/// </summary>
+	if (ImGui::CollapsingHeader("Brightness"))
+	{
+		Material* currentMat = mMaterials["Brightness"].get();
+		ImGui::Checkbox("Enable Brightness", &UseBrightness);
+		if (UseBrightness)
+		{
+			ImGui::SliderFloat("Bright-ness", &currentMat->Brightness, 0.0f, 3.0f);
+
+			ImGui::SliderFloat("Contrast", &currentMat->Contrast, 0.0f, 3.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// HSV
+	/// </summary>
+	if (ImGui::CollapsingHeader("HSV"))
+	{
+		Material* currentMat = mMaterials["HSV"].get();
+		ImGui::Checkbox("Enable HSV", &UseHSV);
+		if (UseHSV)
+		{
+			ImGui::SliderFloat("Hue", &currentMat->Hue, 0, 1.0f);
+			ImGui::SliderFloat("Saturation", &currentMat->Saturation, -1, 1.0f);
+			ImGui::SliderFloat("Value", &currentMat->Value, -1, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+	/// <summary>
+	/// Mosaic
+	/// </summary>
+	if (ImGui::CollapsingHeader("Mosaic"))
+	{
+		Material* currentMat = mMaterials["Mosaic"].get();
+		ImGui::Checkbox("Enable Mosaic", &UseMosaic);
+		if (UseMosaic)
+		{
+			ImGui::InputFloat("PixelSize", &currentMat->PixelSize);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// Sharpen
+	/// </summary>
+	if (ImGui::CollapsingHeader("Sharpen"))
+	{
+		Material* currentMat = mMaterials["Sharpen"].get();
+		ImGui::Checkbox("Enable Sharpen", &UseSharpen);
+		if (UseSharpen)
+		{
+			ImGui::SliderFloat("SharpenStrength", &currentMat->SharpenStrength, 0, 5.0f);
+			ImGui::SliderFloat("SharpenThreshold", &currentMat->SharpenThreshold, 0, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// Spherize
+	/// </summary>
+	if (ImGui::CollapsingHeader("Spherize"))
+	{
+		Material* currentMat = mMaterials["Spherize"].get();
+		ImGui::Checkbox("Enable Spherize", &UseSpherize);
+		if (UseSpherize)
+		{
+			ImGui::SliderFloat("Spherify", &currentMat->Spherify, 0, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// WhiteBalance
+	/// </summary>
+	if (ImGui::CollapsingHeader("WhiteBalance"))
+	{
+		Material* currentMat = mMaterials["WhiteBalance"].get();
+		ImGui::Checkbox("Enable WhiteBalance", &UseWhiteBalance);
+		if (UseWhiteBalance)
+		{
+			ImGui::SliderFloat("Temperature", &currentMat->Temperature, -1.0, 1.0f);
+			ImGui::SliderFloat("Tint", &currentMat->Tint, -1.0, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
 
 	ImGui::End();
 }

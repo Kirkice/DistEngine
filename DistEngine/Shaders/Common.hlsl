@@ -88,8 +88,8 @@ struct SkyBoxMaterialData
 struct PostprocessingData
 {
     //RGBSplit   Decolourize (Turn Gray)
-    float                                                                               Strength;
-
+    float                                                                               RGBSplitStrength;
+    float                                                                               DecolorStrength;
     //Bloom
     float                                                                               Threshold;
     float                                                                               SoftKnee;
@@ -122,7 +122,6 @@ struct PostprocessingData
     float                                                                               Temperature;
     float                                                                               Tint;
 
-    //Sharpen
     //Vignette
     float4                                                                              VignetteColor;
 
@@ -134,6 +133,13 @@ struct PostprocessingData
     float                                                                               Height;
     float                                                                               Smooth;
     float                                                                               Alpha;
+
+    //Sharpen
+    float                                                                               SharpenStrength;
+    float                                                                               SharpenThreshold;
+
+    //Spherize
+    float                                                                               Spherify;
 }; 
  
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);

@@ -1,15 +1,15 @@
-/* $Header: RGBSplit.hlsl                                           6/26/21 20:55p KirkZhu $ */
+/* $Header: Spherize.hlsl                                            3/19/22 20:55p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *
 *                                                                                             *
-*                    File Name : RGBSplit.hlsl                                                *
+*                    File Name : Spherize.hlsl                                                *
 *                                                                                             *
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
-#ifndef RGBSPLIT_INCLUDE
-#define RGBSPLIT_INCLUDE
+#ifndef SPHERIZE_INCLUDE
+#define SPHERIZE_INCLUDE
 
 #include "Core.hlsl"
 
@@ -35,18 +35,21 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	PostprocessingData matData                          = gPostprocessingData[19];
-	float Scale											= 1 - matData.RGBSplitStrength;
-	float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
+	PostprocessingData matData                          = gPostprocessingData[27];
+	float2 centered_uv 									= pin.TexC * 2.0 - 1.0;
+	float z 											= sqrt(1.0 - saturate(dot(centered_uv.xy * 0.73, centered_uv.xy * 0.73)));
+	float2 spherified_uv 								= centered_uv / (z + 1.0);
+	float2 uv 											= spherified_uv * 0.5 + 0.5;
 
-	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 
-
-	float4 shiftColor1 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.05 * (Scale - 1.0), - 0.05 *(Scale - 1.0)));
-	float4 shiftColor2 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.1 * (Scale - 1.0), - 0.1 *(Scale - 1.0)));
-	float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
-	float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
-	return 												float4(blend3DColor,textureColor.a);  
+	uv 													= lerp(pin.TexC, uv, matData.Spherify);
+	float4 col 											= gRenderTarget.Sample(gsamLinearClamp, uv);
+	float sqrDist 										= dot(centered_uv.xy, centered_uv.xy);
+	float mask 											= 1.0 - sqrDist;
+	mask 												= saturate(mask / fwidth(mask));
+	col.a 												*= mask;
+	return col;
 }
+
 
 #endif
 

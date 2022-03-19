@@ -62,6 +62,13 @@ namespace Renderer
 		void DrawRGBSplit(ID3D12Resource* matBuffer);
 		void DrawRadialBlur(ID3D12Resource* matBuffer);
 		void DrawVignette(ID3D12Resource* matBuffer);
+		void DrawDecolor(ID3D12Resource* matBuffer);
+		void DrawBrightness(ID3D12Resource* matBuffer);
+		void DrawHSV(ID3D12Resource* matBuffer);
+		void DrawMosaic(ID3D12Resource* matBuffer);
+		void DrawSharpen(ID3D12Resource* matBuffer);
+		void DrawSpherize(ID3D12Resource* matBuffer);
+		void DrawWhiteBalance(ID3D12Resource* matBuffer);
 
 
 		void DrawBounding();

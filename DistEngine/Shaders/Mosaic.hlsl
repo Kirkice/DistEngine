@@ -1,15 +1,15 @@
-/* $Header: RGBSplit.hlsl                                           6/26/21 20:55p KirkZhu $ */
+/* $Header: Mosaic.hlsl                                            3/19/22 20:55p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *
 *                                                                                             *
-*                    File Name : RGBSplit.hlsl                                                *
+*                    File Name : Mosaic.hlsl                                                  *
 *                                                                                             *
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
-#ifndef RGBSPLIT_INCLUDE
-#define RGBSPLIT_INCLUDE
+#ifndef MOSAIC_INCLUDE
+#define MOSAIC_INCLUDE
 
 #include "Core.hlsl"
 
@@ -33,20 +33,20 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
+float2 GetMosaicUV( half2 uv, float size)
+{
+	float pixelScale 									= 1.0 / size;
+	float2 uv0 											= half2(pixelScale * 0.6 * floor(uv.x / (pixelScale * 0.6)), (pixelScale) * floor(uv.y / (pixelScale)));
+	return uv0;
+}
+
 float4 PS(VertexOut pin) : SV_Target
 {
-	PostprocessingData matData                          = gPostprocessingData[19];
-	float Scale											= 1 - matData.RGBSplitStrength;
-	float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
-
-	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 
-
-	float4 shiftColor1 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.05 * (Scale - 1.0), - 0.05 *(Scale - 1.0)));
-	float4 shiftColor2 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.1 * (Scale - 1.0), - 0.1 *(Scale - 1.0)));
-	float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
-	float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
-	return 												float4(blend3DColor,textureColor.a);  
+	PostprocessingData matData                          = gPostprocessingData[25];
+	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, GetMosaicUV(pin.TexC,matData.PixelSize)); 
+	return textureColor;
 }
+
 
 #endif
 

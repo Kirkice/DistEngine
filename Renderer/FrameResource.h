@@ -133,7 +133,8 @@ struct NPRMaterialData
 struct PostprocessingData
 {
     //RGBSplit   Decolourize (Turn Gray)
-    float Strength = 0.02f;
+    float RGBSplitStrength = 0.02f;
+    float DecolorStrength = 0.5;
 
     //Bloom
     float Threshold = 0.3f;
@@ -151,7 +152,7 @@ struct PostprocessingData
     float Value = 0;
 
     //Mosaic
-    float PixelSize = 0.01f;
+    float PixelSize = 80.0f;
 
     //Radial Blur
     float BlurFactory = 0.01f;
@@ -179,6 +180,13 @@ struct PostprocessingData
 	float Height = 0.7f;
 	float Smooth = 10;
 	float Alpha = 1;
+
+	//Sharpen
+	float SharpenStrength = 3.0f;
+	float SharpenThreshold = 0.5f;
+
+	//Spherize
+    float Spherify = 0.5f;
 };
 
 struct Vertex

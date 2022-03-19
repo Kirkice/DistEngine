@@ -714,6 +714,30 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["vignetteVS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["vignettePS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["brightnessVS"] = d3dUtil::CompileShader(L"Shaders\\Brightness.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["brightnessPS"] = d3dUtil::CompileShader(L"Shaders\\Brightness.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["hsvVS"] = d3dUtil::CompileShader(L"Shaders\\HSV.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["hsvPS"] = d3dUtil::CompileShader(L"Shaders\\HSV.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["mosaicVS"] = d3dUtil::CompileShader(L"Shaders\\Mosaic.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["mosaicPS"] = d3dUtil::CompileShader(L"Shaders\\Mosaic.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["sharpenVS"] = d3dUtil::CompileShader(L"Shaders\\Sharpen.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["sharpenPS"] = d3dUtil::CompileShader(L"Shaders\\Sharpen.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["spherizeVS"] = d3dUtil::CompileShader(L"Shaders\\Spherize.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["spherizePS"] = d3dUtil::CompileShader(L"Shaders\\Spherize.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["whiteBalanceVS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["whiteBalancePS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "PS", "ps_5_1");
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -1332,6 +1356,142 @@ void GraphicsCore::BuildPSOs()
 		mShaders["vignettePS"]->GetBufferSize()
 	};
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&vignettePsoDesc, IID_PPV_ARGS(&mPSOs["Vignette"])));
+
+
+	//
+	// 	PSO for Decolor
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC decolorPsoDesc = opaquePsoDesc;
+	decolorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	decolorPsoDesc.pRootSignature = mRootSignature.Get();
+	decolorPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["decolorVS"]->GetBufferPointer()),
+		mShaders["decolorVS"]->GetBufferSize()
+	};
+	decolorPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["decolorPS"]->GetBufferPointer()),
+		mShaders["decolorPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&decolorPsoDesc, IID_PPV_ARGS(&mPSOs["Decolor"])));
+
+	//
+	// 	PSO for Brightness
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC brightnessPsoDesc = opaquePsoDesc;
+	brightnessPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	brightnessPsoDesc.pRootSignature = mRootSignature.Get();
+	brightnessPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["brightnessVS"]->GetBufferPointer()),
+		mShaders["brightnessVS"]->GetBufferSize()
+	};
+	brightnessPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["brightnessPS"]->GetBufferPointer()),
+		mShaders["brightnessPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&brightnessPsoDesc, IID_PPV_ARGS(&mPSOs["Brightness"])));
+
+	//
+	// 	PSO for HSV
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC hsvPsoDesc = opaquePsoDesc;
+	hsvPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	hsvPsoDesc.pRootSignature = mRootSignature.Get();
+	hsvPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["hsvVS"]->GetBufferPointer()),
+		mShaders["hsvVS"]->GetBufferSize()
+	};
+	hsvPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["hsvPS"]->GetBufferPointer()),
+		mShaders["hsvPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&hsvPsoDesc, IID_PPV_ARGS(&mPSOs["HSV"])));
+
+	//
+	// 	PSO for Mosaic
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC mosaicPsoDesc = opaquePsoDesc;
+	mosaicPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	mosaicPsoDesc.pRootSignature = mRootSignature.Get();
+	mosaicPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["mosaicVS"]->GetBufferPointer()),
+		mShaders["mosaicVS"]->GetBufferSize()
+	};
+	mosaicPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["mosaicPS"]->GetBufferPointer()),
+		mShaders["mosaicPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&mosaicPsoDesc, IID_PPV_ARGS(&mPSOs["Mosaic"])));
+
+	//
+	// 	PSO for Sharpen
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC sharpenPsoDesc = opaquePsoDesc;
+	sharpenPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	sharpenPsoDesc.pRootSignature = mRootSignature.Get();
+	sharpenPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["sharpenVS"]->GetBufferPointer()),
+		mShaders["sharpenVS"]->GetBufferSize()
+	};
+	sharpenPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["sharpenPS"]->GetBufferPointer()),
+		mShaders["sharpenPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&sharpenPsoDesc, IID_PPV_ARGS(&mPSOs["Sharpen"])));
+
+
+	//
+	// 	PSO for Spherize
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC spherizePsoDesc = opaquePsoDesc;
+	spherizePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	spherizePsoDesc.pRootSignature = mRootSignature.Get();
+	spherizePsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["spherizeVS"]->GetBufferPointer()),
+		mShaders["spherizeVS"]->GetBufferSize()
+	};
+	spherizePsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["spherizePS"]->GetBufferPointer()),
+		mShaders["spherizePS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&spherizePsoDesc, IID_PPV_ARGS(&mPSOs["Spherize"])));
+
+
+	//
+	// 	PSO for WhiteBalance
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC whiteBalancePsoDesc = opaquePsoDesc;
+	whiteBalancePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	whiteBalancePsoDesc.pRootSignature = mRootSignature.Get();
+	whiteBalancePsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["whiteBalanceVS"]->GetBufferPointer()),
+		mShaders["whiteBalanceVS"]->GetBufferSize()
+	};
+	whiteBalancePsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["whiteBalancePS"]->GetBufferPointer()),
+		mShaders["whiteBalancePS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&whiteBalancePsoDesc, IID_PPV_ARGS(&mPSOs["WhiteBalance"])));
+
+
+
+
+
+
+
 
 
 	//

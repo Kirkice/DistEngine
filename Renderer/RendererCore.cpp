@@ -922,7 +922,8 @@ void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<Postproce
 	XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
 	PostprocessingData matData;
-	matData.Strength = mat->Strength;
+	matData.RGBSplitStrength = mat->RGBSplitStrength;
+	matData.DecolorStrength = mat->DecolorStrength;
 	matData.Threshold = mat->Threshold;
 	matData.SoftKnee = mat->SoftKnee;
 	matData.Radius = mat->Radius;
@@ -947,6 +948,10 @@ void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<Postproce
 	matData.Height = mat->Height;
 	matData.Smooth = mat->Smooth;
 	matData.Alpha = mat->Alpha;
+	matData.SharpenStrength = mat->SharpenStrength;
+	matData.SharpenThreshold = mat->SharpenThreshold;
+	matData.Spherify = mat->Spherify;
+
 	currMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
 	// Next FrameResource need to be updated too.
@@ -963,19 +968,52 @@ void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique
 	auto RGBSplitMat = std::make_unique<Material>();
 	RGBSplitMat->Name = "RGBSplit";
 	RGBSplitMat->MatCBIndex = 19;
-	RGBSplitMat->Strength = 0.02f;
 	mMaterials["RGBSplit"] = std::move(RGBSplitMat);
 
 	auto RadialBlurMat = std::make_unique<Material>();
 	RadialBlurMat->Name = "RadialBlur";
 	RadialBlurMat->MatCBIndex = 20;
-	RadialBlurMat->BlurFactory = 0.01f;
 	mMaterials["RadialBlur"] = std::move(RadialBlurMat);
 
 	auto VignetteMat = std::make_unique<Material>();
 	VignetteMat->Name = "Vignette";
 	VignetteMat->MatCBIndex = 21;
 	mMaterials["Vignette"] = std::move(VignetteMat);
+
+	auto DecolorMat = std::make_unique<Material>();
+	DecolorMat->Name = "Decolor";
+	DecolorMat->MatCBIndex = 22;
+	mMaterials["Decolor"] = std::move(DecolorMat);
+
+	auto BrightnessMat = std::make_unique<Material>();
+	BrightnessMat->Name = "Brightness";
+	BrightnessMat->MatCBIndex = 23;
+	mMaterials["Brightness"] = std::move(BrightnessMat);
+
+	auto HSVMat = std::make_unique<Material>();
+	HSVMat->Name = "HSV";
+	HSVMat->MatCBIndex = 24;
+	mMaterials["HSV"] = std::move(HSVMat);
+
+	auto MosaicMat = std::make_unique<Material>();
+	MosaicMat->Name = "Mosaic";
+	MosaicMat->MatCBIndex = 25;
+	mMaterials["Mosaic"] = std::move(MosaicMat);
+
+	auto SharpenMat = std::make_unique<Material>();
+	SharpenMat->Name = "Sharpen";
+	SharpenMat->MatCBIndex = 26;
+	mMaterials["Sharpen"] = std::move(SharpenMat);
+
+	auto SpherizeMat = std::make_unique<Material>();
+	SpherizeMat->Name = "Spherize";
+	SpherizeMat->MatCBIndex = 27;
+	mMaterials["Spherize"] = std::move(SpherizeMat);
+
+	auto WhiteBalanceMat = std::make_unique<Material>();
+	WhiteBalanceMat->Name = "WhiteBalance";
+	WhiteBalanceMat->MatCBIndex = 28;
+	mMaterials["WhiteBalance"] = std::move(WhiteBalanceMat);
 }
 
 void RenderCore::Post_BuildRenderItems(
@@ -1051,11 +1089,107 @@ void RenderCore::Post_BuildRenderItems(
 
 
 
+	auto DecolorItem = std::make_unique<RenderItem>();
+	DecolorItem->World = Mathf::Identity4x4();
+	DecolorItem->TexTransform = Mathf::Identity4x4();
+	DecolorItem->ObjCBIndex = 27;
+	DecolorItem->Mat = mMaterials["Decolor"].get();
+	DecolorItem->Geo = mGeometries["shapeGeo"].get();
+	DecolorItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	DecolorItem->IndexCount = DecolorItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	DecolorItem->StartIndexLocation = DecolorItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	DecolorItem->BaseVertexLocation = DecolorItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(DecolorItem.get());
+	mAllRitems.push_back(std::move(DecolorItem));
+
+
+
+	auto BrightnessItem = std::make_unique<RenderItem>();
+	BrightnessItem->World = Mathf::Identity4x4();
+	BrightnessItem->TexTransform = Mathf::Identity4x4();
+	BrightnessItem->ObjCBIndex = 28;
+	BrightnessItem->Mat = mMaterials["Brightness"].get();
+	BrightnessItem->Geo = mGeometries["shapeGeo"].get();
+	BrightnessItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	BrightnessItem->IndexCount = BrightnessItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	BrightnessItem->StartIndexLocation = BrightnessItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	BrightnessItem->BaseVertexLocation = BrightnessItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(BrightnessItem.get());
+	mAllRitems.push_back(std::move(BrightnessItem));
+
+
+
+	auto HSVItem = std::make_unique<RenderItem>();
+	HSVItem->World = Mathf::Identity4x4();
+	HSVItem->TexTransform = Mathf::Identity4x4();
+	HSVItem->ObjCBIndex = 29;
+	HSVItem->Mat = mMaterials["HSV"].get();
+	HSVItem->Geo = mGeometries["shapeGeo"].get();
+	HSVItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	HSVItem->IndexCount = HSVItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	HSVItem->StartIndexLocation = HSVItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	HSVItem->BaseVertexLocation = HSVItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(HSVItem.get());
+	mAllRitems.push_back(std::move(HSVItem));
+
+
+
+	auto MosaicItem = std::make_unique<RenderItem>();
+	MosaicItem->World = Mathf::Identity4x4();
+	MosaicItem->TexTransform = Mathf::Identity4x4();
+	MosaicItem->ObjCBIndex = 30;
+	MosaicItem->Mat = mMaterials["Mosaic"].get();
+	MosaicItem->Geo = mGeometries["shapeGeo"].get();
+	MosaicItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	MosaicItem->IndexCount = MosaicItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	MosaicItem->StartIndexLocation = MosaicItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	MosaicItem->BaseVertexLocation = MosaicItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(MosaicItem.get());
+	mAllRitems.push_back(std::move(MosaicItem));
+
+
+
+	auto SharpenItem = std::make_unique<RenderItem>();
+	SharpenItem->World = Mathf::Identity4x4();
+	SharpenItem->TexTransform = Mathf::Identity4x4();
+	SharpenItem->ObjCBIndex = 31;
+	SharpenItem->Mat = mMaterials["Sharpen"].get();
+	SharpenItem->Geo = mGeometries["shapeGeo"].get();
+	SharpenItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	SharpenItem->IndexCount = SharpenItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	SharpenItem->StartIndexLocation = SharpenItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	SharpenItem->BaseVertexLocation = SharpenItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(SharpenItem.get());
+	mAllRitems.push_back(std::move(SharpenItem));
+
+
+
+	auto WhiteBalanceItem = std::make_unique<RenderItem>();
+	WhiteBalanceItem->World = Mathf::Identity4x4();
+	WhiteBalanceItem->TexTransform = Mathf::Identity4x4();
+	WhiteBalanceItem->ObjCBIndex = 31;
+	WhiteBalanceItem->Mat = mMaterials["WhiteBalance"].get();
+	WhiteBalanceItem->Geo = mGeometries["shapeGeo"].get();
+	WhiteBalanceItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	WhiteBalanceItem->IndexCount = WhiteBalanceItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	WhiteBalanceItem->StartIndexLocation = WhiteBalanceItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	WhiteBalanceItem->BaseVertexLocation = WhiteBalanceItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(WhiteBalanceItem.get());
+	mAllRitems.push_back(std::move(WhiteBalanceItem));
+
+
+
 
 	auto FinalBlitItem = std::make_unique<RenderItem>();
 	FinalBlitItem->World = Mathf::Identity4x4();
 	FinalBlitItem->TexTransform = Mathf::Identity4x4();
-	FinalBlitItem->ObjCBIndex = 27;
+	FinalBlitItem->ObjCBIndex = 32;
 	FinalBlitItem->Mat = mMaterials["CopyColor"].get();
 	FinalBlitItem->Geo = mGeometries["shapeGeo"].get();
 	FinalBlitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

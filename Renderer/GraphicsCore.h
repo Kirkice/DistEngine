@@ -165,5 +165,26 @@ namespace Renderer
 
 		//Vignette
 		bool UseVignette = false;
+
+		//Decolor
+		bool UseDecolor = false;
+
+		//Brightness
+		bool UseBrightness = false;
+
+		//HSV
+		bool UseHSV = false;
+
+		//Mosaic
+		bool UseMosaic = false;
+
+		//Sharpen
+		bool UseSharpen = false;
+
+		//Spherize
+		bool UseSpherize = false;
+
+		//WhiteBalance
+		bool UseWhiteBalance = false;
 	};
 }
