@@ -211,5 +211,10 @@ namespace Renderer
 		//FXAA
 		bool UseFXAA = false;
 
+		//Bloom
+		bool UseBloom = false;
+
+		//ACES ToneMapping
+		bool UseToneMapping = false;
 	};
 }

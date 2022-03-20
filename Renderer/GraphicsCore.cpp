@@ -747,6 +747,13 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["edgeDetectionVS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["edgeDetectionPS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["bloomVS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["bloomPrefilterPS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Prefilter", "ps_5_1");
+	mShaders["bloomDownsample1PS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Downsample1", "ps_5_1");
+	mShaders["bloomDownsample2PS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Downsample2", "ps_5_1");
+	mShaders["bloomUpsamplePS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Upsample", "ps_5_1");
+	mShaders["bloomUpsample_FinalPS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Upsample_Final", "ps_5_1");
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },

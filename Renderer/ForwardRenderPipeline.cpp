@@ -1411,5 +1411,32 @@ void ForwardRenderer::DrawPostProcessingSettings()
 		ImGui::Checkbox("Enable FXAA", &UseFXAA);
 	}
 
+	/// <summary>
+	/// ToneMapping
+	/// </summary>
+	if (ImGui::CollapsingHeader("ToneMapping(ACES)"))
+	{
+		ImGui::Checkbox("Enable ToneMapping", &UseToneMapping);
+	}
+
+	/// <summary>
+	/// Bloom
+	/// </summary>
+	if (ImGui::CollapsingHeader("Bloom"))
+	{
+		Material* currentMat = mMaterials["Bloom"].get();
+		ImGui::Checkbox("Enable Bloom", &UseBloom);
+		if (UseBloom)
+		{
+			ImGui::SliderFloat("Threshold", &currentMat->Threshold, 0.0, 10.0f);
+			ImGui::SliderFloat("SoftKnee", &currentMat->SoftKnee,0.0, 1.0f);
+			ImGui::SliderFloat("Radius", &currentMat->Radius, 0.0, 7.0f);
+			ImGui::InputFloat("Intensity", &currentMat->Intensity);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
 	ImGui::End();
+
+
 }

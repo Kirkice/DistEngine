@@ -1038,6 +1038,11 @@ void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique
 	EdgeDetectionMat->Name = "EdgeDetection";
 	EdgeDetectionMat->MatCBIndex = 31;
 	mMaterials["EdgeDetection"] = std::move(EdgeDetectionMat);
+
+	auto BloomMat = std::make_unique<Material>();
+	BloomMat->Name = "Bloom";
+	BloomMat->MatCBIndex = 32;
+	mMaterials["Bloom"] = std::move(BloomMat);
 }
 
 void RenderCore::Post_BuildRenderItems(
