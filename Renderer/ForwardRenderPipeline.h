@@ -69,7 +69,9 @@ namespace Renderer
 		void DrawSharpen(ID3D12Resource* matBuffer);
 		void DrawSpherize(ID3D12Resource* matBuffer);
 		void DrawWhiteBalance(ID3D12Resource* matBuffer);
-
+		void DrawOilPaint(ID3D12Resource* matBuffer);
+		void DrawRelief(ID3D12Resource* matBuffer);
+		void DrawEdgeDetection(ID3D12Resource* matBuffer);
 
 		void DrawBounding();
 

@@ -140,6 +140,23 @@ struct PostprocessingData
 
     //Spherize
     float                                                                               Spherify;
+
+    //Oil Paint
+    float                                                                               OilPaintRadius;
+
+    //Motion Blur
+    float                                                                               MotionBlurAmount;
+
+    //DOF
+    float                                                                               Aperture;
+    float                                                                               FocalLength;
+    float                                                                               Distance;           
+    
+    //FidelityFX Super Resolution
+    float                                                                               ResoultionLevel;         
+    float                                                                               FSRSharpen;
+    
+                        
 }; 
  
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);

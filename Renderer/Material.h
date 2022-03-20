@@ -82,6 +82,20 @@ namespace Renderer
 		//Spherize
 		float Spherify = 0.5f;
 
+		float OilPaintRadius = 3.0f;
+
+		//Motion Blur
+		float MotionBlurAmount = 0;
+
+		//DOF
+		float Aperture = 0;
+		float FocalLength = 0;
+		float Distance = 0;
+
+		//FidelityFX Super Resolution
+		float ResoultionLevel = 0;
+		float FSRSharpen = 0;
+
 		XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 
 		int DiffuseSrvHeapIndex = -1;

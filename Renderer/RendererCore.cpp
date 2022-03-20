@@ -951,6 +951,15 @@ void RenderCore::Post_UpdateMaterialBuffer(Material* mat, UploadBuffer<Postproce
 	matData.SharpenStrength = mat->SharpenStrength;
 	matData.SharpenThreshold = mat->SharpenThreshold;
 	matData.Spherify = mat->Spherify;
+	matData.OilPaintRadius = mat->OilPaintRadius;
+	matData.ResoultionValue = mat->ResoultionValue;
+	matData.MotionBlurAmount = mat->MotionBlurAmount;
+	matData.Aperture = mat->Aperture;
+	matData.FocalLength - mat->FocalLength;
+	matData.Distance = mat->Distance;
+	matData.ResoultionLevel = mat->ResoultionLevel;
+	matData.FSRSharpen = matData.FSRSharpen;
+
 
 	currMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
@@ -1014,6 +1023,21 @@ void RenderCore::Post_BuildMaterials(std::unordered_map<std::string, std::unique
 	WhiteBalanceMat->Name = "WhiteBalance";
 	WhiteBalanceMat->MatCBIndex = 28;
 	mMaterials["WhiteBalance"] = std::move(WhiteBalanceMat);
+
+	auto OilPaintMat = std::make_unique<Material>();
+	OilPaintMat->Name = "OilPaint";
+	OilPaintMat->MatCBIndex = 29;
+	mMaterials["OilPaint"] = std::move(OilPaintMat);
+
+	auto ReliefMat = std::make_unique<Material>();
+	ReliefMat->Name = "Relief";
+	ReliefMat->MatCBIndex = 30;
+	mMaterials["Relief"] = std::move(ReliefMat);
+
+	auto EdgeDetectionMat = std::make_unique<Material>();
+	EdgeDetectionMat->Name = "EdgeDetection";
+	EdgeDetectionMat->MatCBIndex = 31;
+	mMaterials["EdgeDetection"] = std::move(EdgeDetectionMat);
 }
 
 void RenderCore::Post_BuildRenderItems(
@@ -1186,10 +1210,61 @@ void RenderCore::Post_BuildRenderItems(
 
 
 
+	auto OilPaintItem = std::make_unique<RenderItem>();
+	OilPaintItem->World = Mathf::Identity4x4();
+	OilPaintItem->TexTransform = Mathf::Identity4x4();
+	OilPaintItem->ObjCBIndex = 32;
+	OilPaintItem->Mat = mMaterials["OilPaint"].get();
+	OilPaintItem->Geo = mGeometries["shapeGeo"].get();
+	OilPaintItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	OilPaintItem->IndexCount = OilPaintItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	OilPaintItem->StartIndexLocation = OilPaintItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	OilPaintItem->BaseVertexLocation = OilPaintItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(OilPaintItem.get());
+	mAllRitems.push_back(std::move(OilPaintItem));
+
+
+
+
+	auto ReliefItem = std::make_unique<RenderItem>();
+	ReliefItem->World = Mathf::Identity4x4();
+	ReliefItem->TexTransform = Mathf::Identity4x4();
+	ReliefItem->ObjCBIndex = 33;
+	ReliefItem->Mat = mMaterials["Relief"].get();
+	ReliefItem->Geo = mGeometries["shapeGeo"].get();
+	ReliefItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	ReliefItem->IndexCount = ReliefItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	ReliefItem->StartIndexLocation = ReliefItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	ReliefItem->BaseVertexLocation = ReliefItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(ReliefItem.get());
+	mAllRitems.push_back(std::move(ReliefItem));
+
+
+
+
+	auto EdgeDetectionItem = std::make_unique<RenderItem>();
+	EdgeDetectionItem->World = Mathf::Identity4x4();
+	EdgeDetectionItem->TexTransform = Mathf::Identity4x4();
+	EdgeDetectionItem->ObjCBIndex = 34;
+	EdgeDetectionItem->Mat = mMaterials["EdgeDetection"].get();
+	EdgeDetectionItem->Geo = mGeometries["shapeGeo"].get();
+	EdgeDetectionItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	EdgeDetectionItem->IndexCount = EdgeDetectionItem->Geo->DrawArgs["screenGrid"].IndexCount;
+	EdgeDetectionItem->StartIndexLocation = EdgeDetectionItem->Geo->DrawArgs["screenGrid"].StartIndexLocation;
+	EdgeDetectionItem->BaseVertexLocation = EdgeDetectionItem->Geo->DrawArgs["screenGrid"].BaseVertexLocation;
+
+	mRitemLayer[(int)RenderLayer::PostProcessing].push_back(EdgeDetectionItem.get());
+	mAllRitems.push_back(std::move(EdgeDetectionItem));
+
+
+
+
 	auto FinalBlitItem = std::make_unique<RenderItem>();
 	FinalBlitItem->World = Mathf::Identity4x4();
 	FinalBlitItem->TexTransform = Mathf::Identity4x4();
-	FinalBlitItem->ObjCBIndex = 32;
+	FinalBlitItem->ObjCBIndex = 35;
 	FinalBlitItem->Mat = mMaterials["CopyColor"].get();
 	FinalBlitItem->Geo = mGeometries["shapeGeo"].get();
 	FinalBlitItem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

@@ -186,5 +186,30 @@ namespace Renderer
 
 		//WhiteBalance
 		bool UseWhiteBalance = false;
+
+		//OilPaint
+		bool UseOilPaint = false;
+
+		//Releif
+		bool UseRelief = false;
+
+		//EdgeDetection
+		bool UseEdgeDetection = false;
+
+		//MotionBlur
+		bool UseMotionBlur = false;
+
+		//SSAO
+		bool UseSSAO = false;
+
+		//DOF
+		bool UseDOF = false;
+
+		//FSR
+		bool UseFSR = false;
+
+		//FXAA
+		bool UseFXAA = false;
+
 	};
 }

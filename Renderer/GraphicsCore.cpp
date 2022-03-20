@@ -738,6 +738,15 @@ void GraphicsCore::BuildShadersAndInputLayout()
 	mShaders["whiteBalanceVS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["whiteBalancePS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "PS", "ps_5_1");
 
+	mShaders["oilPaintVS"] = d3dUtil::CompileShader(L"Shaders\\OilPaint.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["oilPaintPS"] = d3dUtil::CompileShader(L"Shaders\\OilPaint.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["reliefVS"] = d3dUtil::CompileShader(L"Shaders\\Relief.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["reliefPS"] = d3dUtil::CompileShader(L"Shaders\\Relief.hlsl", nullptr, "PS", "ps_5_1");
+
+	mShaders["edgeDetectionVS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["edgeDetectionPS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "PS", "ps_5_1");
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -1488,6 +1497,65 @@ void GraphicsCore::BuildPSOs()
 
 
 
+
+	//
+	// 	PSO for OilPaint
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC oilPaintPsoDesc = opaquePsoDesc;
+	oilPaintPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	oilPaintPsoDesc.pRootSignature = mRootSignature.Get();
+	oilPaintPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["oilPaintVS"]->GetBufferPointer()),
+		mShaders["oilPaintVS"]->GetBufferSize()
+	};
+	oilPaintPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["oilPaintPS"]->GetBufferPointer()),
+		mShaders["oilPaintPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&oilPaintPsoDesc, IID_PPV_ARGS(&mPSOs["OilPaint"])));
+
+
+
+
+	//
+	// 	PSO for Relief
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC reliefPsoDesc = opaquePsoDesc;
+	reliefPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	reliefPsoDesc.pRootSignature = mRootSignature.Get();
+	reliefPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["reliefVS"]->GetBufferPointer()),
+		mShaders["reliefVS"]->GetBufferSize()
+	};
+	reliefPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["reliefPS"]->GetBufferPointer()),
+		mShaders["reliefPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&reliefPsoDesc, IID_PPV_ARGS(&mPSOs["Relief"])));
+
+
+
+	//
+	// 	PSO for EdgeDetection
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC edgeDetectionPsoDesc = opaquePsoDesc;
+	edgeDetectionPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	edgeDetectionPsoDesc.pRootSignature = mRootSignature.Get();
+	edgeDetectionPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["edgeDetectionVS"]->GetBufferPointer()),
+		mShaders["edgeDetectionVS"]->GetBufferSize()
+	};
+	edgeDetectionPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["edgeDetectionPS"]->GetBufferPointer()),
+		mShaders["edgeDetectionPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&edgeDetectionPsoDesc, IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
 
 

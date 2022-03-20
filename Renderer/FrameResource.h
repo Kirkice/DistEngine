@@ -187,6 +187,20 @@ struct PostprocessingData
 
 	//Spherize
     float Spherify = 0.5f;
+
+    float OilPaintRadius = 3.0f;
+
+	//Motion Blur
+	float MotionBlurAmount = 0;
+
+	//DOF
+	float Aperture = 0;
+	float FocalLength = 0;
+	float Distance = 0;
+
+	//FidelityFX Super Resolution
+	float ResoultionLevel = 0;
+	float FSRSharpen = 0;
 };
 
 struct Vertex

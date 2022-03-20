@@ -78,6 +78,15 @@ void ForwardRenderer::ForwardRender()
 	//WhiteBalance
 	DrawWhiteBalance(matBuffer);
 
+	//OilPaint
+	DrawOilPaint(matBuffer);
+
+	//Relief
+	DrawRelief(matBuffer);
+
+	//EdgeDetection
+	DrawEdgeDetection(matBuffer);
+
 	//Final Blit
 	DrawFinalBlit();
 
@@ -679,6 +688,136 @@ void ForwardRenderer::DrawWhiteBalance(ID3D12Resource* matBuffer)
 }
 
 
+//	Draw OilPaint
+void ForwardRenderer::DrawOilPaint(ID3D12Resource* matBuffer)
+{
+	if (UseOilPaint)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["OilPaint"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+
+//	Draw Relief
+void ForwardRenderer::DrawRelief(ID3D12Resource* matBuffer)
+{
+	if (UseRelief)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["Relief"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+//	Draw EdgeDetection
+void ForwardRenderer::DrawEdgeDetection(ID3D12Resource* matBuffer)
+{
+	if (UseEdgeDetection)
+	{
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), SolidColor, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+		render_target_descriptor.Offset(UINT(24), mCbvSrvUavDescriptorSize);
+		mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+
+
+		matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->SetPipelineState(mPSOs["EdgeDetection"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcessing]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+}
+
+
+
+
 //	Draw Gizmo
 void ForwardRenderer::DrawGizmo()
 {
@@ -1069,7 +1208,7 @@ void ForwardRenderer::DrawPostProcessingSettings()
 	/// <summary>
 	/// Brightness
 	/// </summary>
-	if (ImGui::CollapsingHeader("Brightness"))
+	if (ImGui::CollapsingHeader("Brightness And Contrast"))
 	{
 		Material* currentMat = mMaterials["Brightness"].get();
 		ImGui::Checkbox("Enable Brightness", &UseBrightness);
@@ -1148,7 +1287,7 @@ void ForwardRenderer::DrawPostProcessingSettings()
 	/// <summary>
 	/// WhiteBalance
 	/// </summary>
-	if (ImGui::CollapsingHeader("WhiteBalance"))
+	if (ImGui::CollapsingHeader("White Balance"))
 	{
 		Material* currentMat = mMaterials["WhiteBalance"].get();
 		ImGui::Checkbox("Enable WhiteBalance", &UseWhiteBalance);
@@ -1160,6 +1299,117 @@ void ForwardRenderer::DrawPostProcessingSettings()
 		currentMat->NumFramesDirty++;
 	}
 
+
+	/// <summary>
+	/// OilPaint
+	/// </summary>
+	if (ImGui::CollapsingHeader("Oil Paint"))
+	{
+		Material* currentMat = mMaterials["OilPaint"].get();
+		ImGui::Checkbox("Enable OilPaint", &UseOilPaint);
+		if (UseOilPaint)
+		{
+			ImGui::SliderFloat("OilPaint Radius", &currentMat->OilPaintRadius, 0.0, 5.0f);
+			ImGui::SliderFloat("ResoultionValue", &currentMat->ResoultionValue, 0.0, 5.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+
+	/// <summary>
+	/// Relief
+	/// </summary>
+	if (ImGui::CollapsingHeader("Relief"))
+	{
+		ImGui::Checkbox("Enable Relief", &UseRelief);
+	}
+
+	/// <summary>
+	/// EdgeDetection
+	/// </summary>
+	if (ImGui::CollapsingHeader("EdgeDetection"))
+	{
+		Material* currentMat = mMaterials["EdgeDetection"].get();
+		ImGui::Checkbox("Enable EdgeDetection", &UseEdgeDetection);
+		if (UseEdgeDetection)
+		{
+			ImGui::SliderFloat("Edge Width", &currentMat->EdgeWdith, 0.0, 5.0f);
+			ImGui::SliderFloat("Edge Neon Fade", &currentMat->EdgeNeonFade, 0.0, 1.0f);
+
+			float colorOutLine[4] = { currentMat->OutLineColor.x,currentMat->OutLineColor.y,currentMat->OutLineColor.z,1 };
+			ImGui::ColorEdit3("OutLine Color", colorOutLine);
+			currentMat->OutLineColor = XMFLOAT4(colorOutLine[0], colorOutLine[1], colorOutLine[2], colorOutLine[3]);
+
+			ImGui::SliderFloat("Background Fade", &currentMat->BackgroundFade, 0.0, 1.0f);
+
+			float colorMain[4] = { currentMat->BackgroundColor.x,currentMat->BackgroundColor.y,currentMat->BackgroundColor.z,1 };
+			ImGui::ColorEdit3("Background Color", colorMain);
+			currentMat->BackgroundColor = XMFLOAT4(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
+
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+	/// <summary>
+	/// SSAO
+	/// </summary>
+	if (ImGui::CollapsingHeader("SSAO"))
+	{
+		ImGui::Checkbox("Enable SSAO", &UseSSAO);
+	}
+
+	/// <summary>
+	/// MotionBlur
+	/// </summary>
+	if (ImGui::CollapsingHeader("Motion Blur"))
+	{
+		Material* currentMat = mMaterials["OilPaint"].get();
+		ImGui::Checkbox("Enable MotionBlur", &UseMotionBlur);
+		if (UseMotionBlur)
+		{
+			ImGui::SliderFloat("Blur Amount", &currentMat->MotionBlurAmount, 0.0, 5.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+	/// <summary>
+	/// DOF
+	/// </summary>
+	if (ImGui::CollapsingHeader("Depth Of Field"))
+	{
+		Material* currentMat = mMaterials["OilPaint"].get();
+		ImGui::Checkbox("Enable Depth Of Field", &UseDOF);
+		if (UseDOF)
+		{
+			ImGui::InputFloat("Distance", &currentMat->Distance);
+			ImGui::InputFloat("Aperture", &currentMat->Aperture);
+			ImGui::SliderFloat("FocalLength", &currentMat->FocalLength, 0.0, 300.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+	/// <summary>
+	/// FidelityFX Super Resolution
+	/// </summary>
+	if (ImGui::CollapsingHeader("FidelityFX Super Resolution"))
+	{
+		Material* currentMat = mMaterials["OilPaint"].get();
+		ImGui::Checkbox("Enable FSR", &UseFSR);
+		if (UseFSR)
+		{
+			ImGui::InputFloat("ResoultionLevel", &currentMat->ResoultionLevel);
+			ImGui::SliderFloat("FSRSharpen", &currentMat->FSRSharpen, 0.0, 1.0f);
+		}
+		currentMat->NumFramesDirty++;
+	}
+
+	/// <summary>
+	/// FXAA
+	/// </summary>
+	if (ImGui::CollapsingHeader("FXAA"))
+	{
+		ImGui::Checkbox("Enable FXAA", &UseFXAA);
+	}
 
 	ImGui::End();
 }
