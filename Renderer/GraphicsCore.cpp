@@ -789,7 +789,7 @@ void GraphicsCore::BuildShapeGeometry()
 	UINT aabbVertexOffset = quadVertexOffset + (UINT)quad.Vertices.size();
 	UINT screenGridVertexOffset = aabbVertexOffset + (UINT)aabb.Vertices.size();
 
-	// Cache the starting index for each object in the concatenated index buffer.
+	// Cache the starting index for each object in the concatenated index buffer.   
 	UINT gridIndexOffset = 0;
 	UINT sphereIndexOffset = gridIndexOffset + (UINT)grid.Indices32.size();
 	UINT quadIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
@@ -798,6 +798,10 @@ void GraphicsCore::BuildShapeGeometry()
 
 	SubmeshGeometry gridSubmesh;
 	gridSubmesh.IndexCount = (UINT)grid.Indices32.size();
+
+
+
+
 	gridSubmesh.StartIndexLocation = gridIndexOffset;
 	gridSubmesh.BaseVertexLocation = gridVertexOffset;
 
