@@ -244,7 +244,7 @@ void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 	XMFLOAT3 sphereCenterLS;
 	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, lightView));
 
-	// Ortho frustum in light space encloses scene.
+	// Ortho frustum in light space encloses scene.  
 	float l = sphereCenterLS.x - mSceneBounds.Radius;
 	float b = sphereCenterLS.y - mSceneBounds.Radius;
 	float n = sphereCenterLS.z - mSceneBounds.Radius;
