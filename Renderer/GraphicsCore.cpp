@@ -218,7 +218,7 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 		// Only update the cbuffer data if the constants have changed.  If the cbuffer
 		// data changes, it needs to be updated for each FrameResource.
 		Material* mat = e.second.get();
-		//if (mat->NumFramesDirty > 0)
+		//if (mat->NumFramesDirty > 0)   
 		//{
 			if (mat->MatCBIndex > 17)
 				Post_UpdateMaterialBuffer(mat, CurrentBackBuffer_Post);
