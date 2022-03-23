@@ -156,7 +156,7 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 
 void GraphicsCore::AnimateMaterials(const GameTimer& gt)
 {
-
+	   
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
