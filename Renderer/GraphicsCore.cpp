@@ -281,7 +281,7 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
 	XMMATRIX T(
-		0.5f, 0.0f, 0.0f, 0.0f,
+		0.5f, 0.0f, 0.0f, 0.0f, 
 		0.0f, -0.5f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.5f, 0.5f, 0.0f, 1.0f);
