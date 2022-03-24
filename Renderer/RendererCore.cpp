@@ -1066,7 +1066,7 @@ void RenderCore::Post_BuildRenderItems(
 	mAllRitems.push_back(std::move(CopyColorItem));
 
 
-
+	 
 
 	auto RGBSplitItem = std::make_unique<RenderItem>();
 	RGBSplitItem->World = Mathf::Identity4x4();
