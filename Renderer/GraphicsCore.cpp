@@ -227,7 +227,7 @@ void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
 
 }
 
-
+   
 
 void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 {
