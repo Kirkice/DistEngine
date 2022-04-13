@@ -835,9 +835,6 @@ void ForwardRenderer::DrawImgui()
 //	DrawEditor
 void ForwardRenderer::DrawEditor()
 {
-	ImGuiIO& io = ImGui::GetIO();
-	ImFont* font1 = io.Fonts->AddFontDefault();
-
 	// Start the Dear ImGui frame
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -852,7 +849,7 @@ void ForwardRenderer::DrawEditor()
 
 	//Draw Light Setting
 	if (show_lightSetting_panel)
-		ForwardRenderer::DrawLightSettings();
+			ForwardRenderer::DrawLightSettings();
 	if (show_physicsSetting_panel)
 		ForwardRenderer::DrawPhysicsSettings();
 	if (show_postprocessingSetting_panel)
@@ -908,9 +905,8 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 	//Graphics Item
 	ImGui::Begin("Graphics Item");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(320, mClientHeight), ImGuiCond_Always);
-
+	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y));
+	//ImGui::SetWindowSize(ImVec2(320, mClientHeight));
 	//Camera
 	if (ImGui::CollapsingHeader("MainCamera"))
 	{
@@ -996,8 +992,8 @@ void ForwardRenderer::DrawRenderItemEditor()
 	//Render Item
 	ImGui::Begin("RenderItem Properties");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(300, mClientHeight), ImGuiCond_Always);
+	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y));
+	//ImGui::SetWindowSize(ImVec2(300, mClientHeight));
 
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -1043,9 +1039,9 @@ void ForwardRenderer::DrawConsoleEditor()
 {
 	ImGui::Begin("Console");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 180), ImGuiCond_Always);
-	if (ImGui::SmallButton("[Debug] Add 5 entries"))
+	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180));
+	//ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 180));
+	if (ImGui::SmallButton("Debug Output"))
 	{
 		static int counter = 0;
 		const char* categories[3] = { "info", "warn", "error" };
@@ -1090,7 +1086,7 @@ void ForwardRenderer::DrawOverLayProfile()
 void ForwardRenderer::DrawPhysicsSettings()
 {
 	//Render Item
-	ImGui::SetWindowSize(ImVec2(180, 500), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(180, 500));
 	ImGui::Begin("Physics Settings", &show_physicsSetting_panel);
 
 	ImGui::Text("Bounce Range");
@@ -1102,7 +1098,7 @@ void ForwardRenderer::DrawPhysicsSettings()
 void ForwardRenderer::DrawLightSettings()
 {
 	//Render Item
-	ImGui::SetWindowSize(ImVec2(180, 500), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(180, 500));
 	ImGui::Begin("Light Settings", &show_lightSetting_panel);
 
 	Material* currentMat = mMaterials["sky"].get();
@@ -1132,7 +1128,7 @@ void ForwardRenderer::DrawLightSettings()
 void ForwardRenderer::DrawPostProcessingSettings()
 {
 	//Render Item
-	ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_Always);
+	ImGui::SetWindowSize(ImVec2(400, 900));
 	ImGui::Begin("PostProcessing Settings", &show_postprocessingSetting_panel);
 
 
@@ -1447,7 +1443,7 @@ void ForwardRenderer::SetDefaultStyle()
 	colors[ImGuiCol_WindowBg] = ImVec4(0.180f, 0.180f, 0.180f, 1.000f);
 	colors[ImGuiCol_ChildBg] = ImVec4(0.280f, 0.280f, 0.280f, 0.000f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.313f, 0.313f, 0.313f, 1.000f);
-	colors[ImGuiCol_Border] = ImVec4(0.266f, 0.266f, 0.266f, 1.000f);
+	colors[ImGuiCol_Border] = ImVec4(0.066f, 0.066f, 0.066f, 1.000f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.000f, 0.000f, 0.000f, 0.000f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.160f, 0.160f, 0.160f, 1.000f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.200f, 0.200f, 0.200f, 1.000f);
