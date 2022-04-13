@@ -110,6 +110,8 @@ namespace Renderer
 
 		void DrawPostProcessingSettings();
 
+		void SetDefaultStyle();
+
 		void CopyColorPass();
 	};
 }

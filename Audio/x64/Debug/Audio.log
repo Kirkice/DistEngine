@@ -1,1 +1,64 @@
-﻿
+﻿  AudioEngine.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  DynamicSoundEffectInstance.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  SoundCommon.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  SoundEffect.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  SoundEffectInstance.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  SoundStreamInstance.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Vector2.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(76,47): warning C4305: “参数”: 从“double”到“float”截断
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(146,20): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(146,13): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(148,24): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\Mathf\Mathf.h(150,19): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(573,1): warning C4297: “DirectX::SoundStreamInstance::Impl::PlayBuffers”: 假定函数不引发异常，但确实发生了
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(573,1): message : 在函数上指定了 __declspec(nothrow)、throw()、noexcept(true)或 noexcept
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(650,1): warning C4297: “DirectX::SoundStreamInstance::Impl::PlayBuffers”: 假定函数不引发异常，但确实发生了
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(650,1): message : 在函数上指定了 __declspec(nothrow)、throw()、noexcept(true)或 noexcept
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(655,1): warning C4297: “DirectX::SoundStreamInstance::Impl::PlayBuffers”: 假定函数不引发异常，但确实发生了
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(655,1): message : 在函数上指定了 __declspec(nothrow)、throw()、noexcept(true)或 noexcept
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(704,1): warning C4297: “DirectX::SoundStreamInstance::Impl::PlayBuffers”: 假定函数不引发异常，但确实发生了
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(704,1): message : 在函数上指定了 __declspec(nothrow)、throw()、noexcept(true)或 noexcept
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(709,1): warning C4297: “DirectX::SoundStreamInstance::Impl::PlayBuffers”: 假定函数不引发异常，但确实发生了
+E:\Engine\DistEngine\Audio\SoundStreamInstance.cpp(709,1): message : 在函数上指定了 __declspec(nothrow)、throw()、noexcept(true)或 noexcept
+  WaveBank.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  WaveBankReader.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  WAVFileReader.cpp
+E:\Engine\DistEngine\DistEngine\Core\d3dUtil.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(85,21): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(95,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+E:\Engine\DistEngine\DistEngine\Core\MathHelper.h(105,28): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  正在生成代码...
+  Audio.vcxproj -> E:\Engine\DistEngine\DistEngine\x64\Debug\Audio.lib
