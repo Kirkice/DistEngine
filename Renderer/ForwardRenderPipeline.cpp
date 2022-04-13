@@ -828,6 +828,12 @@ void ForwardRenderer::DrawGizmo()
 //	Draw Imgui
 void ForwardRenderer::DrawImgui()
 {
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+
 	DrawEditor();
 }
 
@@ -903,10 +909,11 @@ void ForwardRenderer::DrawMenuEditor()
 void ForwardRenderer::DrawGraphicsItemEditor()
 {
 	//Graphics Item
-	ImGui::Begin("Graphics Item");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y));
-	//ImGui::SetWindowSize(ImVec2(320, mClientHeight));
+	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y));
+	ImGui::SetNextWindowSize(ImVec2(320, mClientHeight));
+
+	ImGui::Begin("Graphics Item");
 	//Camera
 	if (ImGui::CollapsingHeader("MainCamera"))
 	{
@@ -989,11 +996,12 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 //	DrawRenderItemEditor
 void ForwardRenderer::DrawRenderItemEditor()
 {
+	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y));
+	ImGui::SetNextWindowSize(ImVec2(300, mClientHeight));
+
 	//Render Item
 	ImGui::Begin("RenderItem Properties");
-	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y));
-	//ImGui::SetWindowSize(ImVec2(300, mClientHeight));
 
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -1037,10 +1045,11 @@ void ForwardRenderer::DrawRenderItemEditor()
 //	DrawConsoleEditor
 void ForwardRenderer::DrawConsoleEditor()
 {
-	ImGui::Begin("Console");
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	//ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180));
-	//ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 180));
+	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180));
+	ImGui::SetNextWindowSize(ImVec2(mClientWidth - 620, 180));
+
+	ImGui::Begin("Console");
 	if (ImGui::SmallButton("Debug Output"))
 	{
 		static int counter = 0;
