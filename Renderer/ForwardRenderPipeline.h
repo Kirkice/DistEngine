@@ -25,6 +25,7 @@ namespace Renderer
 		bool show_lightSetting_panel = false;
 		bool show_physicsSetting_panel = false;
 		bool show_postprocessingSetting_panel = false;
+		bool show_app_dockspace = true;
 
 		virtual void Draw(const GameTimer& gt)override;
 
@@ -113,5 +114,9 @@ namespace Renderer
 		void SetDefaultStyle();
 
 		void CopyColorPass();
+
+		void SetDockSpace(bool* p_open);
+
+		void DrawSceneGameView();
 	};
 }

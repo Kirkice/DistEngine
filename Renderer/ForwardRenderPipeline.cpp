@@ -833,7 +833,6 @@ void ForwardRenderer::DrawImgui()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-
 	DrawEditor();
 }
 
@@ -849,9 +848,9 @@ void ForwardRenderer::DrawEditor()
 
 	//Draw Stylize
 	SetDefaultStyle();
+	SetDockSpace(&show_app_dockspace);
 
-	//Draw Menu
-	ForwardRenderer::DrawMenuEditor();
+	DrawSceneGameView();
 
 	//Draw Light Setting
 	if (show_lightSetting_panel)
@@ -873,10 +872,48 @@ void ForwardRenderer::DrawEditor()
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
 }
 
+//	设置DockSpace
+void ForwardRenderer::SetDockSpace(bool* p_open)
+{
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace Demo", p_open, window_flags);
+	ImGui::PopStyleVar();
+
+	ImGui::PopStyleVar(2);
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	}
+
+	//Draw Menu
+	ForwardRenderer::DrawMenuEditor();
+
+	ImGui::End();
+}
+
 //	DrawMenuEditor
 void ForwardRenderer::DrawMenuEditor()
 {
-	if (ImGui::BeginMainMenuBar())
+	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -901,7 +938,7 @@ void ForwardRenderer::DrawMenuEditor()
 			ImGui::MenuItem("PostProcessing Settings", NULL, &show_postprocessingSetting_panel);
 			ImGui::EndMenu();
 		}
-		ImGui::EndMainMenuBar();
+		ImGui::EndMenuBar();
 	}
 }
 
@@ -910,86 +947,87 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 {
 	//Graphics Item
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y));
-	ImGui::SetNextWindowSize(ImVec2(320, mClientHeight));
+	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(320, mClientHeight), ImGuiCond_FirstUseEver);
 
-	ImGui::Begin("Graphics Item");
-	//Camera
-	if (ImGui::CollapsingHeader("MainCamera"))
+	//Main Camera
+	ImGui::Begin("Main Camera");
+	mCamera.UpdateCamPosArray();
+	mCamera.UpdateCamRotArray();
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader("Transform"))
 	{
-		mCamera.UpdateCamPosArray();
-		mCamera.UpdateCamRotArray();
-		ImGui::Separator();
 		ImGui::Text("Transform");
 		ImGui::InputFloat3("Position", mCamera.mPosArray);
 		ImGui::InputFloat3("Rotation", mCamera.mRotArray);
 		ImGui::InputFloat3("Scale", mCamera.mScaleArray);
-		ImGui::Separator();
-		ImGui::Text("Camera");
+	}
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader("Camera"))
+	{
 		ImGui::SliderFloat("FOV(Y)", &mCamFov, 0, 179);
 		ImGui::InputFloat("Near Clip", &mCamClipN);
 		ImGui::InputFloat("Far Clip", &mCamClipF);
 		ImGui::Checkbox("RenderSkyBox", &renderSkyBox);
 		ImGui::ColorEdit3("SolidColor", SolidColor);
 		ImGui::InputFloat2("ViewPort", RectXY);
-		ImGui::InputFloat2("Rect", RectWH); 
-		ImGui::Separator();
+		ImGui::InputFloat2("Rect", RectWH);
 	}
+	ImGui::End();
 
-	//Light
-	if (ImGui::CollapsingHeader("Light"))
+
+
+	ImGui::Begin("Light Settings");
+	if (ImGui::CollapsingHeader("Direction Light"))
 	{
-		if (ImGui::TreeNode("Direction Light"))
-		{
-			//Direction Light
-			ImGui::Text("Transform");
-			float dirLightPos[3] = { mDirectionLightsPos.x,mDirectionLightsPos.y,mDirectionLightsPos.z };
-			ImGui::InputFloat3("(D)Position", dirLightPos);
-			mDirectionLightsPos = XMFLOAT3(dirLightPos[0], dirLightPos[1], dirLightPos[2]);
-			ImGui::InputFloat3("(D)Rotation", mDirectionLightsAngle);
-			ImGui::InputFloat3("(D)Scale", mDirectionLightsScale);
-			ImGui::Text("Settings");
-			ImGui::Checkbox("Direction Enable", &mDirectionLightsActive);
-			ImGui::ColorEdit3("(D)Color", mDirectionLightsColor);
-			ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f, 10);
-			ImGui::Checkbox("Cast Shadow", &mDirectionLightsCastShadow);
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Point Light"))
-		{
-			//Point Light
-			ImGui::Text("Transform");
-			float pointLightPos[3] = { mPointLightsPos.x,mPointLightsPos.y,mPointLightsPos.z };
-			ImGui::InputFloat3("(P)Position", pointLightPos);
-			mPointLightsPos = XMFLOAT3(pointLightPos[0], pointLightPos[1], pointLightPos[2]);
-			ImGui::InputFloat3("(P)Rotation", mPointLightsRot);
-			ImGui::InputFloat3("(P)Scale", mPointLightsScale);
-			ImGui::Text("Settings");
-			ImGui::Checkbox("Point Enable", &mPointLightsActive);
-			ImGui::ColorEdit3("(P)Color", mPointLightsColor);
-			ImGui::SliderFloat("(P)Intensity", &mPointLightsStrength, 0, 10);
-			ImGui::InputFloat("(P)Range", &mPointLightsRange);
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Spot Light"))
-		{
-			//Spot Light
-			ImGui::Text("Transform");
-			float spotLightPos[3] = { mSpotLightsPos.x,mSpotLightsPos.y,mSpotLightsPos.z };
-			ImGui::InputFloat3("(S)Position", spotLightPos);
-			ImGui::InputFloat3("(S)Rotation", mSpotLightsAngle);
-			ImGui::InputFloat3("(S)Scale", mSpotLightsScale);
-			ImGui::Text("Settings");
-			ImGui::Checkbox("Spot Enable", &mSpotLightsActive);
-			ImGui::ColorEdit3("(S)Color", mSpotLightsColor);
-			ImGui::DragFloat("(S)Intensity", &mSpotLightsStrength, 0.003f, 0, 3);
-			ImGui::InputFloat("(S)Range", &mSpotLightsRange);
-			ImGui::InputFloat("Cut Angle", &mSpotLightsCutAngle);
-			ImGui::TreePop();
-		}
+		//Direction Light
+		ImGui::Text("Transform");
+		float dirLightPos[3] = { mDirectionLightsPos.x,mDirectionLightsPos.y,mDirectionLightsPos.z };
+		ImGui::InputFloat3("(D)Position", dirLightPos);
+		mDirectionLightsPos = XMFLOAT3(dirLightPos[0], dirLightPos[1], dirLightPos[2]);
+		ImGui::InputFloat3("(D)Rotation", mDirectionLightsAngle);
+		ImGui::InputFloat3("(D)Scale", mDirectionLightsScale);
+		ImGui::Text("Settings");
+		ImGui::Checkbox("Direction Enable", &mDirectionLightsActive);
+		ImGui::ColorEdit3("(D)Color", mDirectionLightsColor);
+		ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f, 10);
+		ImGui::Checkbox("Cast Shadow", &mDirectionLightsCastShadow);
 	}
+	ImGui::Separator();
+	
+	if (ImGui::CollapsingHeader("Point Light"))
+	{
+		//Point Light
+		ImGui::Text("Transform");
+		float pointLightPos[3] = { mPointLightsPos.x,mPointLightsPos.y,mPointLightsPos.z };
+		ImGui::InputFloat3("(P)Position", pointLightPos);
+		mPointLightsPos = XMFLOAT3(pointLightPos[0], pointLightPos[1], pointLightPos[2]);
+		ImGui::InputFloat3("(P)Rotation", mPointLightsRot);
+		ImGui::InputFloat3("(P)Scale", mPointLightsScale);
+		ImGui::Text("Settings");
+		ImGui::Checkbox("Point Enable", &mPointLightsActive);
+		ImGui::ColorEdit3("(P)Color", mPointLightsColor);
+		ImGui::SliderFloat("(P)Intensity", &mPointLightsStrength, 0, 10);
+		ImGui::InputFloat("(P)Range", &mPointLightsRange);
+	}
+	ImGui::Separator();
+
+	if (ImGui::CollapsingHeader("Spot Light"))
+	{
+		//Spot Light
+		ImGui::Text("Transform");
+		float spotLightPos[3] = { mSpotLightsPos.x,mSpotLightsPos.y,mSpotLightsPos.z };
+		ImGui::InputFloat3("(S)Position", spotLightPos);
+		ImGui::InputFloat3("(S)Rotation", mSpotLightsAngle);
+		ImGui::InputFloat3("(S)Scale", mSpotLightsScale);
+		ImGui::Text("Settings");
+		ImGui::Checkbox("Spot Enable", &mSpotLightsActive);
+		ImGui::ColorEdit3("(S)Color", mSpotLightsColor);
+		ImGui::DragFloat("(S)Intensity", &mSpotLightsStrength, 0.003f, 0, 3);
+		ImGui::InputFloat("(S)Range", &mSpotLightsRange);
+		ImGui::InputFloat("Cut Angle", &mSpotLightsCutAngle);
+	}
+
 	ImGui::End();
 }
 
@@ -997,11 +1035,11 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 void ForwardRenderer::DrawRenderItemEditor()
 {
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y));
-	ImGui::SetNextWindowSize(ImVec2(300, mClientHeight));
+	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + mClientWidth - 300, main_viewport->WorkPos.y), ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(300, mClientHeight), ImGuiCond_FirstUseEver);
 
 	//Render Item
-	ImGui::Begin("RenderItem Properties");
+	ImGui::Begin("Inspector");
 
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -1046,22 +1084,13 @@ void ForwardRenderer::DrawRenderItemEditor()
 void ForwardRenderer::DrawConsoleEditor()
 {
 	const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 180));
-	ImGui::SetNextWindowSize(ImVec2(mClientWidth - 620, 180));
+	ImGui::SetWindowPos(ImVec2(main_viewport->WorkPos.x + 320, main_viewport->WorkPos.y + mClientHeight - 320), ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 320), ImGuiCond_FirstUseEver);
+
+	ImGui::Begin("Project");
+	ImGui::End();
 
 	ImGui::Begin("Console");
-	if (ImGui::SmallButton("Debug Output"))
-	{
-		static int counter = 0;
-		const char* categories[3] = { "info", "warn", "error" };
-		const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
-		for (int n = 0; n < 5; n++)
-		{
-			const char* category = categories[counter % IM_ARRAYSIZE(categories)];
-			const char* word = words[counter % IM_ARRAYSIZE(words)];
-			counter++;
-		}
-	}
 	ImGui::End();
 }
 
@@ -1100,6 +1129,15 @@ void ForwardRenderer::DrawPhysicsSettings()
 
 	ImGui::Text("Bounce Range");
 	ImGui::Checkbox("Bounce Show", &ShowBounding);
+	ImGui::End();
+}
+
+void ForwardRenderer::DrawSceneGameView()
+{
+	ImGui::Begin("Scene");
+	ImGui::End();
+
+	ImGui::Begin("Game");
 	ImGui::End();
 }
 
@@ -1447,48 +1485,80 @@ void ForwardRenderer::SetDefaultStyle()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImVec4* colors = style->Colors;
 
-	colors[ImGuiCol_Text] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
+	//	文字颜色
+	colors[ImGuiCol_Text] = ImVec4(0.89f, 0.89f, 0.89f, 1.000f);
+	//	文字不显示
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.500f, 0.500f, 0.500f, 1.000f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.180f, 0.180f, 0.180f, 1.000f);
-	colors[ImGuiCol_ChildBg] = ImVec4(0.280f, 0.280f, 0.280f, 0.000f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.313f, 0.313f, 0.313f, 1.000f);
-	colors[ImGuiCol_Border] = ImVec4(0.066f, 0.066f, 0.066f, 1.000f);
+	//	窗口背景色
+	colors[ImGuiCol_WindowBg] = ImVec4(0.1843f, 0.1882f, 0.2078f, 1.000f);
+	//	子窗口颜色
+	colors[ImGuiCol_ChildBg] = ImVec4(0.2431f, 0.2470f, 0.2745f, 0.000f);
+	//	弹出框
+	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.8f);
+	//	边界线
+	colors[ImGuiCol_Border] = ImVec4(0.1098f, 0.1137f, 0.1254f, 1.000f);
+	//	子结点分界框
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.000f, 0.000f, 0.000f, 0.000f);
-	colors[ImGuiCol_FrameBg] = ImVec4(0.160f, 0.160f, 0.160f, 1.000f);
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.200f, 0.200f, 0.200f, 1.000f);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.280f, 0.280f, 0.280f, 1.000f);
-	colors[ImGuiCol_TitleBg] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.148f, 0.148f, 0.148f, 1.000f);
-	colors[ImGuiCol_MenuBarBg] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.160f, 0.160f, 0.160f, 1.000f);
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.277f, 0.277f, 0.277f, 1.000f);
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.300f, 0.300f, 0.300f, 1.000f);
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+
+	colors[ImGuiCol_FrameBg] = ImVec4(0.3137f, 0.3137f, 0.3456f, 1.000f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.4431f, 0.4549f, 0.5019f, 1.000f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.4431f, 0.4549f, 0.5019f, 1.000f);
+
+	//	标题背景
+	colors[ImGuiCol_TitleBg] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
+
+	//	主菜单
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.1607f, 0.1568f, 0.1803f, 1.000f);
+
+	//	滚动条
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.1843f, 0.1882f, 0.2078f, 1.000f);
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.2470f, 0.2470f, 0.2745f, 1.000f);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.2470f, 0.2470f, 0.2745f, 1.000f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
+
+	//	复选框
 	colors[ImGuiCol_CheckMark] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
-	colors[ImGuiCol_SliderGrab] = ImVec4(0.391f, 0.391f, 0.391f, 1.000f);
-	colors[ImGuiCol_SliderGrabActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+
+	//	滑动条
+	colors[ImGuiCol_SliderGrab] = ImVec4(0.3137f, 0.3137f, 0.3456f, 1.000f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
+
+	//	按钮
 	colors[ImGuiCol_Button] = ImVec4(1.000f, 1.000f, 1.000f, 0.000f);
 	colors[ImGuiCol_ButtonHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
 	colors[ImGuiCol_ButtonActive] = ImVec4(1.000f, 1.000f, 1.000f, 0.391f);
-	colors[ImGuiCol_Header] = ImVec4(0.313f, 0.313f, 0.313f, 1.000f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
+
+	//	标题
+	colors[ImGuiCol_Header] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
+
+	//	分割线
 	colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.391f, 0.391f, 0.391f, 1.000f);
-	colors[ImGuiCol_SeparatorActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.0862f, 0.0901f, 0.1058f, 1.000f);
+	colors[ImGuiCol_SeparatorActive] = ImVec4(0.0862f, 0.0901f, 0.1058f, 1.000f);
+
+	//	调整大小
 	colors[ImGuiCol_ResizeGrip] = ImVec4(1.000f, 1.000f, 1.000f, 0.250f);
 	colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.670f);
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+
+	//	Tap
 	colors[ImGuiCol_Tab] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
 	colors[ImGuiCol_TabHovered] = ImVec4(0.352f, 0.352f, 0.352f, 1.000f);
 	colors[ImGuiCol_TabActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
 	colors[ImGuiCol_TabUnfocused] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
 	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
+
+	//	
 	colors[ImGuiCol_PlotLines] = ImVec4(0.469f, 0.469f, 0.469f, 1.000f);
 	colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 	colors[ImGuiCol_PlotHistogram] = ImVec4(0.586f, 0.586f, 0.586f, 1.000f);
 	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
+
+	//	文字选中
 	colors[ImGuiCol_TextSelectedBg] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
 	colors[ImGuiCol_DragDropTarget] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 	colors[ImGuiCol_NavHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
@@ -1498,12 +1568,12 @@ void ForwardRenderer::SetDefaultStyle()
 
 	style->ChildRounding = 4.0f;
 	style->FrameBorderSize = 1.0f;
-	style->FrameRounding = 2.0f;
+	style->FrameRounding = 3.0f;
 	style->GrabMinSize = 7.0f;
 	style->PopupRounding = 2.0f;
 	style->ScrollbarRounding = 12.0f;
 	style->ScrollbarSize = 13.0f;
 	style->TabBorderSize = 1.0f;
 	style->TabRounding = 0.0f;
-	style->WindowRounding = 4.0f;
+	style->WindowRounding = 0.0f;
 }
