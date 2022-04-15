@@ -118,5 +118,9 @@ namespace Renderer
 		void SetDockSpace(bool* p_open);
 
 		void DrawSceneGameView();
+
+		void DrawRenderSetting();
+
+		void DrawProfileView();
 	};
 }

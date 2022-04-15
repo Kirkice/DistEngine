@@ -849,9 +849,9 @@ void ForwardRenderer::DrawEditor()
 	//Draw Stylize
 	SetDefaultStyle();
 	SetDockSpace(&show_app_dockspace);
-
 	DrawSceneGameView();
-
+	DrawRenderSetting();
+	DrawProfileView();
 	//Draw Light Setting
 	if (show_lightSetting_panel)
 			ForwardRenderer::DrawLightSettings();
@@ -965,7 +965,7 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		ImGui::SliderFloat("FOV(Y)", &mCamFov, 0, 179);
+		ImGui::SliderFloat("FOV", &mCamFov, 0, 179);
 		ImGui::InputFloat("Near Clip", &mCamClipN);
 		ImGui::InputFloat("Far Clip", &mCamClipF);
 		ImGui::Checkbox("RenderSkyBox", &renderSkyBox);
@@ -987,8 +987,8 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 		mDirectionLightsPos = XMFLOAT3(dirLightPos[0], dirLightPos[1], dirLightPos[2]);
 		ImGui::InputFloat3("(D)Rotation", mDirectionLightsAngle);
 		ImGui::InputFloat3("(D)Scale", mDirectionLightsScale);
-		ImGui::Text("Settings");
-		ImGui::Checkbox("Direction Enable", &mDirectionLightsActive);
+		ImGui::Text("Porperties");
+		ImGui::Checkbox("(D)Enable", &mDirectionLightsActive);
 		ImGui::ColorEdit3("(D)Color", mDirectionLightsColor);
 		ImGui::SliderFloat("(D)Intensity", &mDirectionLightsStrength, 0.0f, 10);
 		ImGui::Checkbox("Cast Shadow", &mDirectionLightsCastShadow);
@@ -1004,8 +1004,8 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 		mPointLightsPos = XMFLOAT3(pointLightPos[0], pointLightPos[1], pointLightPos[2]);
 		ImGui::InputFloat3("(P)Rotation", mPointLightsRot);
 		ImGui::InputFloat3("(P)Scale", mPointLightsScale);
-		ImGui::Text("Settings");
-		ImGui::Checkbox("Point Enable", &mPointLightsActive);
+		ImGui::Text("Porperties");
+		ImGui::Checkbox("(P)Enable", &mPointLightsActive);
 		ImGui::ColorEdit3("(P)Color", mPointLightsColor);
 		ImGui::SliderFloat("(P)Intensity", &mPointLightsStrength, 0, 10);
 		ImGui::InputFloat("(P)Range", &mPointLightsRange);
@@ -1020,8 +1020,8 @@ void ForwardRenderer::DrawGraphicsItemEditor()
 		ImGui::InputFloat3("(S)Position", spotLightPos);
 		ImGui::InputFloat3("(S)Rotation", mSpotLightsAngle);
 		ImGui::InputFloat3("(S)Scale", mSpotLightsScale);
-		ImGui::Text("Settings");
-		ImGui::Checkbox("Spot Enable", &mSpotLightsActive);
+		ImGui::Text("Porperties");
+		ImGui::Checkbox("(S)Enable", &mSpotLightsActive);
 		ImGui::ColorEdit3("(S)Color", mSpotLightsColor);
 		ImGui::DragFloat("(S)Intensity", &mSpotLightsStrength, 0.003f, 0, 3);
 		ImGui::InputFloat("(S)Range", &mSpotLightsRange);
@@ -1088,6 +1088,33 @@ void ForwardRenderer::DrawConsoleEditor()
 	ImGui::SetWindowSize(ImVec2(mClientWidth - 620, 320), ImGuiCond_FirstUseEver);
 
 	ImGui::Begin("Project");
+
+
+	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
+	{
+		if (ImGui::BeginTabItem("Image"))
+		{
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Mesh"))
+		{
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Scene"))
+		{
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Material"))
+		{
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
 	ImGui::End();
 
 	ImGui::Begin("Console");
@@ -1135,9 +1162,19 @@ void ForwardRenderer::DrawPhysicsSettings()
 void ForwardRenderer::DrawSceneGameView()
 {
 	ImGui::Begin("Scene");
+	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	render_target_descriptor.Offset(UINT(15), mCbvSrvUavDescriptorSize);
+
+	ImGui::Image((ImTextureID)render_target_descriptor.ptr, ImVec2((float)300, (float)300));
 	ImGui::End();
 
 	ImGui::Begin("Game");
+	ImGui::End();
+}
+
+void ForwardRenderer::DrawRenderSetting()
+{
+	ImGui::Begin("Render Setting");
 	ImGui::End();
 }
 
@@ -1546,9 +1583,9 @@ void ForwardRenderer::SetDefaultStyle()
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 
 	//	Tap
-	colors[ImGuiCol_Tab] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
-	colors[ImGuiCol_TabHovered] = ImVec4(0.352f, 0.352f, 0.352f, 1.000f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
+	colors[ImGuiCol_Tab] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
+	colors[ImGuiCol_TabHovered] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.1098f, 0.1137f, 0.1254f, 1.000f);
 	colors[ImGuiCol_TabUnfocused] = ImVec4(0.098f, 0.098f, 0.098f, 1.000f);
 	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.195f, 0.195f, 0.195f, 1.000f);
 
@@ -1576,4 +1613,46 @@ void ForwardRenderer::SetDefaultStyle()
 	style->TabBorderSize = 1.0f;
 	style->TabRounding = 0.0f;
 	style->WindowRounding = 0.0f;
+}
+
+void ForwardRenderer::DrawProfileView()
+{
+	ImGui::Begin("Profile");
+	static bool animate = true;
+
+	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
+	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
+	//ImGui::PlotHistogram("Histogram", arr, IM_ARRAYSIZE(arr), 0, NULL, 0.0f, 1.0f, ImVec2(0, 80.0f));
+
+	static float values[90] = {};
+	static int values_offset = 0;
+	static double refresh_time = 0.0;
+	if (!animate || refresh_time == 0.0)
+		refresh_time = ImGui::GetTime();
+	while (refresh_time < ImGui::GetTime()) // Create data at fixed 60 Hz rate for the demo
+	{
+		static float phase = 0.0f;
+		values[values_offset] = cosf(phase);
+		values_offset = (values_offset + 1) % IM_ARRAYSIZE(values);
+		phase += 0.10f * values_offset;
+		refresh_time += 1.0f / 60.0f;
+	}
+
+	// Plots can display overlay texts
+	// (in this example, we will display an average value)
+	{
+		float average = 0.0f;
+		for (int n = 0; n < IM_ARRAYSIZE(values); n++)
+			average += values[n];
+		average /= (float)IM_ARRAYSIZE(values);
+		char overlay[32];
+		sprintf(overlay, "avg %f", average);
+		ImGui::PlotLines(" ", values, IM_ARRAYSIZE(values), values_offset, overlay, -1.0f, 1.0f, ImVec2(300, 300));
+	}
+	ImGui::End();
+}
+
+void DrawSceneHelper()
+{
+	//ImGui::ImageButton()
 }
