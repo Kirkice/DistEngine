@@ -7,6 +7,9 @@
     <Filter Include="Mathf">
       <UniqueIdentifier>{e3c35327-67c1-43eb-81b3-6c5b2496d44f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{3398a224-f7e5-4f3b-9d88-2cefdf85e0bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -18,13 +21,7 @@
     <ClCompile Include="d3dUtil.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
@@ -69,6 +66,12 @@
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -83,16 +86,7 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="UploadBuffer.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="MathHelper.h">
@@ -122,15 +116,6 @@
     <ClInclude Include="FileUtility.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="zconf.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Mathf\BoundingSphere.h">
       <Filter>Mathf</Filter>
     </ClInclude>
@@ -152,14 +137,32 @@
     <ClInclude Include="PlatformHelpers.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DDS.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="LoaderHelpers.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="zconf.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DDS.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
