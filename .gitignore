@@ -1,4 +1,4 @@
-/ModelLoader/fbxsdk/lib/x64/debug/libfbxsdk-md.lib
-/ModelLoader/fbxsdk/lib/x64/debug/libfbxsdk-mt.lib
-/ModelLoader/fbxsdk/lib/x64/debug/libfbxsdk.lib
+/ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk-md.lib
+/ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk-mt.lib
+/ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk.lib
 /DistEngine/x64/*

@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Mathf">
+      <UniqueIdentifier>{e3c35327-67c1-43eb-81b3-6c5b2496d44f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{4769b5a5-0bdc-47ca-b957-56419dbb46a1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Mathf\BoundingAABB.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\BoundingOBB.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\BoundingSphere.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Vector2.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Vector3.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Vector4.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Quaternion.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Random.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Matrix.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LogSystem.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\Color.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathf\MathHelper.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mathf\Mathf.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingAABB.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingOBB.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\BoundingSphere.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Vector2.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Vector3.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Vector4.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Quaternion.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Random.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Matrix.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Singleton.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LogSystem.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Macro.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\Color.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\MathHelper.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
