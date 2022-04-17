@@ -7,7 +7,7 @@
 
 namespace Dist
 {
-	class Camera : Transform
+	class Camera : public Transform
 	{
 
 	public:

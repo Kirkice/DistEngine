@@ -13,9 +13,9 @@ namespace Dist
 	public:
 		//	GOµÄÃû×Ö
 		std::string											name;
-
+		bool												Enable;
 	public:
-		GameObject() {};
+		GameObject() { Enable = true; };
 		~GameObject();
 
 		virtual void tick(float delta_time);
