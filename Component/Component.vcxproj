@@ -143,6 +143,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Transform.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Transform.cpp" />
