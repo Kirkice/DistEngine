@@ -15,7 +15,7 @@
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
-using namespace DirectX::PackedVector;
+using namespace DirectX::PackedVector; 
 using namespace Renderer;
 
 namespace Renderer
