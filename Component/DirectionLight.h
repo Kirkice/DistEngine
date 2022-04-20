@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "../Core/Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
+#include "../Core/Mathf/BoundingSphere.h"
 
 namespace Dist
 {
@@ -17,13 +18,15 @@ namespace Dist
 		float intensity;
 		//	ÑÕÉ«
 		Color color;
+		//	ÇòÐÎÅö×²Æ÷
+		BoundingSphere bound;
 
 	public:
 		DirectionLight();
 		DirectionLight(Color color);
 		DirectionLight(bool isMain);
 		DirectionLight(bool isMain, Color color);
-		DirectionLight(bool isMain, Color color, float intensity);
+		DirectionLight(bool isMain, Color color, float inten);
 		~DirectionLight();
 	};
 }

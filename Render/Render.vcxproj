@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f650468e-d336-439d-b307-6da9177feb0e}</ProjectGuid>
-    <RootNamespace>Renderer</RootNamespace>
+    <ProjectGuid>{f91bfbf4-173e-43d6-b617-1052e8514b26}</ProjectGuid>
+    <RootNamespace>Render</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -113,13 +113,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>
-      </SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../DistEngine/Core/;../DistEngine/Core/Mathf;../ModelLoader/;../ImGUI;../ModelLoader/fbxsdk/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,24 +139,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ForwardRenderPipeline.cpp" />
-    <ClCompile Include="FrameResource.cpp" />
-    <ClCompile Include="GraphicsCore.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="RendererCore.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
-    <ClCompile Include="Ssao.cpp" />
+    <ClCompile Include="DX12Manager\d3dApp.cpp" />
+    <ClCompile Include="DX12Manager\d3dUtil.cpp" />
+    <ClCompile Include="DX12Manager\FileUtility.cpp" />
+    <ClCompile Include="DX12Manager\GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ForwardRenderPipeline.h" />
-    <ClInclude Include="FrameResource.h" />
-    <ClInclude Include="GraphicsCore.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="RendererCore.h" />
-    <ClInclude Include="ShadowMap.h" />
-    <ClInclude Include="Ssao.h" />
+    <ClInclude Include="DX12Manager\d3dApp.h" />
+    <ClInclude Include="DX12Manager\d3dUtil.h" />
+    <ClInclude Include="DX12Manager\d3dx12.h" />
+    <ClInclude Include="DX12Manager\DirectXHelpers.h" />
+    <ClInclude Include="DX12Manager\FileUtility.h" />
+    <ClInclude Include="DX12Manager\GameTimer.h" />
+    <ClInclude Include="DX12Manager\GraphicsMemory.h" />
+    <ClInclude Include="DX12Manager\PlatformHelpers.h" />
+    <ClInclude Include="DX12Manager\ResourceUploadBatch.h" />
+    <ClInclude Include="DX12Manager\UploadBuffer.h" />
+    <ClInclude Include="DX12Manager\Utility.h" />
+    <ClInclude Include="DX12Manager\zconf.h" />
+    <ClInclude Include="DX12Manager\zlib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

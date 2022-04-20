@@ -3,6 +3,7 @@
 #define POINT_LIGHT_H
 
 #include "Transform.h"
+#include "../Core/Mathf/BoundingSphere.h"
 #include "../Core/Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 
@@ -17,12 +18,14 @@ namespace Dist
 		float intensity;
 		//	ÑÕÉ«
 		Color color;
+		//	ÇòÐÎÅö×²Æ÷
+		BoundingSphere bound;
 
 	public:
 		PointLight();
 		PointLight(Color color);
-		PointLight(Color color,float intensity);
-		PointLight(Color color, float intensity, float rangeFactory);
+		PointLight(Color color,float intens);
+		PointLight(Color color, float intens, float range);
 		~PointLight();
 	};
 }

@@ -17,4 +17,35 @@
       <UniqueIdentifier>{5886ce8a-5f0c-4baf-8a2b-63a8a09cd927}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>MeshLoader\FbxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>MeshLoader\ObjLoader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DDS.h">
+      <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>MeshLoader\FbxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>MeshLoader\ObjLoader</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@ namespace Dist
 		isMainLight = false;
 		color = Color(1.0f,1.0f,1.0f,1.0f);
 		intensity = 1;
+		bound = BoundingSphere(position.x, position.y, position.z,1);
 	}
 
 	DirectionLight::DirectionLight(bool isMain)
@@ -16,6 +17,7 @@ namespace Dist
 		isMainLight = isMain;
 		color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		intensity = 1;
+		bound = BoundingSphere(position.x, position.y, position.z, 1);
 	}
 
 	DirectionLight::DirectionLight(Color color)
@@ -23,6 +25,7 @@ namespace Dist
 		isMainLight = false;
 		color = color;
 		intensity = 1;
+		bound = BoundingSphere(position.x, position.y, position.z, 1);
 	}
 
 	DirectionLight::DirectionLight(bool isMain,Color color)
@@ -30,13 +33,15 @@ namespace Dist
 		isMainLight = isMain;
 		color = color;
 		intensity = 1;
+		bound = BoundingSphere(position.x, position.y, position.z, 1);
 	}
 
-	DirectionLight::DirectionLight(bool isMain, Color color, float intensity)
+	DirectionLight::DirectionLight(bool isMain, Color color, float inten)
 	{
 		isMainLight = isMain;
 		color = color;
-		intensity = intensity;
+		intensity = inten;
+		bound = BoundingSphere(position.x, position.y, position.z, 1);
 	}
 
 	DirectionLight::~DirectionLight()

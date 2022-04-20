@@ -20,8 +20,6 @@
 #include <sstream>
 #include <cassert>
 #include "d3dx12.h"
-#include "DDSTextureLoader.h"
-#include "MathHelper.h"
 
 const int gNumFrameResources = 3;
 
@@ -97,54 +95,54 @@ public:
     int LineNumber = -1;
 };
 
-struct MaterialConstants
-{
-	DirectX::XMFLOAT4 DiffuseAlbedo = { 1.0f, 1.0f, 1.0f, 1.0f };
-	DirectX::XMFLOAT3 FresnelR0 = { 0.01f, 0.01f, 0.01f };
-	float Roughness = 0.25f;
-    float Metallic = 0.85f;
-	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
-
-    //���
-	float OutLineWidth = 0.5f;
-    DirectX::XMFLOAT4 OutLineColor = { 0, 0, 0, 1 };
-
-    //��Ӱ
-    float shadowRange_1st = 0.5f;
-    float shadowFeather_1st = 0.5f;
-    DirectX::XMFLOAT4 shadowColor_1st = { 1,1,1,1 };
-	float shadowRange_2nd = 0.5f;
-	float shadowFeather_2nd = 0.5f;
-    DirectX::XMFLOAT4 shadowColor_2nd = { 1,1,1,1 };
-
-    //��Ե��
-    float rimRange = 0.5f;
-    float rimFeather = 0.5f;
-    DirectX::XMFLOAT4 rimColor = { 1,1,1,1 };
-
-    //�Է���
-    float emissStrength = 0.5f;
-    DirectX::XMFLOAT4 emissColor = { 1,1,1,1 };
-
-    //�߹�
-    float specularRange = 0.5;
-    float specularFeather = 0.5f;
-    DirectX::XMFLOAT4 specularColor = { 1,1,1,1 };
-
-	//������Ӱ��ɫ
-	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
-};
-
-struct Texture
-{
-	// Unique material name for lookup.
-	std::string Name;
-
-	std::wstring Filename;
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
-};
+//struct MaterialConstants
+//{
+//	DirectX::XMFLOAT4 DiffuseAlbedo = { 1.0f, 1.0f, 1.0f, 1.0f };
+//	DirectX::XMFLOAT3 FresnelR0 = { 0.01f, 0.01f, 0.01f };
+//	float Roughness = 0.25f;
+//    float Metallic = 0.85f;
+//	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
+//
+//    //���
+//	float OutLineWidth = 0.5f;
+//    DirectX::XMFLOAT4 OutLineColor = { 0, 0, 0, 1 };
+//
+//    //��Ӱ
+//    float shadowRange_1st = 0.5f;
+//    float shadowFeather_1st = 0.5f;
+//    DirectX::XMFLOAT4 shadowColor_1st = { 1,1,1,1 };
+//	float shadowRange_2nd = 0.5f;
+//	float shadowFeather_2nd = 0.5f;
+//    DirectX::XMFLOAT4 shadowColor_2nd = { 1,1,1,1 };
+//
+//    //��Ե��
+//    float rimRange = 0.5f;
+//    float rimFeather = 0.5f;
+//    DirectX::XMFLOAT4 rimColor = { 1,1,1,1 };
+//
+//    //�Է���
+//    float emissStrength = 0.5f;
+//    DirectX::XMFLOAT4 emissColor = { 1,1,1,1 };
+//
+//    //�߹�
+//    float specularRange = 0.5;
+//    float specularFeather = 0.5f;
+//    DirectX::XMFLOAT4 specularColor = { 1,1,1,1 };
+//
+//	//������Ӱ��ɫ
+//	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
+//};
+//
+//struct Texture
+//{
+//	// Unique material name for lookup.
+//	std::string Name;
+//
+//	std::wstring Filename;
+//
+//	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+//	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
+//};
 
 
 #ifndef ThrowIfFailed

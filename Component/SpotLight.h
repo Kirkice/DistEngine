@@ -3,6 +3,7 @@
 #define SPOT_LIGHT_H
 
 #include "Transform.h"
+#include "../Core/Mathf/BoundingSphere.h"
 #include "../Core/Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 
@@ -20,6 +21,8 @@ namespace Dist
 		float spotAngle;
 		//	ÑÕÉ«
 		Color color;
+		//	ÇòÐÎÅö×²Æ÷
+		BoundingSphere bound;
 
 	public:
 		SpotLight();

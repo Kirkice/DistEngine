@@ -117,7 +117,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\Tinyobjloader;E:\Engine\DistEngine\ThirdParty\Fbxsdk\include;E:\Engine\DistEngine\ThirdParty\Stb;E:\Engine\DistEngine\Render\DX12Manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,10 +141,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DDS.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
