@@ -9,6 +9,8 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshFliter.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="MeshRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -19,5 +21,7 @@
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshFliter.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="MeshRender.cpp" />
   </ItemGroup>
 </Project>
