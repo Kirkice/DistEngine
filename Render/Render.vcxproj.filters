@@ -1,61 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="DX12Manager\d3dApp.cpp">
-      <Filter>DX12Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12Manager\d3dUtil.cpp">
-      <Filter>DX12Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12Manager\FileUtility.cpp">
-      <Filter>DX12Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12Manager\GameTimer.cpp">
-      <Filter>DX12Manager</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DX12Manager\zlib.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\d3dApp.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\d3dUtil.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\d3dx12.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\DirectXHelpers.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\FileUtility.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\GameTimer.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\PlatformHelpers.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\UploadBuffer.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\Utility.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\zconf.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\GraphicsMemory.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Manager\ResourceUploadBatch.h">
-      <Filter>DX12Manager</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="DX12Manager">
       <UniqueIdentifier>{0c1156a9-3474-42b3-94c6-919dac06dca2}</UniqueIdentifier>
     </Filter>
