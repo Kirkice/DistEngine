@@ -97,6 +97,12 @@ namespace Dist
 		return clr;
 	}
 
+	//	GetCOT
+	inline float GetCOT(float delta) 
+	{
+		cos(delta) / sin(delta);
+	}
+
 	//��������
 	inline float ComputeLuminance(Vector3 color)
 	{

@@ -96,44 +96,51 @@ namespace Dist
 	//	≈–∂œ ”◊∂ÃÂ”ÎAABB≈ˆ◊≤
 	bool PhysicsUtils::CheckFrustumAABBIntersect(Camera camera, BoundingBox bound)
 	{
-		bool ret = true;
-		Vector3 vmin, vmax;
+		float4x4 mFrustum = float4x4();
+		mFrustum._11 = GetCOT(camera.GetFovY() / 2 * 0.01745329f) / camera.GetAspect();
+		mFrustum._12 = 0;
+		mFrustum._13 = 0;
+		mFrustum._14 = 0;
 
-		for (int i = 0; i < 6; ++i)
+		mFrustum._21 = 0;
+		mFrustum._22 = GetCOT(camera.GetFovY() / 2 * 0.01745329f) / camera.GetAspect();
+		mFrustum._23 = 0;
+		mFrustum._24 = 0;
+
+		mFrustum._31 = 0;
+		mFrustum._32 = 0;
+		mFrustum._33 = ((camera.GetFarZ() + camera.GetNearZ()) / (camera.GetFarZ() - camera.GetNearZ()) * -1);
+		mFrustum._34 = -1;
+
+		mFrustum._41 = 0;
+		mFrustum._42 = 0;
+		mFrustum._43 = ((2 * camera.GetNearZ() * camera.GetFarZ()) / (camera.GetFarZ() - camera.GetNearZ())) * -1;
+		mFrustum._44 = 0;
+
+		//	Min
+		Vector4 cameraSpacePos = float4x4(camera.GetView()) * Vector4(bound.aabb.GetMin(),1);
+
+		Vector4 res = mFrustum * Vector4(cameraSpacePos.x, cameraSpacePos.y, cameraSpacePos.z, 1);
+
+		if ((res.x <= res.w) && (res.x >= res.w * -1) &&
+			(res.y <= res.w) && (res.y >= res.w * -1) &&
+			(res.z <= res.w) && (res.z >= res.w * -1))
 		{
-			Vector4 plane = Vector4(mPlane[i]);
-			// X axis 
-			if (plane.x > 0) {
-				vmin.x = bound.aabb.GetMin().x;
-				vmax.x = bound.aabb.GetMax().x;
-			}
-			else {
-				vmin.x = bound.aabb.GetMax().x;
-				vmax.x = bound.aabb.GetMin().x;
-			}
-			// Y axis 
-			if (plane.y > 0) {
-				vmin.y = bound.aabb.GetMin().y;
-				vmax.y = bound.aabb.GetMax().y;
-			}
-			else {
-				vmin.y = bound.aabb.GetMax().y;
-				vmax.y = bound.aabb.GetMin().y;
-			}
-			// Z axis 
-			if (plane.z > 0) {
-				vmin.z = bound.aabb.GetMin().z;
-				vmax.z = bound.aabb.GetMax().z;
-			}
-			else {
-				vmin.z = bound.aabb.GetMax().z;
-				vmax.z = bound.aabb.GetMin().z;
-			}
-			if (Vector3::Dot(plane.To3D(), vmin) + plane.w > 0)
-				return false;
-			if (Vector3::Dot(plane.To3D(), vmax) + plane.w >= 0)
-				ret = true;
+			return true;
 		}
-		return ret;
+
+		cameraSpacePos = float4x4(camera.GetView()) * Vector4(bound.aabb.GetMax(), 1);
+
+		//	Max
+		res = mFrustum * Vector4(cameraSpacePos.x, cameraSpacePos.y, cameraSpacePos.z, 1);
+
+		if ((res.x <= res.w) && (res.x >= res.w * -1) &&
+			(res.y <= res.w) && (res.y >= res.w * -1) &&
+			(res.z <= res.w) && (res.z >= res.w * -1))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }
