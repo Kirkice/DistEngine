@@ -8,6 +8,7 @@ namespace Dist
 {
 	class BoundingBox
 	{
+	public:
 		//	AABBАќЮЇКа
 		BoundingAABB aabb;
 		//	ЧђАќЮЇКа
