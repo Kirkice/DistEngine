@@ -10,6 +10,9 @@
     <Filter Include="InputSystem">
       <UniqueIdentifier>{61f53c10-894c-4d0c-a39a-42839dc11d6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{cddc883d-0407-4736-b68f-2e0cd4cf0ee0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineSystem\EngineApp.h">
@@ -24,6 +27,18 @@
     <ClInclude Include="EngineSystem\d3dx12.h">
       <Filter>EngineSystem</Filter>
     </ClInclude>
+    <ClInclude Include="InputSystem\InputSystem.h">
+      <Filter>InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem\PhysicsSystem.h">
+      <Filter>PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem\PhysicsUtils.h">
+      <Filter>PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\DefaultScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineSystem\EngineApp.cpp">
@@ -34,6 +49,18 @@
     </ClCompile>
     <ClCompile Include="EngineSystem\SystemUtils.cpp">
       <Filter>EngineSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\InputSystem.cpp">
+      <Filter>InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem\PhysicsSystem.cpp">
+      <Filter>PhysicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem\PhysicsUtils.cpp">
+      <Filter>PhysicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\DefaultScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

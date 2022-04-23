@@ -144,11 +144,19 @@
     <ClInclude Include="EngineSystem\EngineApp.h" />
     <ClInclude Include="EngineSystem\GameTimer.h" />
     <ClInclude Include="EngineSystem\SystemUtils.h" />
+    <ClInclude Include="InputSystem\InputSystem.h" />
+    <ClInclude Include="PhysicsSystem\PhysicsSystem.h" />
+    <ClInclude Include="PhysicsSystem\PhysicsUtils.h" />
+    <ClInclude Include="Scene\DefaultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineSystem\EngineApp.cpp" />
     <ClCompile Include="EngineSystem\GameTimer.cpp" />
     <ClCompile Include="EngineSystem\SystemUtils.cpp" />
+    <ClCompile Include="InputSystem\InputSystem.cpp" />
+    <ClCompile Include="PhysicsSystem\PhysicsSystem.cpp" />
+    <ClCompile Include="PhysicsSystem\PhysicsUtils.cpp" />
+    <ClCompile Include="Scene\DefaultScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
