@@ -16,11 +16,24 @@ namespace Dist
 	class DefaultScene
 	{
 		//	加载的图片类型
-		enum TexturesType
+		enum class TexturesType
 		{
 			RenderItem,
 			Gizom,
 		};
+
+		//Render Layer
+		enum class RenderLayer : int
+		{
+			Opaque = 0,
+			Transparent = 1,
+			Sky = 2,
+			Gizmo = 3,
+			Bounding = 4,
+			PostProcessing = 5,
+			Count
+		};
+
 
 	public:
 		//----------------
@@ -63,13 +76,15 @@ namespace Dist
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 		// 渲染项
 		std::vector<std::unique_ptr<PBRRenderItem>> mAllRitems;
+		// 渲染PSO层级
+		std::vector<PBRRenderItem*> mRitemLayer[(int)RenderLayer::Count];
 
 	public:
 		DefaultScene();
 		~DefaultScene();
 
 		//	初始化场景
-		void InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device);
+		void InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
 		//	更新场景
 		void UpdateScene();
@@ -90,9 +105,6 @@ namespace Dist
 
 		//	构建着色器
 		void BuildShadersAndInputLayout();
-
-		//	构建渲染项
-		void BuildRenderItems();
 
 		//	更新灯光
 		void UpdateLights(const GameTimer& gt);
@@ -119,7 +131,7 @@ namespace Dist
 		void LoadMeshRender();
 
 		//	加载渲染项目
-		void LoadRenderItem();
+		void LoadRenderItem(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
 		//	加载图片路径
 		std::vector<ComPtr<ID3D12Resource>>& LoadTextures(DefaultScene::TexturesType type);

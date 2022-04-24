@@ -1,6 +1,7 @@
 #include "DefaultScene.h"
 #include "../../Component/DirectionLight.h"
 #include "../EngineSystem/SystemUtils.h"
+#include "../PhysicsSystem/PhysicsUtils.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -23,7 +24,7 @@ namespace Dist
 	}
 
 	//	初始化场景
-	void DefaultScene::InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device)
+	void DefaultScene::InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
 		//	构建场景灯光
 		BuildLights();
@@ -39,6 +40,13 @@ namespace Dist
 
 		//	构建着色器
 		BuildShadersAndInputLayout();
+
+		//	加载MeshRender
+		LoadMeshRender();
+
+		//	加载渲染项目 以及剔除
+		LoadRenderItem(device, mCommandList);
+		
 	}
 
 	//	更新场景
@@ -248,12 +256,6 @@ namespace Dist
 		};
 	}
 
-	//	构建渲染项
-	void DefaultScene::BuildRenderItems()
-	{
-
-	}
-
 	//	更新灯光
 	void DefaultScene::UpdateLights(const GameTimer& gt)
 	{
@@ -297,11 +299,11 @@ namespace Dist
 	}
 
 	//	加载图片
-	std::vector<ComPtr<ID3D12Resource>>& DefaultScene::LoadTextures(DefaultScene::TexturesType type)
+	std::vector<ComPtr<ID3D12Resource>>& DefaultScene::LoadTextures(TexturesType type)
 	{
 		std::vector<ComPtr<ID3D12Resource>> tex2DList;
 
-		if (type == RenderItem)
+		if (type == TexturesType::RenderItem)
 		{
 			tex2DList =
 			{
@@ -426,8 +428,28 @@ namespace Dist
 	}
 
 	//	加载渲染项
-	void DefaultScene::LoadRenderItem()
+	void DefaultScene::LoadRenderItem(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
+		for (size_t i = 0; i < mMeshRender.size(); i++)
+		{
+			//	视锥剔除
+			if (!PhysicsUtils::CheckFrustumAABBIntersect(mCamera, mMeshRender[i]->bound))
+				return;
 
+			auto Ritem = std::make_unique<PBRRenderItem>();
+
+			XMStoreFloat4x4(&Ritem->World, mMeshRender[i]->GetWorldMatrix().ToSIMD());
+			Ritem->TexTransform = Dist::Identity4x4();
+			Ritem->ObjCBIndex = 0;
+			Ritem->Mat = &mMeshRender[i]->material;
+			Ritem->Geo = SystemUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name,mMeshRender[i]->mesh.data,md3dDevice,mCommandList);
+			Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+			Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+			Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+			
+			mRitemLayer[(int)RenderLayer::Opaque].push_back(Ritem.get());
+			mAllRitems.push_back(std::move(Ritem));
+		}
 	}
 }

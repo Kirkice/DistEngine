@@ -13,10 +13,10 @@ namespace Dist
 
 	public:
 		//	ÊÓ×¶		Çò		¼ì²â
-		bool CheckFrustumSphereIntersect(Camera camera, BoundingBox bound, Transform transform);
+		static bool CheckFrustumSphereIntersect(Camera camera, BoundingBox bound, Transform transform);
 
 		//	ÊÓ×¶		AABB	¼ì²â
-		bool CheckFrustumAABBIntersect(Camera camera, BoundingBox bound);
+		static bool CheckFrustumAABBIntersect(Camera camera, BoundingBox bound);
 
 		//	³õÊ¼»¯ FrustumPlane
 		void InitFrustumPlane(float ScreenDepth, CXMMATRIX ProjMatrix, CXMMATRIX ViewMatrix);
