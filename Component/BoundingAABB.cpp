@@ -13,8 +13,16 @@ namespace Dist
 		m_min = min;
 		m_max = max;
 	}
+	 
+	BoundingAABB::BoundingAABB(MeshData data)
+	{
+		for (size_t i = 0; i < data.Vertices.size(); i++)
+		{
+			AddPoint(data.Vertices[i].Position);
+		}
+	}
 
-	void BoundingAABB::AddPoint(Vector3 point)
+	void BoundingAABB::AddPoint(Vector3 point) 
 	{
 		m_min = Vector3::Min(point, m_min);
 		m_max = Vector3::Max(point, m_max);

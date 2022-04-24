@@ -15,7 +15,7 @@ namespace Dist
 	class ObjLoader
 	{
 	public:
-		MeshData LoadObj(const char* filename, const char* basepath = nullptr, bool triangulate = true);
+		MeshData LoadObj(const char* filename);
 	};
 }
 

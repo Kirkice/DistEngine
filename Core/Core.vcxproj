@@ -144,9 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\LogSystem.cpp" />
-    <ClCompile Include="Mathf\BoundingAABB.cpp" />
-    <ClCompile Include="Mathf\BoundingOBB.cpp" />
-    <ClCompile Include="Mathf\BoundingSphere.cpp" />
     <ClCompile Include="Mathf\Color.cpp" />
     <ClCompile Include="Mathf\MathHelper.cpp" />
     <ClCompile Include="Mathf\Matrix.cpp" />
@@ -160,9 +157,6 @@
     <ClInclude Include="Core\LogSystem.h" />
     <ClInclude Include="Core\Macro.h" />
     <ClInclude Include="Core\Singleton.h" />
-    <ClInclude Include="Mathf\BoundingAABB.h" />
-    <ClInclude Include="Mathf\BoundingOBB.h" />
-    <ClInclude Include="Mathf\BoundingSphere.h" />
     <ClInclude Include="Mathf\Color.h" />
     <ClInclude Include="Mathf\Mathf.h" />
     <ClInclude Include="Mathf\MathHelper.h" />

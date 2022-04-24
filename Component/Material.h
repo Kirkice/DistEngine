@@ -10,6 +10,12 @@ namespace Dist
 	class PBRMaterial
 	{
 	public:
+		//	名字
+		std::string Name;
+		//	Index 值
+		int MatCBIndex = -1;
+		//	变化值
+		int NumFramesDirty = 3;
 		//	固有色
 		Color DiffuseColor;
 		//	粗糙度

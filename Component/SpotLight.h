@@ -3,7 +3,7 @@
 #define SPOT_LIGHT_H
 
 #include "Transform.h"
-#include "../Core/Mathf/BoundingSphere.h"
+#include "BoundingSphere.h"
 #include "../Core/Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 

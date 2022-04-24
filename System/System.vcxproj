@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -113,10 +113,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\ThirdParty\ImGUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>
+      </SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\ThirdParty\ImGUI;E:\Engine\DistEngine\Component;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,7 +146,9 @@
     <ClInclude Include="EngineSystem\d3dx12.h" />
     <ClInclude Include="EngineSystem\EngineApp.h" />
     <ClInclude Include="EngineSystem\GameTimer.h" />
+    <ClInclude Include="EngineSystem\MeshGeometry.h" />
     <ClInclude Include="EngineSystem\SystemUtils.h" />
+    <ClInclude Include="EngineSystem\Texture.h" />
     <ClInclude Include="InputSystem\InputSystem.h" />
     <ClInclude Include="PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="PhysicsSystem\PhysicsUtils.h" />

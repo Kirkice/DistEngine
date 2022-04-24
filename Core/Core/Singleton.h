@@ -17,7 +17,7 @@ namespace Dist
 			return instance;
 		}
 		virtual ~Singleton() noexcept {}
-		Singleton(const Singleton&) = delete;
-		Singleton& operator=(const Singleton&) = delete;
+		//Singleton(const Singleton&) = delete;
+		//Singleton& operator=(const Singleton&) = delete;
 	};
 }

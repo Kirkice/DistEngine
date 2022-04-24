@@ -1,5 +1,6 @@
 #pragma once
 #include "Mathf.h"
+#include "MeshFliter.h"
 
 namespace Dist
 {
@@ -8,6 +9,7 @@ namespace Dist
 		Vector3 m_min, m_max;
 		BoundingAABB();
 		BoundingAABB(Vector3 min, Vector3 max);
+		BoundingAABB(MeshData data);
 
 		void AddPoint(Vector3 point);
 		void AddBoundingAABB(const BoundingAABB& aabb);

@@ -5,7 +5,7 @@
 #include "Transform.h"
 #include "../Core/Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
-#include "../Core/Mathf/BoundingSphere.h"
+#include "BoundingSphere.h"
 
 namespace Dist
 {

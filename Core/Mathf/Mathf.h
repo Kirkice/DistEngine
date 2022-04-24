@@ -100,7 +100,7 @@ namespace Dist
 	//	GetCOT
 	inline float GetCOT(float delta) 
 	{
-		cos(delta) / sin(delta);
+		return (delta) / sin(delta);
 	}
 
 	//��������

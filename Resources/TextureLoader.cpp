@@ -1,11 +1,19 @@
 #include <d3d12.h>
-#include <d3dx12.h>
-#include <DDSTextureLoader.h>
+#include "../System/EngineSystem/d3dx12.h"
+#include "DDSTextureLoader.h"
 #include "TextureLoader.h"
+#ifdef __cpp_lib_filesystem
+#include <filesystem>
+namespace fs = std::filesystem;
+#elif __cpp_lib_experimental_filesystem
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING 1;
 #include <experimental/filesystem>
-
+namespace fs = std::experimental::filesystem;
+#else
+#error "no filesystem support ='("
+#endif
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <stb_image.h> 
 
 namespace filesystem = std::experimental::filesystem; 
 

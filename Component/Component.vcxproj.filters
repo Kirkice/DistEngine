@@ -11,6 +11,9 @@
     <ClInclude Include="MeshFliter.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="MeshRender.h" />
+    <ClInclude Include="BoundingAABB.h" />
+    <ClInclude Include="BoundingOBB.h" />
+    <ClInclude Include="BoundingSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -23,5 +26,8 @@
     <ClCompile Include="MeshFliter.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="MeshRender.cpp" />
+    <ClCompile Include="BoundingAABB.cpp" />
+    <ClCompile Include="BoundingOBB.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
   </ItemGroup>
 </Project>

@@ -118,6 +118,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\Tinyobjloader;E:\Engine\DistEngine\ThirdParty\Fbxsdk\include;E:\Engine\DistEngine\ThirdParty\Stb;E:\Engine\DistEngine\Render\DX12Manager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

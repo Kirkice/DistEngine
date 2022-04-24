@@ -8,6 +8,9 @@ namespace Dist
 	/// </summary>
 	PBRMaterial::PBRMaterial()
 	{
+		Name = "New Material";
+		MatCBIndex = -1;
+		NumFramesDirty = 3;
 		DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		Smoothness = 0.5f;
 		Metallic = 0.0f;

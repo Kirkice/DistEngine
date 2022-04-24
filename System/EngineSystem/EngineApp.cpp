@@ -16,7 +16,7 @@ namespace Dist
 	#define IDI_ICON1                       101
 
 
-	struct Vertex
+	struct AppVertex
 	{
 		XMFLOAT3 position;
 		XMFLOAT4 color;
@@ -550,7 +550,7 @@ namespace Dist
 		// calling Reset.
 		mCommandList->Close();
 
-		Vertex trianglesVertices[] =
+		AppVertex trianglesVertices[] =
 		{
 			{ { 0.0f, 0.25f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
 				{ { 0.25f, -0.25f , 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
@@ -574,7 +574,7 @@ namespace Dist
 		m_vertexBuffer->Unmap(0, nullptr);
 
 		m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-		m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+		m_vertexBufferView.StrideInBytes = sizeof(AppVertex);
 		m_vertexBufferView.SizeInBytes = vertexBufferSize;
 	}
 

@@ -2,7 +2,7 @@
 
 namespace Dist
 {
-	MeshData ObjLoader::LoadObj(const char* filename, const char* basepath = nullptr, bool triangulate = true)
+	MeshData ObjLoader::LoadObj(const char* filename)
 	{
 		//	∑µªÿµƒMeshData
 		MeshData data;
@@ -13,7 +13,7 @@ namespace Dist
 		std::vector<tinyobj::material_t> materials;
 		std::string warn;
 		std::string err;
-		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename, basepath, triangulate);
+		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename);
 
 		//	º”‘ÿ ß∞‹
 		//if (!warn.empty()) {

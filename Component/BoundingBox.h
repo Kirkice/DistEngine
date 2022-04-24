@@ -1,8 +1,8 @@
 #pragma once
 #include "../../Core/Mathf/Mathf.h"
-#include "../../Core/Mathf/BoundingOBB.h"
-#include "../../Core/Mathf/BoundingAABB.h"
-#include "../../Core/Mathf/BoundingSphere.h"
+#include "BoundingOBB.h"
+#include "BoundingAABB.h"
+#include "BoundingSphere.h"
 
 namespace Dist
 {

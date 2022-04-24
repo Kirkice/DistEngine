@@ -10,7 +10,7 @@
     <Filter Include="InputSystem">
       <UniqueIdentifier>{61f53c10-894c-4d0c-a39a-42839dc11d6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
+    <Filter Include="SceneManager">
       <UniqueIdentifier>{cddc883d-0407-4736-b68f-2e0cd4cf0ee0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -37,7 +37,13 @@
       <Filter>PhysicsSystem</Filter>
     </ClInclude>
     <ClInclude Include="Scene\DefaultScene.h">
-      <Filter>Scene</Filter>
+      <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSystem\Texture.h">
+      <Filter>EngineSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSystem\MeshGeometry.h">
+      <Filter>EngineSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +66,7 @@
       <Filter>PhysicsSystem</Filter>
     </ClCompile>
     <ClCompile Include="Scene\DefaultScene.cpp">
-      <Filter>Scene</Filter>
+      <Filter>SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
