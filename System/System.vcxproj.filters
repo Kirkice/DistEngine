@@ -45,6 +45,15 @@
     <ClInclude Include="EngineSystem\MeshGeometry.h">
       <Filter>EngineSystem</Filter>
     </ClInclude>
+    <ClInclude Include="EngineSystem\SystemApp.h">
+      <Filter>EngineSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSystem\DefaultFrameResource.h">
+      <Filter>EngineSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSystem\UploadBuffer.h">
+      <Filter>EngineSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineSystem\EngineApp.cpp">
@@ -67,6 +76,12 @@
     </ClCompile>
     <ClCompile Include="Scene\DefaultScene.cpp">
       <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSystem\SystemApp.cpp">
+      <Filter>EngineSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSystem\DefaultFrameResource.cpp">
+      <Filter>EngineSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
