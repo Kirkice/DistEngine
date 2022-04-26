@@ -17,8 +17,12 @@ namespace Dist
 
 		//	欧拉角
 		Vector3 eulerangle;
+
 		//	尺寸
 		Vector3 scale;
+
+		Vector3 forward;
+
 
 		//	世界坐标 数组
 		float positionArray[3] = { 0.0f, 0.0f, 0.0f };
@@ -46,6 +50,8 @@ namespace Dist
 
 		//	数组值传递给向量
 		void SetArray2Vector();
+
+		void Tick();
 
 		//	获取四元数
 		Quaternion GetQuaternion();

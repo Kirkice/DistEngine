@@ -2,6 +2,7 @@
 #include "../../Component/DirectionLight.h"
 #include "../EngineSystem/SystemUtils.h"
 #include "../PhysicsSystem/PhysicsUtils.h"
+#include "../../Component/Material.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -16,6 +17,9 @@ namespace Dist
 		mMainLight = DirectionLight();
 		mCamera = Camera();
 		mSkyBoxTexPath = L"";
+
+		mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
 	}
 
 	DefaultScene::~DefaultScene()
@@ -50,9 +54,16 @@ namespace Dist
 	}
 
 	//	更新场景
-	void DefaultScene::UpdateScene()
+	void DefaultScene::UpdateScene(const GameTimer& gt)
 	{
+		//	更新灯光
+		UpdateLights(gt);
 
+		//	更新物体CB
+		UpdateObjectCBs(gt);
+
+		//	更新材质
+		UpdateMaterials(gt);
 	}
 
 	//	构建灯光
@@ -208,7 +219,6 @@ namespace Dist
 			IID_PPV_ARGS(mSsaoRootSignature.GetAddressOf())));
 	}
 
-
 	//	构建着色器
 	void DefaultScene::BuildShadersAndInputLayout()
 	{
@@ -259,43 +269,61 @@ namespace Dist
 	//	更新灯光
 	void DefaultScene::UpdateLights(const GameTimer& gt)
 	{
-
+		//	更新朝向
+		mMainLight.Tick();
 	}
 
 	//	更新物体CB
 	void DefaultScene::UpdateObjectCBs(const GameTimer& gt)
 	{
+		auto currObjectCB = mCurrFrameResource->ObjectCB.get();
+		for (auto& e : mAllRitems)
+		{
+			XMFLOAT4X4* eWorldMatrix = &e->World;
 
+			XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
+			XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+			XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
+			ObjectConstants objConstants;
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+			XMStoreFloat4x4(&objConstants.InvWorld, XMMatrixTranspose(InvWorld));
+			XMStoreFloat4x4(&objConstants.TexTransform, XMMatrixTranspose(texTransform));
+			objConstants.MaterialIndex = e->Mat->MatCBIndex;
+
+			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+		}
 	}
 
 	//	更新材质
 	void DefaultScene::UpdateMaterials(const GameTimer& gt)
 	{
+		auto currMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
+		for (auto& e : mMeshRender)
+		{
+			PBRMaterial* mat = &e->material;
+			if (mat->NumFramesDirty > 0)
+			{
+				XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
-	}
+				PBRMaterialData matData;
+				matData.DiffuseColor = mat->DiffuseColor;
+				matData.Smoothness = mat->Smoothness;
+				matData.Metallic = mat->Metallic;
+				matData.Occlusion = mat->Occlusion;
+				matData.EmissionColor = mat->EmissionColor;
+				matData.EmissionStrength = mat->EmissionStrength;
+				XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
+				matData.DiffuseMapIndex = mat->DiffuseMapIndex;
+				matData.NormalMapIndex = mat->NormalMapIndex;
+				matData.MsoMapIndex = mat->MsoMapIndex;
+				matData.EmissionMapIndex = mat->EmissionMapIndex;
+				matData.LUTMapIndex = mat->LUTMapIndex;
+				currMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
-	//	更新阴影位置
-	void DefaultScene::UpdateShadowTransform(const GameTimer& gt)
-	{
-
-	}
-
-	//	更新Pass CB
-	void DefaultScene::UpdateMainPassCB(const GameTimer& gt)
-	{
-
-	}
-
-	//	更新Shadow CB
-	void DefaultScene::UpdateShadowPassCB(const GameTimer& gt)
-	{
-
-	}
-
-	//	更新SSAO CB
-	void DefaultScene::UpdateSsaoCB(const GameTimer& gt)
-	{
-
+				// Next FrameResource need to be updated too.
+				mat->NumFramesDirty--;
+			}
+		}
 	}
 
 	//	加载图片

@@ -5,6 +5,7 @@
 #include "../EngineSystem/GameTimer.h"
 #include "../EngineSystem/SystemUtils.h"
 #include "../EngineSystem/Texture.h"
+#include "../EngineSystem/DefaultFrameResource.h"
 #include <string.h>
 
 using Microsoft::WRL::ComPtr;
@@ -74,11 +75,17 @@ namespace Dist
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr; 
 		//	场景SRV
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-		// 渲染项
+		//	渲染项
 		std::vector<std::unique_ptr<PBRRenderItem>> mAllRitems;
-		// 渲染PSO层级
+		//	渲染PSO层级
 		std::vector<PBRRenderItem*> mRitemLayer[(int)RenderLayer::Count];
+		//	场景帧资源
+		std::vector<std::unique_ptr<DefaultFrameResource>> mFrameResources;
+		DefaultFrameResource* mCurrFrameResource = nullptr;
+		int mCurrFrameResourceIndex = 0;
 
+		//	场景包围盒
+		DirectX::BoundingSphere mSceneBounds;
 	public:
 		DefaultScene();
 		~DefaultScene();
@@ -87,7 +94,7 @@ namespace Dist
 		void InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
 		//	更新场景
-		void UpdateScene();
+		void UpdateScene(const GameTimer& gt);
 
 	private:
 
@@ -114,18 +121,6 @@ namespace Dist
 
 		//	更新材质
 		void UpdateMaterials(const GameTimer& gt);
-
-		//	更新阴影位置
-		void UpdateShadowTransform(const GameTimer& gt);
-
-		//	更新Pass CB
-		void UpdateMainPassCB(const GameTimer& gt);
-
-		//	更新Shadow CB
-		void UpdateShadowPassCB(const GameTimer& gt);
-
-		//	更新SSAO CB
-		void UpdateSsaoCB(const GameTimer& gt);
 
 		//	加载MeshRender
 		void LoadMeshRender();

@@ -9,6 +9,7 @@ namespace Dist
 		position = Vector3::zero;
 		eulerangle = Vector3::zero;
 		scale = Vector3::one;
+		forward = Vector3(0, 0, -1);
 		quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 	}
 
@@ -18,6 +19,7 @@ namespace Dist
 		position = pos;
 		eulerangle = Vector3::zero;
 		scale = Vector3::one;
+		forward = Vector3(0, 0, -1);
 		quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 	}
 
@@ -27,6 +29,8 @@ namespace Dist
 		position = pos;
 		eulerangle = rot;
 		scale = Vector3::one;
+		forward = Vector3(0, 0, -1);
+		Tick();
 		quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 	}
 
@@ -36,6 +40,8 @@ namespace Dist
 		position = pos;
 		eulerangle = rot;
 		scale = scale;
+		forward = Vector3(0, 0, -1);
+		Tick();
 		quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 	}
 
@@ -70,6 +76,18 @@ namespace Dist
 		scale = { scaleArray[0] ,scaleArray[1], scaleArray[2] };
 	}
 
+	//	更新
+	void Transform::Tick()
+	{
+		//	设置方向
+		XMMATRIX rot_dir = XMMatrixRotationX((eulerangle.x / 180) * Dist::Pi) * XMMatrixRotationY((eulerangle.y / 180) * Dist::Pi) * XMMatrixRotationZ((eulerangle.z / 180) * Dist::Pi);
+
+		XMVECTOR dir = forward.ToSIMD();
+		forward = Vector3(XMVector3TransformNormal(dir, rot_dir));
+
+		SetArray2Vector();
+	}
+
 	//	获取四元数
 	Quaternion Transform::GetQuaternion()
 	{
@@ -102,4 +120,6 @@ namespace Dist
 
 		return Mat;
 	}
+
+
 }
