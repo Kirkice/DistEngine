@@ -1,14 +1,14 @@
 #pragma once
-#include "../EngineSystem/EngineApp.h"
+#include "../EngineSystem/SystemApp.h"
 #include "../../Component/Camera.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-namespace Dist
+namespace Dist 
 {
-	class InputSystem : public EngineApp
+	class InputSystem : public SystemApp
 	{
 
 	public:

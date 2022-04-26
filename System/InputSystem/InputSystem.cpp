@@ -6,7 +6,7 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	InputSystem::InputSystem(HINSTANCE hInstance) : EngineApp(hInstance)
+	InputSystem::InputSystem(HINSTANCE hInstance) : SystemApp(hInstance)
 	{
 	}
 
