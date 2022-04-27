@@ -17,14 +17,14 @@ namespace Dist
 	class DefaultScene
 	{
 		//	加载的图片类型
-		enum class TexturesType
+	public: enum class TexturesType
 		{
 			RenderItem,
 			Gizom,
 		};
 
 		//Render Layer
-		enum class RenderLayer : int
+	public: enum class RenderLayer : int
 		{
 			Opaque = 0,
 			Transparent = 1,
@@ -96,6 +96,9 @@ namespace Dist
 		//	更新场景
 		void UpdateScene(const GameTimer& gt);
 
+		//	加载图片路径
+		std::vector<ComPtr<ID3D12Resource>>& LoadTextures(DefaultScene::TexturesType type);
+
 	private:
 
 		//	构建场景灯光
@@ -127,8 +130,5 @@ namespace Dist
 
 		//	加载渲染项目
 		void LoadRenderItem(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
-
-		//	加载图片路径
-		std::vector<ComPtr<ID3D12Resource>>& LoadTextures(DefaultScene::TexturesType type);
 	};
 }
