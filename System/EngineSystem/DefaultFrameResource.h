@@ -44,13 +44,48 @@ namespace Dist
 		SpotLight SpotLights[4];
 	};
 
+	struct SsaoConstants
+	{
+		DirectX::XMFLOAT4X4 Proj;
+		DirectX::XMFLOAT4X4 InvProj;
+		DirectX::XMFLOAT4X4 ProjTex;
+		DirectX::XMFLOAT4 OffsetVectors[14];
+
+		// For SsaoBlur.hlsl
+		DirectX::XMFLOAT4 BlurWeights[3];
+
+		XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
+
+		// Coordinates given in view space.
+		float OcclusionRadius = 0.5f;
+		float OcclusionFadeStart = 0.2f;
+		float OcclusionFadeEnd = 2.0f;
+		float SurfaceEpsilon = 0.05f;
+	};
+
+	struct SkyBoxMaterialData
+	{
+		Color SkyBoxTint = Color(1.0f, 1.0f, 1.0f, 1.0f);
+		float SkyBoxExposure = 1;
+		float SkyBoxRotation = 0;
+		float ACES = 1;
+	};
+
+	struct Vertex
+	{
+		XMFLOAT3 Pos;
+		XMFLOAT3 Normal;
+		XMFLOAT2 TexC;
+		XMFLOAT3 TangentU;
+	};
+
 	struct PBRMaterialData
 	{
-		Color DiffuseColor = (1, 1, 1, 1);
+		Color DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		float Smoothness = 0.5f;
 		float Metallic = 0.5f;
 		float Occlusion = 0.0f;
-		Color EmissionColor = (0, 0, 0, 1);
+		Color EmissionColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		float EmissionStrength = 0.0f;
 
 		// Used in texture mapping.
@@ -76,7 +111,9 @@ namespace Dist
 
 		std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
 		std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
+		std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 		std::unique_ptr<UploadBuffer<PBRMaterialData>> PBRMaterialBuffer = nullptr;
+		std::unique_ptr<UploadBuffer<SkyBoxMaterialData>> SkyBoxMaterialBuffer = nullptr;
 		UINT64 Fence = 0;
 	};
 }

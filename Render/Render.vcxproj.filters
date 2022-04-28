@@ -1,8 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="DX12Manager">
+    <Filter Include="RenderUtils">
       <UniqueIdentifier>{0c1156a9-3474-42b3-94c6-919dac06dca2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderPass">
+      <UniqueIdentifier>{1b46a4e9-fca1-4365-81f5-74b618ded4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Postprocess">
+      <UniqueIdentifier>{ba0da607-7637-40e8-96b0-380922de817a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderScene">
+      <UniqueIdentifier>{c4ba5cfe-a4cb-4220-94ff-c2d70645d77e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RenderApp.h" />
+    <ClInclude Include="RenderScene\DefaultSceneRender.h">
+      <Filter>RenderScene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderApp.cpp" />
+    <ClCompile Include="RenderScene\DefaultSceneRender.cpp">
+      <Filter>RenderScene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

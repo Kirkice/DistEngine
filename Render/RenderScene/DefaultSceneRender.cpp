@@ -30,7 +30,7 @@ namespace Dist
 	}
 
 	//	构建描述符
-	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
+	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, UINT mCbvSrvUavDescriptorSize, UINT mRtvDescriptorSize)
 	{
 		//	Create the SRV heap.
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
@@ -119,23 +119,23 @@ namespace Dist
 		nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
 		md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
 
-		//mShadowMap->BuildDescriptors(
-		//	GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
-		//	GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
-		//	GetDsv(1));
+		mShadowMapPass->BuildDescriptors(
+			GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
+			GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
+			GetDsv(1));
 
-		//mSsao->BuildDescriptors(
-		//	mDepthStencilBuffer.Get(),
-		//	GetCpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
-		//	GetGpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
-		//	GetRtv(SwapChainBufferCount),
-		//	mCbvSrvUavDescriptorSize,
-		//	mRtvDescriptorSize);
+		mSsao->BuildDescriptors(
+			mDepthStencilBuffer.Get(),
+			GetCpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
+			GetGpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
+			GetRtv(SwapChainBufferCount),
+			mCbvSrvUavDescriptorSize,
+			mRtvDescriptorSize);
 
-		//mRenderTarget->BuildDescriptors(
-		//	GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-		//	GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-		//	GetRtv(SwapChainBufferCount));
+		mTarget->BuildDescriptors(
+			GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+			GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
+			GetRtv(SwapChainBufferCount));
 	}
 
 	//	构建帧资源
@@ -180,5 +180,23 @@ namespace Dist
 				mSkyTextures[texMap->Name] = std::move(texMap);
 			}
 		}
+	}
+
+	//	初始化阴影贴图
+	void DefaultSceneRender::InitShadow(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice)
+	{
+		mShadowMapPass = std::make_unique<ShadowMapPass>(md3dDevice.Get(), 2048, 2048);
+	}
+
+	//	初始化SSAO
+	void DefaultSceneRender::InitSSAO(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList,int width, int height)
+	{
+		mSsao = std::make_unique<SsaoPass>(md3dDevice.Get(), mCommandList.Get(), width, height);
+	}
+
+	//	初始化渲染目标
+	void DefaultSceneRender::InitRenderTarget(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int width, int height)
+	{
+		mTarget = std::make_unique<RenderTexture>(md3dDevice.Get(), width, height);
 	}
 }
