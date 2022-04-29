@@ -388,7 +388,7 @@ namespace Dist
 		plane->name = "plane_render";
 
 		//¹¹½¨²ÄÖÊ
-		plane->material.Name = "plane_mat";
+		plane->material.Name = "plane_mat"; 
 		plane->material.MatCBIndex = 1;
 		plane->material.DiffuseMapIndex = GizmoCount + 0;
 		plane->material.NormalMapIndex = GizmoCount + 1;
