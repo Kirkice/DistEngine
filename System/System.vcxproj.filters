@@ -54,12 +54,6 @@
     <ClInclude Include="EngineSystem\UploadBuffer.h">
       <Filter>EngineSystem</Filter>
     </ClInclude>
-    <ClInclude Include="EngineSystem\PlatformHelpers.h">
-      <Filter>EngineSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineSystem\DirectXHelpers.h">
-      <Filter>EngineSystem</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EngineSystem\EngineApp.cpp">
