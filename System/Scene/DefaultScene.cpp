@@ -57,7 +57,7 @@ namespace Dist
 		UpdateObjectCBs(gt);
 
 		//	更新材质
-		UpdateMaterials(gt);
+		UpdateMaterials(gt); 
 	}
 
 	//	构建灯光

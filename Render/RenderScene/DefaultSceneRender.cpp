@@ -88,12 +88,12 @@ namespace Dist
 		CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 		//	加载场景图片	ICON图片
-		std::vector<ComPtr<ID3D12Resource>> RenderTex2DList = mDefaultScene.LoadTextureResources(DefaultScene::TexturesType::RenderItem);
-		std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList = mDefaultScene.LoadTextureResources(DefaultScene::TexturesType::Gizom);
+		std::vector<ComPtr<ID3D12Resource>> RenderTex2DList = LoadTextureResources(DefaultScene::TexturesType::RenderItem);
+		std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList = LoadTextureResources(DefaultScene::TexturesType::Gizom);
 
 		//	Environment Tex / CubeMap
-		ComPtr<ID3D12Resource> skyCubeMap = mDefaultScene.mSkyTextures["skyCubeMap"]->Resource;
-		ComPtr<ID3D12Resource> diffuseIBL = mDefaultScene.mSkyTextures["DiffuseIBL"]->Resource;
+		ComPtr<ID3D12Resource> skyCubeMap = mSkyTextures["skyCubeMap"]->Resource;
+		ComPtr<ID3D12Resource> diffuseIBL = mSkyTextures["DiffuseIBL"]->Resource;
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -187,10 +187,10 @@ namespace Dist
 	{
 		for (int i = 0; i < gNumFrameResources; ++i)
 		{
-			mDefaultScene.mFrameResources.push_back(std::make_unique<DefaultFrameResource>(md3dDevice.Get(),
-				2, (UINT)mDefaultScene.mAllRitems.size(),
+				mFrameResources.push_back(std::make_unique<DefaultFrameResource>(md3dDevice.Get(),
+				2, (UINT)mAllRitems.size(),
 				1,
-				(UINT)mDefaultScene.mMeshRender.size()));
+				(UINT)mMeshRender.size()));
 		}
 	}
 
@@ -220,17 +220,17 @@ namespace Dist
 		// PSO for opaque objects.
 		{
 			ZeroMemory(&opaquePsoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-			opaquePsoDesc.InputLayout = { mDefaultScene.mInputLayout.data(), (UINT)mDefaultScene.mInputLayout.size() };
-			opaquePsoDesc.pRootSignature = mDefaultScene.mRootSignature.Get();
+			opaquePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+			opaquePsoDesc.pRootSignature = mRootSignature.Get();
 			opaquePsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["standardVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["standardVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["standardVS"]->GetBufferPointer()),
+				mShaders["standardVS"]->GetBufferSize()
 			};
 			opaquePsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["opaquePS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["opaquePS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["opaquePS"]->GetBufferPointer()),
+				mShaders["opaquePS"]->GetBufferSize()
 			};
 			opaquePsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 			opaquePsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
@@ -249,17 +249,17 @@ namespace Dist
 		// 	PSO for editor gizmo
 		{
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC GizmoPsoDesc = opaquePsoDesc;
-			GizmoPsoDesc.InputLayout = { mDefaultScene.mInputLayout.data(), (UINT)mDefaultScene.mInputLayout.size() };
-			GizmoPsoDesc.pRootSignature = mDefaultScene.mRootSignature.Get();
+			GizmoPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+			GizmoPsoDesc.pRootSignature = mRootSignature.Get();
 			GizmoPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["gizmoVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["gizmoVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["gizmoVS"]->GetBufferPointer()),
+				mShaders["gizmoVS"]->GetBufferSize()
 			};
 			GizmoPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["gizmoPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["gizmoPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["gizmoPS"]->GetBufferPointer()),
+				mShaders["gizmoPS"]->GetBufferSize()
 			};
 
 			D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
@@ -282,17 +282,17 @@ namespace Dist
 		// PSO for pbr objects.
 		{
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC litPsoDesc = opaquePsoDesc;
-			litPsoDesc.InputLayout = { mDefaultScene.mInputLayout.data(), (UINT)mDefaultScene.mInputLayout.size() };
-			litPsoDesc.pRootSignature = mDefaultScene.mRootSignature.Get();
+			litPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+			litPsoDesc.pRootSignature = mRootSignature.Get();
 			litPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["litVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["litVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["litVS"]->GetBufferPointer()),
+				mShaders["litVS"]->GetBufferSize()
 			};
 			litPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["litPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["litPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["litPS"]->GetBufferPointer()),
+				mShaders["litPS"]->GetBufferSize()
 			};
 			litPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 			litPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
@@ -313,16 +313,16 @@ namespace Dist
 			smapPsoDesc.RasterizerState.DepthBias = 100000;
 			smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
 			smapPsoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
-			smapPsoDesc.pRootSignature = mDefaultScene.mRootSignature.Get();
+			smapPsoDesc.pRootSignature = mRootSignature.Get();
 			smapPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["shadowVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["shadowVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["shadowVS"]->GetBufferPointer()),
+				mShaders["shadowVS"]->GetBufferSize()
 			};
 			smapPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["shadowOpaquePS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["shadowOpaquePS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["shadowOpaquePS"]->GetBufferPointer()),
+				mShaders["shadowOpaquePS"]->GetBufferSize()
 			};
 
 			// Shadow map pass does not have a render target.
@@ -337,13 +337,13 @@ namespace Dist
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC drawNormalsPsoDesc = opaquePsoDesc;
 			drawNormalsPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["drawNormalsVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["drawNormalsVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["drawNormalsVS"]->GetBufferPointer()),
+				mShaders["drawNormalsVS"]->GetBufferSize()
 			};
 			drawNormalsPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["drawNormalsPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["drawNormalsPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["drawNormalsPS"]->GetBufferPointer()),
+				mShaders["drawNormalsPS"]->GetBufferSize()
 			};
 			drawNormalsPsoDesc.RTVFormats[0] = SsaoPass::NormalMapFormat;
 			drawNormalsPsoDesc.SampleDesc.Count = 1;
@@ -356,16 +356,16 @@ namespace Dist
 		{
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC ssaoPsoDesc = opaquePsoDesc;
 			ssaoPsoDesc.InputLayout = { nullptr, 0 };
-			ssaoPsoDesc.pRootSignature = mDefaultScene.mSsaoRootSignature.Get();
+			ssaoPsoDesc.pRootSignature = mSsaoRootSignature.Get();
 			ssaoPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["ssaoVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["ssaoVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["ssaoVS"]->GetBufferPointer()),
+				mShaders["ssaoVS"]->GetBufferSize()
 			};
 			ssaoPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["ssaoPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["ssaoPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["ssaoPS"]->GetBufferPointer()),
+				mShaders["ssaoPS"]->GetBufferSize()
 			};
 
 			// SSAO effect does not need the depth buffer.
@@ -383,13 +383,13 @@ namespace Dist
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC ssaoBlurPsoDesc = ssaoPsoDesc;
 			ssaoBlurPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["ssaoBlurVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["ssaoBlurVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["ssaoBlurVS"]->GetBufferPointer()),
+				mShaders["ssaoBlurVS"]->GetBufferSize()
 			};
 			ssaoBlurPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["ssaoBlurPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["ssaoBlurPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["ssaoBlurPS"]->GetBufferPointer()),
+				mShaders["ssaoBlurPS"]->GetBufferSize()
 			};
 			ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoBlurPsoDesc, IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
 
@@ -408,16 +408,16 @@ namespace Dist
 			// Otherwise, the normalized depth values at z = 1 (NDC) will 
 			// fail the depth test if the depth buffer was cleared to 1.
 			skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-			skyPsoDesc.pRootSignature = mDefaultScene.mRootSignature.Get();
+			skyPsoDesc.pRootSignature = mRootSignature.Get();
 			skyPsoDesc.VS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["skyVS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["skyVS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["skyVS"]->GetBufferPointer()),
+				mShaders["skyVS"]->GetBufferSize()
 			};
 			skyPsoDesc.PS =
 			{
-				reinterpret_cast<BYTE*>(mDefaultScene.mShaders["skyPS"]->GetBufferPointer()),
-				mDefaultScene.mShaders["skyPS"]->GetBufferSize()
+				reinterpret_cast<BYTE*>(mShaders["skyPS"]->GetBufferPointer()),
+				mShaders["skyPS"]->GetBufferSize()
 			};
 			ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));
 		}
@@ -429,7 +429,7 @@ namespace Dist
 	void DefaultSceneRender::UpdateShadowTransform(const GameTimer& gt)
 	{
 		// Only the first "main" light casts a shadow.
-		XMVECTOR lightDir = mDefaultScene.mMainLight.forward.ToSIMD();
+		XMVECTOR lightDir = mMainLight.forward.ToSIMD();
 		XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
 		XMVECTOR targetPos = XMLoadFloat3(&mSceneBounds.Center);
 		XMVECTOR lightUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -469,8 +469,8 @@ namespace Dist
 	//	更新Pass常量Buffer
 	void DefaultSceneRender::UpdateMainPassCB(const GameTimer& gt, int mClientWidth, int mClientHeight)
 	{
-		XMMATRIX view = mDefaultScene.mCamera.GetView();
-		XMMATRIX proj = mDefaultScene.mCamera.GetProj();
+		XMMATRIX view = mCamera.GetView();
+		XMMATRIX proj = mCamera.GetProj();
 
 		XMMATRIX viewProj = XMMatrixMultiply(view, proj);
 		XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
@@ -495,7 +495,7 @@ namespace Dist
 		XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
 		XMStoreFloat4x4(&mMainPassCB.ViewProjTex, XMMatrixTranspose(viewProjTex));
 		XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
-		mMainPassCB.EyePosW = mDefaultScene.mCamera.position;
+		mMainPassCB.EyePosW = mCamera.position;
 		mMainPassCB.RenderTargetSize = Vector2((float)mClientWidth, (float)mClientHeight);
 		mMainPassCB.InvRenderTargetSize = Vector2(1.0f / mClientWidth, 1.0f / mClientHeight);
 		mMainPassCB.NearZ = 1.0f;
@@ -505,13 +505,13 @@ namespace Dist
 
 		//Light
 
-		mMainPassCB.directionLight.forward = mDefaultScene.mMainLight.forward;
-		mMainPassCB.directionLight.intensity = mDefaultScene.mMainLight.intensity;
-		mMainPassCB.directionLight.color = mDefaultScene.mMainLight.color;
-		mMainPassCB.directionLight.position = mDefaultScene.mMainLight.position;
-		mMainPassCB.directionLight.Enable = mDefaultScene.mMainLight.Enable;
+		mMainPassCB.directionLight.forward = mMainLight.forward;
+		mMainPassCB.directionLight.intensity = mMainLight.intensity;
+		mMainPassCB.directionLight.color = mMainLight.color;
+		mMainPassCB.directionLight.position = mMainLight.position;
+		mMainPassCB.directionLight.Enable = mMainLight.Enable;
 
-		auto currPassCB = mDefaultScene.mCurrFrameResource->PassCB.get();
+		auto currPassCB = mCurrFrameResource->PassCB.get();
 		currPassCB->CopyData(0, mMainPassCB);
 	}
 
@@ -541,7 +541,7 @@ namespace Dist
 		mShadowPassCB.NearZ = mLightNearZ;
 		mShadowPassCB.FarZ = mLightFarZ;
 
-		auto currPassCB = mDefaultScene.mCurrFrameResource->PassCB.get();
+		auto currPassCB = mCurrFrameResource->PassCB.get();
 		currPassCB->CopyData(1, mShadowPassCB);
 	}
 
@@ -550,7 +550,7 @@ namespace Dist
 	{
 		SsaoConstants ssaoCB;
 
-		XMMATRIX P = mDefaultScene.mCamera.GetProj();
+		XMMATRIX P = mCamera.GetProj();
 
 		// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
 		XMMATRIX T(
@@ -578,7 +578,7 @@ namespace Dist
 		ssaoCB.OcclusionFadeEnd = 2.0f;
 		ssaoCB.SurfaceEpsilon = 0.05f;
 
-		auto currSsaoCB = mDefaultScene.mCurrFrameResource->SsaoCB.get();
+		auto currSsaoCB = mCurrFrameResource->SsaoCB.get();
 		currSsaoCB->CopyData(0, ssaoCB);
 	}
 }

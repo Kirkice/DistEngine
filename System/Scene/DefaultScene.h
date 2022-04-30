@@ -13,7 +13,7 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	struct DefaultScene
+	class DefaultScene
 	{
 		//	加载的图片类型
 	public: enum class TexturesType
@@ -35,6 +35,12 @@ namespace Dist
 			Count
 		};
 
+
+	public:
+		DefaultScene() = default;
+		DefaultScene(const DefaultScene& rhs) = delete;
+		DefaultScene& operator=(const DefaultScene& rhs) = delete;
+		virtual ~DefaultScene() = default;
 
 	public:
 		//----------------
@@ -86,9 +92,8 @@ namespace Dist
 
 		//	场景包围盒
 		DirectX::BoundingSphere mSceneBounds;
+
 	public:
-		//DefaultScene();
-		//~DefaultScene();
 
 		//	初始化场景
 		void InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);

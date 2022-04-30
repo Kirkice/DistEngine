@@ -11,13 +11,15 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	struct DefaultSceneRender
+	class DefaultSceneRender:public DefaultScene
 	{
 	public:
+		DefaultSceneRender() = default;
+		DefaultSceneRender(const DefaultSceneRender& rhs) = delete;
+		DefaultSceneRender& operator=(const DefaultSceneRender& rhs) = delete;
+		virtual ~DefaultSceneRender() = default;
 
-		//	Ä¬ÈÏ³¡¾°
-		DefaultScene mDefaultScene;
-
+	public:
 		//	Default SRV DescriptorHeap
 		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 

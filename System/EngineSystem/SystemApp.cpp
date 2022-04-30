@@ -21,9 +21,6 @@ namespace Dist
 		if (!EngineApp::Initialize())
 			return false;
 
-		//	默认场景
-		default_scene = DefaultScene();
-
 		//	初始化场景
 		default_scene.InitScene(md3dDevice, mCommandList);
 

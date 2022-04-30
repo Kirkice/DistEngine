@@ -21,15 +21,15 @@ namespace Dist
 		//	初始化
 		virtual bool Initialize()override;
 
-	//private:
-	//	//	创建RTV SRV
-	//	virtual void CreateRtvAndDsvDescriptorHeaps()override;
-	//	//	重新设置 
-	//	virtual void OnResize()override;
-	//	//	更新
-	//	virtual void Update(const GameTimer& gt)override;
-	//	//	绘制
-	//	virtual void Draw(const GameTimer& gt)override;
+	private:
+		//	创建RTV SRV
+		virtual void CreateRtvAndDsvDescriptorHeaps()override;
+		//	重新设置 
+		virtual void OnResize()override;
+		//	更新
+		virtual void Update(const GameTimer& gt)override;
+		//	绘制
+		virtual void Draw(const GameTimer& gt)override;
 
 	public:
 		DefaultSceneRender m_SceneRender;
