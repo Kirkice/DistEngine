@@ -12,21 +12,6 @@ namespace Dist
 {
 	const int GizmoCount = 6;
 
-	DefaultScene::DefaultScene()
-	{
-		mMainLight = DirectionLight();
-		mCamera = Camera();
-		mSkyBoxTexPath = L"";
-
-		mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
-	}
-
-	DefaultScene::~DefaultScene()
-	{
-
-	}
-
 	//	初始化场景
 	void DefaultScene::InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
@@ -35,6 +20,15 @@ namespace Dist
 
 		//	构建相机
 		BuildCamera();
+
+		//	初始化图标资源
+		LoadTextures(device, mCommandList, TexturesType::Gizom);
+
+		//	初始化渲染项图片资源
+		LoadTextures(device, mCommandList, TexturesType::RenderItem);
+
+		//	初始化Cubemap资源
+		LoadTextures(device, mCommandList, TexturesType::CubeMap);
 
 		//	构建根签名
 		BuildRootSignature(device);
@@ -327,7 +321,161 @@ namespace Dist
 	}
 
 	//	加载图片
-	std::vector<ComPtr<ID3D12Resource>>& DefaultScene::LoadTextures(TexturesType type)
+	void DefaultScene::LoadTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, TexturesType type)
+	{
+		std::vector<ComPtr<ID3D12Resource>> tex2DList;
+
+		if (type == TexturesType::RenderItem)
+		{
+			std::vector<std::string> texNames =
+			{
+
+				"defaultDiffuseMap",
+				"defaultNormalMap",
+				"defaultMsoMap",
+				"defaultEmissionMap",
+				"defaultLUTMap",
+
+				"WoodenDiffuse",
+				"WoodenNormal",
+
+				"MetallicDiffuse",
+				"MetallicNormal",
+
+				"BricsDiffuse",
+				"BricsNormal",
+
+				"OakDiffuse",
+				"OakNormal",
+
+				"WoodenDiffuse2",
+				"WoodenNormal2",
+
+				"WoodenDiffuse3",
+				"WoodenNormal3",
+
+				"WoodenDiffuse4",
+				"WoodenNormal4",
+			};
+
+			std::vector<std::wstring> texFilenames =
+			{
+				L"Textures/PlaneDiffuse.dds",
+				L"Textures/PlaneNormal.dds",
+				L"Textures/mso.dds",
+				L"Textures/black1x1.dds",
+				L"Textures/sampleLUT.dds",
+
+				L"Textures/WoodenDiffuse.dds",
+				L"Textures/WoodenNormal.dds",
+
+				L"Textures/white1x1.dds",
+				L"Textures/default_nmap.dds",
+
+				L"Textures/BricsDiffuse.dds",
+				L"Textures/BricsNormal.dds",
+
+				L"Textures/OakDiffuse.dds",
+				L"Textures/OakNormal.dds",
+
+				L"Textures/WoodenDiffuse2.dds",
+				L"Textures/WoodenNormal2.dds",
+
+				L"Textures/WoodenDiffuse3.dds",
+				L"Textures/WoodenNormal3.dds",
+
+				L"Textures/WoodenDiffuse4.dds",
+				L"Textures/WoodenNormal4.dds",
+			};
+
+			for (int i = 0; i < (int)texNames.size(); ++i)
+			{
+				// Don't create duplicates.
+				if (mTextures.find(texNames[i]) == std::end(mTextures))
+				{
+					auto texMap = std::make_unique<Texture>();
+					texMap->Name = texNames[i];
+					texMap->Filename = texFilenames[i];
+					ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
+						mCommandList.Get(), texMap->Filename.c_str(),
+						texMap->Resource, texMap->UploadHeap));
+
+					mTextures[texMap->Name] = std::move(texMap);
+				}
+			}
+		}
+		else if(type == TexturesType::Gizom)
+		{
+			std::vector<std::string> texNames =
+			{
+				"AreaLightGizmo",
+				"DirectionalLightGizmo",
+				"ParticleSystemGizmo",
+				"PointLightGizmo",
+				"SpotLightGizmo",
+				"WirePlane",
+			};
+
+			std::vector<std::wstring> texFilenames =
+			{
+				L"Icons/AreaLightGizmo.dds",
+				L"Icons/DirectionalLightGizmo.dds",
+				L"Icons/ParticleSystemGizmo.dds",
+				L"Icons/PointLightGizmo.dds",
+				L"Icons/SpotLightGizmo.dds",
+				L"Icons/WirePlane.dds",
+			};
+
+			for (int i = 0; i < (int)texNames.size(); ++i)
+			{
+				// Don't create duplicates.
+				if (mGizmoTextures.find(texNames[i]) == std::end(mGizmoTextures))
+				{
+					auto texMap = std::make_unique<Texture>();
+					texMap->Name = texNames[i];
+					texMap->Filename = texFilenames[i];
+					ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
+						mCommandList.Get(), texMap->Filename.c_str(),
+						texMap->Resource, texMap->UploadHeap));
+
+					mGizmoTextures[texMap->Name] = std::move(texMap);
+				}
+			}
+		}
+		else if(type == TexturesType::CubeMap)
+		{
+			std::vector<std::string> texNames =
+			{
+				"skyCubeMap",
+				"DiffuseIBL",
+			};
+
+			std::vector<std::wstring> texFilenames =
+			{
+				L"Textures/DGarden_specularIBL.dds",
+				L"Textures/DGarden_diffuseIBL.dds",
+			};
+
+			for (int i = 0; i < (int)texNames.size(); ++i)
+			{
+				// Don't create duplicates.
+				if (mSkyTextures.find(texNames[i]) == std::end(mSkyTextures))
+				{
+					auto texMap = std::make_unique<Texture>();
+					texMap->Name = texNames[i];
+					texMap->Filename = texFilenames[i];
+					ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
+						mCommandList.Get(), texMap->Filename.c_str(),
+						texMap->Resource, texMap->UploadHeap));
+
+					mSkyTextures[texMap->Name] = std::move(texMap);
+				}
+			}
+		}
+	}
+
+	//	加载图片资源
+	std::vector<ComPtr<ID3D12Resource>>& DefaultScene::LoadTextureResources(DefaultScene::TexturesType type)
 	{
 		std::vector<ComPtr<ID3D12Resource>> tex2DList;
 
@@ -363,7 +511,7 @@ namespace Dist
 				mTextures["WoodenNormal4"]->Resource,
 			};
 		}
-		else
+		else if(type == TexturesType::Gizom)
 		{
 			tex2DList =
 			{
@@ -374,6 +522,10 @@ namespace Dist
 				mTextures["SpotLightGizmo"]->Resource,
 				mTextures["WirePlane"]->Resource,
 			};
+		}
+		else if (type == TexturesType::CubeMap)
+		{
+
 		}
 
 		return tex2DList;

@@ -20,11 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderApp.h" />
+    <ClInclude Include="RenderPass\RenderGBuffer.h" />
+    <ClInclude Include="RenderPass\ScreenSpaceAmbientOcclusionPass.h" />
+    <ClInclude Include="RenderPass\ShadowMapPass.h" />
     <ClInclude Include="RenderScene\DefaultSceneRender.h" />
+    <ClInclude Include="RenderUtils\RenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderApp.cpp" />
+    <ClCompile Include="RenderPass\RenderGBuffer.cpp" />
+    <ClCompile Include="RenderPass\ScreenSpaceAmbientOcclusionPass.cpp" />
+    <ClCompile Include="RenderPass\ShadowMapPass.cpp" />
     <ClCompile Include="RenderScene\DefaultSceneRender.cpp" />
+    <ClCompile Include="RenderUtils\RenderTexture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -123,10 +131,10 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>
       </SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\ImGUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\ImGUI;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Component;E:\Engine\DistEngine\Resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

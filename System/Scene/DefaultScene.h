@@ -6,7 +6,6 @@
 #include "../EngineSystem/SystemUtils.h"
 #include "../EngineSystem/Texture.h"
 #include "../EngineSystem/DefaultFrameResource.h"
-#include <string.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -14,13 +13,14 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	class DefaultScene
+	struct DefaultScene
 	{
 		//	加载的图片类型
 	public: enum class TexturesType
 		{
 			RenderItem,
 			Gizom,
+			CubeMap,
 		};
 
 		//Render Layer
@@ -87,8 +87,8 @@ namespace Dist
 		//	场景包围盒
 		DirectX::BoundingSphere mSceneBounds;
 	public:
-		DefaultScene();
-		~DefaultScene();
+		//DefaultScene();
+		//~DefaultScene();
 
 		//	初始化场景
 		void InitScene(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
@@ -96,8 +96,11 @@ namespace Dist
 		//	更新场景
 		void UpdateScene(const GameTimer& gt);
 
-		//	加载图片路径
-		std::vector<ComPtr<ID3D12Resource>>& LoadTextures(DefaultScene::TexturesType type);
+		//	加载图片
+		void LoadTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, DefaultScene::TexturesType type);
+
+		//	加载图片资源
+		std::vector<ComPtr<ID3D12Resource>>& LoadTextureResources(DefaultScene::TexturesType type);
 
 	private:
 

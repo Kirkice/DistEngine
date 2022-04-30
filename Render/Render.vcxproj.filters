@@ -19,11 +19,35 @@
     <ClInclude Include="RenderScene\DefaultSceneRender.h">
       <Filter>RenderScene</Filter>
     </ClInclude>
+    <ClInclude Include="RenderUtils\RenderTexture.h">
+      <Filter>RenderUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderGBuffer.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ScreenSpaceAmbientOcclusionPass.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ShadowMapPass.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderApp.cpp" />
     <ClCompile Include="RenderScene\DefaultSceneRender.cpp">
       <Filter>RenderScene</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderUtils\RenderTexture.cpp">
+      <Filter>RenderUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass\RenderGBuffer.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass\ScreenSpaceAmbientOcclusionPass.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass\ShadowMapPass.cpp">
+      <Filter>RenderPass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

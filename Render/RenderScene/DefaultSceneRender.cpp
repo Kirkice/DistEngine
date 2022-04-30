@@ -7,16 +7,6 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	DefaultSceneRender::DefaultSceneRender(DefaultScene scene)
-	{
-		mDefaultScene = scene;
-	}
-
-	DefaultSceneRender::~DefaultSceneRender()
-	{
-
-	}
-
 	//	≥ı ºªØ≥°æ∞‰÷»æRender
 	void DefaultSceneRender::InitSceneRender()
 	{
@@ -43,11 +33,10 @@ namespace Dist
 		CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 		//	º”‘ÿ≥°æ∞Õº∆¨	ICONÕº∆¨
-		std::vector<ComPtr<ID3D12Resource>> RenderTex2DList = mDefaultScene.LoadTextures(DefaultScene::TexturesType::RenderItem);
-		std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList = mDefaultScene.LoadTextures(DefaultScene::TexturesType::Gizom);
+		std::vector<ComPtr<ID3D12Resource>> RenderTex2DList = mDefaultScene.LoadTextureResources(DefaultScene::TexturesType::RenderItem);
+		std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList = mDefaultScene.LoadTextureResources(DefaultScene::TexturesType::Gizom);
 
 		//	Environment Tex / CubeMap
-		LoadSkyBoxTextures(md3dDevice, mCommandList);
 		ComPtr<ID3D12Resource> skyCubeMap = mSkyTextures["skyCubeMap"]->Resource;
 		ComPtr<ID3D12Resource> diffuseIBL = mSkyTextures["DiffuseIBL"]->Resource;
 
@@ -147,38 +136,6 @@ namespace Dist
 				2, (UINT)mDefaultScene.mAllRitems.size(),
 				1,
 				(UINT)mDefaultScene.mMeshRender.size()));
-		}
-	}
-
-	//	º”‘ÿÃÏø’«ÚÕº∆¨
-	void DefaultSceneRender::LoadSkyBoxTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
-	{
-		std::vector<std::string> texNames =
-		{
-			"skyCubeMap",
-			"DiffuseIBL",
-		};
-
-		std::vector<std::wstring> texFilenames =
-		{
-			L"Textures/DGarden_specularIBL.dds",
-			L"Textures/DGarden_diffuseIBL.dds",
-		};
-
-		for (int i = 0; i < (int)texNames.size(); ++i)
-		{
-			// Don't create duplicates.
-			if (mSkyTextures.find(texNames[i]) == std::end(mSkyTextures))
-			{
-				auto texMap = std::make_unique<Texture>();
-				texMap->Name = texNames[i];
-				texMap->Filename = texFilenames[i];
-				ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
-					mCommandList.Get(), texMap->Filename.c_str(),
-					texMap->Resource, texMap->UploadHeap));
-
-				mSkyTextures[texMap->Name] = std::move(texMap);
-			}
 		}
 	}
 

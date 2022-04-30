@@ -1,3 +1,4 @@
+#pragma once
 #include "SystemUtils.h"
 #include "../../Core/Mathf/Mathf.h"
 #include "../../Component/DirectionLight.h"

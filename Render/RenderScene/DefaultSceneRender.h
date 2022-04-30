@@ -11,7 +11,7 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
-	class DefaultSceneRender
+	struct DefaultSceneRender
 	{
 	public:
 
@@ -41,8 +41,6 @@ namespace Dist
 		UINT mNullTexSrvIndex2 = 0;
 
 	public:
-		DefaultSceneRender(DefaultScene scene);
-		~DefaultSceneRender();
 
 		//	初始化场景渲染
 		void InitSceneRender();
@@ -80,9 +78,6 @@ namespace Dist
 
 		//	构建帧资源
 		void BuildFrameResources(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice);
-
-		//	加载天空球图片
-		void LoadSkyBoxTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
 		//	初始化阴影
 		void InitShadow(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice);
