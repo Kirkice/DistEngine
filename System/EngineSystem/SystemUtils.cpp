@@ -1,5 +1,6 @@
 
 #include "SystemUtils.h"
+#include "DefaultFrameResource.h"
 #include <comdef.h>
 #include <fstream>
 
@@ -209,11 +210,11 @@ namespace Dist
 
 
 
-		std::vector<Vertex> vertices(totalVertexCount);
+		std::vector<DefaultVertex> vertices(totalVertexCount);
 		UINT k = 0;
 		for (size_t i = 0; i < data.Vertices.size(); ++i, ++k)
 		{
-			vertices[k].Position = data.Vertices[i].Position;
+			vertices[k].Pos = data.Vertices[i].Position;
 			vertices[k].Normal = data.Vertices[i].Normal;
 			vertices[k].TexC = data.Vertices[i].TexC;
 			vertices[k].TangentU = data.Vertices[i].TangentU;
@@ -223,7 +224,7 @@ namespace Dist
 		std::vector<std::uint16_t> indices;
 		indices.insert(indices.end(), std::begin(data.GetIndices16()), std::end(data.GetIndices16()));
 
-		const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+		const UINT vbByteSize = (UINT)vertices.size() * sizeof(DefaultVertex);
 		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 		ThrowIfFailed(D3DCreateBlob(vbByteSize, &MeshGeo->VertexBufferCPU));
@@ -238,7 +239,7 @@ namespace Dist
 		MeshGeo->IndexBufferGPU = SystemUtils::CreateDefaultBuffer(md3dDevice.Get(),
 			mCommandList.Get(), indices.data(), ibByteSize, MeshGeo->IndexBufferUploader);
 
-		MeshGeo->VertexByteStride = sizeof(Vertex);
+		MeshGeo->VertexByteStride = sizeof(DefaultVertex);
 		MeshGeo->VertexBufferByteSize = vbByteSize;
 		MeshGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
 		MeshGeo->IndexBufferByteSize = ibByteSize;

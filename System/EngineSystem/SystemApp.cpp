@@ -32,6 +32,6 @@ namespace Dist
 
 	void SystemApp::Update(const GameTimer& gt)
 	{
-		default_scene.UpdateScene();
+		default_scene.UpdateScene(gt);
 	}
 }

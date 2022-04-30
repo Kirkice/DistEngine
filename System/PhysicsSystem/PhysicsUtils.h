@@ -9,7 +9,7 @@ namespace Dist
 	class PhysicsUtils
 	{
 	private:
-		XMVECTOR mPlane[6];
+		static XMVECTOR mPlane[6];
 
 	public:
 		//	ÊÓ×¶		Çò		¼ì²â
@@ -19,6 +19,6 @@ namespace Dist
 		static bool CheckFrustumAABBIntersect(Camera camera, BoundingBox bound);
 
 		//	³õÊ¼»¯ FrustumPlane
-		void InitFrustumPlane(float ScreenDepth, CXMMATRIX ProjMatrix, CXMMATRIX ViewMatrix);
+		static void InitFrustumPlane(float ScreenDepth, CXMMATRIX ProjMatrix, CXMMATRIX ViewMatrix);
 	};
 }

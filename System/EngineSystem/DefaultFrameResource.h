@@ -71,12 +71,12 @@ namespace Dist
 		float ACES = 1;
 	};
 
-	struct Vertex
+	struct DefaultVertex
 	{
-		XMFLOAT3 Pos;
-		XMFLOAT3 Normal;
-		XMFLOAT2 TexC;
-		XMFLOAT3 TangentU;
+		Vector3 Pos;
+		Vector3 Normal;
+		Vector2 TexC;
+		Vector3 TangentU;
 	};
 
 	struct PBRMaterialData
