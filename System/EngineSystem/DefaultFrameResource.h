@@ -40,9 +40,7 @@ namespace Dist
 		float DeltaTime = 0.0f;
 
 		//Light
-		DirectionLight DirectionLights[4];
-		PointLight PointLights[4];
-		SpotLight SpotLights[4];
+		DirectionLight directionLight;
 	};
 
 	struct SsaoConstants
