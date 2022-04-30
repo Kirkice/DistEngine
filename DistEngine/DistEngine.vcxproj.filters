@@ -18,7 +18,7 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EngineApp.h">
+    <ClInclude Include="DistEngine.h">
       <Filter>AppStart</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,7 +33,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EngineApp.cpp">
+    <ClCompile Include="DistEngine.cpp">
       <Filter>AppStart</Filter>
     </ClCompile>
   </ItemGroup>

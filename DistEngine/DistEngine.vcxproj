@@ -117,7 +117,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>Core/;../ModelLoader/;../Renderer/;Core/Mathf/;../ImGUI/;../ModelLoader/fbxsdk/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\Component;E:\Engine\DistEngine\Render;E:\Engine\DistEngine\ThirdParty\ImGUI;E:\Engine\DistEngine\ThirdParty\Fbxsdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -148,7 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="EngineApp.h" />
+    <ClInclude Include="DistEngine.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -158,7 +158,7 @@
     <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EngineApp.cpp" />
+    <ClCompile Include="DistEngine.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

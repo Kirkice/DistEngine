@@ -144,10 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="EngineSystem\d3dx12.h" />
+    <ClInclude Include="EngineSystem\DirectXHelpers.h" />
     <ClInclude Include="EngineSystem\EngineApp.h" />
     <ClInclude Include="EngineSystem\DefaultFrameResource.h" />
     <ClInclude Include="EngineSystem\GameTimer.h" />
     <ClInclude Include="EngineSystem\MeshGeometry.h" />
+    <ClInclude Include="EngineSystem\PlatformHelpers.h" />
     <ClInclude Include="EngineSystem\SystemApp.h" />
     <ClInclude Include="EngineSystem\SystemUtils.h" />
     <ClInclude Include="EngineSystem\Texture.h" />

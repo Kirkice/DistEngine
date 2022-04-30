@@ -10,6 +10,9 @@ namespace Dist
 	//	初始化场景渲染Render
 	void DefaultSceneRender::InitSceneRender(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize, int width, int height)
 	{
+		mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
+
 		//	初始化阴影
 		InitShadow(md3dDevice);
 
