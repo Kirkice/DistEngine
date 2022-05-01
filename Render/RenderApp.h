@@ -33,5 +33,7 @@ namespace Dist
 
 	public:
 		DefaultSceneRender m_SceneRender;
+
+		float SolidColor[4] = { 0,0,0,0 };
 	};
 }

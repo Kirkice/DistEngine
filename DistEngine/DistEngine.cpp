@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	}
 }
 
-DistEngine::DistEngine(HINSTANCE hInstance) : RenderApp(hInstance)
+DistEngine::DistEngine(HINSTANCE hInstance) : EditorApp(hInstance)
 {
 }
 

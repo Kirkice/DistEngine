@@ -114,28 +114,5 @@ namespace Dist
 
 	void RenderApp::Draw(const GameTimer& gt)
 	{
-		//Init    PSO / RootSignature / Material / descriptorHeaps
-		auto cmdListAlloc = m_SceneRender.mCurrFrameResource->CmdListAlloc;
-
-		ThrowIfFailed(cmdListAlloc->Reset());
-		ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), m_SceneRender.mPSOs["opaque"].Get()));
-
-		ID3D12DescriptorHeap* descriptorHeaps[] = { m_SceneRender.mSrvDescriptorHeap.Get() };
-		mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-		mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
-		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
-
-
-
-		ThrowIfFailed(mCommandList->Close());
-		ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
-		mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-		ThrowIfFailed(mSwapChain->Present(0, 0));
-		mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
-
-		m_SceneRender.mCurrFrameResource->Fence = ++mCurrentFence;
-
-		mCommandQueue->Signal(mFence.Get(), mCurrentFence);
 	}
 }
