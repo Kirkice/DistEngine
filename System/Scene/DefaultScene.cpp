@@ -86,6 +86,8 @@ namespace Dist
 		mCamera.eulerangle = Vector3(20, 45, 0);
 		//	相机名字
 		mCamera.name = "Main Camera";
+		//	构建相机ViewMatrix
+		mCamera.UpdateViewMatrix();
 	}
 
 	//	构建根签名
@@ -515,12 +517,12 @@ namespace Dist
 		{
 			tex2DList =
 			{
-				mTextures["AreaLightGizmo"]->Resource,
-				mTextures["DirectionalLightGizmo"]->Resource,
-				mTextures["ParticleSystemGizmo"]->Resource,
-				mTextures["PointLightGizmo"]->Resource,
-				mTextures["SpotLightGizmo"]->Resource,
-				mTextures["WirePlane"]->Resource,
+				mGizmoTextures["AreaLightGizmo"]->Resource,
+				mGizmoTextures["DirectionalLightGizmo"]->Resource,
+				mGizmoTextures["ParticleSystemGizmo"]->Resource,
+				mGizmoTextures["PointLightGizmo"]->Resource,
+				mGizmoTextures["SpotLightGizmo"]->Resource,
+				mGizmoTextures["WirePlane"]->Resource,
 			};
 		}
 		else if (type == TexturesType::CubeMap)

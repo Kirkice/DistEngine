@@ -22,7 +22,7 @@ namespace Dist
 
 		virtual void Update(const GameTimer& gt)override;
 
-	public:
+	private:
 		DefaultScene default_scene;
 	};
 

@@ -8,6 +8,7 @@
 #include "SystemUtils.h"
 #include "GameTimer.h"
 
+#pragma comment(lib,"x64\\Debug\\ImGUI.lib")
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")

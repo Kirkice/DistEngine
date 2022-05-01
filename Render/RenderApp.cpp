@@ -24,6 +24,9 @@ namespace Dist
 
 		ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+		//	初始化Scene
+		m_SceneRender.InitScene(md3dDevice, mCommandList);
+
 		//	初始化SceneRender
 		m_SceneRender.InitSceneRender(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize, mClientWidth, mClientHeight);
 
@@ -105,7 +108,7 @@ namespace Dist
 		}
 
 		//	更新
-		SystemApp::Update(gt);
+		m_SceneRender.UpdateScene(gt);
 		m_SceneRender.UpdateSceneRender(gt,mClientWidth,mClientHeight);
 	}
 
