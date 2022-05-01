@@ -77,7 +77,7 @@ namespace Dist
 	{
 		EngineApp::OnResize();
 
-		mCamera.SetLens((mCamera.GetFovY() / 180) * Dist::Pi, AspectRatio(), mCamera.GetNearZ(), mCamera.GetFarZ());
+		//mCamera.SetLens((mCamera.GetFovY() / 180) * Dist::Pi, AspectRatio(), mCamera.GetNearZ(), mCamera.GetFarZ());
 
 		if (m_SceneRender.mSsao != nullptr)
 		{
