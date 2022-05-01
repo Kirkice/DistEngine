@@ -125,6 +125,8 @@ namespace Dist
 		mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
 		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
 
+
+
 		ThrowIfFailed(mCommandList->Close());
 		ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 		mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);

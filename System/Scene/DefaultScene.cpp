@@ -50,14 +50,14 @@ namespace Dist
 	//	更新场景
 	void DefaultScene::UpdateScene(const GameTimer& gt)
 	{
-		//	更新灯光
-		UpdateLights(gt);
+		////	更新灯光
+		//UpdateLights(gt);
 
-		//	更新物体CB
-		UpdateObjectCBs(gt);
+		////	更新物体CB
+		//UpdateObjectCBs(gt);
 
-		//	更新材质
-		UpdateMaterials(gt); 
+		////	更新材质
+		//UpdateMaterials(gt); 
 	}
 
 	//	构建灯光
@@ -218,6 +218,9 @@ namespace Dist
 	//	构建着色器
 	void DefaultScene::BuildShadersAndInputLayout()
 	{
+		mShaders["standardVS"] = SystemUtils::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["opaquePS"] = SystemUtils::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+
 		//	PBR Lit Shader
 		mShaders["litVS"] = SystemUtils::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
 		mShaders["litPS"] = SystemUtils::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
@@ -615,8 +618,8 @@ namespace Dist
 		for (size_t i = 0; i < mMeshRender.size(); i++)
 		{
 			//	视锥剔除
-			if (!PhysicsUtils::CheckFrustumAABBIntersect(mCamera, mMeshRender[i]->bound))
-				return;
+			//if (!PhysicsUtils::CheckFrustumAABBIntersect(mCamera, mMeshRender[i]->bound))
+			//	return;
 
 			auto Ritem = std::make_unique<PBRRenderItem>();
 

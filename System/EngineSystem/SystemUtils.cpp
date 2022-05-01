@@ -198,7 +198,7 @@ namespace Dist
 	//	¥”MeshDataº”‘ÿMeshGeometry
 	MeshGeometry* SystemUtils::BuidlMeshGeometryFromMeshData(std::string name, MeshData data, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
-		MeshGeometry* MeshGeo;
+		MeshGeometry* MeshGeo = new MeshGeometry;
 		MeshGeo->Name = name;
 
 		SubmeshGeometry Submesh;

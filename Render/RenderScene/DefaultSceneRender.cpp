@@ -187,7 +187,7 @@ namespace Dist
 
 	//	构建帧资源
 	void DefaultSceneRender::BuildFrameResources(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice)
-	{
+	{ 
 		for (int i = 0; i < gNumFrameResources; ++i)
 		{
 				mFrameResources.push_back(std::make_unique<DefaultFrameResource>(md3dDevice.Get(),
