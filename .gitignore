@@ -1,4 +1,15 @@
 /ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk-md.lib
 /ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk-mt.lib
 /ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk.lib
+/ThirdParty/ImGUI/x64/*
+/ThirdParty/Json11/x64/*
+/ThirdParty/Spdlog/Spdlog/x64/*
+/ThirdParty/stb/x64/*
+/ThirdParty/Tinyobjloader/x64/*
 /DistEngine/x64/*
+/Component/x64/*
+/Core/x64/*
+/DistEditor/x64/*
+/Render/x64/*
+/Resources/x64/*
+/System/x64/*
