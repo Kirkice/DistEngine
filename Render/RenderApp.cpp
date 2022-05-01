@@ -91,7 +91,7 @@ namespace Dist
 	void RenderApp::Update(const GameTimer& gt)
 	{
 		OnKeyboardInput(gt);
-		mCamera.SetLens((mCamera.GetFovY() / 180) * Dist::Pi, AspectRatio(), mCamera.GetNearZ(), mCamera.GetFarZ());
+		//mCamera.SetLens((mCamera.GetFovY() / 180) * Dist::Pi, AspectRatio(), mCamera.GetNearZ(), mCamera.GetFarZ());
 
 		// Cycle through the circular frame resource array.
 		m_SceneRender.mCurrFrameResourceIndex = (m_SceneRender.mCurrFrameResourceIndex + 1) % gNumFrameResources;
@@ -114,7 +114,7 @@ namespace Dist
 
 	void RenderApp::Draw(const GameTimer& gt)
 	{
-		//Init    PSO / RootSignature / Material  /  descriptorHeaps
+		//Init    PSO / RootSignature / Material / descriptorHeaps
 		auto cmdListAlloc = m_SceneRender.mCurrFrameResource->CmdListAlloc;
 
 		ThrowIfFailed(cmdListAlloc->Reset());

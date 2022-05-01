@@ -50,14 +50,14 @@ namespace Dist
 	//	更新场景
 	void DefaultScene::UpdateScene(const GameTimer& gt)
 	{
-		////	更新灯光
-		//UpdateLights(gt);
+		//	更新灯光
+		UpdateLights(gt);
 
-		////	更新物体CB
-		//UpdateObjectCBs(gt);
+		//	更新物体CB
+		UpdateObjectCBs(gt);
 
-		////	更新材质
-		//UpdateMaterials(gt); 
+		//	更新材质
+		UpdateMaterials(gt); 
 	}
 
 	//	构建灯光

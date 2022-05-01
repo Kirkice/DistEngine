@@ -540,7 +540,7 @@ namespace Dist
 		XMStoreFloat4x4(&mShadowPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
 		mShadowPassCB.EyePosW = Vector3(mLightPosW);
 		mShadowPassCB.RenderTargetSize = Vector2((float)w, (float)h);
-		mShadowPassCB.InvRenderTargetSize = Vector2(1.0f / w, 1.0f / h);
+		mShadowPassCB.InvRenderTargetSize = Vector2(1.0f / w, 1.0f / h);    
 		mShadowPassCB.NearZ = mLightNearZ;
 		mShadowPassCB.FarZ = mLightFarZ;
 
