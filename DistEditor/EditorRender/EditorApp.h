@@ -1,6 +1,7 @@
 #pragma once
 #include "../../System/InputSystem/InputSystem.h"
 #include "../../Render/RenderApp.h"
+#include "../EditorUtils/EditorUtils.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"

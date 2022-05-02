@@ -143,9 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="EditorRender\EditorApp.h" />
+    <ClInclude Include="EditorUtils\EditorUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorRender\EditorApp.cpp" />
+    <ClCompile Include="EditorUtils\EditorUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

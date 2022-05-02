@@ -12,10 +12,16 @@
     <ClInclude Include="EditorRender\EditorApp.h">
       <Filter>EditorRender</Filter>
     </ClInclude>
+    <ClInclude Include="EditorUtils\EditorUtils.h">
+      <Filter>EditorUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorRender\EditorApp.cpp">
       <Filter>EditorRender</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtils\EditorUtils.cpp">
+      <Filter>EditorUtils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
