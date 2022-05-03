@@ -21,6 +21,8 @@ public:
 	EditorApp& operator=(const EditorApp& rhs) = delete;
 	~EditorApp();
 
+	virtual bool Initialize()override;
+
 private:
 
 	//	绘制
@@ -36,6 +38,17 @@ private:
 	//	后处理设置
 	bool show_postprocessingSetting_panel = false;
 
+
+	//	显示文件夹界面
+	bool show_folder_panel = true;
+	//	显示纹理界面
+	bool show_Textures_panel = false;
+	//	显示Mesh界面
+	bool show_Mesh_panel = false;
+	//	显示材质界面
+	bool show_Materials_panel = false;
+	//	显示场景界面
+	bool show_Scene_panel = false;
 
 	//	绘制Editor
 	void DrawEditor();

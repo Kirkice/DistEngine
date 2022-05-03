@@ -1,0 +1,52 @@
+***************MainLight*********************
+name: Direction_Light
+isMainLight: 1
+color: 1 0.9568627 0.8392157 1
+position: 0 3 0
+eulerangle: 50 -30 0
+
+***************MainCamera*********************
+name: Main_Camera
+position: -4 3 -4
+eulerangle: 20 45 0
+fov: 60
+nc: 0.03
+fc: 3000
+solidColor: 0
+
+***************SkyBox*******************
+name: Default
+CubeMapIndex: 0
+SkyBoxTint: 1 1 1 1 
+SkyBoxExposure: 1
+SkyBoxRotation: 0
+ACES: 1
+
+***************LightSettings*******************
+shadowColor: 0 0 0 0.7
+ambientColor: 0 0 0 0
+useFog: 0
+start: 0
+end: 300
+
+***************MeshRender*******************
+name: plane_render
+shader: dist_lit_pbr
+material: plane_mat
+modelPath: -1
+mesh: grid 
+meshData: 30 30 60 40
+position: 0 0 0
+eulerangle: 0 0 0
+scale: 1 1 1
+
+name: sphere_render
+shader: dist_lit_pbr
+material: Wooden2
+modelPath: -1
+mesh: sphere 
+meshData: 0.5 20 20
+position: 0 -1 3
+eulerangle: 0 0 0
+scale: 2 2 2
+
