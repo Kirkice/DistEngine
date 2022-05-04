@@ -256,6 +256,46 @@ void EditorApp::DrawProjectEditor()
 		//	显示纹理界面
 		EditorUtils::DrawProjectTextures(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
 	}
+	else if (show_Mesh_panel)
+	{
+		//	显示文件夹界面
+		show_folder_panel = false;
+		//	显示纹理界面
+		show_Textures_panel = false;
+		//	显示材质界面
+		show_Materials_panel = false;
+		//	显示场景界面
+		show_Scene_panel = false;
+
+		//	显示Mesh
+		EditorUtils::DrawProjectMesh(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+
+	}
+	else if (show_Materials_panel)
+	{
+		//	显示文件夹界面
+		show_folder_panel = false;
+		//	显示纹理界面
+		show_Textures_panel = false;
+		//	显示Mesh界面
+		show_Mesh_panel = false;
+		//	显示场景界面
+		show_Scene_panel = false;
+
+	}
+	else if(show_Scene_panel)
+	{
+		//	显示文件夹界面
+		show_folder_panel = false;
+		//	显示纹理界面
+		show_Textures_panel = false;
+		//	显示Mesh界面
+		show_Mesh_panel = false;
+		//	显示材质界面
+		show_Materials_panel = false;
+
+
+	}
 
 	ImGui::End();
 

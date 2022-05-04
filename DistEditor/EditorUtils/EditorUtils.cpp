@@ -45,6 +45,29 @@ const std::vector<std::string> mProjectTextures =
 		"Asset/Textures/DefaultTextures/sampleLUT.png"
 };
 
+
+//	Mesh 路径
+const std::vector<std::string> mProjectModels =
+{
+	"Asset/Mesh/Bunny.FBX",
+	"Asset/Mesh/Dragon.FBX",
+	"Asset/Mesh/Sample.FBX",
+	"Asset/Mesh/sponza.obj"
+};
+
+//	材质 路径
+const std::vector<std::string> mProjectMaterials =
+{
+	"Asset/Materials/plane_mat.dmat",
+	"Asset/Materials/wooden2.dmat",
+};
+
+//	材质 路径
+const std::vector<std::string> mProjectScenes =
+{
+	"Asset/Scene/Default.scene",
+};
+
 //	加载纹理
 bool EditorUtils::LoadTextureFromFile(const char* filename, Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle, ID3D12Resource** out_tex_resource, int* out_width, int* out_height)
 {
@@ -232,23 +255,60 @@ void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDev
 	UINT handle_increment = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	D3D12_CPU_DESCRIPTOR_HANDLE folder_srv_cpu_handle = mSrvHeap->GetCPUDescriptorHandleForHeapStart();
 	D3D12_GPU_DESCRIPTOR_HANDLE folder_srv_gpu_handle = mSrvHeap->GetGPUDescriptorHandleForHeapStart();
+	int descriptor_index = 1;
+	folder_srv_cpu_handle.ptr += (handle_increment * descriptor_index);
+	folder_srv_gpu_handle.ptr += (handle_increment * descriptor_index);
 
 	ImGui::Text("../Asset/");
-	for (size_t i = ICON_START_INDEX; i < ICON_COUNT - 1; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
-		int descriptor_index = 1;
-		folder_srv_cpu_handle.ptr += (handle_increment * descriptor_index);
-		folder_srv_gpu_handle.ptr += (handle_increment * descriptor_index);
-
-		if(ImGui::ImageButton((ImTextureID)folder_srv_gpu_handle.ptr, ImVec2(size, size)))
+		switch (i)
 		{
-			*show_folder_panel = false;
-			*show_Textures_panel = true;
-			*show_Mesh_panel = false;
-			*show_Materials_panel = false;
-			*show_Scene_panel = false;
+		case 0:
+			if (ImGui::ImageButton((ImTextureID)folder_srv_gpu_handle.ptr, ImVec2(size, size)))
+			{
+				*show_folder_panel = false;
+				*show_Textures_panel = true;
+				*show_Mesh_panel = false;
+				*show_Materials_panel = false;
+				*show_Scene_panel = false;
+			}
+			ImGui::SameLine(); break;
+
+		case 1:
+			if (ImGui::ImageButton((ImTextureID)folder_srv_gpu_handle.ptr, ImVec2(size, size)))
+			{
+				*show_folder_panel = false;
+				*show_Textures_panel = false;
+				*show_Mesh_panel = true;
+				*show_Materials_panel = false;
+				*show_Scene_panel = false;
+			}
+			ImGui::SameLine(); break;
+		case 2:
+			if (ImGui::ImageButton((ImTextureID)folder_srv_gpu_handle.ptr, ImVec2(size, size)))
+			{
+				*show_folder_panel = false;
+				*show_Textures_panel = false;
+				*show_Mesh_panel = false;
+				*show_Materials_panel = true;
+				*show_Scene_panel = false;
+			}
+			ImGui::SameLine(); break;
+		case 3:
+			if (ImGui::ImageButton((ImTextureID)folder_srv_gpu_handle.ptr, ImVec2(size, size)))
+			{
+				*show_folder_panel = false;
+				*show_Textures_panel = false;
+				*show_Mesh_panel = false;
+				*show_Materials_panel = false;
+				*show_Scene_panel = true;
+			}
+			ImGui::SameLine(); break;
+		default:
+			break;
 		}
-		ImGui::SameLine();
+
 	}
 }
 
@@ -300,5 +360,57 @@ void EditorUtils::DrawProjectTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dD
 	}
 }
 
+
+//	绘制资源Mesh
+void EditorUtils::DrawProjectMesh(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, int width, bool* show_folder_panel, bool* show_Textures_panel, bool* show_Mesh_panel, bool* show_Materials_panel, bool* show_Scene_panel)
+{
+	UINT handle_increment = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	//	从Back ICON开始
+	D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle = mSrvHeap->GetCPUDescriptorHandleForHeapStart();
+	srv_cpu_handle.ptr += handle_increment * (ICON_COUNT - 1);
+	D3D12_GPU_DESCRIPTOR_HANDLE srv_gpu_handle = mSrvHeap->GetGPUDescriptorHandleForHeapStart();
+	srv_gpu_handle.ptr += handle_increment * (ICON_COUNT - 1);
+
+
+	ImGui::Text("../Asset/Mesh");
+	//	BACK ICON
+	srv_cpu_handle.ptr += (handle_increment);
+	srv_gpu_handle.ptr += (handle_increment);
+	if (ImGui::ImageButton((ImTextureID)srv_gpu_handle.ptr, ImVec2(size, size)))
+	{
+		*show_folder_panel = true;
+		*show_Textures_panel = false;
+		*show_Mesh_panel = false;
+		*show_Materials_panel = false;
+		*show_Scene_panel = false;
+	}
+	ImGui::SameLine();
+
+
+	UINT mesh_increment = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	D3D12_CPU_DESCRIPTOR_HANDLE mesh_srv_cpu_handle = mSrvHeap->GetCPUDescriptorHandleForHeapStart();
+	D3D12_GPU_DESCRIPTOR_HANDLE mesh_srv_gpu_handle = mSrvHeap->GetGPUDescriptorHandleForHeapStart();
+	int descriptor_index = 2;
+	mesh_srv_cpu_handle.ptr += (mesh_increment * descriptor_index);
+	mesh_srv_gpu_handle.ptr += (mesh_increment * descriptor_index);
+
+	//	Mesh
+	int frame_padding = 1;
+	for (size_t i = 0; i < mProjectModels.size(); i++)
+	{
+		ImGui::Image((ImTextureID)mesh_srv_cpu_handle.ptr, ImVec2(size, size));
+
+		if ((frame_padding * size) < width)
+		{
+			ImGui::SameLine();
+			frame_padding++;
+		}
+		else
+		{
+			frame_padding = 0;
+		}
+	}
+}
 
 
