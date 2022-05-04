@@ -14,8 +14,6 @@ namespace Dist
 
 	public:
 		ResourceManager() = default;
-		ResourceManager(const ResourceManager& rhs) = delete;
-		ResourceManager& operator=(const ResourceManager& rhs) = delete;
 		virtual ~ResourceManager() = default;
 
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> mIconTextures;

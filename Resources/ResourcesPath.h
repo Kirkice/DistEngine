@@ -11,6 +11,9 @@ namespace Dist
 	const std::vector<std::string> mProjectIconTextures =			//	ICONŒ∆¿Ì
 	{
 		"Asset/Textures/ICON/Folder.png",
+		"Asset/Textures/ICON/Folder.png",
+		"Asset/Textures/ICON/Folder.png",
+		"Asset/Textures/ICON/Folder.png",
 		"Asset/Textures/ICON/Mat.png",
 		"Asset/Textures/ICON/Mesh.png",
 		"Asset/Textures/ICON/Scene.png",
@@ -19,7 +22,10 @@ namespace Dist
 
 	const std::vector<std::string> mProjectIconName =				//	ICONŒ∆¿Ì√˚≥∆
 	{
-		"Folder",
+		"FolderPic",
+		"FolderMat",
+		"FolderMesh",
+		"FolderScene",
 		"Mat",
 		"Mesh",
 		"Scene",
