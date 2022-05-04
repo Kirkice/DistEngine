@@ -30,6 +30,8 @@
     <ClCompile Include="ObjLoader.cpp">
       <Filter>MeshLoader\ObjLoader</Filter>
     </ClCompile>
+    <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="ResourcesPath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DDS.h">
@@ -47,5 +49,8 @@
     <ClInclude Include="ObjLoader.h">
       <Filter>MeshLoader\ObjLoader</Filter>
     </ClInclude>
+    <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="ResourcesPath.h" />
+    <ClInclude Include="Texture2D.h" />
   </ItemGroup>
 </Project>

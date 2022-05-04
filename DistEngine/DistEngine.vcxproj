@@ -117,7 +117,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\Component;E:\Engine\DistEngine\Render;E:\Engine\DistEngine\ThirdParty\ImGUI;E:\Engine\DistEngine\ThirdParty\Fbxsdk\include;E:\Engine\DistEngine\DistEditor\EditorRender;E:\Engine\DistEngine\DistEditor\EditorUtils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;E:\Engine\DistEngine\Component;E:\Engine\DistEngine\Render;E:\Engine\DistEngine\ThirdParty\ImGUI;E:\Engine\DistEngine\ThirdParty\Fbxsdk\include;E:\Engine\DistEngine\DistEditor\EditorRender;E:\Engine\DistEngine\DistEditor\EditorUtils;E:\Engine\DistEngine\Resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>

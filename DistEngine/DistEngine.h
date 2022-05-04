@@ -10,8 +10,8 @@
 #pragma comment(lib,"x64\\Debug\\Core.lib") 
 #pragma comment(lib,"x64\\Debug\\ImGUI.lib")
 #pragma comment(lib,"x64\\Debug\\Render.lib")
-#pragma comment(lib,"x64\\Debug\\Resources.lib")
 #pragma comment(lib,"x64\\Debug\\System.lib")
+#pragma comment(lib,"x64\\Debug\\Resources.lib")
 #pragma comment(lib,"x64\\Debug\\DistEditor.lib")
 
 using Microsoft::WRL::ComPtr;

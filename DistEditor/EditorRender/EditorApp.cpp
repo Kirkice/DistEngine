@@ -22,7 +22,7 @@ bool EditorApp::Initialize()
 	if (!RenderApp::Initialize())
 		return false;
 
-	EditorUtils::InitProjectResources(md3dDevice, mSrvHeap);
+	ResourceManager::LoadTexture2D(md3dDevice, mSrvHeap);
 }
 
 void EditorApp::Draw(const GameTimer& gt)
@@ -240,7 +240,7 @@ void EditorApp::DrawProjectEditor()
 
 
 		//	显示文件夹
-		EditorUtils::DrawProjetcFolder(md3dDevice, mSrvHeap,&show_folder_panel,&show_Textures_panel,&show_Mesh_panel,&show_Materials_panel,&show_Scene_panel);
+		//EditorUtils::DrawProjetcFolder(md3dDevice, mSrvHeap,&show_folder_panel,&show_Textures_panel,&show_Mesh_panel,&show_Materials_panel,&show_Scene_panel);
 	}
 	else if (show_Textures_panel)
 	{
@@ -254,7 +254,7 @@ void EditorApp::DrawProjectEditor()
 		show_Scene_panel = false;
 
 		//	显示纹理界面
-		EditorUtils::DrawProjectTextures(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		//EditorUtils::DrawProjectTextures(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
 	}
 	else if (show_Mesh_panel)
 	{
@@ -268,7 +268,7 @@ void EditorApp::DrawProjectEditor()
 		show_Scene_panel = false;
 
 		//	显示Mesh
-		EditorUtils::DrawProjectMesh(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		//EditorUtils::DrawProjectMesh(md3dDevice, mSrvHeap, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
 
 	}
 	else if (show_Materials_panel)
