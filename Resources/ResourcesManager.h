@@ -11,15 +11,19 @@ namespace Dist
 {
 	class ResourceManager
 	{
-	public:
-		static void LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap);
 
 	public:
-		static std::unordered_map<std::string, std::unique_ptr<Texture2D>> mIconTextures;
-		static std::unordered_map<std::string, std::unique_ptr<Texture2D>> mResourcesTextures;
+		ResourceManager() = default;
+		ResourceManager(const ResourceManager& rhs) = delete;
+		ResourceManager& operator=(const ResourceManager& rhs) = delete;
+		virtual ~ResourceManager() = default;
+
+		std::unordered_map<std::string, std::unique_ptr<Texture2D>> mIconTextures;
+		std::unordered_map<std::string, std::unique_ptr<Texture2D>> mResourcesTextures;
+		void LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap);
 
 	private:
 
-		static bool LoadTextureFromFile(const char* filename, Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle, ID3D12Resource** out_tex_resource, int* out_width, int* out_height);
+		bool LoadTextureFromFile(const char* filename, Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle, ID3D12Resource** out_tex_resource, int* out_width, int* out_height);
 	};
 }

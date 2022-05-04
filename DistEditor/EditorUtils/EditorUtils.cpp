@@ -3,12 +3,12 @@ const int size = 84;
 using namespace Dist;
 
 //	绘制资源文件夹
-void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, bool* show_folder_panel, bool* show_Textures_panel, bool* show_Mesh_panel, bool* show_Materials_panel, bool* show_Scene_panel)
+void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, ResourceManager manager, bool* show_folder_panel, bool* show_Textures_panel, bool* show_Mesh_panel, bool* show_Materials_panel, bool* show_Scene_panel)
 {
 	ImGui::Text("../Asset/");
 
 	//	点击纹理按钮
-	if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
+	if (ImGui::ImageButton((ImTextureID)manager.mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
 	{
 		*show_folder_panel = false;
 		*show_Textures_panel = true;
@@ -19,7 +19,7 @@ void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDev
 	ImGui::SameLine();
 
 	//	点击Mesh按钮
-	if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
+	if (ImGui::ImageButton((ImTextureID)manager.mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
 	{
 		*show_folder_panel = false;
 		*show_Textures_panel = false;
@@ -30,7 +30,7 @@ void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDev
 	ImGui::SameLine();
 
 	//	点击Material按钮
-	if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
+	if (ImGui::ImageButton((ImTextureID)manager.mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
 	{
 		*show_folder_panel = false;
 		*show_Textures_panel = false;
@@ -41,7 +41,7 @@ void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDev
 	ImGui::SameLine();
 
 	//	点击Scene按钮
-	if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
+	if (ImGui::ImageButton((ImTextureID)manager.mIconTextures["Folder"]->GpuHandle.ptr, ImVec2(size, size)))
 	{
 		*show_folder_panel = false;
 		*show_Textures_panel = false;
@@ -55,34 +55,34 @@ void EditorUtils::DrawProjetcFolder(Microsoft::WRL::ComPtr<ID3D12Device> md3dDev
 //	绘制资源纹理
 void EditorUtils::DrawProjectTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, int width, bool* show_folder_panel, bool* show_Textures_panel, bool* show_Mesh_panel, bool* show_Materials_panel, bool* show_Scene_panel)
 {
-	ImGui::Text("../Asset/Textures");
+	//ImGui::Text("../Asset/Textures");
 
-	//	BACK ICON
-	if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Back"]->GpuHandle.ptr, ImVec2(size, size)))
-	{
-		*show_folder_panel = true;
-		*show_Textures_panel = false;
-		*show_Mesh_panel = false;
-		*show_Materials_panel = false;
-		*show_Scene_panel = false;
-	}
-	ImGui::SameLine();
+	////	BACK ICON
+	//if (ImGui::ImageButton((ImTextureID)ResourceManager::mIconTextures["Back"]->GpuHandle.ptr, ImVec2(size, size)))
+	//{
+	//	*show_folder_panel = true;
+	//	*show_Textures_panel = false;
+	//	*show_Mesh_panel = false;
+	//	*show_Materials_panel = false;
+	//	*show_Scene_panel = false;
+	//}
+	//ImGui::SameLine();
 
-	//	TEXTURES
-	int frame_padding = 1;
-	for (size_t i = 0; i < ResourceManager::mResourcesTextures.size(); i++)
-	{
-		ImGui::Image((ImTextureID)ResourceManager::mResourcesTextures[mProjectResourceName[i]]->GpuHandle.ptr, ImVec2(size, size));
-		if ((frame_padding * size) < width)
-		{
-			ImGui::SameLine();
-			frame_padding++;
-		}
-		else
-		{
-			frame_padding = 0;
-		}
-	}
+	////	TEXTURES
+	//int frame_padding = 1;
+	//for (size_t i = 0; i < ResourceManager::mResourcesTextures.size(); i++)
+	//{
+	//	ImGui::Image((ImTextureID)ResourceManager::mResourcesTextures[mProjectResourceName[i]]->GpuHandle.ptr, ImVec2(size, size));
+	//	if ((frame_padding * size) < width)
+	//	{
+	//		ImGui::SameLine();
+	//		frame_padding++;
+	//	}
+	//	else
+	//	{
+	//		frame_padding = 0;
+	//	}
+	//}
 }
 
 

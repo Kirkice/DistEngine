@@ -22,7 +22,7 @@ bool EditorApp::Initialize()
 	if (!RenderApp::Initialize())
 		return false;
 
-	ResourceManager::LoadTexture2D(md3dDevice, mSrvHeap);
+	mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap);
 }
 
 void EditorApp::Draw(const GameTimer& gt)
@@ -240,7 +240,7 @@ void EditorApp::DrawProjectEditor()
 
 
 		//	ÏÔÊ¾ÎÄ¼þ¼Ð
-		//EditorUtils::DrawProjetcFolder(md3dDevice, mSrvHeap,&show_folder_panel,&show_Textures_panel,&show_Mesh_panel,&show_Materials_panel,&show_Scene_panel);
+		EditorUtils::DrawProjetcFolder(md3dDevice, mSrvHeap, mResourceManager, &show_folder_panel,&show_Textures_panel,&show_Mesh_panel,&show_Materials_panel,&show_Scene_panel);
 	}
 	else if (show_Textures_panel)
 	{

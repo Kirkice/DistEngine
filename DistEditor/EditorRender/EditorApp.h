@@ -29,6 +29,8 @@ private:
 	//	»æÖÆ
 	virtual void Draw(const GameTimer& gt)override;
 
+	ResourceManager mResourceManager = ResourceManager();
+
 	bool show_app_dockspace = true;
 
 
