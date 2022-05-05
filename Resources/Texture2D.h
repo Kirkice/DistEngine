@@ -15,6 +15,17 @@ namespace Dist
 		std::string							Name;							//	name
 		std::string							Path;							//	Â·¾¶
 
-		ID3D12Resource* Resource = nullptr;
+		ID3D12Resource*						Resource = nullptr;				//	Resource
+	};
+
+
+	struct TextureCube
+	{
+		D3D12_CPU_DESCRIPTOR_HANDLE			CpuHandle;						//	CPU¾ä±ú
+		D3D12_GPU_DESCRIPTOR_HANDLE			GpuHandle;						//	GPU¾ä±ú
+		std::string							Name;							//	name
+		std::wstring						Path;							//	Â·¾¶
+		Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;			//	Resource
+		Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;		//	ÉÏ´«¶Ñ
 	};
 }

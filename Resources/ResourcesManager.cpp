@@ -1,5 +1,9 @@
 #include "ResourcesManager.h"
 
+using Microsoft::WRL::ComPtr;
+using namespace DirectX;
+using namespace DirectX::PackedVector;
+
 namespace Dist
 {
 	//	º”‘ÿŒ∆¿Ì
@@ -161,7 +165,7 @@ namespace Dist
 	}
 
 	//	º”‘ÿTexture2D
-	void ResourceManager::LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap)
+	void ResourceManager::LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
 		//	√Ë ˆ∑˚æ‰±˙
 		D3D12_CPU_DESCRIPTOR_HANDLE texture_srv_cpu_handle = mSrvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -198,6 +202,7 @@ namespace Dist
 			}
 		}
 
+		//Load Project
 		for (size_t i = 0; i < mProjectResourceTextures.size(); i++)
 		{
 			//	øÌ∏ﬂ
@@ -224,5 +229,90 @@ namespace Dist
 			tex->Path = mProjectResourceTextures[i];
 			mResourcesTextures[tex->Name] = std::move(tex);
 		}
+
+		//Load Gizmo
+		for (size_t i = 0; i < mProjectGizmoTextures.size(); i++)
+		{
+			//	øÌ∏ﬂ
+			int image_width = 0;
+			int image_height = 0;
+
+			ID3D12Resource* texture = NULL;
+
+			texture_srv_cpu_handle.ptr += handle_increment;
+			texture_srv_gpu_handle.ptr += handle_increment;
+
+			// Load the texture from a file
+			bool ret = LoadTextureFromFile(mProjectGizmoTextures[i].c_str(), d3d_device, texture_srv_cpu_handle, &texture, &image_width, &image_height);
+			IM_ASSERT(ret);
+
+			auto tex = std::make_unique<Texture2D>();
+			tex->Width = image_width;
+			tex->Height = image_height;
+			tex->Bit = 32;
+			tex->Size = (float)((image_width * image_height * 32) / 8388608);
+			tex->CpuHandle = texture_srv_cpu_handle;
+			tex->GpuHandle = texture_srv_gpu_handle;
+			tex->Name = mProjectGizmoName[i];
+			tex->Path = mProjectGizmoTextures[i];
+			mGizmosTextures[tex->Name] = std::move(tex);
+		}
+
+		//Load CubeMap
+		for (size_t i = 0; i < mProjectCubeMapTextures.size(); i++)
+		{
+			if (mCubeMapTextures.find(mProjectCubeMapName[i]) == std::end(mCubeMapTextures))
+			{
+				auto tex = std::make_unique<TextureCube>();
+				tex->Name = mProjectCubeMapName[i];
+				tex->Path = mProjectCubeMapTextures[i];
+				tex->CpuHandle = texture_srv_cpu_handle;
+				tex->GpuHandle = texture_srv_gpu_handle;
+
+				ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(d3d_device.Get(),
+					mCommandList.Get(), tex->Path.c_str(),
+					tex->Resource, tex->UploadHeap));
+
+				mCubeMapTextures[tex->Name] = std::move(tex);
+			}
+		}
+
+
+		texture_srv_cpu_handle.ptr += handle_increment;
+		texture_srv_gpu_handle.ptr += handle_increment;
+
+		ComPtr<ID3D12Resource> diffuseIBL = mCubeMapTextures["DGarden_diffuseIBL"]->Resource;
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+		srvDesc.TextureCube.MostDetailedMip = 0;
+		srvDesc.TextureCube.MipLevels = diffuseIBL->GetDesc().MipLevels;
+		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+		srvDesc.Format = diffuseIBL->GetDesc().Format;
+		d3d_device->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, texture_srv_cpu_handle);
+		mCubeMapTextures["DGarden_specularIBL"]->CpuHandle = texture_srv_cpu_handle;
+		mCubeMapTextures["DGarden_specularIBL"]->GpuHandle = texture_srv_gpu_handle;
+
+
+		texture_srv_cpu_handle.ptr += handle_increment;
+		texture_srv_gpu_handle.ptr += handle_increment;
+
+		ComPtr<ID3D12Resource> specularIBL = mCubeMapTextures["DGarden_specularIBL"]->Resource;
+
+		texture_srv_cpu_handle.ptr += handle_increment;
+		texture_srv_gpu_handle.ptr += handle_increment;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+		srvDesc.TextureCube.MostDetailedMip = 0;
+		srvDesc.TextureCube.MipLevels = specularIBL->GetDesc().MipLevels;
+		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+		srvDesc.Format = specularIBL->GetDesc().Format;
+		d3d_device->CreateShaderResourceView(specularIBL.Get(), &srvDesc, texture_srv_cpu_handle);
+		mCubeMapTextures["DGarden_diffuseIBL"]->CpuHandle = texture_srv_cpu_handle;
+		mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle = texture_srv_gpu_handle;
 	}
 }

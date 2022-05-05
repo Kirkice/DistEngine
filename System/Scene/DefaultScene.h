@@ -79,8 +79,6 @@ namespace Dist
 		ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 		//	SSAO根签名
 		ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr; 
-		//	场景SRV
-		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 		//	渲染项
 		std::vector<std::unique_ptr<PBRRenderItem>> mAllRitems;
 		//	渲染PSO层级

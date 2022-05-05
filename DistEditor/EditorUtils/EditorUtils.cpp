@@ -80,7 +80,7 @@ void EditorUtils::DrawProjectTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dD
 	for (size_t i = 0; i < manager.mResourcesTextures.size(); i++)
 	{
 		ImGui::Image((ImTextureID)manager.mResourcesTextures[mProjectResourceName[i]]->GpuHandle.ptr, ImVec2(size, size));
-		if ((frame_padding * size) < width)
+		if ((frame_padding * (size + 10)) < width)
 		{
 			ImGui::SameLine();
 			frame_padding++;

@@ -22,7 +22,7 @@ bool EditorApp::Initialize()
 	if (!RenderApp::Initialize())
 		return false;
 
-	mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap);
+	mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap, mCommandList);
 }
 
 void EditorApp::Draw(const GameTimer& gt)
@@ -33,7 +33,7 @@ void EditorApp::Draw(const GameTimer& gt)
 	ThrowIfFailed(cmdListAlloc->Reset());
 	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), m_SceneRender.mPSOs["opaque"].Get()));
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_SceneRender.mSrvDescriptorHeap.Get() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 	mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
 
@@ -348,6 +348,7 @@ void EditorApp::DrawSceneGameView()
 	ImGui::End();
 
 	ImGui::Begin("Game");
+	ImGui::Image((ImTextureID)mSrvHeap->GetGPUDescriptorHandleForHeapStart().ptr,ImVec2(1412,710));
 	ImGui::End();
 }
 
