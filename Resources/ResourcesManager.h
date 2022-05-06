@@ -21,6 +21,8 @@ namespace Dist
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> mGizmosTextures;
 		std::unordered_map<std::string, std::unique_ptr<TextureCube>> mCubeMapTextures;
 
+		UINT ResourcesTextureEndIndex;
+
 		void LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
 	private:

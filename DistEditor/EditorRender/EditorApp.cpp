@@ -21,8 +21,6 @@ bool EditorApp::Initialize()
 {
 	if (!RenderApp::Initialize())
 		return false;
-
-	mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap, mCommandList);
 }
 
 void EditorApp::Draw(const GameTimer& gt)

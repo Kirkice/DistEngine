@@ -27,8 +27,6 @@ namespace Dist
 		CD3DX12_GPU_DESCRIPTOR_HANDLE mNullSrv;
 
 		//	Index
-		UINT mIBLTexHeapIndex = 0;
-		UINT mSkyTexHeapIndex = 0;
 		UINT mRenderTargetIndex = 0;
 		UINT mCopyColorIndex = 0;
 		UINT mShadowMapHeapIndex = 0;
@@ -94,7 +92,7 @@ namespace Dist
 		//-------------------------Init-------------------------------
 
 		//	构建描述符
-		void BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize);
+		void BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize);
 
 		//	构建帧资源
 		void BuildFrameResources(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice);

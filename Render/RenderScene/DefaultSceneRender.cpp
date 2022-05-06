@@ -23,7 +23,7 @@ namespace Dist
 		InitRenderTarget(md3dDevice, width, height);
 
 		//	构建场景描述符
-		BuildDescriptorHeaps(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize);
+		BuildDescriptorHeaps(mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize);
 
 		//	构建帧资源
 		BuildFrameResources(md3dDevice);
@@ -78,111 +78,31 @@ namespace Dist
 	}
 
 	//	构建描述符
-	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize)
+	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize)
 	{
-		//	Create the SRV heap.
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 128;
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
 
-		//	Fill out the heap with actual descriptors.
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+		//mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
+		//mRenderTargetIndex = mShadowMapHeapIndex + 1;
+		//mSsaoHeapIndexStart = mRenderTargetIndex + 1;
+		//mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
 
-		//	加载场景图片	ICON图片
-		std::vector<ComPtr<ID3D12Resource>> RenderTex2DList = LoadTextureResources(DefaultScene::TexturesType::RenderItem);
-		std::vector<ComPtr<ID3D12Resource>> GizmoTex2DList = LoadTextureResources(DefaultScene::TexturesType::Gizom);
+		//mShadowMapPass->BuildDescriptors(
+		//	GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+		//	GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+		//	GetDsv(1, mDsvHeap, mDsvDescriptorSize));
 
-		//	Environment Tex / CubeMap
-		ComPtr<ID3D12Resource> skyCubeMap = mSkyTextures["skyCubeMap"]->Resource;
-		ComPtr<ID3D12Resource> diffuseIBL = mSkyTextures["DiffuseIBL"]->Resource;
+		//mSsao->BuildDescriptors(
+		//	mDepthStencilBuffer.Get(),
+		//	GetCpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+		//	GetGpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+		//	GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize),
+		//	mCbvSrvUavDescriptorSize,
+		//	mRtvDescriptorSize);
 
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-		for (UINT i = 0; i < (UINT)GizmoTex2DList.size(); ++i)
-		{
-			srvDesc.Format = GizmoTex2DList[i]->GetDesc().Format;
-			srvDesc.Texture2D.MipLevels = GizmoTex2DList[i]->GetDesc().MipLevels;
-			md3dDevice->CreateShaderResourceView(GizmoTex2DList[i].Get(), &srvDesc, hDescriptor);
-
-			// next descriptor
-			hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		}
-
-		for (UINT i = 0; i < (UINT)RenderTex2DList.size(); ++i)
-		{
-			srvDesc.Format = RenderTex2DList[i]->GetDesc().Format;
-			srvDesc.Texture2D.MipLevels = RenderTex2DList[i]->GetDesc().MipLevels;
-			md3dDevice->CreateShaderResourceView(RenderTex2DList[i].Get(), &srvDesc, hDescriptor);
-
-			// next descriptor
-			hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		}
-
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-		srvDesc.TextureCube.MostDetailedMip = 0;
-		srvDesc.TextureCube.MipLevels = diffuseIBL->GetDesc().MipLevels;
-		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-		srvDesc.Format = diffuseIBL->GetDesc().Format;
-		md3dDevice->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, hDescriptor);
-		hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-		srvDesc.TextureCube.MostDetailedMip = 0;
-		srvDesc.TextureCube.MipLevels = skyCubeMap->GetDesc().MipLevels;
-		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-		srvDesc.Format = skyCubeMap->GetDesc().Format;
-		md3dDevice->CreateShaderResourceView(skyCubeMap.Get(), &srvDesc, hDescriptor);
-
-		mIBLTexHeapIndex = (UINT)RenderTex2DList.size() + (UINT)GizmoTex2DList.size();
-		mSkyTexHeapIndex = mIBLTexHeapIndex + 1;
-		mShadowMapHeapIndex = mSkyTexHeapIndex + 1;
-		mRenderTargetIndex = mShadowMapHeapIndex + 1;
-		mSsaoHeapIndexStart = mRenderTargetIndex + 1;
-		mSsaoAmbientMapIndex = mSsaoHeapIndexStart + 3;
-		mNullCubeSrvIndex = mSsaoAmbientMapIndex + 5;
-		mNullTexSrvIndex1 = mNullCubeSrvIndex + 1;
-		mNullTexSrvIndex2 = mNullTexSrvIndex1 + 1;
-
-		auto nullSrv = GetCpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize);
-		mNullSrv = GetGpuSrv(mNullCubeSrvIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize);
-
-		md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-		nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
-
-
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = 1;
-		srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-		md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-
-		nullSrv.Offset(1, mCbvSrvUavDescriptorSize);
-		md3dDevice->CreateShaderResourceView(nullptr, &srvDesc, nullSrv);
-
-		mShadowMapPass->BuildDescriptors(
-			GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
-			GetDsv(1, mDsvHeap, mDsvDescriptorSize));
-
-		mSsao->BuildDescriptors(
-			mDepthStencilBuffer.Get(),
-			GetCpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
-			GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize),
-			mCbvSrvUavDescriptorSize,
-			mRtvDescriptorSize);
-
-		mTarget->BuildDescriptors(
-			GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap,mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap,mCbvSrvUavDescriptorSize),
-			GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize));
+		//mTarget->BuildDescriptors(
+		//	GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap,mCbvSrvUavDescriptorSize),
+		//	GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap,mCbvSrvUavDescriptorSize),
+		//	GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize));
 	}
 
 	//	构建帧资源

@@ -24,6 +24,9 @@ namespace Dist
 
 		ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+		//	加载纹理资源
+		mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap, mCommandList);
+
 		//	初始化Scene
 		m_SceneRender.InitScene(md3dDevice, mCommandList);
 

@@ -10,6 +10,7 @@ namespace Dist
 		int									Height;							//	高度
 		int									Bit;							//	位数
 		float								Size;							//  大小
+		int									TexIndex;						//	Index
 		D3D12_CPU_DESCRIPTOR_HANDLE			CpuHandle;						//	CPU句柄
 		D3D12_GPU_DESCRIPTOR_HANDLE			GpuHandle;						//	GPU句柄
 		std::string							Name;							//	name
@@ -21,6 +22,7 @@ namespace Dist
 
 	struct TextureCube
 	{
+		int									TexIndex;						//	Index
 		D3D12_CPU_DESCRIPTOR_HANDLE			CpuHandle;						//	CPU句柄
 		D3D12_GPU_DESCRIPTOR_HANDLE			GpuHandle;						//	GPU句柄
 		std::string							Name;							//	name

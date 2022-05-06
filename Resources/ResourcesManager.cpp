@@ -172,6 +172,7 @@ namespace Dist
 		D3D12_GPU_DESCRIPTOR_HANDLE texture_srv_gpu_handle = mSrvHeap->GetGPUDescriptorHandleForHeapStart();
 		UINT handle_increment = d3d_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
+		UINT TextureIndex = 0;
 		//Load Icon
 		for (size_t i = 0; i < mProjectIconTextures.size(); i++)
 		{
@@ -194,6 +195,8 @@ namespace Dist
 				tex->Height = image_height;
 				tex->Bit = 32;
 				tex->Size = (float)((image_width * image_height * 32) / 8388608);
+				tex->TexIndex = TextureIndex;
+				TextureIndex++;
 				tex->CpuHandle = texture_srv_cpu_handle;
 				tex->GpuHandle = texture_srv_gpu_handle;
 				tex->Name = mProjectIconName[i];
@@ -223,6 +226,8 @@ namespace Dist
 			tex->Height = image_height;
 			tex->Bit = 32;
 			tex->Size = (float)((image_width * image_height * 32) / 8388608);
+			tex->TexIndex = TextureIndex;
+			TextureIndex++;
 			tex->CpuHandle = texture_srv_cpu_handle;
 			tex->GpuHandle = texture_srv_gpu_handle;
 			tex->Name = mProjectResourceName[i];
@@ -251,6 +256,8 @@ namespace Dist
 			tex->Height = image_height;
 			tex->Bit = 32;
 			tex->Size = (float)((image_width * image_height * 32) / 8388608);
+			tex->TexIndex = TextureIndex;
+			TextureIndex++;
 			tex->CpuHandle = texture_srv_cpu_handle;
 			tex->GpuHandle = texture_srv_gpu_handle;
 			tex->Name = mProjectGizmoName[i];
@@ -268,6 +275,7 @@ namespace Dist
 				tex->Path = mProjectCubeMapTextures[i];
 				tex->CpuHandle = texture_srv_cpu_handle;
 				tex->GpuHandle = texture_srv_gpu_handle;
+				tex->TexIndex = TextureIndex;
 
 				ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(d3d_device.Get(),
 					mCommandList.Get(), tex->Path.c_str(),
@@ -314,5 +322,7 @@ namespace Dist
 		d3d_device->CreateShaderResourceView(specularIBL.Get(), &srvDesc, texture_srv_cpu_handle);
 		mCubeMapTextures["DGarden_diffuseIBL"]->CpuHandle = texture_srv_cpu_handle;
 		mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle = texture_srv_gpu_handle;
+
+		ResourcesTextureEndIndex = TextureIndex + 1;
 	}
 }

@@ -2,6 +2,7 @@
 #include "../System/InputSystem/InputSystem.h"
 #include "RenderScene/DefaultSceneRender.h"
 #include "../System/Scene/DefaultScene.h"
+#include <ResourcesManager.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -33,7 +34,7 @@ namespace Dist
 
 	public:
 		DefaultSceneRender m_SceneRender;
-
+		ResourceManager mResourceManager{};
 		float SolidColor[4] = { 0,0,0,0 };
 	};
 }

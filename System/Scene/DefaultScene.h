@@ -63,12 +63,11 @@ namespace Dist
 		//----------------
 		//	需要加载的Shader
 		std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
-		//	需要加载的纹理
-		std::unordered_map<std::string, std::unique_ptr<Texture>> mTextures;
 		//	需要加载的CubeMap纹理
 		std::unordered_map<std::string, std::unique_ptr<Texture>> mSkyTextures;
 		//	需要加载的Gizmo纹理
 		std::unordered_map<std::string, std::unique_ptr<Texture>> mGizmoTextures;
+
 		//	需要设置的InputLayout
 		std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
@@ -98,12 +97,6 @@ namespace Dist
 
 		//	更新场景
 		void UpdateScene(const GameTimer& gt);
-
-		//	加载图片
-		void LoadTextures(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, DefaultScene::TexturesType type);
-
-		//	加载图片资源
-		std::vector<ComPtr<ID3D12Resource>>& LoadTextureResources(DefaultScene::TexturesType type);
 
 	private:
 
