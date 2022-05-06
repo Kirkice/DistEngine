@@ -63,10 +63,6 @@ namespace Dist
 		//----------------
 		//	需要加载的Shader
 		std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
-		//	需要加载的CubeMap纹理
-		std::unordered_map<std::string, std::unique_ptr<Texture>> mSkyTextures;
-		//	需要加载的Gizmo纹理
-		std::unordered_map<std::string, std::unique_ptr<Texture>> mGizmoTextures;
 
 		//	需要设置的InputLayout
 		std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;

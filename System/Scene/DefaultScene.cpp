@@ -209,43 +209,43 @@ namespace Dist
 	//	构建着色器
 	void DefaultScene::BuildShadersAndInputLayout()
 	{
-		mShaders["standardVS"] = SystemUtils::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["opaquePS"] = SystemUtils::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["standardVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["opaquePS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	PBR Lit Shader
-		mShaders["litVS"] = SystemUtils::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["litPS"] = SystemUtils::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["litVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["litPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	图标 Shader
-		mShaders["gizmoVS"] = SystemUtils::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["gizmoPS"] = SystemUtils::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["gizmoVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\GizmoPass.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["gizmoPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\GizmoPass.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	包围盒 Shader
-		mShaders["boundingVS"] = SystemUtils::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["boundingPS"] = SystemUtils::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["boundingVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["boundingPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	阴影 Shader
-		mShaders["shadowVS"] = SystemUtils::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["shadowOpaquePS"] = SystemUtils::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["shadowVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["shadowOpaquePS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	Debug Shader
-		mShaders["debugVS"] = SystemUtils::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["debugPS"] = SystemUtils::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["debugVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["debugPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	Normal Shader
-		mShaders["drawNormalsVS"] = SystemUtils::CompileShader(L"Shaders\\DrawNormals.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["drawNormalsPS"] = SystemUtils::CompileShader(L"Shaders\\DrawNormals.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["drawNormalsVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["drawNormalsPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	SSAO Shader
-		mShaders["ssaoVS"] = SystemUtils::CompileShader(L"Shaders\\Ssao.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["ssaoPS"] = SystemUtils::CompileShader(L"Shaders\\Ssao.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["ssaoVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Ssao.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["ssaoPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Ssao.hlsl", nullptr, "PS", "ps_5_1");
 
-		mShaders["ssaoBlurVS"] = SystemUtils::CompileShader(L"Shaders\\SsaoBlur.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["ssaoBlurPS"] = SystemUtils::CompileShader(L"Shaders\\SsaoBlur.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["ssaoBlurVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\SsaoBlur.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["ssaoBlurPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\SsaoBlur.hlsl", nullptr, "PS", "ps_5_1");
 
 		//	SkyShader
-		mShaders["skyVS"] = SystemUtils::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
-		mShaders["skyPS"] = SystemUtils::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
+		mShaders["skyVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["skyPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
 		mInputLayout =
 		{
