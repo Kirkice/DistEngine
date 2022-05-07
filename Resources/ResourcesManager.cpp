@@ -6,6 +6,13 @@ using namespace DirectX::PackedVector;
 
 namespace Dist
 {
+
+	UINT ResourceManager::GetResourcesTextureEndIndex()
+	{
+		ResourcesTextureEndIndex = ResourcesTextureEndIndex + 1;
+		return ResourcesTextureEndIndex;
+	}
+
 	//	º”‘ÿŒ∆¿Ì
 	bool ResourceManager::LoadTextureFromFile(const char* filename, Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle, ID3D12Resource** out_tex_resource, int* out_width, int* out_height)
 	{
@@ -195,6 +202,7 @@ namespace Dist
 				tex->Height = image_height;
 				tex->Bit = 32;
 				tex->Size = (float)((image_width * image_height * 32) / 8388608);
+				tex->type = TexturesType::Icon;
 				tex->TexIndex = TextureIndex;
 				TextureIndex++;
 				tex->CpuHandle = texture_srv_cpu_handle;
@@ -226,6 +234,7 @@ namespace Dist
 			tex->Height = image_height;
 			tex->Bit = 32;
 			tex->Size = (float)((image_width * image_height * 32) / 8388608);
+			tex->type = TexturesType::Project;
 			tex->TexIndex = TextureIndex;
 			TextureIndex++;
 			tex->CpuHandle = texture_srv_cpu_handle;
@@ -256,6 +265,7 @@ namespace Dist
 			tex->Height = image_height;
 			tex->Bit = 32;
 			tex->Size = (float)((image_width * image_height * 32) / 8388608);
+			tex->type = TexturesType::Gizom;
 			tex->TexIndex = TextureIndex;
 			TextureIndex++;
 			tex->CpuHandle = texture_srv_cpu_handle;
@@ -275,6 +285,7 @@ namespace Dist
 				tex->Path = mProjectCubeMapTextures[i];
 				tex->CpuHandle = texture_srv_cpu_handle;
 				tex->GpuHandle = texture_srv_gpu_handle;
+				tex->type = TexturesType::CubeMap;
 				tex->TexIndex = TextureIndex;
 
 				ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(d3d_device.Get(),

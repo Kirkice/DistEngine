@@ -22,6 +22,10 @@ namespace Dist
 
         static const int MaxBlurRadius = 5;
 
+
+		void SetIndex(UINT Index);
+		UINT GetIndex();
+
         UINT SsaoMapWidth()const;
         UINT SsaoMapHeight()const;
 
@@ -113,6 +117,7 @@ namespace Dist
         CD3DX12_GPU_DESCRIPTOR_HANDLE mhAmbientMap1GpuSrv;
         CD3DX12_CPU_DESCRIPTOR_HANDLE mhAmbientMap1CpuRtv;
 
+        UINT Index = 0;
         UINT mRenderTargetWidth;
         UINT mRenderTargetHeight;
 

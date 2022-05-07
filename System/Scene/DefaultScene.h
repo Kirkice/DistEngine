@@ -15,27 +15,6 @@ namespace Dist
 {
 	class DefaultScene
 	{
-		//	加载的图片类型
-	public: enum class TexturesType
-		{
-			RenderItem,
-			Gizom,
-			CubeMap,
-		};
-
-		//Render Layer
-	public: enum class RenderLayer : int
-		{
-			Opaque = 0,
-			Transparent = 1,
-			Sky = 2,
-			Gizmo = 3,
-			Bounding = 4,
-			PostProcessing = 5,
-			Count
-		};
-
-
 	public:
 		DefaultScene() = default;
 		DefaultScene(const DefaultScene& rhs) = delete;

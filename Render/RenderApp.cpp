@@ -31,7 +31,7 @@ namespace Dist
 		m_SceneRender.InitScene(md3dDevice, mCommandList);
 
 		//	≥ı ºªØSceneRender
-		m_SceneRender.InitSceneRender(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize, mClientWidth, mClientHeight);
+		m_SceneRender.InitSceneRender(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize, mSrvHeap, mResourceManager,mClientWidth, mClientHeight);
 
 		//	PSO
 		m_SceneRender.BuildPSO(md3dDevice, mBackBufferFormat, m4xMsaaState, m4xMsaaQuality, mDepthStencilFormat);

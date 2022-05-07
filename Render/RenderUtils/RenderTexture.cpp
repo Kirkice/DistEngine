@@ -25,6 +25,16 @@ namespace Dist
 		return mHeight;
 	}
 
+	void RenderTexture::SetIndex(UINT Index)
+	{
+		this->Index = Index;
+	}
+
+	UINT RenderTexture::GetIndex()
+	{
+		return Index;
+	}
+
 	ID3D12Resource* RenderTexture::Resource()
 	{
 		return mRenderTarget.Get();

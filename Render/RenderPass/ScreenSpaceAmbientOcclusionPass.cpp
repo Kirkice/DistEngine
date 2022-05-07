@@ -31,6 +31,16 @@ namespace Dist
         return mRenderTargetHeight / 2;
     }
 
+	void SsaoPass::SetIndex(UINT Index)
+	{
+		this->Index = Index;
+	}
+
+	UINT SsaoPass::GetIndex()
+	{
+		return Index;
+	}
+
     void SsaoPass::GetOffsetVectors(DirectX::XMFLOAT4 offsets[14])
     {
         std::copy(&mOffsets[0], &mOffsets[14], &offsets[0]);

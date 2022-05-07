@@ -4,6 +4,7 @@
 #include "../RenderPass/ScreenSpaceAmbientOcclusionPass.h"
 #include "../../System/Scene/DefaultScene.h"
 #include "../../System/EngineSystem/SystemUtils.h"
+#include <ResourcesManager.h>
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -20,27 +21,9 @@ namespace Dist
 		virtual ~DefaultSceneRender() = default;
 
 	public:
-		//	Default SRV DescriptorHeap
-		ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-
-		//	空的Handle
-		CD3DX12_GPU_DESCRIPTOR_HANDLE mNullSrv;
-
-		//	Index
-		UINT mRenderTargetIndex = 0;
-		UINT mCopyColorIndex = 0;
-		UINT mShadowMapHeapIndex = 0;
-		UINT mSsaoHeapIndexStart = 0;
-		UINT mSsaoAmbientMapIndex = 0;
-
-		UINT mNullCubeSrvIndex = 0;
-		UINT mNullTexSrvIndex1 = 0;
-		UINT mNullTexSrvIndex2 = 0;
-
-	public:
 
 		//	初始化场景渲染
-		void InitSceneRender(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize, int width, int height);
+		void InitSceneRender(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSRV, ResourceManager& manager, int width, int height);
 
 		//	更新场景渲染
 		void UpdateSceneRender(const GameTimer& gt, int mClientWidth, int mClientHeight);
@@ -92,7 +75,7 @@ namespace Dist
 		//-------------------------Init-------------------------------
 
 		//	构建描述符
-		void BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize);
+		void BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSRV, ResourceManager& manager, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize);
 
 		//	构建帧资源
 		void BuildFrameResources(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice);

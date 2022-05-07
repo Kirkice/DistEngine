@@ -21,11 +21,11 @@ namespace Dist
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>> mGizmosTextures;
 		std::unordered_map<std::string, std::unique_ptr<TextureCube>> mCubeMapTextures;
 
-		UINT ResourcesTextureEndIndex;
-
 		void LoadTexture2D(Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
 
+		UINT GetResourcesTextureEndIndex();
 	private:
+		UINT ResourcesTextureEndIndex;
 
 		bool LoadTextureFromFile(const char* filename, Microsoft::WRL::ComPtr<ID3D12Device> d3d_device, D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_handle, ID3D12Resource** out_tex_resource, int* out_width, int* out_height);
 	};

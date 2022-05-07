@@ -27,6 +27,29 @@
 
 namespace Dist
 {
+	//	加载的图片类型
+	enum class TexturesType
+	{
+		Project,
+		Gizom,
+		Icon,
+		CubeMap,
+		RenderTexture,
+	};
+
+		  //Render Layer
+	enum class RenderLayer : int
+	{
+		Opaque = 0,
+		Transparent = 1,
+		Sky = 2,
+		Gizmo = 3,
+		Bounding = 4,
+		PostProcessing = 5,
+		Count
+	};
+
+
 	const int gNumFrameResources = 3;
 
 	inline void d3dSetDebugName(IDXGIObject* obj, const char* name)

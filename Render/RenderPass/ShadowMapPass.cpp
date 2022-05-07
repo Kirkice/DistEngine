@@ -25,6 +25,16 @@ namespace Dist
 		return mHeight;
 	}
 
+	void ShadowMapPass::SetIndex(UINT Index)
+	{
+		this->Index = Index;
+	}
+
+	UINT ShadowMapPass::GetIndex()
+	{
+		return Index;
+	}
+
 	ID3D12Resource* ShadowMapPass::Resource()
 	{
 		return mShadowMap.Get();

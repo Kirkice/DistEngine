@@ -15,6 +15,9 @@ namespace Dist
 		UINT Width()const;
 		UINT Height()const;
 
+		void SetIndex(UINT Index);
+		UINT GetIndex();
+
 		ID3D12Resource* Resource();
 		CD3DX12_GPU_DESCRIPTOR_HANDLE GpuSrv()const;
 		CD3DX12_CPU_DESCRIPTOR_HANDLE CpuSrv()const;
@@ -44,6 +47,7 @@ namespace Dist
 		D3D12_VIEWPORT mViewport;
 		D3D12_RECT mScissorRect;
 
+		UINT Index = 0;
 		UINT mWidth = 0;
 		UINT mHeight = 0;
 
