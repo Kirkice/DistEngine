@@ -46,18 +46,6 @@ void EditorApp::Draw(const GameTimer& gt)
 
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
-
-	mCommandList->CopyResource(m_SceneRender.mTarget->Resource(), CurrentBackBuffer());
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
-
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mTarget->Resource(),D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
-
-
 	DrawEditor();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -358,7 +346,7 @@ void EditorApp::DrawSceneGameView()
 	ImGui::End();
 
 	ImGui::Begin("Game");
-	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr,ImVec2(1412,710));
+	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(512, 512));
 	ImGui::End();
 }
 

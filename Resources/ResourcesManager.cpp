@@ -9,8 +9,9 @@ namespace Dist
 
 	UINT ResourceManager::GetResourcesTextureEndIndex()
 	{
+		UINT CurrentTextureEndIndex = ResourcesTextureEndIndex;
 		ResourcesTextureEndIndex = ResourcesTextureEndIndex + 1;
-		return ResourcesTextureEndIndex;
+		return CurrentTextureEndIndex;
 	}
 
 	//	¼ÓÔØÎÆÀí
@@ -179,7 +180,7 @@ namespace Dist
 		D3D12_GPU_DESCRIPTOR_HANDLE texture_srv_gpu_handle = mSrvHeap->GetGPUDescriptorHandleForHeapStart();
 		UINT handle_increment = d3d_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-		UINT TextureIndex = 0;
+		UINT TextureIndex = 1;
 		//Load Icon
 		for (size_t i = 0; i < mProjectIconTextures.size(); i++)
 		{
@@ -287,7 +288,7 @@ namespace Dist
 				tex->GpuHandle = texture_srv_gpu_handle;
 				tex->type = TexturesType::CubeMap;
 				tex->TexIndex = TextureIndex;
-
+				TextureIndex++;
 				ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(d3d_device.Get(),
 					mCommandList.Get(), tex->Path.c_str(),
 					tex->Resource, tex->UploadHeap));
@@ -314,8 +315,8 @@ namespace Dist
 		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 		srvDesc.Format = diffuseIBL->GetDesc().Format;
 		d3d_device->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, texture_srv_cpu_handle);
-		mCubeMapTextures["DGarden_specularIBL"]->CpuHandle = texture_srv_cpu_handle;
-		mCubeMapTextures["DGarden_specularIBL"]->GpuHandle = texture_srv_gpu_handle;
+		mCubeMapTextures["DGarden_diffuseIBL"]->CpuHandle = texture_srv_cpu_handle;
+		mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle = texture_srv_gpu_handle;
 
 
 		texture_srv_cpu_handle.ptr += handle_increment;
@@ -331,9 +332,9 @@ namespace Dist
 		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 		srvDesc.Format = specularIBL->GetDesc().Format;
 		d3d_device->CreateShaderResourceView(specularIBL.Get(), &srvDesc, texture_srv_cpu_handle);
-		mCubeMapTextures["DGarden_diffuseIBL"]->CpuHandle = texture_srv_cpu_handle;
-		mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle = texture_srv_gpu_handle;
+		mCubeMapTextures["DGarden_specularIBL"]->CpuHandle = texture_srv_cpu_handle;
+		mCubeMapTextures["DGarden_specularIBL"]->GpuHandle = texture_srv_gpu_handle;
 
-		ResourcesTextureEndIndex = TextureIndex + 1;
+		ResourcesTextureEndIndex = TextureIndex;
 	}
 }

@@ -26,12 +26,6 @@ namespace Dist
 		D3D12_VIEWPORT Viewport()const;
 		D3D12_RECT ScissorRect()const;
 
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-
-		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
-		CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
-
 		void BuildDescriptors(
 			CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
 			CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
@@ -51,7 +45,12 @@ namespace Dist
 		UINT mWidth = 0;
 		UINT mHeight = 0;
 
-		DXGI_FORMAT mTargetFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
+		CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
+
 		Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTarget;
 	};
 }

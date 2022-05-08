@@ -2,7 +2,7 @@
 #include "../../System/EngineSystem/SystemUtils.h"
 
 namespace Dist
-{
+{ 
 	class ShadowMapPass
 	{
 	public:
