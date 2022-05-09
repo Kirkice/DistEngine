@@ -38,7 +38,8 @@ private:
 	bool show_physicsSetting_panel = false;
 	//	后处理设置
 	bool show_postprocessingSetting_panel = false;
-
+	//	Frame Debugger
+	bool show_frame_debugger_panel = false;
 
 	//	显示文件夹界面
 	bool show_folder_panel = true;
@@ -86,6 +87,9 @@ private:
 
 	//	绘制渲染设置
 	void DrawRenderSetting();
+
+	//	绘制FrameDebugger
+	void DrawFrameDebugger();
 
 	//	绘制性能分析
 	void DrawProfileView();

@@ -96,6 +96,8 @@ void EditorApp::DrawEditor()
 		DrawPhysicsSettings();
 	if (show_postprocessingSetting_panel)
 		DrawPostProcessingSettings();
+	if (show_frame_debugger_panel)
+		DrawFrameDebugger();
 
 	//	Draw Inspector
 	DrawInspectorEditor();
@@ -181,6 +183,7 @@ void EditorApp::DrawMenuEditor()
 			ImGui::MenuItem("Light Settings", NULL, &show_lightSetting_panel);
 			ImGui::MenuItem("Physics Settings", NULL, &show_physicsSetting_panel);
 			ImGui::MenuItem("PostProcessing Settings", NULL, &show_postprocessingSetting_panel);
+			ImGui::MenuItem("Frame Debugger", NULL, &show_frame_debugger_panel);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -345,20 +348,33 @@ void EditorApp::DrawPhysicsSettings()
 
 void EditorApp::DrawSceneGameView()
 {
-	CD3DX12_GPU_DESCRIPTOR_HANDLE tex(mSrvHeap->GetGPUDescriptorHandleForHeapStart());
-	tex.Offset(m_SceneRender.mShadowMapPass->GetIndex(), mCbvSrvUavDescriptorSize);
-
 	ImGui::Begin("Scene");
 	ImGui::End();
 
 	ImGui::Begin("Game");
-	ImGui::Image((ImTextureID)tex.ptr, ImVec2(512, 512));
+	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(512, 512));
 	ImGui::End();
 }
 
 void EditorApp::DrawRenderSetting()
 {
 	ImGui::Begin("Render Setting");
+	ImGui::End();
+}
+
+void EditorApp::DrawFrameDebugger()
+{
+	//Frame Debugger
+	ImGui::SetWindowSize(ImVec2(256, 760));
+	ImGui::Begin("Frame Debugger", &show_frame_debugger_panel);
+
+	if (ImGui::CollapsingHeader("Draw Shadow Map"))
+	{
+		CD3DX12_GPU_DESCRIPTOR_HANDLE tex(mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+		tex.Offset(m_SceneRender.mShadowMapPass->GetIndex(), mCbvSrvUavDescriptorSize);
+		ImGui::Image((ImTextureID)tex.ptr, ImVec2(256, 256));
+	}
+
 	ImGui::End();
 }
 
