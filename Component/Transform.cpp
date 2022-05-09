@@ -108,15 +108,16 @@ namespace Dist
 		XMFLOAT4X4 Mat = Dist::Identity4x4();
 
 		//	位移
-		XMStoreFloat4x4(&Mat, XMMatrixTranslation(position.x, position.y, position.z));
+		XMMATRIX world = XMLoadFloat4x4(&Mat);
+		world = XMMatrixTranslation(position.x, position.y, position.z);
 
-		//	旋转
-		XMStoreFloat4x4(&Mat, XMMatrixRotationX(eulerangle.x));
-		XMStoreFloat4x4(&Mat, XMMatrixRotationY(eulerangle.y)); 
-		XMStoreFloat4x4(&Mat, XMMatrixRotationZ(eulerangle.z));
+		//// 旋转
+		XMMATRIX RotMat = XMMatrixRotationX((eulerangle.x / 180) * Pi) * XMMatrixRotationY((eulerangle.y / 180) * Pi) * XMMatrixRotationZ((eulerangle.z / 180) * Pi);
+		world = world * RotMat;
 
 		//	缩放
-		XMStoreFloat4x4(&Mat, XMMatrixScaling(scale.x, scale.y, scale.z));
+		world = world * XMMatrixScaling(scale.x, scale.y, scale.z);
+		XMStoreFloat4x4(&Mat, world);
 
 		return Mat;
 	}

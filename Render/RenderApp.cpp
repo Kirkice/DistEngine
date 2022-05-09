@@ -117,5 +117,66 @@ namespace Dist
 
 	void RenderApp::Draw(const GameTimer& gt)
 	{
+		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
+		DrawShadowMap(matBuffer);
+	}
+
+	void RenderApp::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<PBRRenderItem*>& ritems)
+	{
+		UINT objCBByteSize = SystemUtils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+
+		auto objectCB = m_SceneRender.mCurrFrameResource->ObjectCB->Resource();
+
+		for (size_t i = 0; i < ritems.size(); ++i)
+		{
+			auto ri = ritems[i];
+
+			cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
+			cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
+			cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
+
+			D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = objectCB->GetGPUVirtualAddress() + ri->ObjCBIndex * objCBByteSize;
+
+			cmdList->SetGraphicsRootConstantBufferView(0, objCBAddress);
+
+			cmdList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
+		}
+	}
+
+	void RenderApp::DrawShadowMap(ID3D12Resource* matBuffer)
+	{
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+		mCommandList->SetGraphicsRootDescriptorTable(5, mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+		DrawSceneToShadowMap();
+	}
+
+	void RenderApp::DrawSceneToShadowMap()
+	{
+		mCommandList->RSSetViewports(1, &m_SceneRender.mShadowMapPass->Viewport());
+		mCommandList->RSSetScissorRects(1, &m_SceneRender.mShadowMapPass->ScissorRect());
+
+		// Change to DEPTH_WRITE.
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mShadowMapPass->Resource(),
+			D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+
+		// Clear the back buffer and depth buffer.
+		mCommandList->ClearDepthStencilView(m_SceneRender.mShadowMapPass->Dsv(),
+			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		// Specify the buffers we are going to render to.
+		mCommandList->OMSetRenderTargets(0, nullptr, false, &m_SceneRender.mShadowMapPass->Dsv());
+
+		// Bind the pass constant buffer for the shadow map pass.
+		UINT passCBByteSize = SystemUtils::CalcConstantBufferByteSize(sizeof(PassConstants));
+		auto passCB = m_SceneRender.mCurrFrameResource->PassCB->Resource();
+		D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
+		mCommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
+
+		mCommandList->SetPipelineState(m_SceneRender.mPSOs["shadow_opaque"].Get());
+		DrawRenderItems(mCommandList.Get(), m_SceneRender.mRitemLayer[(int)RenderLayer::Opaque]);
+
+		// Change back to GENERIC_READ so we can read the texture in a shader.
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mShadowMapPass->Resource(),
+			D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 	}
 }

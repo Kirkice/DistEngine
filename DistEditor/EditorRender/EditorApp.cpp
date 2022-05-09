@@ -35,6 +35,7 @@ void EditorApp::Draw(const GameTimer& gt)
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 	mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
 
+	RenderApp::Draw(gt);
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -49,6 +50,8 @@ void EditorApp::Draw(const GameTimer& gt)
 	DrawEditor();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
 
 
 	ThrowIfFailed(mCommandList->Close());
@@ -342,11 +345,14 @@ void EditorApp::DrawPhysicsSettings()
 
 void EditorApp::DrawSceneGameView()
 {
+	CD3DX12_GPU_DESCRIPTOR_HANDLE tex(mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+	tex.Offset(m_SceneRender.mShadowMapPass->GetIndex(), mCbvSrvUavDescriptorSize);
+
 	ImGui::Begin("Scene");
 	ImGui::End();
 
 	ImGui::Begin("Game");
-	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(512, 512));
+	ImGui::Image((ImTextureID)tex.ptr, ImVec2(512, 512));
 	ImGui::End();
 }
 

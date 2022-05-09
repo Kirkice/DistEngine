@@ -21,6 +21,8 @@ namespace Dist
 
 		//	初始化
 		virtual bool Initialize()override;
+		//	绘制
+		virtual void Draw(const GameTimer& gt)override;
 
 	private:
 		//	创建RTV SRV
@@ -29,8 +31,13 @@ namespace Dist
 		virtual void OnResize()override;
 		//	更新
 		virtual void Update(const GameTimer& gt)override;
-		//	绘制
-		virtual void Draw(const GameTimer& gt)override;
+		//	绘制渲染项目
+		void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<PBRRenderItem*>& ritems);
+
+		//	绘制阴影
+		void DrawShadowMap(ID3D12Resource* matBuffer);
+		void DrawSceneToShadowMap();
+
 
 	public:
 		DefaultSceneRender m_SceneRender;

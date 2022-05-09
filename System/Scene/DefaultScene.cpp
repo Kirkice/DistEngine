@@ -340,7 +340,7 @@ namespace Dist
 		plane->material.EmissionStrength = 0.0f;
 
 		//	创建平面网格
-		plane->mesh.CreateGrid(30.0f, 30.0f, 60, 40);
+		plane->mesh.CreateGrid(20.0f, 30.0f, 60, 40);
 
 		//	设置坐标
 		plane->position = Vector3(0, 0, 0);
@@ -379,7 +379,7 @@ namespace Dist
 		sphere->mesh.CreateSphere(0.5f, 20, 20);
 
 		//	设置坐标
-		sphere->position = Vector3(0, -1, 3);
+		sphere->position = Vector3(0, 0, 0);
 		sphere->eulerangle = Vector3(0, 0, 0);
 		sphere->scale = Vector3(2, 2, 2);
 
@@ -402,10 +402,9 @@ namespace Dist
 			//	return;
 
 			auto Ritem = std::make_unique<PBRRenderItem>();
-
-			XMStoreFloat4x4(&Ritem->World, mMeshRender[i]->GetWorldMatrix().ToSIMD());
+			Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
 			Ritem->TexTransform = Dist::Identity4x4();
-			Ritem->ObjCBIndex = 0;
+			Ritem->ObjCBIndex = i;
 			Ritem->Mat = &mMeshRender[i]->material;
 			Ritem->Geo = SystemUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name,mMeshRender[i]->mesh.data,md3dDevice,mCommandList);
 			Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
