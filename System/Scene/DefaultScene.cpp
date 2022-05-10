@@ -247,6 +247,10 @@ namespace Dist
 		mShaders["skyVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 		mShaders["skyPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
+		//	GBuffer Shader
+		mShaders["gbufferVS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\GBuffer.hlsl", nullptr, "VS", "vs_5_1");
+		mShaders["gbufferPS"] = SystemUtils::CompileShader(L"Asset\\Shaders\\GBuffer.hlsl", nullptr, "PS", "ps_5_1");
+
 		mInputLayout =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
