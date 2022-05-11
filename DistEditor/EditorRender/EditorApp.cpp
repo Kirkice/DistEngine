@@ -352,7 +352,7 @@ void EditorApp::DrawSceneGameView()
 	ImGui::End();
 
 	ImGui::Begin("Game");
-	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(512, 512));
+	ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(1383, 778));
 	ImGui::End();
 }
 
