@@ -52,6 +52,8 @@ namespace Dist
 		//	渲染目标
 		std::unique_ptr<RenderTexture> mTarget;
 
+		//  GBuffer
+		std::unique_ptr<RenderTexture> mGBuffer[4];
 		//	PSO
 		std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
@@ -89,7 +91,8 @@ namespace Dist
 		//	初始化 渲染目标
 		void InitRenderTarget(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int width, int height);
 
-
+		//	初始化GBuffer
+		void InitGBuffer(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int width, int height);
 		//-------------------------Update-------------------------------
 
 		//	更新阴影位置

@@ -37,7 +37,7 @@ namespace Dist
 
 	ID3D12Resource* RenderTexture::Resource()
 	{
-		return mRenderTarget.Get();
+		return mResource.Get();
 	}
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE RenderTexture::GpuSrv()const
@@ -87,7 +87,7 @@ namespace Dist
 		srvDesc.Texture2D.MostDetailedMip = 0;
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-		md3dDevice->CreateShaderResourceView(mRenderTarget.Get(), &srvDesc, mhCpuSrv);
+		md3dDevice->CreateShaderResourceView(mResource.Get(), &srvDesc, mhCpuSrv);
 	}
 
 	//Build Resource
@@ -113,6 +113,6 @@ namespace Dist
 			&texDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 			NULL,
-			IID_PPV_ARGS(&mRenderTarget)));
+			IID_PPV_ARGS(&mResource)));
 	}
 }

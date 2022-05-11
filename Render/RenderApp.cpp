@@ -115,11 +115,17 @@ namespace Dist
 		m_SceneRender.UpdateSceneRender(gt,mClientWidth,mClientHeight);
 	}
 
+	//	绘制
 	void RenderApp::Draw(const GameTimer& gt)
 	{
 		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
+		//	绘制阴影贴图
 		DrawShadowMap(matBuffer);
+
+		//	绘制GBuffer
+		DrawGBuffer(matBuffer);
 	}
+
 
 	void RenderApp::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<PBRRenderItem*>& ritems)
 	{
@@ -143,6 +149,49 @@ namespace Dist
 		}
 	}
 
+	//	绘制GBuffer
+	void RenderApp::DrawGBuffer(ID3D12Resource* matBuffer)
+	{
+		mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
+		matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
+		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+		mCommandList->RSSetViewports(1, &mScreenViewport);
+		mCommandList->RSSetScissorRects(1, &mScissorRect);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::White, 0, nullptr);
+		mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+
+		mCommandList->SetGraphicsRootDescriptorTable(5, mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+
+		auto passCB = m_SceneRender.mCurrFrameResource->PassCB->Resource();
+		mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
+
+
+		mCommandList->SetPipelineState(m_SceneRender.mPSOs["GBuffer"].Get());
+		DrawRenderItems(mCommandList.Get(), m_SceneRender.mRitemLayer[(int)RenderLayer::Opaque]);
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+		mCommandList->CopyResource(m_SceneRender.mTarget->Resource(), CurrentBackBuffer());
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mTarget->Resource(),
+			D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+
+	}
+
+	//	绘制阴影
 	void RenderApp::DrawShadowMap(ID3D12Resource* matBuffer)
 	{
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());

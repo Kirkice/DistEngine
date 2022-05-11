@@ -38,6 +38,9 @@ namespace Dist
 		void DrawShadowMap(ID3D12Resource* matBuffer);
 		void DrawSceneToShadowMap();
 
+		//	ªÊ÷∆GBuffer
+		void DrawGBuffer(ID3D12Resource* matBuffer);
+
 
 	public:
 		DefaultSceneRender m_SceneRender;

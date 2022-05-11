@@ -51,6 +51,6 @@ namespace Dist
 		CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
 		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
 
-		Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTarget;
+		Microsoft::WRL::ComPtr<ID3D12Resource> mResource;
 	};
 }

@@ -22,6 +22,9 @@ namespace Dist
 		//	初始化渲染目标
 		InitRenderTarget(md3dDevice, width, height);
 
+		//	初始化GBuffer
+		InitGBuffer(md3dDevice, width, height);
+
 		//	构建场景描述符
 		BuildDescriptorHeaps(mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mSRV, manager, mRtvDescriptorSize, mCbvSrvUavDescriptorSize);
 
@@ -84,6 +87,10 @@ namespace Dist
 		mShadowMapPass->SetIndex(manager.GetResourcesTextureEndIndex());
 		mSsao->SetIndex(manager.GetResourcesTextureEndIndex());
 
+		for (size_t i = 0; i < 4; i++)
+			mGBuffer[i]->SetIndex(manager.GetResourcesTextureEndIndex());
+
+
 		mTarget->BuildDescriptors(
 			GetCpuSrv(mTarget->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
 			GetGpuSrv(mTarget->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
@@ -101,6 +108,14 @@ namespace Dist
 			GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize),
 			mCbvSrvUavDescriptorSize,
 			mRtvDescriptorSize);
+
+		for (size_t i = 0; i < 4; i++)
+		{ 
+			mGBuffer[i]->BuildDescriptors( 
+				GetCpuSrv(mGBuffer[i]->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+				GetGpuSrv(mGBuffer[i]->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+				GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize));
+		}
 	}
 
 	//	构建帧资源
@@ -131,6 +146,15 @@ namespace Dist
 	void DefaultSceneRender::InitRenderTarget(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int width, int height)
 	{
 		mTarget = std::make_unique<RenderTexture>(md3dDevice.Get(), width, height);
+	}
+
+	//	初始化GBuffer
+	void DefaultSceneRender::InitGBuffer(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int width, int height)
+	{
+		for (size_t i = 0; i < 4; i++)
+		{
+			mGBuffer[i] = std::make_unique<RenderTexture>(md3dDevice.Get(), width, height);
+		}
 	}
 
 	//	构建PSO
@@ -226,6 +250,34 @@ namespace Dist
 			litPsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 			litPsoDesc.DSVFormat = mDepthStencilFormat;
 			ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&litPsoDesc, IID_PPV_ARGS(&mPSOs["litOpaque"])));
+		}
+
+		// PSO for GBuffer.
+		{
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC gBufferPsoDesc = opaquePsoDesc;
+			gBufferPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+			gBufferPsoDesc.pRootSignature = mRootSignature.Get();
+			gBufferPsoDesc.VS =
+			{
+				reinterpret_cast<BYTE*>(mShaders["gbufferVS"]->GetBufferPointer()),
+				mShaders["gbufferVS"]->GetBufferSize()
+			};
+			gBufferPsoDesc.PS =
+			{
+				reinterpret_cast<BYTE*>(mShaders["gbufferPS"]->GetBufferPointer()),
+				mShaders["gbufferPS"]->GetBufferSize()
+			};
+			gBufferPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+			gBufferPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+			gBufferPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+			gBufferPsoDesc.SampleMask = UINT_MAX;
+			gBufferPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+			gBufferPsoDesc.NumRenderTargets = 1;
+			gBufferPsoDesc.RTVFormats[0] = mBackBufferFormat;
+			gBufferPsoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
+			gBufferPsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
+			gBufferPsoDesc.DSVFormat = mDepthStencilFormat;
+			ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&gBufferPsoDesc, IID_PPV_ARGS(&mPSOs["GBuffer"])));
 		}
 
 		// PSO for shadow map pass.
@@ -342,6 +394,8 @@ namespace Dist
 			};
 			ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));
 		}
+
+
 	}
 
 
