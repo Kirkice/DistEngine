@@ -85,10 +85,10 @@ namespace Dist
 	void DefaultScene::BuildRootSignature(Microsoft::WRL::ComPtr<ID3D12Device> device)
 	{
 		CD3DX12_DESCRIPTOR_RANGE texTable0;
-		texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
+		texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 9, 0, 0);
 
 		CD3DX12_DESCRIPTOR_RANGE texTable1;
-		texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
+		texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 9, 0);
 
 		// Root parameter can be a table, root descriptor or root constants.
 		CD3DX12_ROOT_PARAMETER slotRootParameter[6];
