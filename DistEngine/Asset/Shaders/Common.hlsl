@@ -168,12 +168,17 @@ StructuredBuffer<PostprocessingData> gPostprocessingData                        
 //TEXTURES
 TextureCube gCubeIBL                                                                    : register(t0);
 TextureCube gCubeMap                                                                    : register(t1);
-Texture2D gShadowMap                                                                    : register(t2);
-Texture2D gSsaoMap                                                                      : register(t3);
-Texture2D gRenderTarget                                                                 : register(t4);
- 
-Texture2D gGizmoTextureMaps[12]                                                         : register(t5);
-Texture2D gTextureMaps[48]                                                              : register(t5);
+
+Texture2D gRenderTarget                                                                 : register(t2);
+Texture2D gShadowMap                                                                    : register(t3);
+Texture2D gSsaoMap                                                                      : register(t4);
+Texture2D gGBuffer0                                                                     : register(t5);
+Texture2D gGBuffer1                                                                     : register(t6);
+Texture2D gGBuffer2                                                                     : register(t7);
+Texture2D gGBuffer3                                                                     : register(t8);
+
+Texture2D gGizmoTextureMaps[12]                                                         : register(t9);
+Texture2D gTextureMaps[48]                                                              : register(t9);
 
 
 //SAMPLER
