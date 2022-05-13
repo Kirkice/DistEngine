@@ -119,8 +119,8 @@ namespace Dist
 	void RenderApp::Draw(const GameTimer& gt)
 	{
 		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
-		//	»æÖÆÒõÓ°ÌùÍ¼
-		DrawShadowMap(matBuffer);
+		////	»æÖÆÒõÓ°ÌùÍ¼
+		//DrawShadowMap(matBuffer);
 
 		//	»æÖÆGBuffer
 		DrawGBuffer(matBuffer);
@@ -153,7 +153,7 @@ namespace Dist
 	void RenderApp::DrawGBuffer(ID3D12Resource* matBuffer)
 	{
 		mCommandList->SetGraphicsRootSignature(m_SceneRender.mRootSignature.Get());
-		matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
+
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 
 		mCommandList->RSSetViewports(1, &mScreenViewport);
@@ -176,6 +176,7 @@ namespace Dist
 		DrawRenderItems(mCommandList.Get(), m_SceneRender.mRitemLayer[(int)RenderLayer::Opaque]);
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
 
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_SceneRender.mTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));

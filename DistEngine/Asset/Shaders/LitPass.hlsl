@@ -129,7 +129,7 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return REDPBRColor(pin);
+    return float4(1,0,0,1);//REDPBRColor(pin);
 }
 
 #endif
