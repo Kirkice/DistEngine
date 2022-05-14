@@ -8,7 +8,7 @@ using namespace DirectX::PackedVector;
 namespace Dist
 {
 	//	初始化场景渲染Render
-	void DefaultSceneRender::InitSceneRender(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSRV, ResourceManager& manager, int width, int height)
+	void DefaultSceneRender::InitSceneRender(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize, ResourceManager& manager, int width, int height)
 	{
 		mSceneBounds.Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		mSceneBounds.Radius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
@@ -26,7 +26,7 @@ namespace Dist
 		InitGBuffer(md3dDevice, width, height);
 
 		//	构建场景描述符
-		BuildDescriptorHeaps(mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mSRV, manager, mRtvDescriptorSize, mCbvSrvUavDescriptorSize);
+		BuildDescriptorHeaps(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, manager, mRtvDescriptorSize, mCbvSrvUavDescriptorSize);
 
 		//	构建帧资源
 		BuildFrameResources(md3dDevice);
@@ -80,9 +80,23 @@ namespace Dist
 		return rtv;
 	}
 
-	//	构建描述符
-	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSRV, ResourceManager& manager, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize)
+	//	加载资源
+	void DefaultSceneRender::LoadResources(ResourceManager& manager, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
 	{
+		manager.LoadTexture2D(md3dDevice, mSrvDescriptorHeap, mCommandList);
+	}
+
+	//	构建描述符
+	void DefaultSceneRender::BuildDescriptorHeaps(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer, int SwapChainBufferCount, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap, UINT mDsvDescriptorSize, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap, ResourceManager& manager, UINT mRtvDescriptorSize, UINT mCbvSrvUavDescriptorSize)
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+		srvHeapDesc.NumDescriptors = 128;
+		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
+
+		LoadResources(manager, md3dDevice, mCommandList);
+
 		mTarget->SetIndex(manager.GetResourcesTextureEndIndex());
 		mShadowMapPass->SetIndex(manager.GetResourcesTextureEndIndex());
 		mSsao->SetIndex(manager.GetResourcesTextureEndIndex());
@@ -92,19 +106,19 @@ namespace Dist
 
 
 		mTarget->BuildDescriptors(
-			GetCpuSrv(mTarget->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mTarget->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+			GetCpuSrv(mTarget->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+			GetGpuSrv(mTarget->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
 			GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize));
 
 		mShadowMapPass->BuildDescriptors(
-			GetCpuSrv(mShadowMapPass->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mShadowMapPass->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+			GetCpuSrv(mShadowMapPass->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+			GetGpuSrv(mShadowMapPass->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
 			GetDsv(1, mDsvHeap, mDsvDescriptorSize));
 
 		mSsao->BuildDescriptors(
 			mDepthStencilBuffer.Get(),
-			GetCpuSrv(mSsao->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
-			GetGpuSrv(mSsao->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+			GetCpuSrv(mSsao->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+			GetGpuSrv(mSsao->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
 			GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize),
 			mCbvSrvUavDescriptorSize,
 			mRtvDescriptorSize);
@@ -112,8 +126,8 @@ namespace Dist
 		for (size_t i = 0; i < 4; i++)
 		{ 
 			mGBuffer[i]->BuildDescriptors( 
-				GetCpuSrv(mGBuffer[i]->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
-				GetGpuSrv(mGBuffer[i]->GetIndex(), mSRV, mCbvSrvUavDescriptorSize),
+				GetCpuSrv(mGBuffer[i]->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
+				GetGpuSrv(mGBuffer[i]->GetIndex(), mSrvDescriptorHeap, mCbvSrvUavDescriptorSize),
 				GetRtv(SwapChainBufferCount, mRtvHeap, mRtvDescriptorSize));
 		}
 	}

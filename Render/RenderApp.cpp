@@ -24,14 +24,22 @@ namespace Dist
 
 		ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
-		//	加载纹理资源
-		mResourceManager.LoadTexture2D(md3dDevice, mSrvHeap, mCommandList);
-
 		//	初始化Scene
 		m_SceneRender.InitScene(md3dDevice, mCommandList);
 
 		//	初始化SceneRender
-		m_SceneRender.InitSceneRender(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize, mSrvHeap, mResourceManager,mClientWidth, mClientHeight);
+		m_SceneRender.InitSceneRender(md3dDevice, mCommandList, mDepthStencilBuffer, SwapChainBufferCount, mDsvHeap, mDsvDescriptorSize, mRtvHeap, mRtvDescriptorSize, mCbvSrvUavDescriptorSize, mResourceManager, mClientWidth, mClientHeight);
+
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGui::StyleColorsDark();
+		ImGui_ImplWin32_Init(mhMainWnd);
+		ImGui_ImplDX12_Init(md3dDevice.Get(), 3,
+			DXGI_FORMAT_R8G8B8A8_UNORM, m_SceneRender.mSrvDescriptorHeap.Get(),
+			m_SceneRender.mSrvDescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+			m_SceneRender.mSrvDescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart());
 
 		//	PSO
 		m_SceneRender.BuildPSO(md3dDevice, mBackBufferFormat, m4xMsaaState, m4xMsaaQuality, mDepthStencilFormat);
@@ -119,8 +127,8 @@ namespace Dist
 	void RenderApp::Draw(const GameTimer& gt)
 	{
 		auto matBuffer = m_SceneRender.mCurrFrameResource->PBRMaterialBuffer->Resource();
-		////	绘制阴影贴图
-		//DrawShadowMap(matBuffer);
+		//	绘制阴影贴图
+		DrawShadowMap(matBuffer);
 
 		//	绘制GBuffer
 		DrawGBuffer(matBuffer);
@@ -166,13 +174,13 @@ namespace Dist
 
 		mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
-		mCommandList->SetGraphicsRootDescriptorTable(5, mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+		mCommandList->SetGraphicsRootDescriptorTable(5, m_SceneRender.mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 		auto passCB = m_SceneRender.mCurrFrameResource->PassCB->Resource();
 		mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 
 
-		mCommandList->SetPipelineState(m_SceneRender.mPSOs["GBuffer"].Get());
+		mCommandList->SetPipelineState(m_SceneRender.mPSOs["litOpaque"].Get());
 		DrawRenderItems(mCommandList.Get(), m_SceneRender.mRitemLayer[(int)RenderLayer::Opaque]);
 
 		mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -196,7 +204,7 @@ namespace Dist
 	void RenderApp::DrawShadowMap(ID3D12Resource* matBuffer)
 	{
 		mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
-		mCommandList->SetGraphicsRootDescriptorTable(5, mSrvHeap->GetGPUDescriptorHandleForHeapStart());
+		mCommandList->SetGraphicsRootDescriptorTable(5, m_SceneRender.mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 		DrawSceneToShadowMap();
 	}
 
