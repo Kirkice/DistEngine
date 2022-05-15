@@ -1,16 +1,13 @@
 #include "BoundingBox.h"
 
-namespace Dist
+BoundingBox::BoundingBox()
 {
-	BoundingBox::BoundingBox()
-	{
-		aabb = BoundingAABB();
-		bound_sphere = BoundingSphere();
-		obb = BoundingOBB();
-	}
+	aabb = BoundingAABB();
+	bound_sphere = DistBound::BoundingSphere();
+	obb = BoundingOBB();
+}
 
-	BoundingBox::~BoundingBox()
-	{
+BoundingBox::~BoundingBox()
+{
 
-	}
 }

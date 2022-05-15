@@ -1,74 +1,73 @@
 #include "Camera.h"
 #include <string>
 
-namespace Dist
+
+Camera::Camera()
 {
-	Camera::Camera()
-	{
-		SetLens(0.25f * Dist::Pi, 1.0f, 1.0f, 1000.0f);
-	}
+	SetLens(0.25f * Mathf::Pi, 1.0f, 1.0f, 1000.0f);
+}
 
-	Camera::~Camera()
-	{
-	}
+Camera::~Camera()
+{
+}
 
-	//	更新相机
-	void Camera::tickCamera()
-	{
-		position3f = { position.x, position.y, position.z };
-	}
+//	更新相机
+void Camera::tickCamera()
+{
+	position3f = { position.x, position.y, position.z };
+}
 
-	//	获取相机坐标
-	XMVECTOR Camera::GetPosition()const
-	{
-		return position.ToSIMD();
-	}
+//	获取相机坐标
+XMVECTOR Camera::GetPosition()const
+{
+	return position.ToSIMD();
+}
 
-	XMFLOAT3 Camera::GetPosition3f()const
-	{
-		return XMFLOAT3(position.x, position.y, position.z);
-	}
+XMFLOAT3 Camera::GetPosition3f()const
+{
+	return XMFLOAT3(position.x, position.y, position.z);
+}
 
-	//	设置相机坐标
-	void Camera::SetPosition(float x, float y, float z)
-	{
-		position = Vector3(x, y, z);
-		mViewDirty = true;
-	}
+//	设置相机坐标
+void Camera::SetPosition(float x, float y, float z)
+{
+	position = Vector3(x, y, z);
+	mViewDirty = true;
+}
 
-	void Camera::SetPosition(const Vector3& v)
-	{
-		position = v;
-		mViewDirty = true;
-	}
+void Camera::SetPosition(const Vector3& v)
+{
+	position = v;
+	mViewDirty = true;
+}
 
-	//	获取右向量
-	XMVECTOR Camera::GetRight()const
-	{
-		return XMLoadFloat3(&mRight);
-	}
+//	获取右向量
+XMVECTOR Camera::GetRight()const
+{
+	return XMLoadFloat3(&mRight);
+}
 
-	XMFLOAT3 Camera::GetRight3f()const
-	{
-		return mRight;
-	}
+XMFLOAT3 Camera::GetRight3f()const
+{
+	return mRight;
+}
 
-	//	获取上向量
-	XMVECTOR Camera::GetUp()const
-	{
-		return XMLoadFloat3(&mUp);
-	}
+//	获取上向量
+XMVECTOR Camera::GetUp()const
+{
+	return XMLoadFloat3(&mUp);
+}
 
-	XMFLOAT3 Camera::GetUp3f()const
-	{
-		return mUp;
-	}
+XMFLOAT3 Camera::GetUp3f()const
+{
+	return mUp;
+}
 
-	//	获取前向量
-	XMVECTOR Camera::GetLook()const
-	{
-		return XMLoadFloat3(&mLook);
-	}
+//	获取前向量
+XMVECTOR Camera::GetLook()const
+{
+	return XMLoadFloat3(&mLook);
+}
 
 	XMFLOAT3 Camera::GetLook3f()const
 	{
@@ -289,4 +288,3 @@ namespace Dist
 			mViewDirty = false;
 		}
 	}
-}

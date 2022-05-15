@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-namespace Dist
+namespace Mathf
 {
 	struct float3x3
 	{

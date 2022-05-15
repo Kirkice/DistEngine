@@ -2,31 +2,28 @@
 #ifndef MESH_RENDER_H
 #define MESH_RENDER_H
 #include "Transform.h"
-#include "../Core/Core/Singleton.h"
+#include "../Core/Singleton.h"
 #include "../Core/Mathf/Mathf.h"
 #include "Material.h"
 #include "MeshFliter.h"
 #include "BoundingBox.h"
 
-namespace Dist
+class PBRMeshRender : public Transform
 {
-	class PBRMeshRender : public Transform
-	{
-	public:
-		//	材质
-		PBRMaterial material;
-		//	网格
-		MeshFliter mesh;
-		//	包围盒
-		BoundingBox bound;
+public:
+	//	材质
+	PBRMaterial material;
+	//	网格
+	MeshFliter mesh;
+	//	包围盒
+	BoundingBox bound;
 
 
-	public:
-		PBRMeshRender();
-		PBRMeshRender(PBRMaterial mat, MeshFliter mesh, BoundingBox bound);
-		~PBRMeshRender();
+public:
+	PBRMeshRender();
+	PBRMeshRender(PBRMaterial mat, MeshFliter mesh, BoundingBox bound);
+	~PBRMeshRender();
 
-	};
-}
+};
 
 #endif

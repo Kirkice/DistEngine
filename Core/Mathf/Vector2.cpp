@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	Vector2::Vector2()
 	{
@@ -153,8 +153,8 @@ namespace Dist
 	Vector2 Vector2::Clamp(const Vector2& val, const Vector2& min, const Vector2& max)
 	{
 		Vector2 retVal;
-		retVal.x = Dist::Clamp(val.x, min.x, max.x);
-		retVal.y = Dist::Clamp(val.y, min.y, max.y);
+		retVal.x = Mathf::Clamp(val.x, min.x, max.x);
+		retVal.y = Mathf::Clamp(val.y, min.y, max.y);
 		return retVal;
 	}
 
@@ -221,12 +221,12 @@ namespace Dist
 
 	Vector2 Vector2::Min(const Vector2& v1, const Vector2& v2)
 	{
-		return { Dist::Min(v1.x, v2.x), Dist::Min(v1.y, v2.y) };
+		return { Mathf::Min(v1.x, v2.x), Mathf::Min(v1.y, v2.y) };
 	}
 
 	Vector2 Vector2::Max(const Vector2& v1, const Vector2& v2)
 	{
-		return { Dist::Max(v1.x, v2.x), Dist::Max(v1.y, v2.y) };
+		return { Mathf::Max(v1.x, v2.x), Mathf::Max(v1.y, v2.y) };
 	}
 
 	void Vector2::StoreVector2(Vector2* pDestination, Vector2 V)

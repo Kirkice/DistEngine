@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	Vector4::Vector4()
 	{
@@ -159,10 +159,10 @@ namespace Dist
 	Vector4 Vector4::Clamp(const Vector4& val, const Vector4& min, const Vector4& max)
 	{
 		Vector4 retVal;
-		retVal.x = Dist::Clamp(val.x, min.x, max.x);
-		retVal.y = Dist::Clamp(val.y, min.y, max.y);
-		retVal.z = Dist::Clamp(val.z, min.z, max.z);
-		retVal.w = Dist::Clamp(val.w, min.w, max.w);
+		retVal.x = Mathf::Clamp(val.x, min.x, max.x);
+		retVal.y = Mathf::Clamp(val.y, min.y, max.y);
+		retVal.z = Mathf::Clamp(val.z, min.z, max.z);
+		retVal.w = Mathf::Clamp(val.w, min.w, max.w);
 		return retVal;
 	}
 

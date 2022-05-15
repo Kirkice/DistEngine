@@ -1,10 +1,10 @@
 #pragma once
-#include "MathHelper.h"
+#include "../MathHelper.h"
 #include "Vector2.h"
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	struct Vector3
 	{

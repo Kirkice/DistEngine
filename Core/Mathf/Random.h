@@ -2,7 +2,7 @@
 #include "Vector2.h"
 #include <random>
 
-namespace Dist
+namespace Mathf
 {
 	// Random number generation
 	class Random

@@ -3,7 +3,7 @@
 using namespace DirectX;
 using namespace std;
 
-namespace Dist
+namespace Mathf
 {
 	void Random::Roll(uint32_t numRolls)
 	{

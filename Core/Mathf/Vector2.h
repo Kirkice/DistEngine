@@ -1,9 +1,9 @@
 #pragma once
-#include "MathHelper.h"
+#include "../MathHelper.h"
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	struct Vector2
 	{

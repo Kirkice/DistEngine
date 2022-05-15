@@ -1,14 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8a7e26bb-0f37-4e75-98c4-2b38f3a923e3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Mathf">
       <UniqueIdentifier>{e3c35327-67c1-43eb-81b3-6c5b2496d44f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Base">
-      <UniqueIdentifier>{4769b5a5-0bdc-47ca-b957-56419dbb46a1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="d3dApp.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
     <ClCompile Include="Mathf\Vector2.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
@@ -18,27 +36,51 @@
     <ClCompile Include="Mathf\Vector4.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
+    <ClCompile Include="Mathf\Matrix.cpp">
+      <Filter>Mathf</Filter>
+    </ClCompile>
     <ClCompile Include="Mathf\Quaternion.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Random.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
-    <ClCompile Include="Mathf\Matrix.cpp">
-      <Filter>Mathf</Filter>
+    <ClCompile Include="FileUtility.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Core\LogSystem.cpp">
-      <Filter>Base</Filter>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Color.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
-    <ClCompile Include="Mathf\MathHelper.cpp">
-      <Filter>Mathf</Filter>
+    <ClCompile Include="LogSystem.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Mathf\Mathf.h">
+    <ClInclude Include="d3dApp.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
       <Filter>Mathf</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Vector2.h">
@@ -50,29 +92,56 @@
     <ClInclude Include="Mathf\Vector4.h">
       <Filter>Mathf</Filter>
     </ClInclude>
+    <ClInclude Include="Mathf\Matrix.h">
+      <Filter>Mathf</Filter>
+    </ClInclude>
     <ClInclude Include="Mathf\Quaternion.h">
       <Filter>Mathf</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Random.h">
       <Filter>Mathf</Filter>
     </ClInclude>
-    <ClInclude Include="Mathf\Matrix.h">
+    <ClInclude Include="Mathf\Mathf.h">
       <Filter>Mathf</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Singleton.h">
-      <Filter>Base</Filter>
+    <ClInclude Include="FileUtility.h">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Core\LogSystem.h">
-      <Filter>Base</Filter>
+    <ClInclude Include="Utility.h">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Macro.h">
-      <Filter>Base</Filter>
+    <ClInclude Include="zlib.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="zconf.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelpers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformHelpers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DDS.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="LoaderHelpers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Color.h">
       <Filter>Mathf</Filter>
     </ClInclude>
-    <ClInclude Include="Mathf\MathHelper.h">
-      <Filter>Mathf</Filter>
+    <ClInclude Include="LogSystem.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

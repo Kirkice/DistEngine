@@ -2,8 +2,6 @@
 
 using DirectX::XMVECTORU32;
 
-namespace Dist
-{
 	uint32_t Color::R11G11B10F(bool RoundToEven) const
 	{
 #if 1
@@ -12,9 +10,9 @@ namespace Dist
 
 		union { float f; uint32_t u; } R, G, B;
 
-		R.f = Dist::Clamp(m_value.f[0], 0.0f, kMaxVal) * kF32toF16;
-		G.f = Dist::Clamp(m_value.f[1], 0.0f, kMaxVal) * kF32toF16;
-		B.f = Dist::Clamp(m_value.f[2], 0.0f, kMaxVal) * kF32toF16;
+		R.f = Mathf::Clamp(m_value.f[0], 0.0f, kMaxVal) * kF32toF16;
+		G.f = Mathf::Clamp(m_value.f[1], 0.0f, kMaxVal) * kF32toF16;
+		B.f = Mathf::Clamp(m_value.f[2], 0.0f, kMaxVal) * kF32toF16;
 
 		if (RoundToEven)
 		{
@@ -76,12 +74,12 @@ namespace Dist
 		static const float kMinVal = float(1.f / (1 << 16));
 
 		// Clamp RGB to [0, 1.FF*2^16]
-		float r = Dist::Clamp(m_value.f[0], 0.0f, kMaxVal);
-		float g = Dist::Clamp(m_value.f[1], 0.0f, kMaxVal);
-		float b = Dist::Clamp(m_value.f[2], 0.0f, kMaxVal);
+		float r = Mathf::Clamp(m_value.f[0], 0.0f, kMaxVal);
+		float g = Mathf::Clamp(m_value.f[1], 0.0f, kMaxVal);
+		float b = Mathf::Clamp(m_value.f[2], 0.0f, kMaxVal);
 
 		// Compute the maximum channel, no less than 1.0*2^-15
-		float MaxChannel = Dist::Max(Dist::Max(r, g), Dist::Max(b, kMinVal));
+		float MaxChannel = Mathf::Max(Mathf::Max(r, g), Mathf::Max(b, kMinVal));
 
 		// Take the exponent of the maximum channel (rounding up the 9th bit) and
 		// add 15 to it.  When added to the channels, it causes the implicit '1.0'
@@ -138,4 +136,3 @@ namespace Dist
 
 #endif
 	}
-}

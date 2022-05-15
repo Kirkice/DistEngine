@@ -1,5 +1,5 @@
 #pragma once
-#include "MathHelper.h"
+#include "../MathHelper.h"
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
@@ -8,7 +8,7 @@
 #include "Quaternion.h"
 
 
-namespace Dist
+namespace Mathf
 {
 	template<typename T> void Swap(T& a, T& b)
 	{
@@ -95,12 +95,6 @@ namespace Dist
 		clr.z = color.z <= 0.04045f ? x.z : y.z;
 
 		return clr;
-	}
-
-	//	GetCOT
-	inline float GetCOT(float delta) 
-	{
-		return (delta) / sin(delta);
 	}
 
 	//��������

@@ -1,19 +1,16 @@
 #include "GameObject.h"
 
-namespace Dist
+//	释放
+GameObject::~GameObject()
 {
-	//	释放
-	GameObject::~GameObject()
-	{
-	}
+}
 
-	//	tick
-	void GameObject::tick(float delta_time)
-	{
-	}
+//	tick
+void GameObject::tick(float delta_time)
+{
+}
 
-	//	销毁
-	void GameObject::destory()
-	{
-	}
+//	销毁
+void GameObject::destory()
+{
 }

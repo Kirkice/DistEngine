@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ForwardRenderPipeline.cpp" />
+    <ClCompile Include="FrameResource.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="RendererCore.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="Ssao.cpp" />
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesPath.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesManager.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsCore.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ForwardRenderPipeline.h" />
+    <ClInclude Include="FrameResource.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshGeometry.h" />
+    <ClInclude Include="RendererCore.h" />
+    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="Ssao.h" />
+    <ClInclude Include="InputSystem.h">
+      <Filter>InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsUtils.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesPath.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesManager.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsCore.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="InputSystem">
+      <UniqueIdentifier>{e4291b71-b010-4f74-96e4-616553a91448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsSystem">
+      <UniqueIdentifier>{137a5663-10ee-4920-bbfa-084474969f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceManager">
+      <UniqueIdentifier>{90a1eba5-5d3f-4d55-8466-8e045c38501c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneManager">
+      <UniqueIdentifier>{7dba45c4-95e7-4d3c-a4d1-8f5c4f7d8df6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

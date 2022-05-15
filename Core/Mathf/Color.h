@@ -1,8 +1,6 @@
 #pragma once
 #include "Mathf.h"
 
-namespace Dist
-{
 	class Color
 	{
 	public:
@@ -136,4 +134,3 @@ namespace Dist
 		uint32_t a = XMVectorGetIntW(result);
 		return a << 24 | b << 16 | g << 8 | r;
 	}
-}

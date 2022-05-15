@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	Quaternion::Quaternion()
 	{

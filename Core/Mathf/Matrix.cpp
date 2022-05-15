@@ -2,7 +2,7 @@
 
 using namespace DirectX;
 
-namespace Dist
+namespace Mathf
 {
 	float3x3::float3x3()
 	{
@@ -297,7 +297,7 @@ namespace Dist
 		x /= mag;
 
 		Vector3 y(Vector3::Cross(z, x));
-		if (!Dist::CompareApproximately(Vector3::SqrMagnitude(y), 1.0F)) 
+		if (!Mathf::CompareApproximately(Vector3::SqrMagnitude(y), 1.0F)) 
 			return false;
 
 		m->SetXBasis(x);

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d1478862-41b0-4a83-a760-77b1ef4a3ab2}</ProjectGuid>
+    <ProjectGuid>{3000f3ac-db09-4073-b40d-c258e7a4bc2f}</ProjectGuid>
     <RootNamespace>Component</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Engine\DistEngine\ThirdParty\Spdlog\include;E:\Engine\DistEngine\Core\Core;E:\Engine\DistEngine\Core\Mathf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../ThirdParty/Spdlog/include;../ThirdParty/Core/Core;../ThirdParty/Core/Mathf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -141,21 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BoundingAABB.h" />
-    <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="BoundingOBB.h" />
-    <ClInclude Include="BoundingSphere.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="DirectionLight.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="MeshFliter.h" />
-    <ClInclude Include="MeshRender.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="SpotLight.h" />
-    <ClInclude Include="Transform.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="BoundingAABB.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="BoundingOBB.cpp" />
@@ -169,6 +154,21 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Transform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BoundingAABB.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingOBB.h" />
+    <ClInclude Include="BoundingSphere.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DirectionLight.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshFliter.h" />
+    <ClInclude Include="MeshRender.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

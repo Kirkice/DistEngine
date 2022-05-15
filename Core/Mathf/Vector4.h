@@ -1,9 +1,9 @@
 #pragma once
-#include "MathHelper.h"
+#include "../MathHelper.h"
 #include "Vector2.h"
 #include "Vector3.h"
 
-namespace Dist
+namespace Mathf
 {
 	struct Vector4
 	{

@@ -1,7 +1,8 @@
 #pragma once
-#include "Mathf.h"
+#include "../Core/Mathf/Mathf.h"
+using namespace Mathf;
 
-namespace Dist
+namespace DistBound
 {
 	struct BoundingSphere
 	{
@@ -13,12 +14,12 @@ namespace Dist
 		explicit BoundingSphere(DirectX::FXMVECTOR xyzw);
 		explicit BoundingSphere(Vector4 sphere);
 
-		Vector3 GetCenter(void) const { return Vector3(x,y,z); }
+		Vector3 GetCenter(void) const { return Vector3(x, y, z); }
 		float GetRadius(void) const { return w; }
 
 		bool IsIntersect(const BoundingSphere& rhs);
 		bool IsContain(const BoundingSphere& rhs);
 
 		bool IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length = 100);
-	}; 
+	};
 }

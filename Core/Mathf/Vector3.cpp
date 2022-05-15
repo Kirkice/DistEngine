@@ -1,7 +1,7 @@
 #include "Vector3.h"
 
 
-namespace Dist
+namespace Mathf
 {
 	const Vector3 Vector3::zero = Vector3(0, 0, 0);
 	const Vector3 Vector3::one = Vector3(1.0F, 1.0F, 1.0F);
@@ -250,9 +250,9 @@ namespace Dist
 	Vector3 Vector3::Clamp(const Vector3& val, const Vector3& min, const Vector3& max)
 	{
 		Vector3 retVal;
-		retVal.x = Dist::Clamp(val.x, min.x, max.x);
-		retVal.y = Dist::Clamp(val.y, min.y, max.y);
-		retVal.z = Dist::Clamp(val.z, min.z, max.z);
+		retVal.x = Mathf::Clamp(val.x, min.x, max.x);
+		retVal.y = Mathf::Clamp(val.y, min.y, max.y);
+		retVal.z = Mathf::Clamp(val.z, min.z, max.z);
 		return retVal;
 	}
 
@@ -290,12 +290,12 @@ namespace Dist
 
 	Vector3 Vector3::Min(const Vector3& v1, const Vector3& v2)
 	{
-		return { Dist::Min(v1.x, v2.x), Dist::Min(v1.y, v2.y), Dist::Min(v1.z, v2.z) };
+		return { Mathf::Min(v1.x, v2.x), Mathf::Min(v1.y, v2.y), Mathf::Min(v1.z, v2.z) };
 	}
 
 	Vector3 Vector3::Max(const Vector3& v1, const Vector3& v2)
 	{
-		return { Dist::Max(v1.x, v2.x), Dist::Max(v1.y, v2.y), Dist::Max(v1.z, v2.z) };
+		return { Mathf::Max(v1.x, v2.x), Mathf::Max(v1.y, v2.y), Mathf::Max(v1.z, v2.z) };
 	}
 
 	bool Vector3::Near3(const Vector3& a, const Vector3& b, float eps/*=1e-3f*/)
