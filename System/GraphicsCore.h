@@ -9,6 +9,7 @@
 #include "Ssao.h"
 #include "RendererCore.h"
 #include "ResourcesManager.h"
+#include "SceneManager.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -34,7 +35,7 @@ public:
 	void UpdateLights(const GameTimer& gt);
 	void AnimateMaterials(const GameTimer& gt);
 	void UpdateObjectCBs(const GameTimer& gt);
-	void UpdatePBRMaterialBuffer(const GameTimer& gt);
+	void UpdateMaterialBuffer(const GameTimer& gt);
 	void UpdateShadowTransform(const GameTimer& gt);
 	void UpdateMainPassCB(const GameTimer& gt);
 	void UpdateShadowPassCB(const GameTimer& gt);
@@ -46,10 +47,9 @@ public:
 	void BuildDescriptorHeaps();
 
 	void BuildShadersAndInputLayout();
-	void BuildShapeGeometry();
 	void BuildPSOs();
 	void BuildFrameResources();
-	void BuildMaterials();
+
 	void BuildRenderItems();
 
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
@@ -64,7 +64,18 @@ public:
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GetStaticSamplers();
 
 public:
-	ResourcesManager mResManager = ResourcesManager();
+
+	//Textures
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mIconTextures;
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mResourcesTextures;
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mGizmosTextures;
+	std::unordered_map<std::string, std::unique_ptr<TextureCube>> mCubeMapTextures;
+
+	//	场景管理
+	SceneManager mSceneManager = SceneManager(SceneType::Default);
+
+
+
 
 	std::vector<std::unique_ptr<FrameResource>> mFrameResources;
 	FrameResource* mCurrFrameResource = nullptr;
@@ -75,14 +86,6 @@ public:
 
 	ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 
-	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
-	std::unordered_map<std::string, std::unique_ptr<Material>> mMaterials;
-
-	//Textures
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mIconTextures;
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mResourcesTextures;
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>> mGizmosTextures;
-	std::unordered_map<std::string, std::unique_ptr<TextureCube>> mCubeMapTextures;
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;

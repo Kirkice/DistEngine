@@ -85,12 +85,10 @@
 		"Asset/Textures/DefaultTextures/WoodenDiffuse4.png",
 		"Asset/Textures/DefaultTextures/WoodenNormal4.png",
 
-		"Asset/Textures/DefaultTextures/sampleLUT.png"
+		"Asset/Textures/DefaultTextures/sampleLUT.png",
 
-		//"Asset/Textures/DefaultTextures/black.png",
-		//"Asset/Textures/DefaultTextures/mso.png",
-		//"Asset/Textures/DefaultTextures/norm.png",
-		//"Asset/Textures/DefaultTextures/white.png",
+		"Asset/Textures/DefaultTextures/black.png",
+		"Asset/Textures/DefaultTextures/white.png"
 	};
 
 	const std::vector<std::string> mProjectResourceName =			//	资源纹理名称
@@ -116,12 +114,10 @@
 		"WoodenDiffuse4",
 		"WoodenNormal4",
 
-		"sampleLUT"
+		"sampleLUT",
 
-		//"black",
-		//"mso",
-		//"norm",
-		//"white",
+		"black",
+		"white",
 	};
 
 

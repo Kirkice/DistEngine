@@ -67,21 +67,20 @@ struct SsaoConstants
 
 struct SkyBoxMaterialData
 {
-	Vector4 SkyBoxTint = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float SkyBoxExposure = 1;
-	float SkyBoxRotation = 0;
+    Color Tint = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float Exposure = 1;
+	float Rotation = 0;
 	float ACES = 1;
 };
 
 struct PBRMaterialData
 {
-    Vector4 BaseColor = (1, 1, 1, 1);
+    Color DiffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float Smoothness = 0.5f;
     float Metallic = 0.5f;
     float Occlusion = 0.0f;
-    Vector4 EmissionColor = (0,0,0,1);
+    Color EmissionColor = { 0.0f, 0.0f, 0.0f, 1.0f };
     float EmissionStrength = 0.0f;
-    float ReceiveShadow = 0.0f;
 
 	// Used in texture mapping.
 	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();

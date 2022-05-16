@@ -42,8 +42,8 @@ bool GraphicsCore::Initialize()
 	BuildDescriptorHeaps();
 
 	BuildShadersAndInputLayout();
-	BuildShapeGeometry();
-	BuildMaterials();
+
+
 	BuildRenderItems();
 	BuildFrameResources();
 	BuildPSOs();
@@ -127,7 +127,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateLights(gt);
 	AnimateMaterials(gt);
 	UpdateObjectCBs(gt);
-	UpdatePBRMaterialBuffer(gt);
+	UpdateMaterialBuffer(gt);
 	UpdateShadowTransform(gt);
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
@@ -179,33 +179,12 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	}
 }
 
-void GraphicsCore::UpdatePBRMaterialBuffer(const GameTimer& gt)
+void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 {
-	auto currMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
-	for (auto& e : mMaterials)
-	{
-		// Only update the cbuffer data if the constants have changed.  If the cbuffer
-		// data changes, it needs to be updated for each FrameResource.
-		Material* mat = e.second.get();
-		if (mat->NumFramesDirty > 0)
-		{
-			if (mat->MatCBIndex > 0)
-				PBRDemo_UpdateMaterialBuffer(mat, currMaterialBuffer);
-		}
-	}
-
-	auto currMaterialBuffer_Sky = mCurrFrameResource->SkyBoxMaterialBuffer.get();
-	for (auto& e : mMaterials)
-	{
-		// Only update the cbuffer data if the constants have changed.  If the cbuffer
-		// data changes, it needs to be updated for each FrameResource.
-		Material* mat = e.second.get();
-		if (mat->NumFramesDirty > 0)
-		{
-			if (mat->MatCBIndex < 1)
-				SkyBox_UpdateMaterialBuffer(mat, currMaterialBuffer_Sky);
-		}
-	}
+	auto PBRMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
+	auto SkyBoxMaterialBuffer = mCurrFrameResource->SkyBoxMaterialBuffer.get();
+	//	更惨材质Buffer
+	mSceneManager.UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer);
 }
 
    
@@ -508,14 +487,13 @@ void GraphicsCore::BuildDescriptorHeaps()
 	//Load Icon
 	for (size_t i = 0; i < mProjectIconTextures.size(); i++)
 	{
-		//	����
 		int image_width = 0;
 		int image_height = 0;
 
 		ID3D12Resource* texture = NULL;
 
 		// Load the texture from a file
-		bool ret = mResManager.LoadTextureFromFile(mProjectIconTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
+		bool ret = ResourcesManager::LoadTextureFromFile(mProjectIconTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
 		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
@@ -537,36 +515,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 		}
 	}
 
-	//Load Project
-	for (size_t i = 0; i < mProjectResourceTextures.size(); i++)
-	{
-		int image_width = 0;
-		int image_height = 0;
-
-		ID3D12Resource* texture = NULL;
-
-		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-		// Load the texture from a file
-		bool ret = mResManager.LoadTextureFromFile(mProjectResourceTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
-		IM_ASSERT(ret);
-
-		auto tex = std::make_unique<Texture2D>();
-		tex->Width = image_width;
-		tex->Height = image_height;
-		tex->Bit = 32;
-		tex->Size = (float)((image_width * image_height * 32) / 8388608);
-		tex->type = TexturesType::Project;
-		tex->TexIndex = TextureIndex;
-		TextureIndex++;
-		tex->CpuHandle = CPUDescriptor;
-		tex->GpuHandle = GPUDescriptor;
-		tex->Name = mProjectResourceName[i];
-		tex->Path = mProjectResourceTextures[i];
-		mResourcesTextures[tex->Name] = std::move(tex);
-	}
-
 	//Load Gizmo
 	for (size_t i = 0; i < mProjectGizmoTextures.size(); i++)
 	{
@@ -579,7 +527,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 		// Load the texture from a file
-		bool ret = mResManager.LoadTextureFromFile(mProjectGizmoTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
+		bool ret = ResourcesManager::LoadTextureFromFile(mProjectGizmoTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
 		IM_ASSERT(ret);
 
 		auto tex = std::make_unique<Texture2D>();
@@ -595,6 +543,36 @@ void GraphicsCore::BuildDescriptorHeaps()
 		tex->Name = mProjectGizmoName[i];
 		tex->Path = mProjectGizmoTextures[i];
 		mGizmosTextures[tex->Name] = std::move(tex);
+	}
+
+	//Load Project
+	for (size_t i = 0; i < mProjectResourceTextures.size(); i++)
+	{
+		int image_width = 0;
+		int image_height = 0;
+
+		ID3D12Resource* texture = NULL;
+
+		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+		// Load the texture from a file
+		bool ret = ResourcesManager::LoadTextureFromFile(mProjectResourceTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
+		IM_ASSERT(ret);
+
+		auto tex = std::make_unique<Texture2D>();
+		tex->Width = image_width;
+		tex->Height = image_height;
+		tex->Bit = 32;
+		tex->Size = (float)((image_width * image_height * 32) / 8388608);
+		tex->type = TexturesType::Project;
+		tex->TexIndex = TextureIndex;
+		TextureIndex++;
+		tex->CpuHandle = CPUDescriptor;
+		tex->GpuHandle = GPUDescriptor;
+		tex->Name = mProjectResourceName[i];
+		tex->Path = mProjectResourceTextures[i];
+		mResourcesTextures[tex->Name] = std::move(tex);
 	}
 
 	//Load CubeMap
@@ -799,134 +777,6 @@ void GraphicsCore::BuildShadersAndInputLayout()
 		{ "WEIGHTS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
-}
-
-void GraphicsCore::BuildShapeGeometry()
-{
-	GeometryGenerator geoGen;
-	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
-	GeometryGenerator::MeshData ScreenGrid = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
-	GeometryGenerator::MeshData quad = geoGen.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-
-	// Cache the vertex offsets to each object in the concatenated vertex buffer.
-	UINT gridVertexOffset = 0;
-	UINT sphereVertexOffset = gridVertexOffset + (UINT)grid.Vertices.size();
-	UINT quadVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
-	UINT screenGridVertexOffset = quadVertexOffset + (UINT)quad.Vertices.size();
-
-	// Cache the starting index for each object in the concatenated index buffer.   
-	UINT gridIndexOffset = 0;
-	UINT sphereIndexOffset = gridIndexOffset + (UINT)grid.Indices32.size();
-	UINT quadIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
-	UINT screenGridIndexOffset = quadIndexOffset + (UINT)quad.Indices32.size();
-
-	SubmeshGeometry gridSubmesh;
-	gridSubmesh.IndexCount = (UINT)grid.Indices32.size();
-
-
-
-
-	gridSubmesh.StartIndexLocation = gridIndexOffset;
-	gridSubmesh.BaseVertexLocation = gridVertexOffset;
-
-	SubmeshGeometry sphereSubmesh;
-	sphereSubmesh.IndexCount = (UINT)sphere.Indices32.size();
-	sphereSubmesh.StartIndexLocation = sphereIndexOffset;
-	sphereSubmesh.BaseVertexLocation = sphereVertexOffset;
-
-	SubmeshGeometry quadSubmesh;
-	quadSubmesh.IndexCount = (UINT)quad.Indices32.size();
-	quadSubmesh.StartIndexLocation = quadIndexOffset;
-	quadSubmesh.BaseVertexLocation = quadVertexOffset;
-
-	SubmeshGeometry screenGridSubMesh;
-	screenGridSubMesh.IndexCount = (UINT)ScreenGrid.Indices32.size();
-	screenGridSubMesh.StartIndexLocation = screenGridIndexOffset;
-	screenGridSubMesh.BaseVertexLocation = screenGridVertexOffset;
-
-	//
-	// Extract the vertex elements we are interested in and pack the
-	// vertices of all the meshes into one vertex buffer.
-	//
-
-	auto totalVertexCount =
-		grid.Vertices.size() +
-		sphere.Vertices.size() +
-		quad.Vertices.size() +
-		ScreenGrid.Vertices.size();
-
-	std::vector<Vertex> vertices(totalVertexCount);
-
-	UINT k = 0;
-
-	for (size_t i = 0; i < grid.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = grid.Vertices[i].Position;
-		vertices[k].Normal = grid.Vertices[i].Normal;
-		vertices[k].TexC = grid.Vertices[i].TexC;
-		vertices[k].TangentU = grid.Vertices[i].TangentU;
-	}
-
-	for (size_t i = 0; i < sphere.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = sphere.Vertices[i].Position;
-		vertices[k].Normal = sphere.Vertices[i].Normal;
-		vertices[k].TexC = sphere.Vertices[i].TexC;
-		vertices[k].TangentU = sphere.Vertices[i].TangentU;
-	}
-
-	for (int i = 0; i < quad.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = quad.Vertices[i].Position;
-		vertices[k].Normal = quad.Vertices[i].Normal;
-		vertices[k].TexC = quad.Vertices[i].TexC;
-		vertices[k].TangentU = quad.Vertices[i].TangentU;
-	}
-
-	for (int i = 0; i < ScreenGrid.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = ScreenGrid.Vertices[i].Position;
-		vertices[k].Normal = ScreenGrid.Vertices[i].Normal;
-		vertices[k].TexC = ScreenGrid.Vertices[i].TexC;
-		vertices[k].TangentU = ScreenGrid.Vertices[i].TangentU;
-	}
-
-	std::vector<std::uint16_t> indices;
-	indices.insert(indices.end(), std::begin(grid.GetIndices16()), std::end(grid.GetIndices16()));
-	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
-	indices.insert(indices.end(), std::begin(quad.GetIndices16()), std::end(quad.GetIndices16()));
-	indices.insert(indices.end(), std::begin(ScreenGrid.GetIndices16()), std::end(ScreenGrid.GetIndices16()));
-
-	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
-	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
-
-	auto geo = std::make_unique<MeshGeometry>();
-	geo->Name = "shapeGeo";
-
-	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-
-	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
-
-	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), vertices.data(), vbByteSize, geo->VertexBufferUploader);
-
-	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), indices.data(), ibByteSize, geo->IndexBufferUploader);
-
-	geo->VertexByteStride = sizeof(Vertex);
-	geo->VertexBufferByteSize = vbByteSize;
-	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
-	geo->IndexBufferByteSize = ibByteSize;
-
-	geo->DrawArgs["grid"] = gridSubmesh;
-	geo->DrawArgs["sphere"] = sphereSubmesh;
-	geo->DrawArgs["quad"] = quadSubmesh;
-	geo->DrawArgs["screenGrid"] = screenGridSubMesh;
-
-	mGeometries[geo->Name] = std::move(geo);
 }
 
 void GraphicsCore::BuildPSOs()
@@ -1567,16 +1417,8 @@ void GraphicsCore::BuildFrameResources()
 		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, (UINT)mAllRitems.size(),
 			1,
-			(UINT)mMaterials.size()));
+			(UINT)(mSceneManager.mMeshRender.size() + mSceneManager.mSkyBoxMeshRender.size())));
 	}
-}
-
-void GraphicsCore::BuildMaterials()
-{
-	//SkyBox Mat
-	SkyBox_BuildMaterials(mMaterials);
-	//PBR Mat
-	PBRDemo_BuildMaterials(mMaterials);
 }
 
 void GraphicsCore::BuildRenderItems()

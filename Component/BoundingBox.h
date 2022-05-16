@@ -4,17 +4,20 @@
 #include "BoundingAABB.h"
 #include "BoundingSphere.h"
 
-class BoundingBox
+namespace DistBound
 {
-public:
-	//	AABBАќЮЇКа
-	BoundingAABB aabb;
-	//	ЧђАќЮЇКа
-	DistBound::BoundingSphere bound_sphere;
-	//	OBBАќЮЇКа
-	BoundingOBB obb;
+	class BoundingBox
+	{
+	public:
+		//	AABBАќЮЇКа
+		BoundingAABB aabb;
+		//	ЧђАќЮЇКа
+		DistBound::BoundingSphere bound_sphere;
+		//	OBBАќЮЇКа
+		BoundingOBB obb;
 
-public:
-	BoundingBox();
-	~BoundingBox();
-};
+	public:
+		BoundingBox();
+		~BoundingBox();
+	};
+}

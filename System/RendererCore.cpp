@@ -6,7 +6,7 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-const int GizmoCount = 6;
+const int GizmoCount = 14;
 
 RenderCore::RenderCore(HINSTANCE hInstance) : InputSystem(hInstance)
 {
@@ -228,9 +228,9 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	plane->MatCBIndex = 1;
 	plane->DiffuseSrvHeapIndex = GizmoCount + 0;
 	plane->NormalSrvHeapIndex = GizmoCount + 1;
-	plane->MsoSrvHeapIndex = GizmoCount + 2;
-	plane->EmissionSrvHeapIndex = GizmoCount + 3;
-	plane->LUTSrvHeapIndex = GizmoCount + 4;
+	plane->MsoSrvHeapIndex = GizmoCount + 16;
+	plane->EmissionSrvHeapIndex = GizmoCount + 15;
+	plane->LUTSrvHeapIndex = GizmoCount + 14;
 	plane->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	plane->Smoothness = 0.0f;
 	plane->Metallic = 0.0f;
@@ -242,11 +242,11 @@ void RenderCore::PBRDemo_BuildMaterials(std::unordered_map<std::string, std::uni
 	auto sphere = std::make_unique<Material>();
 	sphere->Name = "sphere";
 	sphere->MatCBIndex = 2;
-	sphere->DiffuseSrvHeapIndex = GizmoCount + 5;
-	sphere->NormalSrvHeapIndex = GizmoCount + 6;
-	sphere->MsoSrvHeapIndex = GizmoCount + 2;
-	sphere->EmissionSrvHeapIndex = GizmoCount + 3;
-	sphere->LUTSrvHeapIndex = GizmoCount + 4;
+	sphere->DiffuseSrvHeapIndex = GizmoCount + 2;
+	sphere->NormalSrvHeapIndex = GizmoCount + 3;
+	sphere->MsoSrvHeapIndex = GizmoCount + 16;
+	sphere->EmissionSrvHeapIndex = GizmoCount + 15;
+	sphere->LUTSrvHeapIndex = GizmoCount + 14;
 	sphere->BaseColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->Smoothness = 0.45f;
 	sphere->Metallic = 0.0f;

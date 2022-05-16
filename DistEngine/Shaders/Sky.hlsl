@@ -45,7 +45,7 @@ VertexOut VS(VertexIn vin)
 
 	SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
 
-    float3 rotated 											= RotateAroundYInDegrees(vin.PosL, matData.SkyBoxRotation);
+    float3 rotated 											= RotateAroundYInDegrees(vin.PosL, matData.Rotation);
 	float4 posW 											= mul(float4(rotated, 1.0f), gWorld);
 	posW.xyz 												+= gEyePosW;
 	vout.PosH 												= mul(posW, gViewProj).xyww;
@@ -56,7 +56,7 @@ float4 PS(VertexOut pin) : SV_Target
 {
 	SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
 	float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
-	color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
+	color													= color * matData.Tint.rgb * matData.Exposure;
 
 	// color													= pow(color.rgb,0.454545);
 	if(matData.ACES > 0.5)

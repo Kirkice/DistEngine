@@ -27,6 +27,7 @@ public:
 
 	//	Mesh Render	
 	std::vector<std::unique_ptr<PBRMeshRender>> mMeshRender;
+	std::vector<std::unique_ptr<SkyBoxMeshRender>> mSkyBoxMeshRender;
 
 	//	天空盒设置
 	SkyBoxSetting mSkyBoxSetting;
@@ -34,10 +35,18 @@ public:
 	//	灯光设置
 	LightSetting mLightSetting;
 
+public:
+	//	更新场景的Material Buffer
+	void UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
 private:
 	void BuildScene();
 	void BuildDefaultScene();
 	void BuildConelBoxScene();
 	void BuildToonScene();
 	void BuildWaterScene();
+
+	void UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
+	void UpdateConelBoxSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
+	void UpdateToonSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
+	void UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
 };

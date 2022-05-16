@@ -5,7 +5,7 @@
 #include "../Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 
-
+//	PBR材质
 class PBRMaterial
 {
 public:
@@ -13,8 +13,8 @@ public:
 	std::string Name;
 	//	Index 值
 	int MatCBIndex = -1;
-	//	变化值
-	int NumFramesDirty = 3;
+	//	材质变化值
+	int NumFramesDirty;
 	//	固有色
 	Color DiffuseColor;
 	//	粗糙度
@@ -47,5 +47,28 @@ public:
 	~PBRMaterial();
 };
 
+//	天空球材质
+class SkyBoxMaterial
+{
+public:
+	//	名字
+	std::string Name;
+	//	Index 值
+	int MatCBIndex = -1;
+	//	材质变化值
+	int NumFramesDirty;
+	//	固有色
+	Color Tint;
+	//	曝光度
+	float Exposure;
+	//	旋转
+	float Rotation;
+	//	ACES开启
+	float ACES;
+
+public:
+	SkyBoxMaterial();
+	~SkyBoxMaterial();
+};
 
 #endif

@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-const int GizmoCount = 6;
+const int ProjectTexStart = 14;
 
 SceneManager::SceneManager(SceneType tp)
 {
@@ -12,6 +12,8 @@ SceneManager::~SceneManager()
 
 }
 
+
+//	构建场景
 void SceneManager::BuildScene()
 {
 	switch (Type)
@@ -31,16 +33,26 @@ void SceneManager::BuildScene()
 
 void SceneManager::BuildDefaultScene()
 {
-	//	设为主光源
-	mMainLight.isMainLight = true;
-	//	灯光颜色
-	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
-	//	设置灯光位置
-	mMainLight.position = Vector3(0, 3, 0);
-	//	设置灯光欧拉角
-	mMainLight.eulerangle = Vector3(50, -30, 0);
-	//	主光源名字
-	mMainLight.name = "Direction Light";
+	//	SkyBoxMeshRender
+	auto sky = std::make_unique<SkyBoxMeshRender>();
+	sky->name = "DGarden";
+	//构建材质
+	sky->material.Name = "DGarden_mat";
+	sky->material.MatCBIndex = 0;
+	sky->material.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	sky->material.Exposure = 1;
+	sky->material.Rotation = 0;
+	sky->material.ACES = 1;
+
+	//	创建平面网格
+	sky->mesh.CreateSphere(0.5f, 20, 20);
+
+	//	设置坐标
+	sky->position = Vector3(0, 0, 0);
+	sky->eulerangle = Vector3(0, 0, 0);
+	sky->scale = Vector3(5000, 5000, 5000);
+	mSkyBoxMeshRender.push_back(std::move(sky));
+
 
 
 	//	平面的MeshRender
@@ -51,11 +63,11 @@ void SceneManager::BuildDefaultScene()
 	//构建材质
 	plane->material.Name = "plane_mat";
 	plane->material.MatCBIndex = 1;
-	plane->material.DiffuseMapIndex = GizmoCount + 0;
-	plane->material.NormalMapIndex = GizmoCount + 1;
-	plane->material.MsoMapIndex = GizmoCount + 2;
-	plane->material.EmissionMapIndex = GizmoCount + 3;
-	plane->material.LUTMapIndex = GizmoCount + 4;
+	plane->material.DiffuseMapIndex = ProjectTexStart + 0;
+	plane->material.NormalMapIndex = ProjectTexStart + 1;
+	plane->material.MsoMapIndex = ProjectTexStart + 16;
+	plane->material.EmissionMapIndex = ProjectTexStart + 15;
+	plane->material.LUTMapIndex = ProjectTexStart + 14;
 	plane->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	plane->material.Smoothness = 0.0f;
 	plane->material.Metallic = 0.0f;
@@ -87,11 +99,11 @@ void SceneManager::BuildDefaultScene()
 	//构建材质
 	sphere->material.Name = "Wooden2";
 	sphere->material.MatCBIndex = 2;
-	sphere->material.DiffuseMapIndex = GizmoCount + 13;
-	sphere->material.NormalMapIndex = GizmoCount + 14;
-	sphere->material.MsoMapIndex = GizmoCount + 2;
-	sphere->material.EmissionMapIndex = GizmoCount + 3;
-	sphere->material.LUTMapIndex = GizmoCount + 4;
+	sphere->material.DiffuseMapIndex = ProjectTexStart + 2;
+	sphere->material.NormalMapIndex = ProjectTexStart + 3;
+	sphere->material.MsoMapIndex = ProjectTexStart + 16;
+	sphere->material.EmissionMapIndex = ProjectTexStart + 15;
+	sphere->material.LUTMapIndex = ProjectTexStart + 14;
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->material.Smoothness = 0.15f;
 	sphere->material.Metallic = 0.0f;
@@ -99,7 +111,7 @@ void SceneManager::BuildDefaultScene()
 	sphere->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 	sphere->material.EmissionStrength = 0.0f;
 
-	//	创建平面网格
+	//	创建球网格
 	sphere->mesh.CreateSphere(0.5f, 20, 20);
 
 	//	设置坐标
@@ -114,6 +126,22 @@ void SceneManager::BuildDefaultScene()
 	sphere->bound.aabb.m_min = sphere->GetWorldMatrix() * sphere->bound.aabb.m_min;
 	sphere->bound.aabb.m_max = sphere->GetWorldMatrix() * sphere->bound.aabb.m_max;
 	mMeshRender.push_back(std::move(sphere));
+
+
+
+
+
+
+	//	设为主光源
+	mMainLight.isMainLight = true;
+	//	灯光颜色
+	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
+	//	设置灯光位置
+	mMainLight.position = Vector3(0, 3, 0);
+	//	设置灯光欧拉角
+	mMainLight.eulerangle = Vector3(50, -30, 0);
+	//	主光源名字
+	mMainLight.name = "Direction Light";
 
 	//	天空球设置
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -146,6 +174,85 @@ void SceneManager::BuildToonScene()
 }
 
 void SceneManager::BuildWaterScene()
+{
+
+}
+
+
+//	更新场景材质
+void SceneManager::UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+{
+	switch (Type)
+	{
+	case SceneType::Default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+		break;
+	case SceneType::ConelBox:UpdateConelBoxSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+		break;
+	case SceneType::Toon:UpdateToonSceneMaterialBuffer(PBRMaterialBuffer, 
+		SkyMaterialBuffer);
+		break;
+	case SceneType::Water:UpdateWaterSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+		break;
+	default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+		break;
+	}
+}
+
+void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+{
+	for (size_t i = 0; i < mMeshRender.size(); i++)
+	{
+		PBRMaterial* mat = &(mMeshRender[i]->material);
+
+		XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
+
+		PBRMaterialData matData;
+		matData.DiffuseColor = mat->DiffuseColor;
+		matData.Smoothness = mat->Smoothness;
+		matData.Metallic = mat->Metallic;
+		matData.Occlusion = mat->Occlusion;
+		matData.EmissionColor = mat->EmissionColor;
+		matData.EmissionStrength = mat->EmissionStrength;
+		XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
+		matData.DiffuseMapIndex = mat->DiffuseMapIndex;
+		matData.NormalMapIndex = mat->NormalMapIndex;
+		matData.MsoMapIndex = mat->MsoMapIndex;
+		matData.EmissionMapIndex = mat->EmissionMapIndex;
+		matData.LUTMapIndex = mat->LUTMapIndex;
+		PBRMaterialBuffer->CopyData(mat->MatCBIndex, matData);
+
+		// Next FrameResource need to be updated too.
+		mat->NumFramesDirty--;
+
+	}
+
+
+	for (size_t i = 0; i < mSkyBoxMeshRender.size(); i++)
+	{
+		SkyBoxMaterial* skyMat = &mSkyBoxMeshRender[i]->material;
+		SkyBoxMaterialData matData;
+		matData.Tint = skyMat->Tint;
+		matData.Exposure = skyMat->Exposure;
+		matData.Rotation = skyMat->Rotation;
+		matData.ACES = skyMat->ACES;
+		SkyMaterialBuffer->CopyData(skyMat->MatCBIndex, matData);
+
+		// Next FrameResource need to be updated too.
+		skyMat->NumFramesDirty--;
+	}
+}
+
+void SceneManager::UpdateConelBoxSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+{
+
+}
+
+void SceneManager::UpdateToonSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+{
+
+}
+
+void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
 {
 
 }

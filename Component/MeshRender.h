@@ -8,6 +8,7 @@
 #include "MeshFliter.h"
 #include "BoundingBox.h"
 
+//	PBR MeshRender
 class PBRMeshRender : public Transform
 {
 public:
@@ -16,14 +17,30 @@ public:
 	//	网格
 	MeshFliter mesh;
 	//	包围盒
-	BoundingBox bound;
+	DistBound::BoundingBox bound;
 
 
 public:
 	PBRMeshRender();
-	PBRMeshRender(PBRMaterial mat, MeshFliter mesh, BoundingBox bound);
+	PBRMeshRender(PBRMaterial mat, MeshFliter mesh, DistBound::BoundingBox bound);
 	~PBRMeshRender();
 
 };
+
+//	SkyBoxMeshRender
+class SkyBoxMeshRender : public Transform
+{
+public:
+	//	材质
+	SkyBoxMaterial material;
+	//	网格
+	MeshFliter mesh;
+
+public:
+	SkyBoxMeshRender(); 
+	SkyBoxMeshRender(SkyBoxMaterial mat, MeshFliter mesh);
+	~SkyBoxMeshRender();
+};
+
 
 #endif

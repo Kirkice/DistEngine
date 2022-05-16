@@ -126,7 +126,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
 {
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
     //Albedo
-    float4 diffuseAlbedo                                = matData.BaseColor;
+    float4 diffuseAlbedo                                = matData.DiffuseColor;
     uint diffuseMapIndex                                = matData.DiffuseMapIndex;
     diffuseAlbedo                                       *= gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, uv);
 
@@ -1035,7 +1035,6 @@ float3 DistShadow(InputData inputData, half3 outColor)
 {
     half Shadow                                         = inputData.ShadowCoord;
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
-    Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
     return                                              lerp(outColor * half3(0.2,0.2,0.2),outColor,Shadow);
 }
 
@@ -1043,7 +1042,6 @@ float GetShadow(InputData inputData)
 {
 	half Shadow                                         = inputData.ShadowCoord;
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
-    Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
 	return 												Shadow;
 }
 #endif

@@ -1,15 +1,16 @@
 #include "Material.h"
+#include "d3dUtil.h"
 #include "../Core/Mathf/Color.h"
 
 
 /// <summary>
-/// PBRMaterial
+/// PBR Material
 /// </summary>
 PBRMaterial::PBRMaterial()
 {
 	Name = "New Material";
 	MatCBIndex = -1;
-	NumFramesDirty = 3;
+	NumFramesDirty = gNumFrameResources;
 	DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	Smoothness = 0.5f;
 	Metallic = 0.0f;
@@ -27,6 +28,26 @@ PBRMaterial::PBRMaterial()
 }
 
 PBRMaterial::~PBRMaterial()
+{
+
+}
+
+
+/// <summary>
+/// SkyBox Material
+/// </summary>
+SkyBoxMaterial::SkyBoxMaterial()
+{
+	Name = "New SkyBox Material";
+	MatCBIndex = -1;
+	NumFramesDirty = gNumFrameResources;
+	Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	Exposure = 1.0f;
+	Rotation = 0.0f;
+	ACES = 1.0f;
+}
+
+SkyBoxMaterial::~SkyBoxMaterial()
 {
 
 }

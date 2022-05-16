@@ -28,46 +28,45 @@
 //平行光
 struct DirectionLight
 {
-    float3                                                                          Direction;
-    float                                                                           Strength;
-    float3                                                                          Color;
-    float                                                                           CastShadow;
-    float3                                                                          Position;
-    float                                                                           Active;
+    float3                                                                              Direction;
+    float                                                                               Strength;
+    float3                                                                              Color;
+    float                                                                               CastShadow;
+    float3                                                                              Position;
+    float                                                                               Active;
 };
  
 //点光源
 struct PointLight
 {
-    float3                                                                          Color;
-    float                                                                           rangeFactory;
-    float3                                                                          Position;
-    float                                                                           Strength;
-    float                                                                           Active;
+    float3                                                                              Color;
+    float                                                                               rangeFactory;
+    float3                                                                              Position;
+    float                                                                               Strength;
+    float                                                                               Active;
 };
 
 //聚光灯
 struct SpotLight
 {
-    float3                                                                          Color;
-    float                                                                           rangeFactory;
-    float3                                                                          Position;
-    float                                                                           spotLightsStrength;
-    float3                                                                          Direction;
-    float                                                                           spotAngle;
-    float                                                                           spotLightsActive;
+    float3                                                                              Color;
+    float                                                                               rangeFactory;
+    float3                                                                              Position;
+    float                                                                               spotLightsStrength;
+    float3                                                                              Direction;
+    float                                                                               spotAngle;
+    float                                                                               spotLightsActive;
 };
  
 //PBR Material
 struct PBRMaterialData
 {
-    float4                                                                              BaseColor;
+    float4                                                                              DiffuseColor;
     float                                                                               Smoothness;
     float                                                                               Metallic;
     float                                                                               Occlusion;
     float4                                                                              EmissionColor;
     float                                                                               EmissionStrength;
-    float                                                                               ReceiveShadow;
     float4x4                                                                            MatTransform;
 
     uint                                                                                DiffuseMapIndex;
@@ -79,9 +78,9 @@ struct PBRMaterialData
 
 struct SkyBoxMaterialData
 {
-    float4                                                                              SkyBoxTint;
-    float                                                                               SkyBoxExposure;
-    float                                                                               SkyBoxRotation;
+    float4                                                                              Tint;
+    float                                                                               Exposure;
+    float                                                                               Rotation;
     float                                                                               ACES;
 };
 
