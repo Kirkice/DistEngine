@@ -3,6 +3,7 @@
 /ThirdParty/Fbxsdk/lib/x64/debug/libfbxsdk.lib
 /ThirdParty/ImGUI/x64/*
 /ThirdParty/Json11/x64/*
+/ThirdParty/Spdlog/x64/*
 /ThirdParty/Spdlog/Spdlog/x64/*
 /ThirdParty/stb/x64/*
 /ThirdParty/Tinyobjloader/x64/*
@@ -13,3 +14,4 @@
 /DistEditor/x64/*
 /Render/x64/*
 /System/x64/*
+/Audio/x64/*
