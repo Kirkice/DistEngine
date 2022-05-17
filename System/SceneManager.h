@@ -35,6 +35,8 @@ public:
 	LightSetting mLightSetting;
 
 public:
+	void BuildScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
+
 	//	更新场景的Material Buffer
 	void UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
 
@@ -46,11 +48,10 @@ public:
 	);
 
 private:
-	void BuildScene();
-	void BuildDefaultScene();
-	void BuildConelBoxScene();
-	void BuildToonScene();
-	void BuildWaterScene();
+	void BuildDefaultScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
+	void BuildConelBoxScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
+	void BuildToonScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
+	void BuildWaterScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
 
 	void UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
 	void UpdateConelBoxSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);

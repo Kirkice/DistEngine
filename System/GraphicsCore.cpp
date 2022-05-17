@@ -40,9 +40,8 @@ bool GraphicsCore::Initialize()
 	BuildSsaoRootSignature();
 
 	BuildDescriptorHeaps();
-
 	BuildShadersAndInputLayout();
-
+	mSceneManager.BuildScene(mResourcesTextures);
 
 	BuildRenderItems();
 	BuildFrameResources();

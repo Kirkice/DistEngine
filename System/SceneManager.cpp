@@ -4,7 +4,6 @@ const int ProjectTexStart = 14;
 SceneManager::SceneManager(SceneType tp)
 {
 	Type = tp;
-	BuildScene();
 }
 
 SceneManager::~SceneManager()
@@ -14,24 +13,24 @@ SceneManager::~SceneManager()
 
 
 //	构建场景
-void SceneManager::BuildScene()
+void SceneManager::BuildScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
 {
 	switch (Type)
 	{
-	case SceneType::Default:BuildDefaultScene();
+	case SceneType::Default:BuildDefaultScene(mResourcesTextures);
 		break;
-	case SceneType::ConelBox:BuildConelBoxScene();
+	case SceneType::ConelBox:BuildConelBoxScene(mResourcesTextures);
 		break;
-	case SceneType::Toon:BuildToonScene();
+	case SceneType::Toon:BuildToonScene(mResourcesTextures);
 		break;
-	case SceneType::Water:BuildWaterScene();
+	case SceneType::Water:BuildWaterScene(mResourcesTextures);
 		break;
-	default:BuildDefaultScene();
+	default:BuildDefaultScene(mResourcesTextures);
 		break;
 	}
 }
 
-void SceneManager::BuildDefaultScene()
+void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
 {
 	//	SkyBox
 	auto sky = std::make_unique<MeshRender>();
@@ -67,11 +66,11 @@ void SceneManager::BuildDefaultScene()
 	//构建材质
 	plane->material.Name = "plane_mat";
 	plane->material.MatCBIndex = 1;
-	plane->material.DiffuseMapIndex = ProjectTexStart + 0;
-	plane->material.NormalMapIndex = ProjectTexStart + 1;
-	plane->material.MsoMapIndex = ProjectTexStart + 16;
-	plane->material.EmissionMapIndex = ProjectTexStart + 15;
-	plane->material.LUTMapIndex = ProjectTexStart + 14;
+	plane->material.DiffuseMapIndex = mResourcesTextures["BricsDiffuse"]->TexIndex;
+	plane->material.NormalMapIndex = mResourcesTextures["BricsNormal"]->TexIndex;
+	plane->material.MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	plane->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
+	plane->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 	plane->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	plane->material.Smoothness = 0.0f;
 	plane->material.Metallic = 0.0f;
@@ -103,11 +102,11 @@ void SceneManager::BuildDefaultScene()
 	//构建材质
 	sphere->material.Name = "Wooden2";
 	sphere->material.MatCBIndex = 2;
-	sphere->material.DiffuseMapIndex = ProjectTexStart + 2;
-	sphere->material.NormalMapIndex = ProjectTexStart + 3;
-	sphere->material.MsoMapIndex = ProjectTexStart + 16;
-	sphere->material.EmissionMapIndex = ProjectTexStart + 15;
-	sphere->material.LUTMapIndex = ProjectTexStart + 14;
+	sphere->material.DiffuseMapIndex = mResourcesTextures["WoodenDiffuse"]->TexIndex;
+	sphere->material.NormalMapIndex = mResourcesTextures["WoodenNormal"]->TexIndex;
+	sphere->material.MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
+	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->material.Smoothness = 0.15f;
 	sphere->material.Metallic = 0.0f;
@@ -167,17 +166,17 @@ void SceneManager::BuildDefaultScene()
 
 }
 
-void SceneManager::BuildConelBoxScene()
+void SceneManager::BuildConelBoxScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
 {
 
 }
 
-void SceneManager::BuildToonScene()
+void SceneManager::BuildToonScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
 {
 
 }
 
-void SceneManager::BuildWaterScene()
+void SceneManager::BuildWaterScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
 {
 
 }

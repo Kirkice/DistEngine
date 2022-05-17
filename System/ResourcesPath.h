@@ -91,6 +91,9 @@
 		"Asset/Textures/DefaultTextures/white.png"
 	};
 
+
+
+
 	const std::vector<std::string> mProjectResourceName =			//	资源纹理名称
 	{
 		"BricsDiffuse",
