@@ -8,12 +8,12 @@
 #include "MeshFliter.h"
 #include "BoundingBox.h"
 
-//	PBR MeshRender
-class PBRMeshRender : public Transform
+// MeshRender
+class MeshRender : public Transform
 {
 public:
 	//	材质
-	PBRMaterial material;
+	Material material;
 	//	网格
 	MeshFliter mesh;
 	//	包围盒
@@ -21,26 +21,10 @@ public:
 
 
 public:
-	PBRMeshRender();
-	PBRMeshRender(PBRMaterial mat, MeshFliter mesh, DistBound::BoundingBox bound);
-	~PBRMeshRender();
+	MeshRender();
+	MeshRender(Material mat, MeshFliter mesh, DistBound::BoundingBox bound);
+	~MeshRender();
 
 };
-
-//	SkyBoxMeshRender
-class SkyBoxMeshRender : public Transform
-{
-public:
-	//	材质
-	SkyBoxMaterial material;
-	//	网格
-	MeshFliter mesh;
-
-public:
-	SkyBoxMeshRender(); 
-	SkyBoxMeshRender(SkyBoxMaterial mat, MeshFliter mesh);
-	~SkyBoxMeshRender();
-};
-
 
 #endif

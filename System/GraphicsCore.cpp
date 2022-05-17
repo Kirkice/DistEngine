@@ -1415,15 +1415,13 @@ void GraphicsCore::BuildFrameResources()
 		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, (UINT)mAllRitems.size(),
 			1,
-			(UINT)(mSceneManager.mMeshRender.size() + mSceneManager.mSkyBoxMeshRender.size())));
+			(UINT)(mSceneManager.mMeshRender.size())));
 	}
 }
 
 void GraphicsCore::BuildRenderItems()
 {
-	SkyBox_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
-
-	PBRDemo_BuildRenderItems(mRitemLayer, mMaterials, mGeometries, mAllRitems);
+	mSceneManager.BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

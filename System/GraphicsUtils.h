@@ -22,7 +22,7 @@ struct RenderItem
 
 	UINT ObjCBIndex = -1;
 
-	PBRMaterial* Mat = nullptr;
+	Material* Mat = nullptr;
 	MeshGeometry* Geo = nullptr;
 
 	D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

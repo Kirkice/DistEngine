@@ -6,7 +6,7 @@
 #include "../Core/Mathf/Color.h"
 
 //	PBR材质
-class PBRMaterial
+class Material
 {
 public:
 	//	名字
@@ -42,21 +42,8 @@ public:
 	//	LUT贴图Index
 	UINT LUTMapIndex;
 
-public:
-	PBRMaterial();
-	~PBRMaterial();
-};
 
-//	天空球材质
-class SkyBoxMaterial
-{
-public:
-	//	名字
-	std::string Name;
-	//	Index 值
-	int MatCBIndex = -1;
-	//	材质变化值
-	int NumFramesDirty;
+
 	//	固有色
 	Color Tint;
 	//	曝光度
@@ -66,9 +53,11 @@ public:
 	//	ACES开启
 	float ACES;
 
+
+
 public:
-	SkyBoxMaterial();
-	~SkyBoxMaterial();
+	Material();
+	~Material();
 };
 
 #endif

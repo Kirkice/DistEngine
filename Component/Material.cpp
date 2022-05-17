@@ -6,7 +6,7 @@
 /// <summary>
 /// PBR Material
 /// </summary>
-PBRMaterial::PBRMaterial()
+Material::Material()
 {
 	Name = "New Material";
 	MatCBIndex = -1;
@@ -25,29 +25,14 @@ PBRMaterial::PBRMaterial()
 	MsoMapIndex = 0;
 	EmissionMapIndex = 0;
 	LUTMapIndex = 0;
-}
 
-PBRMaterial::~PBRMaterial()
-{
-
-}
-
-
-/// <summary>
-/// SkyBox Material
-/// </summary>
-SkyBoxMaterial::SkyBoxMaterial()
-{
-	Name = "New SkyBox Material";
-	MatCBIndex = -1;
-	NumFramesDirty = gNumFrameResources;
 	Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	Exposure = 1.0f;
 	Rotation = 0.0f;
 	ACES = 1.0f;
 }
 
-SkyBoxMaterial::~SkyBoxMaterial()
+Material::~Material()
 {
 
 }

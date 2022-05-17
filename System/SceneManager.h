@@ -26,8 +26,7 @@ public:
 	DirectionLight mMainLight;
 
 	//	Mesh Render	
-	std::vector<std::unique_ptr<PBRMeshRender>> mMeshRender;
-	std::vector<std::unique_ptr<SkyBoxMeshRender>> mSkyBoxMeshRender;
+	std::vector<std::unique_ptr<MeshRender>> mMeshRender;
 
 	//	ÃÏø’∫–…Ë÷√
 	SkyBoxSetting mSkyBoxSetting;

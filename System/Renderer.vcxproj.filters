@@ -3,8 +3,6 @@
   <ItemGroup>
     <ClCompile Include="ForwardRenderPipeline.cpp" />
     <ClCompile Include="FrameResource.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="RendererCore.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Ssao.cpp" />
     <ClCompile Include="InputSystem.cpp">
@@ -22,13 +20,14 @@
     <ClCompile Include="GraphicsCore.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsUtils.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ForwardRenderPipeline.h" />
     <ClInclude Include="FrameResource.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="RendererCore.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Ssao.h" />
     <ClInclude Include="InputSystem.h">

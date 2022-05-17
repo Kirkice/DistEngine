@@ -33,8 +33,8 @@ void SceneManager::BuildScene()
 
 void SceneManager::BuildDefaultScene()
 {
-	//	SkyBoxMeshRender
-	auto sky = std::make_unique<SkyBoxMeshRender>();
+	//	SkyBox
+	auto sky = std::make_unique<MeshRender>();
 	sky->name = "DGarden";
 	//构建材质
 	sky->material.Name = "DGarden_mat";
@@ -51,13 +51,17 @@ void SceneManager::BuildDefaultScene()
 	sky->position = Vector3(0, 0, 0);
 	sky->eulerangle = Vector3(0, 0, 0);
 	sky->scale = Vector3(5000, 5000, 5000);
-	mSkyBoxMeshRender.push_back(std::move(sky));
+
+	//	创建碰撞盒
+	sky->bound.aabb = BoundingAABB();
+
+	mMeshRender.push_back(std::move(sky));
 
 
 
 	//	平面的MeshRender
 
-	auto plane = std::make_unique<PBRMeshRender>();
+	auto plane = std::make_unique<MeshRender>();
 	plane->name = "plane_render";
 
 	//构建材质
@@ -93,7 +97,7 @@ void SceneManager::BuildDefaultScene()
 
 	//	球的MeshRender
 
-	auto sphere = std::make_unique<PBRMeshRender>();
+	auto sphere = std::make_unique<MeshRender>();
 	sphere->name = "sphere_render";
 
 	//构建材质
@@ -202,43 +206,41 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
-		PBRMaterial* mat = &(mMeshRender[i]->material);
+		Material* mat = &(mMeshRender[i]->material);
+		if (mMeshRender[i]->material.MatCBIndex < 1)
+		{
+			SkyBoxMaterialData matData;
+			matData.Tint = mat->Tint;
+			matData.Exposure = mat->Exposure;
+			matData.Rotation = mat->Rotation;
+			matData.ACES = mat->ACES;
+			SkyMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
-		XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
+			// Next FrameResource need to be updated too.
+			mat->NumFramesDirty--;
+		}
+		else
+		{
+			XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
-		PBRMaterialData matData;
-		matData.DiffuseColor = mat->DiffuseColor;
-		matData.Smoothness = mat->Smoothness;
-		matData.Metallic = mat->Metallic;
-		matData.Occlusion = mat->Occlusion;
-		matData.EmissionColor = mat->EmissionColor;
-		matData.EmissionStrength = mat->EmissionStrength;
-		XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
-		matData.DiffuseMapIndex = mat->DiffuseMapIndex;
-		matData.NormalMapIndex = mat->NormalMapIndex;
-		matData.MsoMapIndex = mat->MsoMapIndex;
-		matData.EmissionMapIndex = mat->EmissionMapIndex;
-		matData.LUTMapIndex = mat->LUTMapIndex;
-		PBRMaterialBuffer->CopyData(mat->MatCBIndex, matData);
+			PBRMaterialData matData;
+			matData.DiffuseColor = mat->DiffuseColor;
+			matData.Smoothness = mat->Smoothness;
+			matData.Metallic = mat->Metallic;
+			matData.Occlusion = mat->Occlusion;
+			matData.EmissionColor = mat->EmissionColor;
+			matData.EmissionStrength = mat->EmissionStrength;
+			XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
+			matData.DiffuseMapIndex = mat->DiffuseMapIndex;
+			matData.NormalMapIndex = mat->NormalMapIndex;
+			matData.MsoMapIndex = mat->MsoMapIndex;
+			matData.EmissionMapIndex = mat->EmissionMapIndex;
+			matData.LUTMapIndex = mat->LUTMapIndex;
+			PBRMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
-		// Next FrameResource need to be updated too.
-		mat->NumFramesDirty--;
-
-	}
-
-
-	for (size_t i = 0; i < mSkyBoxMeshRender.size(); i++)
-	{
-		SkyBoxMaterial* skyMat = &mSkyBoxMeshRender[i]->material;
-		SkyBoxMaterialData matData;
-		matData.Tint = skyMat->Tint;
-		matData.Exposure = skyMat->Exposure;
-		matData.Rotation = skyMat->Rotation;
-		matData.ACES = skyMat->ACES;
-		SkyMaterialBuffer->CopyData(skyMat->MatCBIndex, matData);
-
-		// Next FrameResource need to be updated too.
-		skyMat->NumFramesDirty--;
+			// Next FrameResource need to be updated too.
+			mat->NumFramesDirty--;
+		}
 	}
 }
 
@@ -276,24 +278,14 @@ void SceneManager::BuildRenderItem(std::vector<RenderItem*> mRitemLayer[(int)Ren
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 
-		mRitemLayer[(int)RenderLayer::Opaque].push_back(Ritem.get());
-		mAllRitems.push_back(std::move(Ritem));
-	}
-
-	for (size_t i = 0; i < mSkyBoxMeshRender.size(); i++)
-	{
-		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mSkyBoxMeshRender[i]->GetWorldXMMatrix();
-		Ritem->TexTransform = Mathf::Identity4x4();
-		Ritem->ObjCBIndex = i;
-		Ritem->Mat = &mSkyBoxMeshRender[i]->material;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mSkyBoxMeshRender[i]->name, mSkyBoxMeshRender[i]->mesh.data, md3dDevice, mCommandList);
-		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
-		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
-		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-
-		mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
+		if (mMeshRender[i]->material.MatCBIndex < 1)
+		{
+			mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
+		}
+		else
+		{
+			mRitemLayer[(int)RenderLayer::Opaque].push_back(Ritem.get());
+		}
 		mAllRitems.push_back(std::move(Ritem));
 	}
 }

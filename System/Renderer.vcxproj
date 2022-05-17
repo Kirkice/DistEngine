@@ -147,9 +147,8 @@
     <ClCompile Include="ForwardRenderPipeline.cpp" />
     <ClCompile Include="FrameResource.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
+    <ClCompile Include="GraphicsUtils.cpp" />
     <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="RendererCore.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="ResourcesPath.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -162,9 +161,7 @@
     <ClInclude Include="GraphicsCore.h" />
     <ClInclude Include="GraphicsUtils.h" />
     <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="RendererCore.h" />
     <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="ResourcesPath.h" />
     <ClInclude Include="SceneManager.h" />
