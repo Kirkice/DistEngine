@@ -256,3 +256,44 @@ void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>*
 {
 
 }
+
+
+
+
+//	´´½¨RenderItem
+void SceneManager::BuildRenderItem(std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], std::vector<std::unique_ptr<RenderItem>>& mAllRitems, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
+{
+	for (size_t i = 0; i < mMeshRender.size(); i++)
+	{
+		auto Ritem = std::make_unique<RenderItem>();
+		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+		Ritem->TexTransform = Mathf::Identity4x4();
+		Ritem->ObjCBIndex = i;
+		Ritem->Mat = &mMeshRender[i]->material;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+
+		mRitemLayer[(int)RenderLayer::Opaque].push_back(Ritem.get());
+		mAllRitems.push_back(std::move(Ritem));
+	}
+
+	for (size_t i = 0; i < mSkyBoxMeshRender.size(); i++)
+	{
+		auto Ritem = std::make_unique<RenderItem>();
+		Ritem->World = mSkyBoxMeshRender[i]->GetWorldXMMatrix();
+		Ritem->TexTransform = Mathf::Identity4x4();
+		Ritem->ObjCBIndex = i;
+		Ritem->Mat = &mSkyBoxMeshRender[i]->material;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mSkyBoxMeshRender[i]->name, mSkyBoxMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+
+		mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
+		mAllRitems.push_back(std::move(Ritem));
+	}
+}

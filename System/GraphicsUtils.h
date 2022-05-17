@@ -1,8 +1,11 @@
 #pragma once
+#include "FrameResource.h"
+#include "../Component/MeshFliter.h"
 #include "../Component/Material.h"
 #include "MeshGeometry.h" 
 #include "d3dUtil.h"
 #include "Mathf/Mathf.h"
+
 using namespace Mathf;
 
 struct RenderItem
@@ -76,3 +79,8 @@ struct LightSetting
 	float Step;
 };
 
+class GraphicsUtils
+{
+public:
+	static MeshGeometry* BuidlMeshGeometryFromMeshData(std::string name, MeshData data, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
+};

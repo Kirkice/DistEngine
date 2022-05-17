@@ -1,5 +1,6 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
+#include "InputSystem.h"
 #include "Material.h"
 #include "MeshGeometry.h"
 #include "d3dApp.h"
@@ -7,7 +8,6 @@
 #include "FrameResource.h"
 #include "ShadowMap.h"
 #include "Ssao.h"
-#include "RendererCore.h"
 #include "ResourcesManager.h"
 #include "SceneManager.h"
 
@@ -15,7 +15,7 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-class GraphicsCore : public RenderCore
+class GraphicsCore : public InputSystem
 {
 public:
 	GraphicsCore(HINSTANCE hInstance);

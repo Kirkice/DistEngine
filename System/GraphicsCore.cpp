@@ -6,7 +6,7 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-GraphicsCore::GraphicsCore(HINSTANCE hInstance) : RenderCore(hInstance)
+GraphicsCore::GraphicsCore(HINSTANCE hInstance) : InputSystem(hInstance)
 {
 }
 
@@ -162,8 +162,6 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	for (auto& e : mAllRitems)
 	{
 		XMFLOAT4X4* eWorldMatrix = &e->World;
-
-		//Gizmo Update
 
 		XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
 		XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);

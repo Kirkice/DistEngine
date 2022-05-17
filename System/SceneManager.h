@@ -38,6 +38,14 @@ public:
 public:
 	//	更新场景的Material Buffer
 	void UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer);
+
+	void BuildRenderItem(
+		std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], 
+		std::vector<std::unique_ptr<RenderItem>>& mAllRitems,
+		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, 
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList
+	);
+
 private:
 	void BuildScene();
 	void BuildDefaultScene();
