@@ -11,18 +11,18 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 	std::string err;
 	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename);
 
-	//	º”‘ÿ ß∞‹
-	//if (!warn.empty()) {
-	//	std::cout << "WARN: " << warn << std::endl;
-	//}
+	//º”‘ÿ ß∞‹
+	if (!warn.empty()) {
+		std::cout << "WARN: " << warn << std::endl;
+	}
 
-	//if (!err.empty()) {
-	//	std::cerr << "ERR: " << err << std::endl;
-	//}
+	if (!err.empty()) {
+		std::cerr << "ERR: " << err << std::endl;
+	}
 
-	//if (!ret) {
-	//	printf("Failed to load/parse .obj.\n");
-	//}
+	if (!ret) {
+		printf("Failed to load/parse .obj.\n");
+	}
 
 	//std::vector<Vertex> vertices;
 	//std::vector<uint32> Indices;
