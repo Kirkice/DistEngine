@@ -58,42 +58,6 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 
 
 
-	//	平面的MeshRender
-
-	auto plane = std::make_unique<MeshRender>();
-	plane->name = "plane_render";
-
-	//构建材质
-	plane->material.Name = "plane_mat";
-	plane->material.MatCBIndex = 1;
-	plane->material.DiffuseMapIndex = mResourcesTextures["BricsDiffuse"]->TexIndex;
-	plane->material.NormalMapIndex = mResourcesTextures["BricsNormal"]->TexIndex;
-	plane->material.MsoMapIndex = mResourcesTextures["white"]->TexIndex;
-	plane->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
-	plane->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
-	plane->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	plane->material.Smoothness = 0.0f;
-	plane->material.Metallic = 0.0f;
-	plane->material.Occlusion = 1;
-	plane->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-	plane->material.EmissionStrength = 0.0f;
-
-	//	创建平面网格
-	plane->mesh.CreateGrid(20.0f, 30.0f, 60, 40);
-
-	//	设置坐标
-	plane->position = Vector3(0, 0, 0);
-	plane->eulerangle = Vector3(0, 0, 0);
-	plane->scale = Vector3(10, 1, 10);
-
-	//	创建碰撞盒
-	plane->bound.aabb = BoundingAABB(plane->mesh.data);
-
-	//	设置AABB的世界坐标
-	plane->bound.aabb.m_min = plane->GetWorldMatrix() * plane->bound.aabb.m_min;
-	plane->bound.aabb.m_max = plane->GetWorldMatrix() * plane->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(plane));
-
 	//	球的MeshRender
 
 	auto sphere = std::make_unique<MeshRender>();

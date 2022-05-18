@@ -117,7 +117,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../Core;../System/;../CoreMathf/;../ImGUI/;../ThirdParty/Fbxsdk/include;../Component;../ThirdParty/Stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Core;../System/;../CoreMathf/;../ImGUI/;../ThirdParty/Fbxsdk/include;../Component;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>

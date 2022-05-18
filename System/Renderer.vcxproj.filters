@@ -23,6 +23,12 @@
     <ClCompile Include="GraphicsUtils.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ForwardRenderPipeline.h" />
@@ -50,6 +56,12 @@
     </ClInclude>
     <ClInclude Include="GraphicsCore.h">
       <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@
 #include "d3dUtil.h"
 #include "Texture2D.h"
 #include "FrameResource.h"
+#include "FbxLoader.h"
+#include "ObjLoader.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
