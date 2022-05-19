@@ -79,7 +79,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->material.EmissionStrength = 0.0f;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "E:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);
@@ -93,9 +93,6 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->bound.aabb.m_min = sphere->GetWorldMatrix() * sphere->bound.aabb.m_min;
 	sphere->bound.aabb.m_max = sphere->GetWorldMatrix() * sphere->bound.aabb.m_max;
 	mMeshRender.push_back(std::move(sphere));
-
-
-
 
 
 
@@ -127,7 +124,6 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	mLightSetting.HeightMax = 0;
 	mLightSetting.Feather = 0;
 	mLightSetting.Step = 0;
-
 }
 
 void SceneManager::BuildConelBoxScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)

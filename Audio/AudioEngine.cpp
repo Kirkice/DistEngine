@@ -402,7 +402,7 @@ HRESULT AudioEngine::Impl::Reset(const WAVEFORMATEX* wfx, const wchar_t* deviceI
         debug.BreakMask = XAUDIO2_LOG_ERRORS;
         xaudio2->SetDebugConfiguration(&debug, nullptr);
     #ifdef USING_XAUDIO2_9
-        DebugTrace("INFO: XAudio 2.9 debugging enabled\n");
+        DebugTrace("INFO: XAudio 2.9 debugging enabled\n");  
     #else // USING_XAUDIO2_8
             // To see the trace output, you need to view ETW logs for this application:
             //    Go to Control Panel, Administrative Tools, Event Viewer.

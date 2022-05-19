@@ -30,7 +30,7 @@ public:
 	//	Mesh Render	
 	std::vector<std::unique_ptr<MeshRender>> mMeshRender;
 
-	//	天空盒设置
+	//	天空盒设置 
 	SkyBoxSetting mSkyBoxSetting;
 
 	//	灯光设置
