@@ -24,8 +24,6 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 		printf("Failed to load/parse .obj.\n");
 	}
 
-	//std::vector<Vertex> vertices;
-	//std::vector<uint32> Indices;
 
 	for (size_t i = 0; i < shapes.size(); i++)
 	{
@@ -49,7 +47,7 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 				normal_index[v] = idx.normal_index;
 
 				//	Ìí¼ÓË÷Òý
-				uint32 index;
+				uint32 index; 
 				index = vertex_index[v];
 				data.Indices32.push_back(index);
 			}
@@ -74,11 +72,14 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 				// vtangent
 				newVertex.TangentU.x = 1.0f;
 				newVertex.TangentU.y = 1.0f;
+
+
 				newVertex.TangentU.z = 1.0f;
 
 				data.Vertices.push_back(newVertex);
 			}
 
+			index_offset += fnum;
 		}
 	}
 }
