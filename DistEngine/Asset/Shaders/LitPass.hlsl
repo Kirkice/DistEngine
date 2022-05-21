@@ -106,13 +106,13 @@ float4 REDPBRColor(VertexOut pin)
 {
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
-    InputData inputData;
-    InitializeInputData(pin, surfaceData.Normal, inputData);
+    // InputData inputData;
+    // InitializeInputData(pin, surfaceData.Normal, inputData);
 
-    float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW, pin.PosW); 
-    outColor                                            += RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
-    outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
-    return float4(outColor,1);
+    // float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW, pin.PosW); 
+    // outColor                                            += RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
+    // outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
+    return float4(surfaceData.Albedo.rgb,1);
 }
 
 float4 Dist_IBL(VertexOut pin)

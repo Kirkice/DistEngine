@@ -61,13 +61,13 @@ struct SpotLight
 //PBR Material
 struct PBRMaterialData
 {
-    float4                                                                              BaseColor;
+    float4                                                                              DiffuseColor;
     float                                                                               Smoothness;
     float                                                                               Metallic;
     float                                                                               Occlusion;
     float4                                                                              EmissionColor;
     float                                                                               EmissionStrength;
-    float                                                                               ReceiveShadow;
+
     float4x4                                                                            MatTransform;
 
     uint                                                                                DiffuseMapIndex;

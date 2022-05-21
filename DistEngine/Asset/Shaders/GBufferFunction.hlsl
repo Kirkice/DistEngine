@@ -73,8 +73,6 @@ half3 PackNormal(half3 n)
 float ShadowFactory(InputData inputData)
 {
     half Shadow                                         = inputData.ShadowCoord;
-    PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
-    Shadow                                              = saturate(Shadow + (1 - matData.ReceiveShadow));
     return                                              Shadow;
 }
 
