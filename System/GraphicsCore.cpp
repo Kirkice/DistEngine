@@ -136,18 +136,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	//ƽ�й���ת
-	XMMATRIX rot_dir = XMMatrixRotationX((mDirectionLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mDirectionLightsAngle[1] / 180) * Mathf::Pi) * XMMatrixRotationZ((mDirectionLightsAngle[2] / 180) * Mathf::Pi);
-
-	XMVECTOR lightDir = XMLoadFloat3(&mDirectionLightsDir);
-	lightDir = XMVector3TransformNormal(lightDir, rot_dir);
-	XMStoreFloat3(&mRotatedLightDirections, lightDir);
-
-	//�۹����ת
-	XMMATRIX rot_spot = XMMatrixRotationX((mSpotLightsAngle[0] / 180) * Mathf::Pi) * XMMatrixRotationY((mSpotLightsAngle[1] / 180) * Mathf::Pi) * XMMatrixRotationZ((mSpotLightsAngle[2] / 180) * Mathf::Pi);
-	XMVECTOR lightSpot = XMLoadFloat3(&mSpotLightsDir);
-	lightSpot = XMVector3TransformNormal(lightSpot, rot_spot);
-	XMStoreFloat3(&mRotatedLightSpots, lightSpot);
+	mSceneManager.mMainLight.Tick();
 }
 
 void GraphicsCore::AnimateMaterials(const GameTimer& gt)
@@ -189,7 +178,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 {
 	// Only the first "main" light casts a shadow.
-	XMVECTOR lightDir = XMLoadFloat3(&mRotatedLightDirections);
+	XMVECTOR lightDir = mSceneManager.mMainLight.forward.ToSIMD();
 	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
 	XMVECTOR targetPos = XMLoadFloat3(&mSceneBounds.Center);
 	XMVECTOR lightUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -264,12 +253,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	//Light
 
-	mMainPassCB.DirectionLights.forward = Vector3(mRotatedLightDirections);
-	mMainPassCB.DirectionLights.intensity = mDirectionLightsStrength;
-	mMainPassCB.DirectionLights.color = Color(mDirectionLightsColor[0], mDirectionLightsColor[1], mDirectionLightsColor[2],1);
+	mMainPassCB.DirectionLights.forward = mSceneManager.mMainLight.forward;
+	mMainPassCB.DirectionLights.intensity = mSceneManager.mMainLight.intensity;
+	mMainPassCB.DirectionLights.color = mSceneManager.mMainLight.color;
 	mMainPassCB.DirectionLights.isMainLight = true;
-	mMainPassCB.DirectionLights.position = Vector3(mDirectionLightsPos);
-	mMainPassCB.DirectionLights.Enable = (int)mDirectionLightsActive;
+	mMainPassCB.DirectionLights.position = mSceneManager.mMainLight.position;
+	mMainPassCB.DirectionLights.Enable = mSceneManager.mMainLight.Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
@@ -301,7 +290,7 @@ void GraphicsCore::UpdateShadowPassCB(const GameTimer& gt)
 	mShadowPassCB.FarZ = mLightFarZ;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
-	currPassCB->CopyData(1, mShadowPassCB);
+	currPassCB->CopyData(1, mShadowPassCB); 
 }
 
 void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
@@ -662,93 +651,93 @@ void GraphicsCore::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
-	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
-	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["standardVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["skinnedVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
+	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["outlineVS"] = d3dUtil::CompileShader(L"Shaders\\OutLine.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["outlinePS"] = d3dUtil::CompileShader(L"Shaders\\OutLine.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["outlineVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\OutLine.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["outlinePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\OutLine.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["litVS"] = d3dUtil::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["litPS"] = d3dUtil::CompileShader(L"Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["litVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\LitPass.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["litPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\LitPass.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["gizmoVS"] = d3dUtil::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["gizmoPS"] = d3dUtil::CompileShader(L"Shaders\\GizmoPass.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["gizmoVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\GizmoPass.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["gizmoPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\GizmoPass.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["unitVS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["unitPS"] = d3dUtil::CompileShader(L"Shaders\\Unlit.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["unitVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Unlit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["unitPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Unlit.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["boundingVS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["boundingVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Bounding.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
-	mShaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
-	mShaders["shadowAlphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", alphaTestDefines, "PS", "ps_5_1");
+	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
+	mShaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["shadowAlphaTestedPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", alphaTestDefines, "PS", "ps_5_1");
 
-	mShaders["debugVS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["debugPS"] = d3dUtil::CompileShader(L"Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["debugVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["debugPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["drawNormalsVS"] = d3dUtil::CompileShader(L"Shaders\\DrawNormals.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedDrawNormalsVS"] = d3dUtil::CompileShader(L"Shaders\\DrawNormals.hlsl", skinnedDefines, "VS", "vs_5_1");
-	mShaders["drawNormalsPS"] = d3dUtil::CompileShader(L"Shaders\\DrawNormals.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["drawNormalsVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["skinnedDrawNormalsVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", skinnedDefines, "VS", "vs_5_1");
+	mShaders["drawNormalsPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["ssaoVS"] = d3dUtil::CompileShader(L"Shaders\\Ssao.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["ssaoPS"] = d3dUtil::CompileShader(L"Shaders\\Ssao.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["ssaoVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Ssao.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["ssaoPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Ssao.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["ssaoBlurVS"] = d3dUtil::CompileShader(L"Shaders\\SsaoBlur.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["ssaoBlurPS"] = d3dUtil::CompileShader(L"Shaders\\SsaoBlur.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["ssaoBlurVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\SsaoBlur.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["ssaoBlurPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\SsaoBlur.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["skyVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["skyPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["copyColorVS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["copyColorPS"] = d3dUtil::CompileShader(L"Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["copyColorVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\CopyColor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["copyColorPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\CopyColor.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["finalBlitVS"] = d3dUtil::CompileShader(L"Shaders\\FinalBlit.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["finalBlitPS"] = d3dUtil::CompileShader(L"Shaders\\FinalBlit.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["finalBlitVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\FinalBlit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["finalBlitPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\FinalBlit.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["rgbSplitVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\RGBSplit.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["rgbSplitPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\RGBSplit.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["radialBlurVS"] = d3dUtil::CompileShader(L"Shaders\\RadialBlur.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["radialBlurPS"] = d3dUtil::CompileShader(L"Shaders\\RadialBlur.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["radialBlurVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\RadialBlur.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["radialBlurPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\RadialBlur.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["vignetteVS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["vignettePS"] = d3dUtil::CompileShader(L"Shaders\\Vignette.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["vignetteVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Vignette.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["vignettePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Vignette.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["decolorVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Decolor.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["decolorPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Decolor.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["brightnessVS"] = d3dUtil::CompileShader(L"Shaders\\Brightness.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["brightnessPS"] = d3dUtil::CompileShader(L"Shaders\\Brightness.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["brightnessVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Brightness.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["brightnessPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Brightness.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["hsvVS"] = d3dUtil::CompileShader(L"Shaders\\HSV.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["hsvPS"] = d3dUtil::CompileShader(L"Shaders\\HSV.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["hsvVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\HSV.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["hsvPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\HSV.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["mosaicVS"] = d3dUtil::CompileShader(L"Shaders\\Mosaic.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["mosaicPS"] = d3dUtil::CompileShader(L"Shaders\\Mosaic.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["mosaicVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Mosaic.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["mosaicPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Mosaic.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["sharpenVS"] = d3dUtil::CompileShader(L"Shaders\\Sharpen.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["sharpenPS"] = d3dUtil::CompileShader(L"Shaders\\Sharpen.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["sharpenVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Sharpen.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["sharpenPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Sharpen.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["spherizeVS"] = d3dUtil::CompileShader(L"Shaders\\Spherize.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["spherizePS"] = d3dUtil::CompileShader(L"Shaders\\Spherize.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["spherizeVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Spherize.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["spherizePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Spherize.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["whiteBalanceVS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["whiteBalancePS"] = d3dUtil::CompileShader(L"Shaders\\WhiteBalance.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["whiteBalanceVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\WhiteBalance.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["whiteBalancePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\WhiteBalance.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["oilPaintVS"] = d3dUtil::CompileShader(L"Shaders\\OilPaint.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["oilPaintPS"] = d3dUtil::CompileShader(L"Shaders\\OilPaint.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["oilPaintVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\OilPaint.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["oilPaintPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\OilPaint.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["reliefVS"] = d3dUtil::CompileShader(L"Shaders\\Relief.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["reliefPS"] = d3dUtil::CompileShader(L"Shaders\\Relief.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["reliefVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Relief.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["reliefPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Relief.hlsl", nullptr, "PS", "ps_5_1");
 
-	mShaders["edgeDetectionVS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["edgeDetectionPS"] = d3dUtil::CompileShader(L"Shaders\\EdgeDetection.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["edgeDetectionVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\EdgeDetection.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["edgeDetectionPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\EdgeDetection.hlsl", nullptr, "PS", "ps_5_1");
 
 	//mShaders["bloomVS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "VS", "vs_5_1");
 	//mShaders["bloomPrefilterPS"] = d3dUtil::CompileShader(L"Shaders\\Bloom.hlsl", nullptr, "PS_Prefilter", "ps_5_1");

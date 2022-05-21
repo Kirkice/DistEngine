@@ -60,8 +60,8 @@ VertexOut VS(VertexIn vin)
 
     vout.SsaoPosH                                       = mul(float4(vout.PosW,1), gViewProjTex);
 
-	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
-	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
+    vout.TexC                                           = vin.TexC;//mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
+    // vout.TexC                                           = mul(texC, matData.MatTransform).xy;
 
     vout.ShadowPosH                                     = mul(float4(vout.PosW,1), gShadowTransform);
 
@@ -129,7 +129,7 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return float4(1,0,0,1);//REDPBRColor(pin);
+    return REDPBRColor(pin);
 }
 
 #endif

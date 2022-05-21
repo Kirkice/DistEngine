@@ -64,26 +64,10 @@
 	//	-----------------Project------------------
 	const std::vector<std::string> mProjectResourceTextures =		//	资源纹理
 	{
-		"Asset/Textures/DefaultTextures/BricsDiffuse.png",
-		"Asset/Textures/DefaultTextures/BricsNormal.png",
+		"Asset/Textures/DefaultTextures/AK47Albedo.png",
+		"Asset/Textures/DefaultTextures/AK47MSO.png",
 
-		"Asset/Textures/DefaultTextures/OakDiffuse.png",
-		"Asset/Textures/DefaultTextures/OakNormal.png",
-
-		"Asset/Textures/DefaultTextures/PlaneDiffuse.png",
-		"Asset/Textures/DefaultTextures/PlaneNormal.png",
-
-		"Asset/Textures/DefaultTextures/WoodenDiffuse.png",
-		"Asset/Textures/DefaultTextures/WoodenNormal.png",
-
-		"Asset/Textures/DefaultTextures/WoodenDiffuse2.png",
-		"Asset/Textures/DefaultTextures/WoodenNormal2.png",
-
-		"Asset/Textures/DefaultTextures/WoodenDiffuse3.png",
-		"Asset/Textures/DefaultTextures/WoodenNormal3.png",
-
-		"Asset/Textures/DefaultTextures/WoodenDiffuse4.png",
-		"Asset/Textures/DefaultTextures/WoodenNormal4.png",
+		"Asset/Textures/DefaultTextures/AK47Normal.png",
 
 		"Asset/Textures/DefaultTextures/sampleLUT.png",
 
@@ -96,26 +80,10 @@
 
 	const std::vector<std::string> mProjectResourceName =			//	资源纹理名称
 	{
-		"BricsDiffuse",
-		"BricsNormal",
+		"AK47Albedo",
+		"AK47MSO",
 
-		"OakDiffuse",
-		"OakNormal",
-
-		"PlaneDiffuse",
-		"PlaneNormal",
-
-		"WoodenDiffuse",
-		"WoodenNormal",
-
-		"WoodenDiffuse2",
-		"WoodenNormal2",
-
-		"WoodenDiffuse3",
-		"WoodenNormal3",
-
-		"WoodenDiffuse4",
-		"WoodenNormal4",
+		"AK47Normal",
 
 		"sampleLUT",
 

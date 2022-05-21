@@ -61,14 +61,14 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	//	球的MeshRender
 
 	auto sphere = std::make_unique<MeshRender>();
-	sphere->name = "sphere_render";
+	sphere->name = "ak47_render";
 
 	//构建材质
-	sphere->material.Name = "Wooden2";
+	sphere->material.Name = "ak47";
 	sphere->material.MatCBIndex = 2;
-	sphere->material.DiffuseMapIndex = mResourcesTextures["WoodenDiffuse"]->TexIndex;
-	sphere->material.NormalMapIndex = mResourcesTextures["WoodenNormal"]->TexIndex;
-	sphere->material.MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
+	sphere->material.NormalMapIndex = mResourcesTextures["AK47Normal"]->TexIndex;
+	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
 	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -84,7 +84,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);
 	sphere->eulerangle = Vector3(0, 0, 0);
-	sphere->scale = Vector3(5, 5, 5);
+	sphere->scale = Vector3(3, 3, 3);
 
 	//	创建碰撞盒
 	sphere->bound.aabb = BoundingAABB(sphere->mesh.data);

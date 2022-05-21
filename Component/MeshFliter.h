@@ -37,12 +37,21 @@ struct PVertex
 	Vector2 TexC;
 };
 
+struct Subset
+{
+	UINT Id = -1;
+	UINT VertexStart = 0;
+	UINT VertexCount = 0;
+	UINT FaceStart = 0;
+	UINT FaceCount = 0;
+};
+
 //	MeshÊý¾Ý
 struct MeshData
 {
 	std::vector<PVertex> Vertices;
 	std::vector<uint32> Indices32;
-
+	std::vector<Subset> Subsetes;
 	std::vector<uint16>& GetIndices16()
 	{
 		if (mIndices16.empty())

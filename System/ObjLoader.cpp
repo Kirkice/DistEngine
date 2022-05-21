@@ -25,7 +25,7 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 	}
 
 
-	for (size_t i = 0; i < shapes.size(); i++)
+	for (size_t i = 0; i < 1; i++)
 	{
 		size_t index_offset = 0;
 
@@ -45,14 +45,9 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 				vertex_index[v] = idx.vertex_index;
 				texcoord_index[v] = idx.texcoord_index;
 				normal_index[v] = idx.normal_index;
-
-				//	添加索引
-				uint32 index; 
-				index = vertex_index[v];
-				data.Indices32.push_back(index);
 			}
 
-
+			data.Vertices.resize(shapes[i].mesh.num_face_vertices.size() * 3);
 			for (size_t v = 0; v < fnum; v++) {
 
 				PVertex newVertex;
@@ -72,11 +67,14 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 				// vtangent
 				newVertex.TangentU.x = 1.0f;
 				newVertex.TangentU.y = 1.0f;
-
-
 				newVertex.TangentU.z = 1.0f;
 
-				data.Vertices.push_back(newVertex);
+				//	添加索引
+				uint32 index;
+				index = vertex_index[v];
+				data.Indices32.push_back(index);
+
+				data.Vertices[index] = newVertex;
 			}
 
 			index_offset += fnum;
