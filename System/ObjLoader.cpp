@@ -25,59 +25,27 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 	}
 
 
-	for (size_t i = 0; i < 1; i++)
+	for (const auto& shape : shapes)
 	{
-		size_t index_offset = 0;
+		data.Vertices.resize(shape.mesh.num_face_vertices.size() * 3);
+		for (const auto& index : shape.mesh.indices) {
 
-		// For each face
-		for (size_t f = 0; f < shapes[i].mesh.num_face_vertices.size(); f++)
-		{
-			size_t fnum = shapes[i].mesh.num_face_vertices[f];
+			data.Vertices[index.vertex_index].Position.x = attrib.vertices[3 * index.vertex_index + 0];
+			data.Vertices[index.vertex_index].Position.y = attrib.vertices[3 * index.vertex_index + 1];
+			data.Vertices[index.vertex_index].Position.z = attrib.vertices[3 * index.vertex_index + 2];
 
-			// 获得所索引下标
-			tinyobj::index_t idx;
-			int vertex_index[3];
-			int normal_index[3];
-			int texcoord_index[3];
-			for (size_t v = 0; v < fnum; v++)
-			{
-				idx = shapes[i].mesh.indices[index_offset + v];
-				vertex_index[v] = idx.vertex_index;
-				texcoord_index[v] = idx.texcoord_index;
-				normal_index[v] = idx.normal_index;
-			}
+			data.Vertices[index.texcoord_index].TexC.x = attrib.texcoords[2 * index.texcoord_index + 0];
+			data.Vertices[index.texcoord_index].TexC.y = attrib.texcoords[2 * index.texcoord_index + 1];
 
-			data.Vertices.resize(shapes[i].mesh.num_face_vertices.size() * 3);
-			for (size_t v = 0; v < fnum; v++) {
+			data.Vertices[index.normal_index].Normal.x = attrib.vertices[3 * index.normal_index + 0];
+			data.Vertices[index.normal_index].Normal.y = attrib.vertices[3 * index.normal_index + 1];
+			data.Vertices[index.normal_index].Normal.z = attrib.vertices[3 * index.normal_index + 2];
 
-				PVertex newVertex;
-				newVertex.Position.x = attrib.vertices[(vertex_index[v]) * 3 + 0];
-				newVertex.Position.y = attrib.vertices[(vertex_index[v]) * 3 + 1];
-				newVertex.Position.z = attrib.vertices[(vertex_index[v]) * 3 + 2];
+			data.Vertices[index.normal_index].TangentU.x = attrib.vertices[3 * index.normal_index + 0];
+			data.Vertices[index.normal_index].TangentU.y = attrib.vertices[3 * index.normal_index + 1];
+			data.Vertices[index.normal_index].TangentU.z = attrib.vertices[3 * index.normal_index + 2];
 
-				// vt
-				newVertex.TexC.x = attrib.texcoords[texcoord_index[v] * 2 + 0];
-				newVertex.TexC.y = attrib.texcoords[texcoord_index[v] * 2 + 1];
-
-				// vn
-				newVertex.Normal.x = attrib.normals[normal_index[v] * 3 + 0];
-				newVertex.Normal.y = attrib.normals[normal_index[v] * 3 + 1];
-				newVertex.Normal.z = attrib.normals[normal_index[v] * 3 + 2];
-
-				// vtangent
-				newVertex.TangentU.x = 1.0f;
-				newVertex.TangentU.y = 1.0f;
-				newVertex.TangentU.z = 1.0f;
-
-				//	添加索引
-				uint32 index;
-				index = vertex_index[v];
-				data.Indices32.push_back(index);
-
-				data.Vertices[index] = newVertex;
-			}
-
-			index_offset += fnum;
+			data.Indices32.push_back(index.vertex_index);
 		}
 	}
 }

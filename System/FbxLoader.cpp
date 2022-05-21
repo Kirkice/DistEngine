@@ -17,7 +17,7 @@ void GetVerticesAndIndicesData(
 			if (node->GetChild(i)->GetMesh())
 			{
 				//Get Mesh
-				FbxMesh* mesh = node->GetChild(i)->GetMesh();
+				FbxMesh* mesh = node->GetChild(i)->GetMesh(); 
 				//Get Node Name
 				std::string meshName = node->GetChild(i)->GetName();
 

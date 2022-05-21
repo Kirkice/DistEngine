@@ -67,7 +67,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->material.Name = "ak47";
 	sphere->material.MatCBIndex = 2;
 	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
-	sphere->material.NormalMapIndex = mResourcesTextures["AK47Normal"]->TexIndex;
+	sphere->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
 	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
 	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
@@ -79,7 +79,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->material.EmissionStrength = 0.0f;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/untitled.obj");
 
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);

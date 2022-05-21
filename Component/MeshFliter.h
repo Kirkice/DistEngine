@@ -71,7 +71,7 @@ private:
 class MeshFliter
 {
 public:
-	MeshData data;
+	MeshData data; 
 
 public:
 	MeshFliter();
