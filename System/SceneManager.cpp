@@ -79,7 +79,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->material.EmissionStrength = 0.0f;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/untitled.obj");
+	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);

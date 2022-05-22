@@ -24,28 +24,37 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 		printf("Failed to load/parse .obj.\n");
 	}
 
+	//这里对贴图UV做一个修正：反转V轴：
+	for (int i = 0; i < attrib.texcoords.size(); i++)
+	{
+		if (i % 2 == 1)	//第0个是u，第1个是v
+			attrib.texcoords[i] = 1.0f - attrib.texcoords[i];
+	}
 
+	int PresentVertexIndex = 0;
 	for (const auto& shape : shapes)
 	{
-		data.Vertices.resize(shape.mesh.num_face_vertices.size() * 3);
 		for (const auto& index : shape.mesh.indices) {
 
-			data.Vertices[index.vertex_index].Position.x = attrib.vertices[3 * index.vertex_index + 0];
-			data.Vertices[index.vertex_index].Position.y = attrib.vertices[3 * index.vertex_index + 1];
-			data.Vertices[index.vertex_index].Position.z = attrib.vertices[3 * index.vertex_index + 2];
+			PVertex vert;
+			vert.Position.x = attrib.vertices[3 * index.vertex_index + 0];
+			vert.Position.y = attrib.vertices[3 * index.vertex_index + 1];
+			vert.Position.z = attrib.vertices[3 * index.vertex_index + 2];
 
-			data.Vertices[index.texcoord_index].TexC.x = attrib.texcoords[2 * index.texcoord_index + 0];
-			data.Vertices[index.texcoord_index].TexC.y = attrib.texcoords[2 * index.texcoord_index + 1];
+			vert.TexC.x = attrib.texcoords[2 * index.texcoord_index + 0];
+			vert.TexC.y = attrib.texcoords[2 * index.texcoord_index + 1];
 
-			data.Vertices[index.normal_index].Normal.x = attrib.vertices[3 * index.normal_index + 0];
-			data.Vertices[index.normal_index].Normal.y = attrib.vertices[3 * index.normal_index + 1];
-			data.Vertices[index.normal_index].Normal.z = attrib.vertices[3 * index.normal_index + 2];
+			vert.Normal.x = attrib.vertices[3 * index.normal_index + 0];
+			vert.Normal.y = attrib.vertices[3 * index.normal_index + 1];
+			vert.Normal.z = attrib.vertices[3 * index.normal_index + 2];
 
-			data.Vertices[index.normal_index].TangentU.x = attrib.vertices[3 * index.normal_index + 0];
-			data.Vertices[index.normal_index].TangentU.y = attrib.vertices[3 * index.normal_index + 1];
-			data.Vertices[index.normal_index].TangentU.z = attrib.vertices[3 * index.normal_index + 2];
+			vert.TangentU.x = attrib.vertices[3 * index.normal_index + 0];
+			vert.TangentU.y = attrib.vertices[3 * index.normal_index + 1];
+			vert.TangentU.z = attrib.vertices[3 * index.normal_index + 2];
 
-			data.Indices32.push_back(index.vertex_index);
+			data.Vertices.push_back(vert);
+			data.Indices32.push_back(PresentVertexIndex);
+			PresentVertexIndex++;
 		}
 	}
 }

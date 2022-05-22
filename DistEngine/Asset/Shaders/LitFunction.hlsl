@@ -132,12 +132,12 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
 
     //Normal
 	uint normalMapIndex                                 = matData.NormalMapIndex;
-    float4 normalMapSample                              = gTextureMaps[normalMapIndex].Sample(gsamAnisotropicWrap, uv);
+    float4 normalMapSample                              = gTextureMaps[12].Sample(gsamAnisotropicWrap, uv);
 	float3 bumpedNormalW                                = NormalSampleToWorldSpace(normalMapSample.rgb, normalize(N), T);
 
     //Occlusion
 	uint msoMapIndex                                    = matData.MsoMapIndex;
-	float4 mso                                          = gTextureMaps[msoMapIndex].Sample(gsamAnisotropicWrap, uv);
+	float4 mso                                          = gTextureMaps[11].Sample(gsamAnisotropicWrap, uv);
     float Metallic                                      = mso.r * matData.Metallic;
     float Smoothness                                    = mso.g * matData.Smoothness;
     float Occlusion                                     = mso.b * matData.Occlusion;
@@ -575,7 +575,7 @@ float3 CalculateLighting( float3 L, float atten, float3 N, float3 V, float3 ligh
 float3 RED_SBS_CalculateLighting(float3 baseColor, float roughness, float metalness, float3 N, float3 V, float3 PosW)
 {
     Light mainLight                                     = GetMainLight();
-	float3 color                                        = CalculateLighting( mainLight.direction, mainLight.distanceAttenuation, N, V, mainLight.color, baseColor, roughness, metalness );
+	float3 color                                        = CalculateLighting( float3(1,1,1), 1, N, V, float3(1,1,1), baseColor, roughness, metalness );
 
 	Light pointLight 									= GetPointLight(PosW);
 	color											   += CalculateLighting( pointLight.direction, pointLight.distanceAttenuation, N, V, pointLight.color, baseColor, roughness, metalness );
