@@ -1,15 +1,14 @@
 #pragma once
-#include "../Core/Mathf/Mathf.h"
 #include "InputSystem.h"
 #include "Material.h"
 #include "MeshGeometry.h"
-#include "d3dApp.h"
 #include "Camera.h"
 #include "FrameResource.h"
 #include "ShadowMap.h"
 #include "Ssao.h"
 #include "ResourcesManager.h"
 #include "SceneManager.h"
+#include "RootSignature.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -41,8 +40,10 @@ public:
 	void UpdateShadowPassCB(const GameTimer& gt);
 	void UpdateSsaoCB(const GameTimer& gt);
 
+
+
+
 	void BuildRootSignature();
-	void BuildSsaoRootSignature();
 
 	void BuildDescriptorHeaps();
 
@@ -74,15 +75,12 @@ public:
 	//	场景管理
 	SceneManager mSceneManager = SceneManager(SceneType::Default);
 
-
-
-
 	std::vector<std::unique_ptr<FrameResource>> mFrameResources;
 	FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 
-	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
-	ComPtr<ID3D12RootSignature> mSsaoRootSignature = nullptr;
+	RootSignature mRootSignature = RootSignature();
+	RootSignature mSsaoRootSignature = RootSignature();
 
 	ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
 

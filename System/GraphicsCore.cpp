@@ -35,10 +35,7 @@ bool GraphicsCore::Initialize()
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
-
 	BuildRootSignature();
-	BuildSsaoRootSignature();
-
 	BuildDescriptorHeaps();
 	BuildShadersAndInputLayout();
 	mSceneManager.BuildScene(mResourcesTextures);
@@ -331,125 +328,8 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 
 void GraphicsCore::BuildRootSignature()
 {
-	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0, 0);
-
-	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 60, 5, 0);
-
-	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
-
-	// Perfomance TIP: Order from most frequent to least frequent.
-	slotRootParameter[0].InitAsConstantBufferView(0);
-	slotRootParameter[1].InitAsConstantBufferView(1);
-	slotRootParameter[2].InitAsConstantBufferView(2);
-	slotRootParameter[3].InitAsShaderResourceView(0, 1);
-	slotRootParameter[4].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
-	slotRootParameter[5].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL);
-
-	auto staticSamplers = GetStaticSamplers();
-
-	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(6, slotRootParameter,
-		(UINT)staticSamplers.size(), staticSamplers.data(),
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-	// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
-	ComPtr<ID3DBlob> serializedRootSig = nullptr;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-		serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-
-	if (errorBlob != nullptr)
-	{
-		::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-	}
-	ThrowIfFailed(hr);
-
-	ThrowIfFailed(md3dDevice->CreateRootSignature(
-		0,
-		serializedRootSig->GetBufferPointer(),
-		serializedRootSig->GetBufferSize(),
-		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
-}
-
-void GraphicsCore::BuildSsaoRootSignature()
-{
-	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0, 0);
-
-	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2, 0);
-
-	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
-
-	// Perfomance TIP: Order from most frequent to least frequent.
-	slotRootParameter[0].InitAsConstantBufferView(0);
-	slotRootParameter[1].InitAsConstants(1, 1);
-	slotRootParameter[2].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
-	slotRootParameter[3].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL);
-
-	const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
-		0, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearClamp(
-		1, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC depthMapSam(
-		2, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressW
-		0.0f,
-		0,
-		D3D12_COMPARISON_FUNC_LESS_EQUAL,
-		D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE);
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
-		3, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
-
-	std::array<CD3DX12_STATIC_SAMPLER_DESC, 4> staticSamplers =
-	{
-		pointClamp, linearClamp, depthMapSam, linearWrap
-	};
-
-	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(4, slotRootParameter,
-		(UINT)staticSamplers.size(), staticSamplers.data(),
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-	// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
-	ComPtr<ID3DBlob> serializedRootSig = nullptr;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-		serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-
-	if (errorBlob != nullptr)
-	{
-		::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-	}
-	ThrowIfFailed(hr);
-
-	ThrowIfFailed(md3dDevice->CreateRootSignature(
-		0,
-		serializedRootSig->GetBufferPointer(),
-		serializedRootSig->GetBufferSize(),
-		IID_PPV_ARGS(mSsaoRootSignature.GetAddressOf())));
+	mRootSignature.Build(RootSignature::RootSignatureType::Default, md3dDevice, 5, 0, 0, 60, 5, 0);
+	mSsaoRootSignature.Build(RootSignature::RootSignatureType::SSAO, md3dDevice, 2, 0, 0, 1, 2, 0);
 }
 
 //swap chain  BuildDescriptorHeaps
@@ -774,14 +654,14 @@ void GraphicsCore::BuildPSOs()
 	//
 	ZeroMemory(&opaquePsoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 	opaquePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	opaquePsoDesc.pRootSignature = mRootSignature.Get();
+	opaquePsoDesc.pRootSignature = mRootSignature.GetSignature();
 	opaquePsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["standardVS"]->GetBufferPointer()),
 		mShaders["standardVS"]->GetBufferSize()
 	};
 	opaquePsoDesc.PS =
-	{
+	{ 
 		reinterpret_cast<BYTE*>(mShaders["opaquePS"]->GetBufferPointer()),
 		mShaders["opaquePS"]->GetBufferSize()
 	};
@@ -802,7 +682,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC BoundingPsoDesc = opaquePsoDesc;
 	BoundingPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	BoundingPsoDesc.pRootSignature = mRootSignature.Get();
+	BoundingPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	BoundingPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["boundingVS"]->GetBufferPointer()),
@@ -822,7 +702,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC outlinePsoDesc = opaquePsoDesc;
 	outlinePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	outlinePsoDesc.pRootSignature = mRootSignature.Get();
+	outlinePsoDesc.pRootSignature = mRootSignature.GetSignature();
 	outlinePsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["outlineVS"]->GetBufferPointer()),
@@ -850,7 +730,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC GizmoPsoDesc = opaquePsoDesc;
 	GizmoPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	GizmoPsoDesc.pRootSignature = mRootSignature.Get();
+	GizmoPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	GizmoPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["gizmoVS"]->GetBufferPointer()),
@@ -882,7 +762,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC UnlitPsoDesc = GizmoPsoDesc;
 	UnlitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	UnlitPsoDesc.pRootSignature = mRootSignature.Get();
+	UnlitPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	UnlitPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["unitVS"]->GetBufferPointer()),
@@ -900,7 +780,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC litPsoDesc = opaquePsoDesc;
 	litPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	litPsoDesc.pRootSignature = mRootSignature.Get();
+	litPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	litPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["litVS"]->GetBufferPointer()),
@@ -954,7 +834,7 @@ void GraphicsCore::BuildPSOs()
 	smapPsoDesc.RasterizerState.DepthBias = 100000;
 	smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
 	smapPsoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
-	smapPsoDesc.pRootSignature = mRootSignature.Get();
+	smapPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	smapPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["shadowVS"]->GetBufferPointer()),
@@ -989,7 +869,7 @@ void GraphicsCore::BuildPSOs()
 	// PSO for debug layer.
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC debugPsoDesc = opaquePsoDesc;
-	debugPsoDesc.pRootSignature = mRootSignature.Get();
+	debugPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	debugPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["debugVS"]->GetBufferPointer()),
@@ -1044,7 +924,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC ssaoPsoDesc = opaquePsoDesc;
 	ssaoPsoDesc.InputLayout = { nullptr, 0 };
-	ssaoPsoDesc.pRootSignature = mSsaoRootSignature.Get();
+	ssaoPsoDesc.pRootSignature = mSsaoRootSignature.GetSignature();
 	ssaoPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["ssaoVS"]->GetBufferPointer()),
@@ -1086,7 +966,7 @@ void GraphicsCore::BuildPSOs()
 	//
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC FinalBlitPsoDesc = opaquePsoDesc;
 		FinalBlitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-		FinalBlitPsoDesc.pRootSignature = mRootSignature.Get();
+		FinalBlitPsoDesc.pRootSignature = mRootSignature.GetSignature();
 		FinalBlitPsoDesc.VS =
 		{
 			reinterpret_cast<BYTE*>(mShaders["finalBlitVS"]->GetBufferPointer()),
@@ -1104,7 +984,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
 	CopyColorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	CopyColorPsoDesc.pRootSignature = mRootSignature.Get();
+	CopyColorPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	CopyColorPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["copyColorVS"]->GetBufferPointer()),
@@ -1122,7 +1002,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC RGBSplitPsoDesc = opaquePsoDesc;
 	RGBSplitPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	RGBSplitPsoDesc.pRootSignature = mRootSignature.Get();
+	RGBSplitPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	RGBSplitPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["rgbSplitVS"]->GetBufferPointer()),
@@ -1141,7 +1021,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC RadialBlurPsoDesc = opaquePsoDesc;
 	RadialBlurPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	RadialBlurPsoDesc.pRootSignature = mRootSignature.Get();
+	RadialBlurPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	RadialBlurPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["radialBlurVS"]->GetBufferPointer()),
@@ -1160,7 +1040,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC vignettePsoDesc = opaquePsoDesc;
 	vignettePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	vignettePsoDesc.pRootSignature = mRootSignature.Get();
+	vignettePsoDesc.pRootSignature = mRootSignature.GetSignature();
 	vignettePsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["vignetteVS"]->GetBufferPointer()),
@@ -1179,7 +1059,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC decolorPsoDesc = opaquePsoDesc;
 	decolorPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	decolorPsoDesc.pRootSignature = mRootSignature.Get();
+	decolorPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	decolorPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["decolorVS"]->GetBufferPointer()),
@@ -1197,7 +1077,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC brightnessPsoDesc = opaquePsoDesc;
 	brightnessPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	brightnessPsoDesc.pRootSignature = mRootSignature.Get();
+	brightnessPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	brightnessPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["brightnessVS"]->GetBufferPointer()),
@@ -1215,7 +1095,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC hsvPsoDesc = opaquePsoDesc;
 	hsvPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	hsvPsoDesc.pRootSignature = mRootSignature.Get();
+	hsvPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	hsvPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["hsvVS"]->GetBufferPointer()),
@@ -1233,7 +1113,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC mosaicPsoDesc = opaquePsoDesc;
 	mosaicPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	mosaicPsoDesc.pRootSignature = mRootSignature.Get();
+	mosaicPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	mosaicPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["mosaicVS"]->GetBufferPointer()),
@@ -1251,7 +1131,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC sharpenPsoDesc = opaquePsoDesc;
 	sharpenPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	sharpenPsoDesc.pRootSignature = mRootSignature.Get();
+	sharpenPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	sharpenPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["sharpenVS"]->GetBufferPointer()),
@@ -1270,7 +1150,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC spherizePsoDesc = opaquePsoDesc;
 	spherizePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	spherizePsoDesc.pRootSignature = mRootSignature.Get();
+	spherizePsoDesc.pRootSignature = mRootSignature.GetSignature();
 	spherizePsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["spherizeVS"]->GetBufferPointer()),
@@ -1289,7 +1169,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC whiteBalancePsoDesc = opaquePsoDesc;
 	whiteBalancePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	whiteBalancePsoDesc.pRootSignature = mRootSignature.Get();
+	whiteBalancePsoDesc.pRootSignature = mRootSignature.GetSignature();
 	whiteBalancePsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["whiteBalanceVS"]->GetBufferPointer()),
@@ -1310,7 +1190,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC oilPaintPsoDesc = opaquePsoDesc;
 	oilPaintPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	oilPaintPsoDesc.pRootSignature = mRootSignature.Get();
+	oilPaintPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	oilPaintPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["oilPaintVS"]->GetBufferPointer()),
@@ -1331,7 +1211,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC reliefPsoDesc = opaquePsoDesc;
 	reliefPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	reliefPsoDesc.pRootSignature = mRootSignature.Get();
+	reliefPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	reliefPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["reliefVS"]->GetBufferPointer()),
@@ -1351,7 +1231,7 @@ void GraphicsCore::BuildPSOs()
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC edgeDetectionPsoDesc = opaquePsoDesc;
 	edgeDetectionPsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
-	edgeDetectionPsoDesc.pRootSignature = mRootSignature.Get();
+	edgeDetectionPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	edgeDetectionPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["edgeDetectionVS"]->GetBufferPointer()),
@@ -1381,7 +1261,7 @@ void GraphicsCore::BuildPSOs()
 	// Otherwise, the normalized depth values at z = 1 (NDC) will 
 	// fail the depth test if the depth buffer was cleared to 1.
 	skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	skyPsoDesc.pRootSignature = mRootSignature.Get();
+	skyPsoDesc.pRootSignature = mRootSignature.GetSignature();
 	skyPsoDesc.VS =
 	{
 		reinterpret_cast<BYTE*>(mShaders["skyVS"]->GetBufferPointer()),

@@ -27,7 +27,7 @@ void ForwardRenderer::Draw(const GameTimer& gt)
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
 	////Draw ShadowMap
@@ -36,7 +36,7 @@ void ForwardRenderer::Draw(const GameTimer& gt)
 	////SSAO
 	//DrawSSAO(matBuffer);
 
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
@@ -112,7 +112,7 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 void ForwardRenderer::DrawSSAO(ID3D12Resource* matBuffer)
 {
 	ForwardRenderer::DrawDepthNormal();
-	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.Get());
+	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.GetSignature());
 	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
 }
 

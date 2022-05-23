@@ -29,6 +29,15 @@
     <ClCompile Include="ObjLoader.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
+    <ClCompile Include="CommandListManager.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorHeap.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignature.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ForwardRenderPipeline.h" />
@@ -62,6 +71,15 @@
     </ClInclude>
     <ClInclude Include="ObjLoader.h">
       <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandListManager.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHeap.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature.h">
+      <Filter>GraphicsSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

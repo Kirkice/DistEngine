@@ -144,6 +144,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandListManager.cpp" />
+    <ClCompile Include="DescriptorHeap.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="ForwardRenderPipeline.cpp" />
     <ClCompile Include="FrameResource.cpp" />
@@ -153,11 +155,14 @@
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="ResourcesPath.cpp" />
+    <ClCompile Include="RootSignature.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Ssao.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandListManager.h" />
+    <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="ForwardRenderPipeline.h" />
     <ClInclude Include="FrameResource.h" />
@@ -168,6 +173,7 @@
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="ResourcesPath.h" />
+    <ClInclude Include="RootSignature.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Ssao.h" />
