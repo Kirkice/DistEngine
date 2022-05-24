@@ -25,7 +25,7 @@ void ForwardRenderer::Draw(const GameTimer& gt)
 	ThrowIfFailed(cmdListAlloc->Reset());
 	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.Get() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get()};
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
@@ -52,7 +52,7 @@ void ForwardRenderer::Draw(const GameTimer& gt)
 
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
@@ -105,7 +105,7 @@ void ForwardRenderer::DrawShadowMap(ID3D12Resource* matBuffer)
 
 	//mCommandList->SetGraphicsRootDescriptorTable(4, mNullSrv);
 
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	DrawSceneToShadowMap();
 }
 

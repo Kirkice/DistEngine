@@ -9,6 +9,7 @@
 #include "ResourcesManager.h"
 #include "SceneManager.h"
 #include "RootSignature.h"
+#include "DescriptorHeap.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -57,12 +58,8 @@ public:
 	void DrawSceneToShadowMap();
 	void DrawNormalsAndDepth();
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GetGpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetDsv(int index)const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetRtv(int index)const;
-
-	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GetStaticSamplers();
 
 public:
 
@@ -79,11 +76,12 @@ public:
 	FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 
+	//	根签名
 	RootSignature mRootSignature = RootSignature();
 	RootSignature mSsaoRootSignature = RootSignature();
 
-	ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-
+	//	描述符堆
+	DescriptorHeap mSrvDescriptorHeap = DescriptorHeap();
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;

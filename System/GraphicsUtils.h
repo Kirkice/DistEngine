@@ -5,8 +5,13 @@
 #include "MeshGeometry.h" 
 #include "d3dUtil.h"
 #include "Mathf/Mathf.h"
+#include "ResourcesManager.h"
 
 using namespace Mathf;
+
+using Microsoft::WRL::ComPtr;
+using namespace DirectX;
+using namespace DirectX::PackedVector;
 
 struct RenderItem
 {
@@ -83,4 +88,13 @@ class GraphicsUtils
 {
 public:
 	static MeshGeometry* BuidlMeshGeometryFromMeshData(std::string name, MeshData data, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
+
+	static void BuildTextureCubeSrvDesc(
+		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
+		UINT mCbvSrvUavDescriptorSize,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+		std::unordered_map<std::string, std::unique_ptr<TextureCube>>& mCubeMapTextures,
+		std::string TexName
+	);
 };

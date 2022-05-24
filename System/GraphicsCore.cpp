@@ -335,17 +335,10 @@ void GraphicsCore::BuildRootSignature()
 //swap chain  BuildDescriptorHeaps
 void GraphicsCore::BuildDescriptorHeaps()
 {
-	//
-	// Create the SRV heap.
-	//
-	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = 128;
-	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
+	mSrvDescriptorHeap.Build(md3dDevice, 128);
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUDescriptor(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUDescriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUDescriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
 	UINT mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
@@ -462,40 +455,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 		}
 	}
 
-
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-	ComPtr<ID3D12Resource> diffuseIBL = mCubeMapTextures["DGarden_diffuseIBL"]->Resource;
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = diffuseIBL->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = diffuseIBL->GetDesc().Format;
-	md3dDevice->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, CPUDescriptor);
-	mCubeMapTextures["DGarden_diffuseIBL"]->CpuHandle = CPUDescriptor;
-	mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle = GPUDescriptor;
-
-
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-	ComPtr<ID3D12Resource> specularIBL = mCubeMapTextures["DGarden_specularIBL"]->Resource;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = specularIBL->GetDesc().MipLevels;
-	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = specularIBL->GetDesc().Format;
-	md3dDevice->CreateShaderResourceView(specularIBL.Get(), &srvDesc, CPUDescriptor);
-	mCubeMapTextures["DGarden_specularIBL"]->CpuHandle = CPUDescriptor;
-	mCubeMapTextures["DGarden_specularIBL"]->GpuHandle = GPUDescriptor;
+	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_diffuseIBL");
+	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_specularIBL");
 
 	//mShadowMap->BuildDescriptors(
 	//	GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
@@ -1378,21 +1339,6 @@ void GraphicsCore::DrawNormalsAndDepth()
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetCpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const
-{
-	auto srv = CD3DX12_CPU_DESCRIPTOR_HANDLE(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-	srv.Offset(index, mCbvSrvUavDescriptorSize);
-	return srv;
-}
-
-
-CD3DX12_GPU_DESCRIPTOR_HANDLE GraphicsCore::GetGpuSrv(int index, ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap)const
-{
-	auto srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	srv.Offset(index, mCbvSrvUavDescriptorSize);
-	return srv;
-}
-
 CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetDsv(int index)const
 {
 	auto dsv = CD3DX12_CPU_DESCRIPTOR_HANDLE(mDsvHeap->GetCPUDescriptorHandleForHeapStart());
@@ -1405,74 +1351,4 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetRtv(int index)const
 	auto rtv = CD3DX12_CPU_DESCRIPTOR_HANDLE(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
 	rtv.Offset(index, mRtvDescriptorSize);
 	return rtv;
-}
-
-std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsCore::GetStaticSamplers()
-{
-	// Applications usually only need a handful of samplers.  So just define them all up front
-	// and keep them available as part of the root signature.  
-
-	const CD3DX12_STATIC_SAMPLER_DESC pointWrap(
-		0, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
-		1, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
-		2, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC linearClamp(
-		3, // shaderRegister
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
-
-	const CD3DX12_STATIC_SAMPLER_DESC anisotropicWrap(
-		4, // shaderRegister
-		D3D12_FILTER_ANISOTROPIC, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressW
-		0.0f,                             // mipLODBias
-		8);                               // maxAnisotropy
-
-	const CD3DX12_STATIC_SAMPLER_DESC anisotropicClamp(
-		5, // shaderRegister
-		D3D12_FILTER_ANISOTROPIC, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressW
-		0.0f,                              // mipLODBias
-		8);                                // maxAnisotropy
-
-	const CD3DX12_STATIC_SAMPLER_DESC shadow(
-		6, // shaderRegister
-		D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, // filter
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressU
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressV
-		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressW
-		0.0f,                               // mipLODBias
-		16,                                 // maxAnisotropy
-		D3D12_COMPARISON_FUNC_LESS_EQUAL,
-		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK);
-
-	return {
-		pointWrap, pointClamp,
-		linearWrap, linearClamp,
-		anisotropicWrap, anisotropicClamp,
-		shadow
-	};
 }
