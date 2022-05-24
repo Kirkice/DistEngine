@@ -38,6 +38,9 @@
     <ClCompile Include="RootSignature.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ForwardRenderPipeline.h" />
@@ -79,6 +82,9 @@
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
     <ClInclude Include="RootSignature.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
   </ItemGroup>

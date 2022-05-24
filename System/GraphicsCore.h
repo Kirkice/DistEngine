@@ -10,6 +10,7 @@
 #include "SceneManager.h"
 #include "RootSignature.h"
 #include "DescriptorHeap.h"
+#include "ShaderManager.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -83,11 +84,11 @@ public:
 	//	描述符堆
 	DescriptorHeap mSrvDescriptorHeap = DescriptorHeap();
 
-	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
+	//	PSO
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
-	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
-	std::vector<D3D12_INPUT_ELEMENT_DESC> mSkinnedInputLayout;
+	//	ShaderManager
+	ShaderManager mShaderManager = ShaderManager();
 
 	// List of all the render items.
 	std::vector<std::unique_ptr<RenderItem>> mAllRitems;

@@ -157,6 +157,7 @@
     <ClCompile Include="ResourcesPath.cpp" />
     <ClCompile Include="RootSignature.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Ssao.cpp" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="ResourcesPath.h" />
     <ClInclude Include="RootSignature.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Ssao.h" />
     <ClInclude Include="Texture2D.h" />
