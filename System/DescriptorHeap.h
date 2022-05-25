@@ -10,7 +10,7 @@ using namespace DirectX::PackedVector;
 class DescriptorHeap
 {
 public:
-	DescriptorHeap();
+	DescriptorHeap(); 
 	~DescriptorHeap();
 
 public:
