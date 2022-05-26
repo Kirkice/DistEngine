@@ -41,6 +41,9 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineStateObject.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ForwardRenderPipeline.h" />
@@ -85,6 +88,9 @@
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineStateObject.h">
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
   </ItemGroup>
