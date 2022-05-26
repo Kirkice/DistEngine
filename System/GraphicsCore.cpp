@@ -121,7 +121,6 @@ void GraphicsCore::Update(const GameTimer& gt)
 	}
 
 	UpdateLights(gt);
-	AnimateMaterials(gt);
 	UpdateObjectCBs(gt);
 	UpdateMaterialBuffer(gt);
 	UpdateShadowTransform(gt);
@@ -134,11 +133,6 @@ void GraphicsCore::Update(const GameTimer& gt)
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
 	mSceneManager.mMainLight.Tick();
-}
-
-void GraphicsCore::AnimateMaterials(const GameTimer& gt)
-{
-	   
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
@@ -485,35 +479,7 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 void GraphicsCore::BuildPSOs()
 {
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePsoDesc;
-
-	//
-	// PSO for opaque objects.
-	//
-	ZeroMemory(&opaquePsoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	opaquePsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	opaquePsoDesc.pRootSignature = mRootSignature.GetSignature();
-	opaquePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["standardVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["standardVS"]->GetBufferSize()
-	};
-	opaquePsoDesc.PS =
-	{ 
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["opaquePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["opaquePS"]->GetBufferSize()
-	};
-	opaquePsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	opaquePsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	opaquePsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	opaquePsoDesc.SampleMask = UINT_MAX;
-	opaquePsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	opaquePsoDesc.NumRenderTargets = 1;
-	opaquePsoDesc.RTVFormats[0] = mBackBufferFormat;
-	opaquePsoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-	opaquePsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	opaquePsoDesc.DSVFormat = mDepthStencilFormat;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
+	mPSOs.Add(md3dDevice, mShaderManager, mRootSignature, "standardVS", "opaquePS", "opaque", mBackBufferFormat, m4xMsaaState, m4xMsaaQuality,mDepthStencilFormat);
 
 	//
 	// 	PSO for Bounding

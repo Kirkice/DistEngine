@@ -11,6 +11,7 @@
 #include "RootSignature.h"
 #include "DescriptorHeap.h"
 #include "ShaderManager.h"
+#include "PipelineStateObject.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -34,7 +35,6 @@ private:
 public:
 
 	void UpdateLights(const GameTimer& gt);
-	void AnimateMaterials(const GameTimer& gt);
 	void UpdateObjectCBs(const GameTimer& gt);
 	void UpdateMaterialBuffer(const GameTimer& gt);
 	void UpdateShadowTransform(const GameTimer& gt);
@@ -85,7 +85,7 @@ public:
 	DescriptorHeap mSrvDescriptorHeap = DescriptorHeap();
 
 	//	PSO
-	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
+	PipelineStateObject mPSOs;
 
 	//	ShaderManager
 	ShaderManager mShaderManager = ShaderManager();
@@ -96,11 +96,27 @@ public:
 	// Render items divided by PSO.
 	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count];
 
-	UINT mNullCubeSrvIndex = 0;
-	UINT mNullTexSrvIndex1 = 0;
-	UINT mNullTexSrvIndex2 = 0;
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mNullSrv;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 	PassConstants mShadowPassCB;// index 1 of pass cbuffer.
