@@ -163,3 +163,9 @@
 	{
 		"Asset/Scene/Default.scene",
 	};
+
+
+
+	const std::vector<std::string> mBuiltinShaderVS =
+	{
+	};

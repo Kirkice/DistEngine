@@ -22,20 +22,7 @@ void ShaderManager::Build()
 /// </summary>
 void ShaderManager::BuildShaders()
 {
-	const D3D_SHADER_MACRO alphaTestDefines[] =
-	{
-		"ALPHA_TEST", "1",
-		NULL, NULL
-	};
-
-	const D3D_SHADER_MACRO skinnedDefines[] =
-	{
-		"SKINNED", "1",
-		NULL, NULL
-	};
-
 	mShaders["standardVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
 	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["outlineVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\OutLine.hlsl", nullptr, "VS", "vs_5_1");
@@ -54,15 +41,12 @@ void ShaderManager::BuildShaders()
 	mShaders["boundingPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Bounding.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["shadowVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
 	mShaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
-	mShaders["shadowAlphaTestedPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Shadows.hlsl", alphaTestDefines, "PS", "ps_5_1");
 
 	mShaders["debugVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["debugPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\ShadowDebug.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["drawNormalsVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["skinnedDrawNormalsVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", skinnedDefines, "VS", "vs_5_1");
 	mShaders["drawNormalsPS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\DrawNormals.hlsl", nullptr, "PS", "ps_5_1");
 
 	mShaders["ssaoVS"] = d3dUtil::CompileShader(L"Asset\\Shaders\\Ssao.hlsl", nullptr, "VS", "vs_5_1");

@@ -649,22 +649,6 @@ void GraphicsCore::BuildPSOs()
 	lit_trans_PsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&lit_trans_PsoDesc, IID_PPV_ARGS(&mPSOs["transparent"])));
 
-	// PSO for skinned pass.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedOpaquePsoDesc = opaquePsoDesc;
-	skinnedOpaquePsoDesc.InputLayout = { mShaderManager.mSkinnedInputLayout.data(), (UINT)mShaderManager.mSkinnedInputLayout.size() };
-	skinnedOpaquePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["skinnedVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["skinnedVS"]->GetBufferSize()
-	};
-	skinnedOpaquePsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["opaquePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["opaquePS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skinnedOpaquePsoDesc, IID_PPV_ARGS(&mPSOs["skinnedOpaque"])));
-
 	//
 	// PSO for shadow map pass.
 	//
@@ -689,19 +673,6 @@ void GraphicsCore::BuildPSOs()
 	smapPsoDesc.NumRenderTargets = 0;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&smapPsoDesc, IID_PPV_ARGS(&mPSOs["shadow_opaque"])));
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedSmapPsoDesc = smapPsoDesc;
-	skinnedSmapPsoDesc.InputLayout = { mShaderManager.mSkinnedInputLayout.data(), (UINT)mShaderManager.mSkinnedInputLayout.size() };
-	skinnedSmapPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["skinnedShadowVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["skinnedShadowVS"]->GetBufferSize()
-	};
-	skinnedSmapPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["shadowOpaquePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["shadowOpaquePS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skinnedSmapPsoDesc, IID_PPV_ARGS(&mPSOs["skinnedShadow_opaque"])));
 
 	//
 	// PSO for debug layer.
@@ -739,20 +710,6 @@ void GraphicsCore::BuildPSOs()
 	drawNormalsPsoDesc.SampleDesc.Quality = 0;
 	drawNormalsPsoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&drawNormalsPsoDesc, IID_PPV_ARGS(&mPSOs["drawNormals"])));
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedDrawNormalsPsoDesc = drawNormalsPsoDesc;
-	skinnedDrawNormalsPsoDesc.InputLayout = { mShaderManager.mSkinnedInputLayout.data(), (UINT)mShaderManager.mSkinnedInputLayout.size() };
-	skinnedDrawNormalsPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["skinnedDrawNormalsVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["skinnedDrawNormalsVS"]->GetBufferSize()
-	};
-	skinnedDrawNormalsPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["drawNormalsPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["drawNormalsPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skinnedDrawNormalsPsoDesc, IID_PPV_ARGS(&mPSOs["skinnedDrawNormals"])));
 
 
 	//Postprocessing PSO
@@ -1120,7 +1077,6 @@ void GraphicsCore::BuildFrameResources()
 	{
 		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, (UINT)mAllRitems.size(),
-			1,
 			(UINT)(mSceneManager.mMeshRender.size())));
 	}
 }
@@ -1133,10 +1089,8 @@ void GraphicsCore::BuildRenderItems()
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
 {
 	UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-	UINT skinnedCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(SkinnedConstants));
 
 	auto objectCB = mCurrFrameResource->ObjectCB->Resource();
-	auto skinnedCB = mCurrFrameResource->SkinnedCB->Resource();
 
 	for (size_t i = 0; i < ritems.size(); ++i)
 	{
