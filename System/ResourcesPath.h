@@ -165,7 +165,104 @@
 	};
 
 
-
+	/// <summary>
+	/// VS
+	/// </summary>
 	const std::vector<std::string> mBuiltinShaderVS =
 	{
+		"standardVS",
+		"outlineVS",
+		"litVS",
+		"gizmoVS",
+		"unitVS",
+		"boundingVS",
+		"shadowVS",
+		"debugVS",
+		"drawNormalsVS",
+		"ssaoVS",
+		"ssaoBlurVS",
+		"skyVS",
+		"copyColorVS",
+		"finalBlitVS",
+		"rgbSplitVS",
+		"radialBlurVS",
+		"vignetteVS",
+		"decolorVS",
+		"brightnessVS",
+		"hsvVS",
+		"mosaicVS",
+		"sharpenVS",
+		"spherizeVS",
+		"whiteBalanceVS",
+		"oilPaintVS",
+		"reliefVS",
+		"edgeDetectionVS",
+	};
+
+	/// <summary>
+	/// PS
+	/// </summary>
+	const std::vector<std::string> mBuiltinShaderPS =
+	{
+		"opaquePS",
+		"outlinePS",
+		"litPS",
+		"gizmoPS",
+		"unitPS",
+		"boundingPS",
+		"shadowOpaquePS",
+		"debugPS",
+		"drawNormalsPS",
+		"ssaoPS",
+		"ssaoBlurPS",
+		"skyPS",
+		"copyColorPS",
+		"finalBlitPS",
+		"rgbSplitPS",
+		"radialBlurPS",
+		"vignettePS",
+		"decolorPS",
+		"brightnessPS",
+		"hsvPS",
+		"mosaicPS",
+		"sharpenPS",
+		"spherizePS",
+		"whiteBalancePS",
+		"oilPaintPS",
+		"reliefPS",
+		"edgeDetectionPS",
+	};
+
+	/// <summary>
+	/// Path
+	/// </summary>
+	const std::vector<std::wstring> mBuiltinShaderPath =
+	{
+		L"Asset\\Shaders\\Default.hlsl",
+		L"Asset\\Shaders\\OutLine.hlsl",
+		L"Asset\\Shaders\\LitPass.hlsl",
+		L"Asset\\Shaders\\GizmoPass.hlsl",
+		L"Asset\\Shaders\\Unlit.hlsl",
+		L"Asset\\Shaders\\Bounding.hlsl",
+		L"Asset\\Shaders\\Shadows.hlsl",
+		L"Asset\\Shaders\\ShadowDebug.hlsl",
+		L"Asset\\Shaders\\DrawNormals.hlsl",
+		L"Asset\\Shaders\\Ssao.hlsl",
+		L"Asset\\Shaders\\SsaoBlur.hlsl",
+		L"Asset\\Shaders\\Sky.hlsl",
+		L"Asset\\Shaders\\CopyColor.hlsl",
+		L"Asset\\Shaders\\FinalBlit.hlsl",
+		L"Asset\\Shaders\\RGBSplit.hlsl",
+		L"Asset\\Shaders\\RadialBlur.hlsl",
+		L"Asset\\Shaders\\Vignette.hlsl",
+		L"Asset\\Shaders\\Decolor.hlsl",
+		L"Asset\\Shaders\\Brightness.hlsl",
+		L"Asset\\Shaders\\HSV.hlsl",
+		L"Asset\\Shaders\\Mosaic.hlsl",
+		L"Asset\\Shaders\\Sharpen.hlsl",
+		L"Asset\\Shaders\\Spherize.hlsl",
+		L"Asset\\Shaders\\WhiteBalance.hlsl",
+		L"Asset\\Shaders\\OilPaint.hlsl",
+		L"Asset\\Shaders\\Relief.hlsl",
+		L"Asset\\Shaders\\EdgeDetection.hlsl",
 	};

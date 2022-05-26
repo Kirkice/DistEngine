@@ -14,9 +14,6 @@ public:
 	~ShaderManager();
 
 	void Build();
-	//ComPtr<ID3DBlob> GetShader(std::string str);
-	//std::vector<D3D12_INPUT_ELEMENT_DESC> GetCommonLayout();
-	//std::vector<D3D12_INPUT_ELEMENT_DESC> GetSkinnedLayout();
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
