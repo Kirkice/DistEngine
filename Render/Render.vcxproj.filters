@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="RenderUtils">
+      <UniqueIdentifier>{6d4e22e2-d707-48c9-8c49-c27c2b9f9f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass">
+      <UniqueIdentifier>{32969f1e-4255-410f-abda-e0ef6a57e943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostProcess">
+      <UniqueIdentifier>{a12aefef-9c56-428d-9bd9-e9b266c1497f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPipeline">
+      <UniqueIdentifier>{235d6e7f-c1d5-4dce-9e7b-05f15945e11b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RenderCore.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderCore.cpp">
+      <Filter>RenderPipeline</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

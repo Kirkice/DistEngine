@@ -1,7 +1,6 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
-#include "GraphicsCore.h"
-#include "ForwardRenderPipeline.h"
+#include "GUISystem.h"
 
 #include "../ThirdParty/ImGUI/imgui.h"
 #include "../ThirdParty/ImGUI/imgui_impl_win32.h"
@@ -13,12 +12,14 @@
 #pragma comment(lib,"x64\\Debug\\Component.lib")
 #pragma comment(lib,"x64\\Debug\\Stb.lib")
 #pragma comment(lib,"x64\\Debug\\TinyObjLoader.lib")
+#pragma comment(lib,"x64\\Debug\\Render.lib")
+#pragma comment(lib,"x64\\Debug\\DistEditor.lib")
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-class EngineApp : public ForwardRenderer
+class EngineApp : public GUISystem
 {
 public:
 	EngineApp(HINSTANCE hInstance);

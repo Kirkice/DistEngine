@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f650468e-d336-439d-b307-6da9177feb0e}</ProjectGuid>
-    <RootNamespace>Renderer</RootNamespace>
+    <ProjectGuid>{d7bc9837-cb80-46a7-b5d8-d0354a1596c0}</ProjectGuid>
+    <RootNamespace>DistEditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>System</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -118,8 +117,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../Core;../ThirdParty/ImGUI;../ThirdParty/Fbxsdk/include;../Core/Mathf;../Component;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
+      <AdditionalIncludeDirectories>../Core/;../System/;../Core/Mathf/;../ImGUI/;../ThirdParty/Fbxsdk/include;../Component;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;../Render/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -144,42 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandListManager.cpp" />
-    <ClCompile Include="DescriptorHeap.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="FrameResource.cpp" />
-    <ClCompile Include="GraphicsCore.cpp" />
-    <ClCompile Include="GraphicsUtils.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="ObjLoader.cpp" />
-    <ClCompile Include="PipelineStateObject.cpp" />
-    <ClCompile Include="ResourcesManager.cpp" />
-    <ClCompile Include="ResourcesPath.cpp" />
-    <ClCompile Include="RootSignature.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
-    <ClCompile Include="Ssao.cpp" />
+    <ClInclude Include="GUISystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandListManager.h" />
-    <ClInclude Include="DescriptorHeap.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="FrameResource.h" />
-    <ClInclude Include="GraphicsCore.h" />
-    <ClInclude Include="GraphicsUtils.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="ObjLoader.h" />
-    <ClInclude Include="PipelineStateObject.h" />
-    <ClInclude Include="ResourcesManager.h" />
-    <ClInclude Include="ResourcesPath.h" />
-    <ClInclude Include="RootSignature.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="ShadowMap.h" />
-    <ClInclude Include="Ssao.h" />
-    <ClInclude Include="Texture2D.h" />
+    <ClCompile Include="GUISystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

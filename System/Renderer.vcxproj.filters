@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="ForwardRenderPipeline.cpp" />
     <ClCompile Include="FrameResource.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Ssao.cpp" />
@@ -46,7 +45,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ForwardRenderPipeline.h" />
     <ClInclude Include="FrameResource.h" />
     <ClInclude Include="MeshGeometry.h" />
     <ClInclude Include="ShadowMap.h" />
