@@ -143,9 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GUISystem.h" />
+    <ClInclude Include="GUIUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUISystem.cpp" />
+    <ClCompile Include="GUIUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

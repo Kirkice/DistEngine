@@ -1,4 +1,5 @@
 #pragma once
+#include "GUIUtils.h"
 #include "../Core/Mathf/Mathf.h"
 #include "RenderCore.h"
 

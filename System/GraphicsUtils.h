@@ -97,4 +97,10 @@ public:
 		std::unordered_map<std::string, std::unique_ptr<TextureCube>>& mCubeMapTextures,
 		std::string TexName
 	);
+
+	static void IMGUIInit(
+		HWND& mhMainWnd,
+		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap
+	);
 };

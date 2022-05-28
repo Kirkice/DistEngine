@@ -12,10 +12,16 @@
     <ClInclude Include="GUISystem.h">
       <Filter>GUISystem</Filter>
     </ClInclude>
+    <ClInclude Include="GUIUtils.h">
+      <Filter>GUIUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUISystem.cpp">
       <Filter>GUISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIUtils.cpp">
+      <Filter>GUIUtils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

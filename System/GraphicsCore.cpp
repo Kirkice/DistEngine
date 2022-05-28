@@ -37,18 +37,7 @@ bool GraphicsCore::Initialize()
 
 	BuildRootSignature();
 	BuildDescriptorHeaps();
-
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(mhMainWnd);
-	ImGui_ImplDX12_Init(md3dDevice.Get(), 3,
-		DXGI_FORMAT_R8G8B8A8_UNORM, mSrvDescriptorHeap.GetDescriptorHeap().Get(),
-		mSrvDescriptorHeap.GetDescriptorHeap().Get()->GetCPUDescriptorHandleForHeapStart(),
-		mSrvDescriptorHeap.GetDescriptorHeap().Get()->GetGPUDescriptorHandleForHeapStart());
-
+	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());
 	BuildShadersAndInputLayout();
 	mSceneManager.BuildScene(mResourcesTextures);
 
@@ -359,8 +348,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 		// Load the texture from a file
 		bool ret = ResourcesManager::LoadTextureFromFile(mProjectIconTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
-		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 		if (ret)
 		{
@@ -378,6 +365,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 			tex->Path = mProjectIconTextures[i];
 			mIconTextures[tex->Name] = std::move(tex);
 		}
+		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	}
 
 	//Load Gizmo
@@ -387,9 +376,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 		int image_height = 0;
 
 		ID3D12Resource* texture = NULL;
-
-		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 		// Load the texture from a file
 		bool ret = ResourcesManager::LoadTextureFromFile(mProjectGizmoTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
@@ -408,6 +394,9 @@ void GraphicsCore::BuildDescriptorHeaps()
 		tex->Name = mProjectGizmoName[i];
 		tex->Path = mProjectGizmoTextures[i];
 		mGizmosTextures[tex->Name] = std::move(tex);
+
+		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	}
 
 	//Load Project
@@ -417,9 +406,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 		int image_height = 0;
 
 		ID3D12Resource* texture = NULL;
-
-		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 		// Load the texture from a file
 		bool ret = ResourcesManager::LoadTextureFromFile(mProjectResourceTextures[i].c_str(), md3dDevice, CPUDescriptor, &texture, &image_width, &image_height);
@@ -438,6 +424,9 @@ void GraphicsCore::BuildDescriptorHeaps()
 		tex->Name = mProjectResourceName[i];
 		tex->Path = mProjectResourceTextures[i];
 		mResourcesTextures[tex->Name] = std::move(tex);
+
+		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	}
 
 	//Load CubeMap

@@ -14,6 +14,7 @@
 		"Asset/Textures/ICON/Folder.png",
 		"Asset/Textures/ICON/Folder.png",
 		"Asset/Textures/ICON/Folder.png",
+		"Asset/Textures/ICON/Folder.png",
 		"Asset/Textures/ICON/Mat.png",
 		"Asset/Textures/ICON/Mesh.png",
 		"Asset/Textures/ICON/Scene.png",
@@ -22,6 +23,7 @@
 
 	const std::vector<std::string> mProjectIconName =				//	ICONŒ∆¿Ì√˚≥∆
 	{
+		"Folder",
 		"FolderPic",
 		"FolderMat",
 		"FolderMesh",

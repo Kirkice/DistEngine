@@ -214,7 +214,16 @@ void GUISystem::DrawProjectEditor()
 
 
 		//	显示文件夹
-		//EditorUtils::DrawProjetcFolder(md3dDevice, m_SceneRender.mSrvDescriptorHeap, mResourceManager, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		GUIUtils::DrawProjetcFolder(
+			md3dDevice,
+			mSrvDescriptorHeap.GetDescriptorHeap(),
+			mIconTextures, 
+			&show_folder_panel, 
+			&show_Textures_panel, 
+			&show_Mesh_panel, 
+			&show_Materials_panel, 
+			&show_Scene_panel
+		);
 	}
 	else if (show_Textures_panel)
 	{
@@ -228,7 +237,18 @@ void GUISystem::DrawProjectEditor()
 		show_Scene_panel = false;
 
 		//	显示纹理界面
-		//EditorUtils::DrawProjectTextures(md3dDevice, m_SceneRender.mSrvDescriptorHeap, mResourceManager, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		GUIUtils::DrawProjectTextures(
+			md3dDevice, 
+			mSrvDescriptorHeap.GetDescriptorHeap(),
+			mIconTextures,
+			mResourcesTextures,
+			mClientWidth - 620, 
+			&show_folder_panel, 
+			&show_Textures_panel, 
+			&show_Mesh_panel, 
+			&show_Materials_panel, 
+			&show_Scene_panel
+		);
 	}
 	else if (show_Mesh_panel)
 	{
@@ -242,7 +262,17 @@ void GUISystem::DrawProjectEditor()
 		show_Scene_panel = false;
 
 		//	显示Mesh
-		//EditorUtils::DrawProjectMesh(md3dDevice, m_SceneRender.mSrvDescriptorHeap, mResourceManager, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		GUIUtils::DrawProjectMesh(
+			md3dDevice,
+			mSrvDescriptorHeap.GetDescriptorHeap(),
+			mIconTextures,
+			mClientWidth - 620, 
+			&show_folder_panel, 
+			&show_Textures_panel, 
+			&show_Mesh_panel, 
+			&show_Materials_panel, 
+			&show_Scene_panel
+		);
 
 	}
 	else if (show_Materials_panel)
@@ -256,7 +286,17 @@ void GUISystem::DrawProjectEditor()
 		//	显示场景界面
 		show_Scene_panel = false;
 
-		//EditorUtils::DrawProjectMaterials(md3dDevice, m_SceneRender.mSrvDescriptorHeap, mResourceManager, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		GUIUtils::DrawProjectMaterials(
+			md3dDevice, 
+			mSrvDescriptorHeap.GetDescriptorHeap(),
+			mIconTextures,
+			mClientWidth - 620, 
+			&show_folder_panel, 
+			&show_Textures_panel, 
+			&show_Mesh_panel, 
+			&show_Materials_panel, 
+			&show_Scene_panel
+		);
 	}
 	else if (show_Scene_panel)
 	{
@@ -269,7 +309,17 @@ void GUISystem::DrawProjectEditor()
 		//	显示材质界面
 		show_Materials_panel = false;
 
-		//EditorUtils::DrawProjectScene(md3dDevice, m_SceneRender.mSrvDescriptorHeap, mResourceManager, mClientWidth - 620, &show_folder_panel, &show_Textures_panel, &show_Mesh_panel, &show_Materials_panel, &show_Scene_panel);
+		GUIUtils::DrawProjectScene(
+			md3dDevice, 
+			mSrvDescriptorHeap.GetDescriptorHeap(),
+			mIconTextures,
+			mClientWidth - 620, 
+			&show_folder_panel, 
+			&show_Textures_panel, 
+			&show_Mesh_panel, 
+			&show_Materials_panel, 
+			&show_Scene_panel
+		);
 	}
 
 	ImGui::End();

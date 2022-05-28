@@ -63,9 +63,6 @@ void GraphicsUtils::BuildTextureCubeSrvDesc(
 	std::string TexName
 )
 {
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
 	ComPtr<ID3D12Resource> diffuseIBL = mCubeMapTextures[TexName]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -82,5 +79,25 @@ void GraphicsUtils::BuildTextureCubeSrvDesc(
 	md3dDevice->CreateShaderResourceView(diffuseIBL.Get(), &srvDesc, CPUDescriptor);
 	mCubeMapTextures[TexName]->CpuHandle = CPUDescriptor;
 	mCubeMapTextures[TexName]->GpuHandle = GPUDescriptor;
+
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }
 
+void GraphicsUtils::IMGUIInit(
+	HWND &mhMainWnd,
+	Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvHeap
+)
+{
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(mhMainWnd);
+	ImGui_ImplDX12_Init(md3dDevice.Get(), 3,
+		DXGI_FORMAT_R8G8B8A8_UNORM, mSrvHeap.Get(),
+		mSrvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+		mSrvHeap.Get()->GetGPUDescriptorHandleForHeapStart());
+}
