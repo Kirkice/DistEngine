@@ -479,562 +479,158 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 void GraphicsCore::BuildPSOs()
 {
-	mPSOs.Add(md3dDevice, mShaderManager, mRootSignature, "standardVS", "opaquePS", "opaque", mBackBufferFormat, m4xMsaaState, m4xMsaaQuality,mDepthStencilFormat);
+	// 	PSO for Bounding.
+	PipelineStateObject BoundingObject = PipelineStateObject();
+	BoundingObject.BuildDefault(mShaderManager,mRootSignature);
+	BoundingObject.SetShader(mShaderManager, mRootSignature, "boundingVS", "boundingPS");
+	BoundingObject.SetRasterizerState(D3D12_FILL_MODE_WIREFRAME, D3D12_CULL_MODE_NONE);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(BoundingObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["bounding"])));
 
-	//
-	// 	PSO for Bounding
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC BoundingPsoDesc = opaquePsoDesc;
-	BoundingPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	BoundingPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	BoundingPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["boundingVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["boundingVS"]->GetBufferSize()
-	};
-	BoundingPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["boundingPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["boundingPS"]->GetBufferSize()
-	};
-	BoundingPsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	BoundingPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&BoundingPsoDesc, IID_PPV_ARGS(&mPSOs["bounding"])));
+	// 	PSO for Gizmo.
+	PipelineStateObject GizmoObject = PipelineStateObject();
+	GizmoObject.BuildDefault(mShaderManager, mRootSignature);
+	GizmoObject.SetShader(mShaderManager, mRootSignature, "gizmoVS", "gizmoPS");
+	GizmoObject.SetDefaultBlend();
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GizmoObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Gizmo"])));
 
-	//
-	// 	PSO for OutLine
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC outlinePsoDesc = opaquePsoDesc;
-	outlinePsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	outlinePsoDesc.pRootSignature = mRootSignature.GetSignature();
-	outlinePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["outlineVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["outlineVS"]->GetBufferSize()
-	};
-	outlinePsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["outlinePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["outlinePS"]->GetBufferSize()
-	};
-	outlinePsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
-	outlinePsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	outlinePsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	outlinePsoDesc.SampleMask = UINT_MAX;
-	outlinePsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	outlinePsoDesc.NumRenderTargets = 1;
-	outlinePsoDesc.RTVFormats[0] = mBackBufferFormat;
-	outlinePsoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-	outlinePsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	outlinePsoDesc.DSVFormat = mDepthStencilFormat;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&outlinePsoDesc, IID_PPV_ARGS(&mPSOs["outline"])));
+	// PSO for Lit.
+	PipelineStateObject LitObject = PipelineStateObject();
+	LitObject.BuildDefault(mShaderManager, mRootSignature);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LitObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["litOpaque"])));
 
-	//
-	// 	PSO for EditorGizmo
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC GizmoPsoDesc = opaquePsoDesc;
-	GizmoPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	GizmoPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	GizmoPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["gizmoVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["gizmoVS"]->GetBufferSize()
-	};
-	GizmoPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["gizmoPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["gizmoPS"]->GetBufferSize()
-	};
+	// 	PSO for Lit. (Transparent)
+	PipelineStateObject LitTransparentObject = PipelineStateObject();
+	LitTransparentObject.BuildDefault(mShaderManager, mRootSignature);
+	LitTransparentObject.SetDefaultBlend();
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LitTransparentObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["transparent"])));
 
-	D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
-	transparencyBlendDesc.BlendEnable = true;
-	transparencyBlendDesc.LogicOpEnable = false;
-	transparencyBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	transparencyBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	transparencyBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
-	transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	GizmoPsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
-
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&GizmoPsoDesc, IID_PPV_ARGS(&mPSOs["Gizmo"])));
-
-	//
-	// 	PSO for Unlit
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC UnlitPsoDesc = GizmoPsoDesc;
-	UnlitPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	UnlitPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	UnlitPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["unitVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["unitVS"]->GetBufferSize()
-	};
-	UnlitPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["unitPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["unitPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&UnlitPsoDesc, IID_PPV_ARGS(&mPSOs["Unlit"])));
-
-	//
-	// PSO for PBR objects.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC litPsoDesc = opaquePsoDesc;
-	litPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	litPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	litPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["litVS"]->GetBufferSize()
-	};
-	litPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["litPS"]->GetBufferSize()
-	};
-	litPsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	litPsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	litPsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	litPsoDesc.SampleMask = UINT_MAX;
-	litPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	litPsoDesc.NumRenderTargets = 1;
-	litPsoDesc.RTVFormats[0] = mBackBufferFormat;
-	litPsoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
-	litPsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	litPsoDesc.DSVFormat = mDepthStencilFormat;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&litPsoDesc, IID_PPV_ARGS(&mPSOs["litOpaque"])));
-
-
-	//
-	// 	PSO for PBR objects (Transparent).
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC lit_trans_PsoDesc = litPsoDesc;
-	lit_trans_PsoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&lit_trans_PsoDesc, IID_PPV_ARGS(&mPSOs["transparent"])));
-
-	//
 	// PSO for shadow map pass.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC smapPsoDesc = opaquePsoDesc;
-	smapPsoDesc.RasterizerState.DepthBias = 100000;
-	smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
-	smapPsoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
-	smapPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	smapPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["shadowVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["shadowVS"]->GetBufferSize()
-	};
-	smapPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["shadowOpaquePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["shadowOpaquePS"]->GetBufferSize()
-	};
+	PipelineStateObject SmapObject = PipelineStateObject();
+	SmapObject.Build(mShaderManager,mRootSignature,"shadowVS","shadowOpaquePS",0,DXGI_FORMAT_UNKNOWN);
+	SmapObject.SetRasterizerDepth(100000, 0.0f, 1.0f);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SmapObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["shadow_opaque"])));
 
-	// Shadow map pass does not have a render target.
-	smapPsoDesc.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
-	smapPsoDesc.NumRenderTargets = 0;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&smapPsoDesc, IID_PPV_ARGS(&mPSOs["shadow_opaque"])));
-
-
-	//
 	// PSO for debug layer.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC debugPsoDesc = opaquePsoDesc;
-	debugPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	debugPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["debugVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["debugVS"]->GetBufferSize()
-	};
-	debugPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["debugPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["debugPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&debugPsoDesc, IID_PPV_ARGS(&mPSOs["debug"])));
+	PipelineStateObject DebugObject = PipelineStateObject();
+	DebugObject.BuildDefault(mShaderManager, mRootSignature);
+	DebugObject.SetShader(mShaderManager, mRootSignature, "debugVS", "debugPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(DebugObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["debug"])));
 
-	//
 	// PSO for drawing normals.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC drawNormalsPsoDesc = opaquePsoDesc;
-	drawNormalsPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["drawNormalsVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["drawNormalsVS"]->GetBufferSize()
-	};
-	drawNormalsPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["drawNormalsPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["drawNormalsPS"]->GetBufferSize()
-	};
-	drawNormalsPsoDesc.RTVFormats[0] = Ssao::NormalMapFormat;
-	drawNormalsPsoDesc.SampleDesc.Count = 1;
-	drawNormalsPsoDesc.SampleDesc.Quality = 0;
-	drawNormalsPsoDesc.DSVFormat = mDepthStencilFormat;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&drawNormalsPsoDesc, IID_PPV_ARGS(&mPSOs["drawNormals"])));
+	PipelineStateObject DrawNormalsObject = PipelineStateObject();
+	DrawNormalsObject.Build(mShaderManager, mRootSignature, "drawNormalsVS", "drawNormalsPS", 1, Ssao::NormalMapFormat,false,0, mDepthStencilFormat);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(DrawNormalsObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["drawNormals"])));
 
-
-	//Postprocessing PSO
-
-	//
 	// PSO for SSAO.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC ssaoPsoDesc = opaquePsoDesc;
-	ssaoPsoDesc.InputLayout = { nullptr, 0 };
-	ssaoPsoDesc.pRootSignature = mSsaoRootSignature.GetSignature();
-	ssaoPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["ssaoVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["ssaoVS"]->GetBufferSize()
-	};
-	ssaoPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["ssaoPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["ssaoPS"]->GetBufferSize()
-	};
+	PipelineStateObject SsaoObject = PipelineStateObject();
+	SsaoObject.Build(mShaderManager, mRootSignature, "ssaoVS", "ssaoPS", 1, DXGI_FORMAT_R8G8B8A8_UNORM, false, 0, DXGI_FORMAT_UNKNOWN);
+	SsaoObject.SetDepthStencilState(false, D3D12_DEPTH_WRITE_MASK_ZERO);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SsaoObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["ssao"])));
 
-	// SSAO effect does not need the depth buffer.
-	ssaoPsoDesc.DepthStencilState.DepthEnable = false;
-	ssaoPsoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	ssaoPsoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	ssaoPsoDesc.SampleDesc.Count = 1;
-	ssaoPsoDesc.SampleDesc.Quality = 0;
-	ssaoPsoDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoPsoDesc, IID_PPV_ARGS(&mPSOs["ssao"])));
-
-	//
 	// PSO for SSAO blur.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC ssaoBlurPsoDesc = ssaoPsoDesc;
-	ssaoBlurPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["ssaoBlurVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["ssaoBlurVS"]->GetBufferSize()
-	};
-	ssaoBlurPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["ssaoBlurPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["ssaoBlurPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&ssaoBlurPsoDesc, IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
+	PipelineStateObject SsaoBlurObject = PipelineStateObject();
+	SsaoBlurObject.Build(mShaderManager, mRootSignature, "ssaoBlurVS", "ssaoBlurPS", 1, DXGI_FORMAT_R8G8B8A8_UNORM, false, 0, DXGI_FORMAT_UNKNOWN);
+	SsaoBlurObject.SetDepthStencilState(false, D3D12_DEPTH_WRITE_MASK_ZERO);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SsaoBlurObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
 
-	//
 	// 	PSO for FinalBlit
-	//
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC FinalBlitPsoDesc = opaquePsoDesc;
-		FinalBlitPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-		FinalBlitPsoDesc.pRootSignature = mRootSignature.GetSignature();
-		FinalBlitPsoDesc.VS =
-		{
-			reinterpret_cast<BYTE*>(mShaderManager.mShaders["finalBlitVS"]->GetBufferPointer()),
-			mShaderManager.mShaders["finalBlitVS"]->GetBufferSize()
-		};
-		FinalBlitPsoDesc.PS =
-		{
-			reinterpret_cast<BYTE*>(mShaderManager.mShaders["finalBlitPS"]->GetBufferPointer()),
-			mShaderManager.mShaders["finalBlitPS"]->GetBufferSize()
-		};
-		ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&FinalBlitPsoDesc, IID_PPV_ARGS(&mPSOs["FinalBlit"])));
+	PipelineStateObject FinalBlitObject = PipelineStateObject();
+	FinalBlitObject.BuildDefault(mShaderManager, mRootSignature);
+	FinalBlitObject.SetShader(mShaderManager, mRootSignature, "finalBlitVS", "finalBlitPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(FinalBlitObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["FinalBlit"])));
 
-	//
+
 	// 	PSO for CopyColor
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC CopyColorPsoDesc = opaquePsoDesc;
-	CopyColorPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	CopyColorPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	CopyColorPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["copyColorVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["copyColorVS"]->GetBufferSize()
-	};
-	CopyColorPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["copyColorPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["copyColorPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&CopyColorPsoDesc, IID_PPV_ARGS(&mPSOs["CopyColor"])));
+	PipelineStateObject CopyColorObject = PipelineStateObject();
+	CopyColorObject.BuildDefault(mShaderManager, mRootSignature);
+	CopyColorObject.SetShader(mShaderManager, mRootSignature, "copyColorVS", "copyColorPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(CopyColorObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["CopyColor"])));
 
-	//
 	// 	PSO for RGBSplit
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC RGBSplitPsoDesc = opaquePsoDesc;
-	RGBSplitPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	RGBSplitPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	RGBSplitPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["rgbSplitVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["rgbSplitVS"]->GetBufferSize()
-	};
-	RGBSplitPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["rgbSplitPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["rgbSplitPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RGBSplitPsoDesc, IID_PPV_ARGS(&mPSOs["RGBSplit"])));
+	PipelineStateObject RGBSplitObject = PipelineStateObject();
+	RGBSplitObject.BuildDefault(mShaderManager, mRootSignature);
+	RGBSplitObject.SetShader(mShaderManager, mRootSignature, "rgbSplitVS", "rgbSplitPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(RGBSplitObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["RGBSplit"])));
 
-
-	//
 	// 	PSO for RadialBlur
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC RadialBlurPsoDesc = opaquePsoDesc;
-	RadialBlurPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	RadialBlurPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	RadialBlurPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["radialBlurVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["radialBlurVS"]->GetBufferSize()
-	};
-	RadialBlurPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["radialBlurPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["radialBlurPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&RadialBlurPsoDesc, IID_PPV_ARGS(&mPSOs["RadialBlur"])));
+	PipelineStateObject RadialBlurObject = PipelineStateObject();
+	RadialBlurObject.BuildDefault(mShaderManager, mRootSignature);
+	RadialBlurObject.SetShader(mShaderManager, mRootSignature, "radialBlurVS", "radialBlurPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(RadialBlurObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["RadialBlur"])));
 
-
-	//
 	// 	PSO for Vignette
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC vignettePsoDesc = opaquePsoDesc;
-	vignettePsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	vignettePsoDesc.pRootSignature = mRootSignature.GetSignature();
-	vignettePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["vignetteVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["vignetteVS"]->GetBufferSize()
-	};
-	vignettePsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["vignettePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["vignettePS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&vignettePsoDesc, IID_PPV_ARGS(&mPSOs["Vignette"])));
+	PipelineStateObject VignetteObject = PipelineStateObject();
+	VignetteObject.BuildDefault(mShaderManager, mRootSignature);
+	VignetteObject.SetShader(mShaderManager, mRootSignature, "vignetteVS", "vignettePS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VignetteObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Vignette"])));
 
-
-	//
 	// 	PSO for Decolor
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC decolorPsoDesc = opaquePsoDesc;
-	decolorPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	decolorPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	decolorPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["decolorVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["decolorVS"]->GetBufferSize()
-	};
-	decolorPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["decolorPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["decolorPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&decolorPsoDesc, IID_PPV_ARGS(&mPSOs["Decolor"])));
+	PipelineStateObject DecolorObject = PipelineStateObject();
+	DecolorObject.BuildDefault(mShaderManager, mRootSignature);
+	DecolorObject.SetShader(mShaderManager, mRootSignature, "decolorVS", "decolorPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(DecolorObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Decolor"])));
 
-	//
 	// 	PSO for Brightness
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC brightnessPsoDesc = opaquePsoDesc;
-	brightnessPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	brightnessPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	brightnessPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["brightnessVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["brightnessVS"]->GetBufferSize()
-	};
-	brightnessPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["brightnessPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["brightnessPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&brightnessPsoDesc, IID_PPV_ARGS(&mPSOs["Brightness"])));
+	PipelineStateObject BrightnessObject = PipelineStateObject();
+	BrightnessObject.BuildDefault(mShaderManager, mRootSignature);
+	BrightnessObject.SetShader(mShaderManager, mRootSignature, "brightnessVS", "brightnessPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(BrightnessObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Brightness"])));
 
-	//
 	// 	PSO for HSV
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC hsvPsoDesc = opaquePsoDesc;
-	hsvPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	hsvPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	hsvPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["hsvVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["hsvVS"]->GetBufferSize()
-	};
-	hsvPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["hsvPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["hsvPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&hsvPsoDesc, IID_PPV_ARGS(&mPSOs["HSV"])));
+	PipelineStateObject HsvObject = PipelineStateObject();
+	HsvObject.BuildDefault(mShaderManager, mRootSignature);
+	HsvObject.SetShader(mShaderManager, mRootSignature, "hsvVS", "hsvPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(HsvObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["HSV"])));
 
-	//
 	// 	PSO for Mosaic
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC mosaicPsoDesc = opaquePsoDesc;
-	mosaicPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	mosaicPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	mosaicPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["mosaicVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["mosaicVS"]->GetBufferSize()
-	};
-	mosaicPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["mosaicPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["mosaicPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&mosaicPsoDesc, IID_PPV_ARGS(&mPSOs["Mosaic"])));
+	PipelineStateObject MosaicObject = PipelineStateObject();
+	MosaicObject.BuildDefault(mShaderManager, mRootSignature);
+	MosaicObject.SetShader(mShaderManager, mRootSignature, "mosaicVS", "mosaicPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(MosaicObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Mosaic"])));
 
-	//
 	// 	PSO for Sharpen
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC sharpenPsoDesc = opaquePsoDesc;
-	sharpenPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	sharpenPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	sharpenPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["sharpenVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["sharpenVS"]->GetBufferSize()
-	};
-	sharpenPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["sharpenPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["sharpenPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&sharpenPsoDesc, IID_PPV_ARGS(&mPSOs["Sharpen"])));
+	PipelineStateObject SharpenObject = PipelineStateObject();
+	SharpenObject.BuildDefault(mShaderManager, mRootSignature);
+	SharpenObject.SetShader(mShaderManager, mRootSignature, "sharpenVS", "sharpenPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SharpenObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Sharpen"])));
 
-
-	//
 	// 	PSO for Spherize
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC spherizePsoDesc = opaquePsoDesc;
-	spherizePsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	spherizePsoDesc.pRootSignature = mRootSignature.GetSignature();
-	spherizePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["spherizeVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["spherizeVS"]->GetBufferSize()
-	};
-	spherizePsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["spherizePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["spherizePS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&spherizePsoDesc, IID_PPV_ARGS(&mPSOs["Spherize"])));
+	PipelineStateObject SpherizeObject = PipelineStateObject();
+	SpherizeObject.BuildDefault(mShaderManager, mRootSignature);
+	SpherizeObject.SetShader(mShaderManager, mRootSignature, "spherizeVS", "spherizePS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SpherizeObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Spherize"])));
 
-
-	//
 	// 	PSO for WhiteBalance
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC whiteBalancePsoDesc = opaquePsoDesc;
-	whiteBalancePsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	whiteBalancePsoDesc.pRootSignature = mRootSignature.GetSignature();
-	whiteBalancePsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["whiteBalanceVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["whiteBalanceVS"]->GetBufferSize()
-	};
-	whiteBalancePsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["whiteBalancePS"]->GetBufferPointer()),
-		mShaderManager.mShaders["whiteBalancePS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&whiteBalancePsoDesc, IID_PPV_ARGS(&mPSOs["WhiteBalance"])));
+	PipelineStateObject WhiteBalanceObject = PipelineStateObject();
+	WhiteBalanceObject.BuildDefault(mShaderManager, mRootSignature);
+	WhiteBalanceObject.SetShader(mShaderManager, mRootSignature, "whiteBalanceVS", "whiteBalancePS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(WhiteBalanceObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["WhiteBalance"])));
 
-
-
-
-	//
 	// 	PSO for OilPaint
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC oilPaintPsoDesc = opaquePsoDesc;
-	oilPaintPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	oilPaintPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	oilPaintPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["oilPaintVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["oilPaintVS"]->GetBufferSize()
-	};
-	oilPaintPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["oilPaintPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["oilPaintPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&oilPaintPsoDesc, IID_PPV_ARGS(&mPSOs["OilPaint"])));
+	PipelineStateObject OilPaintObject = PipelineStateObject();
+	OilPaintObject.BuildDefault(mShaderManager, mRootSignature);
+	OilPaintObject.SetShader(mShaderManager, mRootSignature, "oilPaintVS", "oilPaintPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(OilPaintObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["OilPaint"])));
 
-
-
-
-	//
 	// 	PSO for Relief
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC reliefPsoDesc = opaquePsoDesc;
-	reliefPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	reliefPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	reliefPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["reliefVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["reliefVS"]->GetBufferSize()
-	};
-	reliefPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["reliefPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["reliefPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&reliefPsoDesc, IID_PPV_ARGS(&mPSOs["Relief"])));
+	PipelineStateObject ReliefObject = PipelineStateObject();
+	ReliefObject.BuildDefault(mShaderManager, mRootSignature);
+	ReliefObject.SetShader(mShaderManager, mRootSignature, "reliefVS", "reliefPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(ReliefObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Relief"])));
 
-
-
-	//
 	// 	PSO for EdgeDetection
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC edgeDetectionPsoDesc = opaquePsoDesc;
-	edgeDetectionPsoDesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	edgeDetectionPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	edgeDetectionPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["edgeDetectionVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["edgeDetectionVS"]->GetBufferSize()
-	};
-	edgeDetectionPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["edgeDetectionPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["edgeDetectionPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&edgeDetectionPsoDesc, IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
+	PipelineStateObject EdgeDetectionObject = PipelineStateObject();
+	EdgeDetectionObject.BuildDefault(mShaderManager, mRootSignature);
+	EdgeDetectionObject.SetShader(mShaderManager, mRootSignature, "edgeDetectionVS", "edgeDetectionPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(EdgeDetectionObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
-
-
-
-
-
-	//
 	// PSO for sky.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC skyPsoDesc = opaquePsoDesc;
-
-	// The camera is inside the sky sphere, so just turn off culling.
-	skyPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-
-	// Make sure the depth function is LESS_EQUAL and not just LESS.  
-	// Otherwise, the normalized depth values at z = 1 (NDC) will 
-	// fail the depth test if the depth buffer was cleared to 1.
-	skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	skyPsoDesc.pRootSignature = mRootSignature.GetSignature();
-	skyPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["skyVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["skyVS"]->GetBufferSize()
-	};
-	skyPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["skyPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["skyPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&mPSOs["sky"])));
-
+	PipelineStateObject SkyBoxObject = PipelineStateObject();
+	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);
+	SkyBoxObject.SetShader(mShaderManager, mRootSignature, "skyVS", "skyPS");
+	SkyBoxObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+	SkyBoxObject.SetRasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SkyBoxObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["sky"])));
 }
 
 void GraphicsCore::BuildFrameResources()

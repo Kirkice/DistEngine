@@ -85,7 +85,7 @@ public:
 	DescriptorHeap mSrvDescriptorHeap = DescriptorHeap();
 
 	//	PSO
-	PipelineStateObject mPSOs;
+	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
 	//	ShaderManager
 	ShaderManager mShaderManager = ShaderManager();
