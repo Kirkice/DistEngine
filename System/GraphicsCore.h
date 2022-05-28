@@ -33,27 +33,38 @@ private:
 	virtual void Update(const GameTimer& gt)override;
 
 public:
-
+	//	更新灯光
 	void UpdateLights(const GameTimer& gt);
+	//	更新ObjectCB
 	void UpdateObjectCBs(const GameTimer& gt);
+	//	更新材质Buffer
 	void UpdateMaterialBuffer(const GameTimer& gt);
+	//	更新ShadowTransform
 	void UpdateShadowTransform(const GameTimer& gt);
+	//	更新MainPass
 	void UpdateMainPassCB(const GameTimer& gt);
+	//	更新ShadowPass
 	void UpdateShadowPassCB(const GameTimer& gt);
+	//	更新SSAO PASS
 	void UpdateSsaoCB(const GameTimer& gt);
 
 
-
-
+	//	构建根签名
 	void BuildRootSignature();
-
+	//	构建描述符堆
 	void BuildDescriptorHeaps();
-
+	//	构建Shader
 	void BuildShadersAndInputLayout();
+	//	构建PSO
 	void BuildPSOs();
+	//	构建帧资源
 	void BuildFrameResources();
-
+	//	构建渲染项
 	void BuildRenderItems();
+
+
+
+
 
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 	void DrawSceneToShadowMap();
@@ -72,6 +83,7 @@ public:
 
 	//	场景管理
 	SceneManager mSceneManager = SceneManager(SceneType::Default);
+
 
 	std::vector<std::unique_ptr<FrameResource>> mFrameResources;
 	FrameResource* mCurrFrameResource = nullptr;
