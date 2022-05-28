@@ -46,6 +46,8 @@ void RenderCore::Draw(const GameTimer& gt)
 
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
+
+
 	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
 	auto passCB = mCurrFrameResource->PassCB->Resource();
@@ -61,7 +63,6 @@ void RenderCore::Draw(const GameTimer& gt)
 	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
 	RenderCore::DrawSkyBox();
-
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 }
 
