@@ -368,11 +368,8 @@ void GUISystem::DrawPhysicsSettings()
 
 void GUISystem::DrawSceneGameView()
 {
-	ImGui::Begin("Scene");
-	ImGui::End();
-
-	ImGui::Begin("Game");
-	//ImGui::Image((ImTextureID)m_SceneRender.mTarget->GpuSrv().ptr, ImVec2(1383, 778));
+	ImGui::Begin("View");
+	ImGui::Image((ImTextureID)mRenderTarget->GpuSrv().ptr, ImVec2(1383, 778));
 	ImGui::End();
 }
 

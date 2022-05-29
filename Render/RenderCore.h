@@ -18,6 +18,8 @@ public:
 
 private:
 
+	void CopyColorPass();
+
 	//	DrawShadowMap
 	void DrawShadowMap(ID3D12Resource* matBuffer);
 
