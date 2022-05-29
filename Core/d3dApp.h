@@ -7,7 +7,6 @@
 
 #include "d3dUtil.h"
 #include "GameTimer.h"
-#include "RenderTarget.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")

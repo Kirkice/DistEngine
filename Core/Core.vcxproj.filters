@@ -48,9 +48,6 @@
     <ClCompile Include="FileUtility.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Mathf\Color.cpp">
       <Filter>Mathf</Filter>
     </ClCompile>
@@ -126,9 +123,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="LoaderHelpers.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTarget.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Color.h">

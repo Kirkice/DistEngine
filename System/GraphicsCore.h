@@ -12,6 +12,7 @@
 #include "DescriptorHeap.h"
 #include "ShaderManager.h"
 #include "PipelineStateObject.h"
+#include "RenderTarget.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

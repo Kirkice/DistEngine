@@ -54,13 +54,15 @@ D3D12_RECT RenderTarget::ScissorRect()const
 }
 
 void RenderTarget::BuildDescriptors(
-	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-	CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
-	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv,
+	UINT mCbvSrvUavDescriptorSize
+)
 {
 	// Save references to the descriptors. 
-	mhCpuSrv = hCpuSrv;
-	mhGpuSrv = hGpuSrv;
+	mhCpuSrv = CPUDescriptor;
+	mhGpuSrv = GPUDescriptor;
 	mhCpuRtv = hCpuRtv;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -69,7 +71,10 @@ void RenderTarget::BuildDescriptors(
 	srvDesc.Format = mTargetFormat;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	md3dDevice->CreateShaderResourceView(mRenderTarget.Get(), &srvDesc, hCpuSrv);
+	md3dDevice->CreateShaderResourceView(mRenderTarget.Get(), &srvDesc, CPUDescriptor);
+
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }
 
 //Build Resource

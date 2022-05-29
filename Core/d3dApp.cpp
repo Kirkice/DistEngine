@@ -1,5 +1,4 @@
 #include "d3dApp.h"
-#include "RenderTarget.h"
 #include <WindowsX.h>
 
 #pragma comment(lib,"..\\DistEngine\\x64\\Debug\\ImGUI.lib")

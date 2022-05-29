@@ -43,6 +43,7 @@
     <ClCompile Include="PipelineStateObject.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="RenderTarget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameResource.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="PipelineStateObject.h">
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTarget.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">

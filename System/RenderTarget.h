@@ -29,12 +29,13 @@ public:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;
 
 	void BuildDescriptors(
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv,
+		UINT mCbvSrvUavDescriptorSize
+	);
 
 private:
-	void BuildDescriptors();
 	void BuildResource();
 
 private:

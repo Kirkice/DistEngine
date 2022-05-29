@@ -453,6 +453,15 @@ void GraphicsCore::BuildDescriptorHeaps()
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_diffuseIBL");
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_specularIBL");
 
+	mRenderTarget->BuildDescriptors(
+		CPUDescriptor,
+		GPUDescriptor,
+		GetRtv(SwapChainBufferCount),
+		mCbvSrvUavDescriptorSize
+		);
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
 	//mShadowMap->BuildDescriptors(
 	//	GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
 	//	GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
@@ -465,11 +474,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 	//	GetRtv(SwapChainBufferCount),
 	//	mCbvSrvUavDescriptorSize,
 	//	mRtvDescriptorSize);
-
-	//mRenderTarget->BuildDescriptors(
-	//	GetCpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-	//	GetGpuSrv(mRenderTargetIndex, mSrvDescriptorHeap),
-	//	GetRtv(SwapChainBufferCount));
 }
 
 
