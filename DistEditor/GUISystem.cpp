@@ -387,9 +387,12 @@ void GUISystem::DrawFrameDebugger()
 
 	if (ImGui::CollapsingHeader("Draw Shadow Map"))
 	{
-		//CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_SceneRender.mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-		//tex.Offset(m_SceneRender.mShadowMapPass->GetIndex(), mCbvSrvUavDescriptorSize);
-		//ImGui::Image((ImTextureID)tex.ptr, ImVec2(256, 256));
+		ImGui::Image((ImTextureID)mShadowMap->Srv().ptr, ImVec2(256, 256));
+	}
+
+	if (ImGui::CollapsingHeader("Draw Depth"))
+	{
+		ImGui::Image((ImTextureID)mSsao->DepthBufferSrv().ptr, ImVec2(256, 256));
 	}
 
 	ImGui::End();

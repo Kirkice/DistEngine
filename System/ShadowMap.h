@@ -36,14 +36,16 @@ public:
 	D3D12_RECT ScissorRect()const;
 
 	void BuildDescriptors(
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv,
+		UINT mCbvSrvUavDescriptorSize
+	);
 
 	void OnResize(UINT newWidth, UINT newHeight);
 
 private:
-	void BuildDescriptors();
+	void BuildDescriptors(); 
 	void BuildResource();
 
 private:

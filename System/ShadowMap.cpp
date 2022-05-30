@@ -52,17 +52,23 @@ D3D12_RECT ShadowMap::ScissorRect()const
 	return mScissorRect;
 }
 
-void ShadowMap::BuildDescriptors(CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-	                             CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
-	                             CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv)
+void ShadowMap::BuildDescriptors(
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuDsv,
+	UINT mCbvSrvUavDescriptorSize
+)
 {
 	// Save references to the descriptors. 
-	mhCpuSrv = hCpuSrv;
-	mhGpuSrv = hGpuSrv;
+	mhCpuSrv = CPUDescriptor;
+	mhGpuSrv = GPUDescriptor;
     mhCpuDsv = hCpuDsv;
 
 	//  Create the descriptors
 	BuildDescriptors();
+
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }
 
 void ShadowMap::OnResize(UINT newWidth, UINT newHeight)

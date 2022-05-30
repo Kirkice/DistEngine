@@ -35,15 +35,18 @@ public:
 	
     CD3DX12_CPU_DESCRIPTOR_HANDLE NormalMapRtv()const;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE NormalMapSrv()const;
+    CD3DX12_GPU_DESCRIPTOR_HANDLE DepthBufferSrv()const;
+
     CD3DX12_GPU_DESCRIPTOR_HANDLE AmbientMapSrv()const;
 
 	void BuildDescriptors(
-        ID3D12Resource* depthStencilBuffer,
-		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
+		ID3D12Resource* depthStencilBuffer,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
 		CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv,
-        UINT cbvSrvUavDescriptorSize,
-        UINT rtvDescriptorSize);
+		UINT cbvSrvUavDescriptorSize,
+		UINT rtvDescriptorSize
+    );
 
     void RebuildDescriptors(ID3D12Resource* depthStencilBuffer);
 

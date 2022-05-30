@@ -458,22 +458,23 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GPUDescriptor,
 		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize
-		);
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	);
 
-	//mShadowMap->BuildDescriptors(
-	//	GetCpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
-	//	GetGpuSrv(mShadowMapHeapIndex, mSrvDescriptorHeap),
-	//	GetDsv(1));
+	mShadowMap->BuildDescriptors(
+		CPUDescriptor, 
+		GPUDescriptor, 
+		GetDsv(1), 
+		mCbvSrvUavDescriptorSize
+	);
 
-	//mSsao->BuildDescriptors(
-	//	mDepthStencilBuffer.Get(),
-	//	GetCpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
-	//	GetGpuSrv(mSsaoHeapIndexStart, mSrvDescriptorHeap),
-	//	GetRtv(SwapChainBufferCount),
-	//	mCbvSrvUavDescriptorSize,
-	//	mRtvDescriptorSize);
+	mSsao->BuildDescriptors(
+		mDepthStencilBuffer.Get(),
+		CPUDescriptor,
+		GPUDescriptor,
+		GetRtv(SwapChainBufferCount),
+		mCbvSrvUavDescriptorSize,
+		mRtvDescriptorSize
+	);
 }
 
 

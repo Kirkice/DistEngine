@@ -92,28 +92,34 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE Ssao::AmbientMapSrv()const
     return mhAmbientMap0GpuSrv;
 }
 
+CD3DX12_GPU_DESCRIPTOR_HANDLE Ssao::DepthBufferSrv()const
+{
+    return mhDepthMapGpuSrv;
+}
+
 void Ssao::BuildDescriptors(
     ID3D12Resource* depthStencilBuffer,
-    CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuSrv,
-    CD3DX12_GPU_DESCRIPTOR_HANDLE hGpuSrv,
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
     CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv,
     UINT cbvSrvUavDescriptorSize,
-    UINT rtvDescriptorSize)
+    UINT rtvDescriptorSize
+)
 {
     // Save references to the descriptors.  The Ssao reserves heap space
     // for 5 contiguous Srvs.
 
-    mhAmbientMap0CpuSrv = hCpuSrv;
-    mhAmbientMap1CpuSrv = hCpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhNormalMapCpuSrv = hCpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhDepthMapCpuSrv = hCpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhRandomVectorMapCpuSrv = hCpuSrv.Offset(1, cbvSrvUavDescriptorSize);
+    mhAmbientMap0CpuSrv = CPUDescriptor;
+    mhAmbientMap1CpuSrv = CPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhNormalMapCpuSrv = CPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhDepthMapCpuSrv = CPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhRandomVectorMapCpuSrv = CPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
 
-    mhAmbientMap0GpuSrv = hGpuSrv;
-    mhAmbientMap1GpuSrv = hGpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhNormalMapGpuSrv = hGpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhDepthMapGpuSrv = hGpuSrv.Offset(1, cbvSrvUavDescriptorSize);
-    mhRandomVectorMapGpuSrv = hGpuSrv.Offset(1, cbvSrvUavDescriptorSize);
+    mhAmbientMap0GpuSrv = GPUDescriptor;
+    mhAmbientMap1GpuSrv = GPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhNormalMapGpuSrv = GPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhDepthMapGpuSrv = GPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+    mhRandomVectorMapGpuSrv = GPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
 
     mhNormalMapCpuRtv = hCpuRtv;
     mhAmbientMap0CpuRtv = hCpuRtv.Offset(1, rtvDescriptorSize);
@@ -121,6 +127,9 @@ void Ssao::BuildDescriptors(
 
     //  Create the descriptors
     RebuildDescriptors(depthStencilBuffer);
+
+	CPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, cbvSrvUavDescriptorSize);
 }
 
 void Ssao::RebuildDescriptors(ID3D12Resource* depthStencilBuffer)

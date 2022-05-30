@@ -24,11 +24,11 @@ void RenderCore::Draw(const GameTimer& gt)
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 	auto matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 
-	////Draw ShadowMap
-	//DrawShadowMap(matBuffer);
+	//Draw ShadowMap
+	DrawShadowMap(matBuffer);
 
-	////SSAO
-	//DrawSSAO(matBuffer);
+	//SSAO
+	DrawSSAO(matBuffer);
 
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 
@@ -91,8 +91,6 @@ void RenderCore::CopyColorPass()
 void RenderCore::DrawShadowMap(ID3D12Resource* matBuffer)
 {
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
-
-	//mCommandList->SetGraphicsRootDescriptorTable(4, mNullSrv);
 
 	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	DrawSceneToShadowMap();
