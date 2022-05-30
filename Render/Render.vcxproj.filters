@@ -18,10 +18,16 @@
     <ClInclude Include="RenderCore.h">
       <Filter>RenderPipeline</Filter>
     </ClInclude>
+    <ClInclude Include="GBufferPass.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderCore.cpp">
       <Filter>RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="GBufferPass.cpp">
+      <Filter>RenderPass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
