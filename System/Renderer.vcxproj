@@ -148,6 +148,7 @@
     <ClCompile Include="DescriptorHeap.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="FrameResource.cpp" />
+    <ClCompile Include="GBufferPass.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
     <ClCompile Include="GraphicsUtils.cpp" />
     <ClCompile Include="InputSystem.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="FrameResource.h" />
+    <ClInclude Include="GBufferPass.h" />
     <ClInclude Include="GraphicsCore.h" />
     <ClInclude Include="GraphicsUtils.h" />
     <ClInclude Include="InputSystem.h" />

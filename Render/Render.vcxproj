@@ -142,11 +142,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GBufferPass.h" />
     <ClInclude Include="RenderCore.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GBufferPass.cpp" />
     <ClCompile Include="RenderCore.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

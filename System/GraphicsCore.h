@@ -13,6 +13,7 @@
 #include "ShaderManager.h"
 #include "PipelineStateObject.h"
 #include "RenderTarget.h"
+#include "GBufferPass.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -136,7 +137,7 @@ public:
 
 	std::unique_ptr<RenderTarget> mRenderTarget;
 	std::unique_ptr<ShadowMap> mShadowMap;
-
+	std::unique_ptr<GBuffer> mGBuffer;
 	std::unique_ptr<Ssao> mSsao;
 
 	DirectX::BoundingSphere mSceneBounds;

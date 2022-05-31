@@ -35,6 +35,9 @@ bool GraphicsCore::Initialize()
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
+	//GBuffer
+	mGBuffer = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
+
 	BuildRootSignature();
 	BuildDescriptorHeaps();
 	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());

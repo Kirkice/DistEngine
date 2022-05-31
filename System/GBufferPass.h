@@ -10,7 +10,8 @@ class GBuffer
 public:
 
 	GBuffer(
-		UINT width, 
+		ID3D12Device* device,
+		UINT width,
 		UINT height
 	);
 
@@ -46,6 +47,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer1;
 	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer2;
 	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer3;
+
+	ID3D12Device* md3dDevice = nullptr;
 
 	void BuildResource();
 
