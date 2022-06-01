@@ -478,6 +478,12 @@ void GraphicsCore::BuildDescriptorHeaps()
 		mCbvSrvUavDescriptorSize,
 		mRtvDescriptorSize
 	);
+
+	mGBuffer->BuildDescriptors(
+		CPUDescriptor,
+		GPUDescriptor,
+		mCbvSrvUavDescriptorSize
+	);
 }
 
 
@@ -512,6 +518,12 @@ void GraphicsCore::BuildPSOs()
 	LitTransparentObject.BuildDefault(mShaderManager, mRootSignature);
 	LitTransparentObject.SetDefaultBlend();
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LitTransparentObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["transparent"])));
+
+	// GBuffer0 for Lit.
+	PipelineStateObject GBuffer0Object = PipelineStateObject();
+	GBuffer0Object.BuildDefault(mShaderManager, mRootSignature);
+	GBuffer0Object.SetShader(mShaderManager, mRootSignature, "gbuffer0VS", "gbuffer0PS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer0Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer0"])));
 
 	// PSO for shadow map pass.
 	PipelineStateObject SmapObject = PipelineStateObject();

@@ -21,25 +21,6 @@ GBuffer::GBuffer(
 	BuildResource();
 }
 
-ID3D12Resource* GBuffer::GetGBuffer0()
-{
-	return GBuffer0.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer1()
-{
-	return GBuffer1.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer2()
-{
-	return GBuffer2.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer3()
-{
-	return GBuffer3.Get();
-}
 
 void GBuffer::BuildResource()
 {
@@ -166,4 +147,65 @@ void GBuffer::BuildResource()
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 		&stClear3,
 		IID_PPV_ARGS(&GBuffer3)));
+}
+
+
+void GBuffer::BuildDescriptors(
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+	UINT mCbvSrvUavDescriptorSize
+)
+{
+	mhGBuffer0CpuSrv = CPUDescriptor;
+	mhGBuffer1CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	mhGBuffer2CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	mhGBuffer3CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	mhGBuffer0GpuSrv = GPUDescriptor;
+	mhGBuffer1GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	mhGBuffer2GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	mhGBuffer3GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+}
+
+ID3D12Resource* GBuffer::GetGBuffer0()
+{
+	return GBuffer0.Get();
+}
+
+ID3D12Resource* GBuffer::GetGBuffer1()
+{
+	return GBuffer1.Get();
+}
+
+ID3D12Resource* GBuffer::GetGBuffer2()
+{
+	return GBuffer2.Get();
+}
+
+ID3D12Resource* GBuffer::GetGBuffer3()
+{
+	return GBuffer3.Get();
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer0Srv()const
+{
+	return mhGBuffer0GpuSrv;
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer1Srv()const
+{
+	return mhGBuffer1GpuSrv;
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer2Srv()const
+{
+	return mhGBuffer2GpuSrv;
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer3Srv()const
+{
+	return mhGBuffer3GpuSrv;
 }

@@ -30,11 +30,12 @@ void RenderCore::Draw(const GameTimer& gt)
 	//SSAO
 	DrawSSAO(matBuffer);
 
+
+
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
-
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -60,14 +61,11 @@ void RenderCore::Draw(const GameTimer& gt)
 	RenderCore::DrawOpaque();
 
 
-
-
-
-	//SkyBox
-	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
-	RenderCore::DrawSkyBox();
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	////SkyBox
+	//auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
+	//mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
+	//RenderCore::DrawSkyBox();
+	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	RenderCore::CopyColorPass();
 }
@@ -112,7 +110,7 @@ void RenderCore::DrawDepthNormal()
 //	DrawOpaque
 void RenderCore::DrawOpaque()
 {
-	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
+	mCommandList->SetPipelineState(mPSOs["GBuffer0"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
 
