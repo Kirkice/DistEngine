@@ -68,7 +68,7 @@ float4 PS(VertexOut pin) : SV_Target
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
     InputData inputData;
     InitializeInputData(pin, surfaceData.Normal, inputData); 
-    return                                              half4(surfaceData.Metallic, inputData.ViewW);
+    return                                              half4(1,1,1,1);
 }
 
 #endif

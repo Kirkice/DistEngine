@@ -22,8 +22,6 @@ public:
 	D3D12_VIEWPORT Viewport()const;
 	D3D12_RECT ScissorRect()const;
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mSrvDescriptorHeap = nullptr;
-
 	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
 	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuRtv;

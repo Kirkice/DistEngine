@@ -19,11 +19,6 @@ public:
 	GBuffer& operator=(const GBuffer& rhs) = delete;
 	~GBuffer() = default;
 
-	static const DXGI_FORMAT GBuffer0Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	static const DXGI_FORMAT GBuffer1Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	static const DXGI_FORMAT GBuffer2Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	static const DXGI_FORMAT GBuffer3Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-
 	ID3D12Resource* GetGBuffer0();
 	ID3D12Resource* GetGBuffer1();
 	ID3D12Resource* GetGBuffer2();
@@ -61,6 +56,8 @@ private:
 	ID3D12Device* md3dDevice = nullptr;
 
 	void BuildResource();
+
+	DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	D3D12_VIEWPORT mViewport;
 	D3D12_RECT mScissorRect;

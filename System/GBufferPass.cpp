@@ -24,128 +24,56 @@ GBuffer::GBuffer(
 
 void GBuffer::BuildResource()
 {
-	/// <summary>
-	/// GBuffer0
-	/// </summary>
-	D3D12_RESOURCE_DESC GBuffer0Desc;
-	ZeroMemory(&GBuffer0Desc, 0, sizeof(D3D12_RESOURCE_DESC));
-	GBuffer0Desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	GBuffer0Desc.Alignment = 0;
-	GBuffer0Desc.Width = mWidth;
-	GBuffer0Desc.Height = mHeight;
-	GBuffer0Desc.DepthOrArraySize = 1;
-	GBuffer0Desc.MipLevels = 1;
-	GBuffer0Desc.Format = GBuffer0Format;
-	GBuffer0Desc.SampleDesc.Count = 1;
-	GBuffer0Desc.SampleDesc.Quality = 0;
-	GBuffer0Desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	GBuffer0Desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	D3D12_RESOURCE_DESC texDesc;
+	ZeroMemory(&texDesc, 0, sizeof(D3D12_RESOURCE_DESC));
+	texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	texDesc.Alignment = 0;
+	texDesc.Width = mWidth;
+	texDesc.Height = mHeight;
+	texDesc.DepthOrArraySize = 1;
+	texDesc.MipLevels = 1;
+	texDesc.Format = mFormat;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	texDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
 
-	D3D12_CLEAR_VALUE stClear0 = {};
-	stClear0.Format = GBuffer0Format;
-	const float clearColor0[4] = { 1, 1, 1, 1 };
-	memcpy(stClear0.Color, &clearColor0, 4 * sizeof(float));
+	D3D12_CLEAR_VALUE stClear = {};
+	stClear.Format = mFormat;
+	const float clearColor[4] = { 1, 1, 1, 1 };
+	memcpy(stClear.Color, &clearColor, 4 * sizeof(float));
 
 	ThrowIfFailed(md3dDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
-		&GBuffer0Desc,
+		&texDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear0,
+		&stClear,
 		IID_PPV_ARGS(&GBuffer0)));
 
-	/// <summary>
-	/// GBuffer1
-	/// </summary>
-	D3D12_RESOURCE_DESC GBuffer1Desc;
-	ZeroMemory(&GBuffer1Desc, 0, sizeof(D3D12_RESOURCE_DESC));
-	GBuffer1Desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	GBuffer1Desc.Alignment = 0;
-	GBuffer1Desc.Width = mWidth;
-	GBuffer1Desc.Height = mHeight;
-	GBuffer1Desc.DepthOrArraySize = 1;
-	GBuffer1Desc.MipLevels = 1;
-	GBuffer1Desc.Format = GBuffer0Format;
-	GBuffer1Desc.SampleDesc.Count = 1;
-	GBuffer1Desc.SampleDesc.Quality = 0;
-	GBuffer1Desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	GBuffer1Desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-
-	D3D12_CLEAR_VALUE stClear1 = {};
-	stClear1.Format = GBuffer1Format;
-	const float clearColor1[4] = { 1, 1, 1, 1 };
-	memcpy(stClear1.Color, &clearColor1, 4 * sizeof(float));
-
 	ThrowIfFailed(md3dDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
-		&GBuffer1Desc,
+		&texDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear1,
+		&stClear,
 		IID_PPV_ARGS(&GBuffer1)));
 
-	/// <summary>
-	/// GBuffer2
-	/// </summary>
-	D3D12_RESOURCE_DESC GBuffer2Desc;
-	ZeroMemory(&GBuffer2Desc, 0, sizeof(D3D12_RESOURCE_DESC));
-	GBuffer2Desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	GBuffer2Desc.Alignment = 0;
-	GBuffer2Desc.Width = mWidth;
-	GBuffer2Desc.Height = mHeight;
-	GBuffer2Desc.DepthOrArraySize = 1;
-	GBuffer2Desc.MipLevels = 1;
-	GBuffer2Desc.Format = GBuffer0Format;
-	GBuffer2Desc.SampleDesc.Count = 1;
-	GBuffer2Desc.SampleDesc.Quality = 0;
-	GBuffer2Desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	GBuffer2Desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-
-	D3D12_CLEAR_VALUE stClear2 = {};
-	stClear2.Format = GBuffer2Format;
-	const float clearColor2[4] = { 1, 1, 1, 1 };
-	memcpy(stClear2.Color, &clearColor2, 4 * sizeof(float));
-
 	ThrowIfFailed(md3dDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
-		&GBuffer2Desc,
+		&texDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear2,
+		&stClear,
 		IID_PPV_ARGS(&GBuffer2)));
 
-	/// <summary>
-	/// GBuffer3
-	/// </summary>
-	D3D12_RESOURCE_DESC GBuffer3Desc;
-	ZeroMemory(&GBuffer3Desc, 0, sizeof(D3D12_RESOURCE_DESC));
-	GBuffer3Desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	GBuffer3Desc.Alignment = 0;
-	GBuffer3Desc.Width = mWidth;
-	GBuffer3Desc.Height = mHeight;
-	GBuffer3Desc.DepthOrArraySize = 1;
-	GBuffer3Desc.MipLevels = 1;
-	GBuffer3Desc.Format = GBuffer0Format;
-	GBuffer3Desc.SampleDesc.Count = 1;
-	GBuffer3Desc.SampleDesc.Quality = 0;
-	GBuffer3Desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	GBuffer3Desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-
-	D3D12_CLEAR_VALUE stClear3 = {};
-	stClear3.Format = GBuffer3Format;
-	const float clearColor3[4] = { 1, 1, 1, 1 };
-	memcpy(stClear3.Color, &clearColor3, 4 * sizeof(float));
-
 	ThrowIfFailed(md3dDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
-		&GBuffer3Desc,
+		&texDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear3,
+		&stClear,
 		IID_PPV_ARGS(&GBuffer3)));
 }
 
@@ -157,15 +85,22 @@ void GBuffer::BuildDescriptors(
 )
 {
 	mhGBuffer0CpuSrv = CPUDescriptor;
-	mhGBuffer1CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	mhGBuffer2CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	mhGBuffer3CpuSrv = CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
 	mhGBuffer0GpuSrv = GPUDescriptor;
-	mhGBuffer1GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	mhGBuffer2GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	mhGBuffer3GpuSrv = GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
+	mhGBuffer1CpuSrv = CPUDescriptor;
+	mhGBuffer1GpuSrv = GPUDescriptor;
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	mhGBuffer2CpuSrv = CPUDescriptor;
+	mhGBuffer2GpuSrv = GPUDescriptor;
+	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	mhGBuffer3CpuSrv = CPUDescriptor;
+	mhGBuffer3GpuSrv = GPUDescriptor;
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }

@@ -32,6 +32,12 @@ private:
 	//DrawOpaque
 	void DrawOpaque();
 
+	//Draw GBuffer
+	void DrawGBuffer0();
+	void DrawGBuffer1();
+	void DrawGBuffer2();
+	void DrawGBuffer3();
+
 	//DrawSkyBox
 	void DrawSkyBox();
 };
