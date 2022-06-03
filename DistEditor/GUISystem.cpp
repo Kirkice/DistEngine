@@ -395,25 +395,25 @@ void GUISystem::DrawFrameDebugger()
 		ImGui::Image((ImTextureID)mSsao->DepthBufferSrv().ptr, ImVec2(256, 256));
 	}
 
-	if (ImGui::CollapsingHeader("GBuffer0"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer0Srv().ptr, ImVec2(256, 256));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer0"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBuffer->GBuffer0Srv().ptr, ImVec2(256, 256));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer1"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer1Srv().ptr, ImVec2(256, 256));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer1"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBuffer->GBuffer1Srv().ptr, ImVec2(256, 256));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer2"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer2Srv().ptr, ImVec2(256, 256));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer2"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBuffer->GBuffer2Srv().ptr, ImVec2(256, 256));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer3"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer3Srv().ptr, ImVec2(256, 256));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer3"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBuffer->GBuffer3Srv().ptr, ImVec2(256, 256));
+	//}
 	ImGui::End();
 }
 

@@ -84,23 +84,35 @@ void GBuffer::BuildDescriptors(
 	UINT mCbvSrvUavDescriptorSize
 )
 {
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Format = mFormat;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+
 	mhGBuffer0CpuSrv = CPUDescriptor;
 	mhGBuffer0GpuSrv = GPUDescriptor;
+	md3dDevice->CreateShaderResourceView(GBuffer0.Get(), &srvDesc, CPUDescriptor);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer1CpuSrv = CPUDescriptor;
 	mhGBuffer1GpuSrv = GPUDescriptor;
+	md3dDevice->CreateShaderResourceView(GBuffer1.Get(), &srvDesc, CPUDescriptor);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer2CpuSrv = CPUDescriptor;
 	mhGBuffer2GpuSrv = GPUDescriptor;
+	md3dDevice->CreateShaderResourceView(GBuffer2.Get(), &srvDesc, CPUDescriptor);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer3CpuSrv = CPUDescriptor;
 	mhGBuffer3GpuSrv = GPUDescriptor;
+	md3dDevice->CreateShaderResourceView(GBuffer3.Get(), &srvDesc, CPUDescriptor);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }
@@ -125,22 +137,46 @@ ID3D12Resource* GBuffer::GetGBuffer3()
 	return GBuffer3.Get();
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer0Srv()const
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer0GPUSrv()const
 {
 	return mhGBuffer0GpuSrv;
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer1Srv()const
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer1GPUSrv()const
 {
 	return mhGBuffer1GpuSrv;
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer2Srv()const
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer2GPUSrv()const
 {
 	return mhGBuffer2GpuSrv;
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer3Srv()const
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer3GPUSrv()const
 {
 	return mhGBuffer3GpuSrv;
+}
+
+/// <summary>
+/// CPU SRV
+/// </summary>
+/// <returns></returns>
+CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GBuffer0CPUSrv()const
+{
+	return mhGBuffer0CpuSrv;
+}
+
+CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GBuffer1CPUSrv()const
+{
+	return mhGBuffer1CpuSrv;
+}
+
+CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GBuffer2CPUSrv()const
+{
+	return mhGBuffer2CpuSrv;
+}
+
+CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GBuffer3CPUSrv()const
+{
+	return mhGBuffer3CpuSrv;
 }
