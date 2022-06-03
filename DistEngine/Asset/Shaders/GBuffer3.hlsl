@@ -56,8 +56,7 @@ VertexOut VS(VertexIn vin)
 	vout.TangentW                                       = TransformObjectToWorld(vin.TangentL);
     vout.PosH                                           = TransformObjectToHClip(vin.PosL);
 
-	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
-	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
+	vout.TexC                                           = vin.TexC;
 
     vout.ShadowPosH                                     = mul(float4(vout.PosW,1), gShadowTransform);
 
@@ -72,8 +71,8 @@ float4 PS(VertexOut pin) : SV_Target
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
     InputData inputData;
     InitializeInputData(pin, surfaceData.Normal, inputData); 
-    float3 outColor                                     = RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
-    return                                              half4(outColor, ShadowFactory(inputData));
+    float3 GI                                           = RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
+    return                                              half4(GI, 1);
 }
 
 #endif

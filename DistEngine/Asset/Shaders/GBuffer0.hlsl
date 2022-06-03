@@ -41,8 +41,7 @@ VertexOut VS(VertexIn vin)
 	vout.TangentW                                       = TransformObjectToWorld(vin.TangentL);
     vout.PosH                                           = TransformObjectToHClip(vin.PosL);
 
-	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
-	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
+	vout.TexC                                           = vin.TexC;;
     return vout;
 }
 
@@ -50,7 +49,7 @@ float4 PS(VertexOut pin) : SV_Target
 {
     SurfaceData surfaceData; 
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
-    return                                              float4(surfaceData.Albedo.rgb, surfaceData.Occlusion);
+    return                                              float4(surfaceData.Albedo.rgb, 1);
 }
 
 #endif

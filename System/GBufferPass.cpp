@@ -93,25 +93,25 @@ void GBuffer::BuildDescriptors(
 
 	mhGBuffer0CpuSrv = CPUDescriptor;
 	mhGBuffer0GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer0.Get(), &srvDesc, CPUDescriptor);
+	md3dDevice->CreateShaderResourceView(GBuffer0.Get(), &srvDesc, mhGBuffer0CpuSrv);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer1CpuSrv = CPUDescriptor;
 	mhGBuffer1GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer1.Get(), &srvDesc, CPUDescriptor);
+	md3dDevice->CreateShaderResourceView(GBuffer1.Get(), &srvDesc, mhGBuffer1CpuSrv);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer2CpuSrv = CPUDescriptor;
 	mhGBuffer2GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer2.Get(), &srvDesc, CPUDescriptor);
+	md3dDevice->CreateShaderResourceView(GBuffer2.Get(), &srvDesc, mhGBuffer2CpuSrv);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 
 	mhGBuffer3CpuSrv = CPUDescriptor;
 	mhGBuffer3GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer3.Get(), &srvDesc, CPUDescriptor);
+	md3dDevice->CreateShaderResourceView(GBuffer3.Get(), &srvDesc, mhGBuffer3CpuSrv);
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }

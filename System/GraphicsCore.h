@@ -166,7 +166,7 @@ public:
 	float mCamClipF = 1000;
 
 	bool renderSkyBox = true;
-	float SolidColor[4] = { 0,0,0,0 };
+	float SolidColor[4] = { 0,0,0,1 };
 
 	//Bounding
 	bool ShowBounding = false;
