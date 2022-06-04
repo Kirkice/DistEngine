@@ -164,7 +164,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 {
 	auto PBRMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
 	auto SkyBoxMaterialBuffer = mCurrFrameResource->SkyBoxMaterialBuffer.get();
-	//	更惨材质Buffer
+	//	更新材质Buffer
 	mSceneManager.UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer);
 }
 
@@ -326,7 +326,7 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 
 void GraphicsCore::BuildRootSignature()
 {
-	mRootSignature.Build(RootSignature::RootSignatureType::Default, md3dDevice, 5, 0, 0, 60, 5, 0);
+	mRootSignature.Build(RootSignature::RootSignatureType::Default, md3dDevice, 9, 0, 0, 20, 9, 0);
 	mSsaoRootSignature.Build(RootSignature::RootSignatureType::SSAO, md3dDevice, 2, 0, 0, 1, 2, 0);
 }
 
@@ -340,7 +340,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 	UINT mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	UINT TextureIndex = 1;
+	UINT TextureIndex = 0;
 	//Load Icon
 	for (size_t i = 0; i < mProjectIconTextures.size(); i++)
 	{

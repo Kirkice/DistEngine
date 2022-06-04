@@ -177,8 +177,8 @@ Texture2D gGBuffer1                                                             
 Texture2D gGBuffer2                                                                     : register(t7);
 Texture2D gGBuffer3                                                                     : register(t8);
 
-Texture2D gGizmoTextureMaps[12]                                                         : register(t9);
-Texture2D gTextureMaps[48]                                                              : register(t9);
+Texture2D gGizmoTextureMaps[14]                                                         : register(t9);
+Texture2D gTextureMaps[6]                                                               : register(t9);
 
 
 //SAMPLER

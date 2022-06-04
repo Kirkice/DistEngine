@@ -72,8 +72,8 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	sphere->material.Smoothness = 0.15f;
-	sphere->material.Metallic = 0.0f;
+	sphere->material.Smoothness = 1.0f;
+	sphere->material.Metallic = 1.0f;
 	sphere->material.Occlusion = 1.0f;
 	sphere->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 	sphere->material.EmissionStrength = 0.0f;
