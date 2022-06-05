@@ -676,9 +676,13 @@ void GraphicsCore::BuildFrameResources()
 {
 	for (int i = 0; i < gNumFrameResources; ++i)
 	{
-		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
-			2, (UINT)mAllRitems.size(),
-			(UINT)(mSceneManager.mMeshRender.size())));
+		mFrameResources.push_back(
+			std::make_unique<FrameResource>(md3dDevice.Get(),
+			2, 
+			(UINT)mAllRitems.size(),
+			(UINT)(mSceneManager.mMeshRender.size())
+				)
+		);
 	}
 }
 

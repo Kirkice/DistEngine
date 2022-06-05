@@ -102,7 +102,7 @@
 	const std::vector<std::wstring> mProjectCubeMapTextures =					//	CubeMap×ÊÔ´
 	{
 		L"Asset/Textures/CubeMap/DGarden_diffuseIBL.dds",
-		L"Asset/Textures/CubeMap/DGarden_specularIBL.dds",
+		L"Asset/Textures/CubeMap/Stonewall_specularIBL.dds",
 	};
 
 	const std::vector<std::string> mProjectCubeMapName =						//	CubeMapÃû³Æ

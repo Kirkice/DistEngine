@@ -65,18 +65,18 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 
 	//构建材质
 	sphere->material.Name = "ak47";
-	sphere->material.MatCBIndex = 2;
-	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
-	sphere->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
-	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
-	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
-	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+	sphere->material.MatCBIndex = 1;
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->material.Smoothness = 1.0f;
 	sphere->material.Metallic = 1.0f;
 	sphere->material.Occlusion = 1.0f;
 	sphere->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 	sphere->material.EmissionStrength = 0.0f;
+	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
+	sphere->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
+	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
+	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
+	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
 	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");

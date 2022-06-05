@@ -38,6 +38,7 @@ void RootSignature::Build(
 		slotRootParameter[3].InitAsShaderResourceView(0, 1);
 		slotRootParameter[4].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
 		slotRootParameter[5].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL);
+
 		auto staticSamplers = GetStaticSamplers();
 
 		// A root signature is an array of root parameters.

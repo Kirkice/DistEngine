@@ -58,16 +58,18 @@ void RenderCore::Draw(const GameTimer& gt)
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["DGarden_specularIBL"]->GpuHandle);
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["DGarden_diffuseIBL"]->GpuHandle);
 
+	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 	RenderCore::DrawGBuffer0();
 	RenderCore::DrawGBuffer1();
 	RenderCore::DrawGBuffer2();
 	RenderCore::DrawGBuffer3();
 
-	////SkyBox
-	//auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
-	//mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
-	//RenderCore::DrawSkyBox();
-	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	//SkyBox
+	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
+	RenderCore::DrawSkyBox();
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	RenderCore::CopyColorPass();
 }

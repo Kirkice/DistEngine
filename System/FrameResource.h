@@ -69,7 +69,7 @@ struct SkyBoxMaterialData
 {
     Color Tint = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float Exposure = 1;
-	float Rotation = 0;
+	float Rotation = 60;
 	float ACES = 1;
 };
 
