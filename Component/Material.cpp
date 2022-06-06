@@ -31,7 +31,7 @@ Material::Material()
 	Rotation = 0.0f;
 	ACES = 1.0f;
 }
-
+ 
 Material::~Material()
 {
 
