@@ -40,7 +40,7 @@ public:
 	//	×Ô·¢¹âÌùÍ¼Index
 	UINT EmissionMapIndex;
 	//	LUTÌùÍ¼Index
-	UINT LUTMapIndex;
+	UINT LUTMapIndex;  
 
 
 
