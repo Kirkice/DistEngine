@@ -226,7 +226,7 @@ float3 LatlongToDirectionCoordinate(float2 coord)
 //SPACE  TRANSFORM
 float3 GetCameraPositionWS()
 {
-    return                                                             (float3)gEyePosW.xyz;
+    return                                                             gEyePosW;
 }
 
 float4x4 GetObjectToWorldMatrix()

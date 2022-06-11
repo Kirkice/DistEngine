@@ -14,6 +14,8 @@ class ObjLoader
 {
 public:
 	static void LoadObj(MeshData& data, char* filename);
+	static void ReconStructNormals(MeshData& data);
+	static void ComputeTangentSpace(MeshData& data);
 };
 
 

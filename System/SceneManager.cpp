@@ -41,7 +41,7 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	sky->material.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sky->material.Exposure = 1;
 	sky->material.Rotation = 0;
-	sky->material.ACES = 1;
+	sky->material.ACES = 0;
 
 	//	创建平面网格
 	sky->mesh.CreateSphere(0.5f, 20, 20);

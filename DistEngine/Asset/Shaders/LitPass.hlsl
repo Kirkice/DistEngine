@@ -122,7 +122,7 @@ float4 Dist_IBL(VertexOut pin)
     InputData inputData;
     InitializeInputData(pin, surfaceData.Normal, inputData);
 
-    float3 outColor                                     = Dist_ImageBasedLighting(surfaceData.Albedo.rgb,surfaceData.Smoothness, surfaceData.Metallic, surfaceData.Occlusion, surfaceData.Emission.rgb, inputData.NormalW,inputData.ViewW);
+    float3 outColor                                     = Dist_ImageBasedLighting(surfaceData.Albedo.rgb,surfaceData.Smoothness, surfaceData.Metallic, surfaceData.Occlusion, surfaceData.Emission.rgb, inputData.NormalW, inputData.ViewW);
     outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
     return                                              float4(outColor,surfaceData.Albedo.a);
 }

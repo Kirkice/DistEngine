@@ -238,6 +238,7 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
 	XMStoreFloat4x4(&mMainPassCB.ViewProjTex, XMMatrixTranspose(viewProjTex));
 	XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
+	mCamera.tickCamera();
 	mMainPassCB.EyePosW = mCamera.position;
 	mMainPassCB.RenderTargetSize = Vector2((float)mClientWidth, (float)mClientHeight);
 	mMainPassCB.InvRenderTargetSize = Vector2(1.0f / mClientWidth, 1.0f / mClientHeight);

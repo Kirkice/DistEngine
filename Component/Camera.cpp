@@ -14,7 +14,7 @@ Camera::~Camera()
 //	更新相机
 void Camera::tickCamera()
 {
-	position3f = { position.x, position.y, position.z };
+	position = { position3f.x, position3f.y, position3f.z };
 }
 
 //	获取相机坐标
@@ -25,7 +25,7 @@ XMVECTOR Camera::GetPosition()const
 
 XMFLOAT3 Camera::GetPosition3f()const
 {
-	return XMFLOAT3(position.x, position.y, position.z);
+	return XMFLOAT3(position3f.x, position3f.y, position3f.z);
 }
 
 //	设置相机坐标
