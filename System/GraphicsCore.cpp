@@ -248,12 +248,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	//Light
 
-	mMainPassCB.DirectionLights.forward = mSceneManager.mMainLight.forward;
-	mMainPassCB.DirectionLights.intensity = mSceneManager.mMainLight.intensity;
-	mMainPassCB.DirectionLights.color = mSceneManager.mMainLight.color;
-	mMainPassCB.DirectionLights.isMainLight = true;
-	mMainPassCB.DirectionLights.position = mSceneManager.mMainLight.position;
-	mMainPassCB.DirectionLights.Enable = mSceneManager.mMainLight.Enable;
+	mMainPassCB.DirectionLights.Direction = mSceneManager.mMainLight.forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.mMainLight.intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.mMainLight.color);
+	mMainPassCB.DirectionLights.CastShadow = 1;
+	mMainPassCB.DirectionLights.Position = mSceneManager.mMainLight.position;
+	mMainPassCB.DirectionLights.Active = mSceneManager.mMainLight.Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);

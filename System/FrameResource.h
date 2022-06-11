@@ -6,6 +6,17 @@
 
 using namespace Mathf;
 
+//Light FrameResources
+struct DirLight
+{
+	Vector3 Direction = { 0.0f, 0.0f, 0.0f };
+	float Strength = 1;
+	Vector3 Color = { 0.5f, 0.5f, 0.5f };
+	float CastShadow = 1;
+	Vector3 Position = { 0.0f, 0.0f, 0.0f };
+	float Active = 1;
+};
+
 struct ObjectConstants
 {
     DirectX::XMFLOAT4X4 World = Mathf::Identity4x4();
@@ -43,7 +54,7 @@ struct PassConstants
     float DeltaTime = 0.0f;
 
     //Light
-    DirectionLight DirectionLights;
+    DirLight DirectionLights;
 };
 
 struct SsaoConstants
@@ -67,7 +78,7 @@ struct SsaoConstants
 
 struct SkyBoxMaterialData
 {
-    Color Tint = { 1.0f, 1.0f, 1.0f, 1.0f };
+    Vector4 Tint = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float Exposure = 1;
 	float Rotation = 60;
 	float ACES = 1;
@@ -75,11 +86,11 @@ struct SkyBoxMaterialData
 
 struct PBRMaterialData
 {
-    Color DiffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    Vector4 DiffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float Smoothness = 0.5f;
     float Metallic = 0.5f;
     float Occlusion = 0.0f;
-    Color EmissionColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+    Vector4 EmissionColor = { 0.0f, 0.0f, 0.0f, 1.0f };
     float EmissionStrength = 0.0f;
 
 	// Used in texture mapping.
@@ -124,6 +135,7 @@ struct NPRMaterialData
 	//������Ӱ��ɫ
 	DirectX::XMFLOAT4 LightShadowColor = { 1,1,1,1 };
 };
+
 
 struct PostprocessingData
 {

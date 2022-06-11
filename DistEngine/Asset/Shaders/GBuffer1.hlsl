@@ -39,7 +39,8 @@ VertexOut VS(VertexIn vin)
     vout.NormalW                                        = TransformObjectToWorldNormal(vin.NormalL);
 	vout.TangentW                                       = TransformObjectToWorld(vin.TangentL);
     vout.PosH                                           = TransformObjectToHClip(vin.PosL);
-	vout.TexC                                           = vin.TexC;;
+	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
+	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
     return vout;
 }
 

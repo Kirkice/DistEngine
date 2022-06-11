@@ -60,8 +60,8 @@ VertexOut VS(VertexIn vin)
 
     vout.SsaoPosH                                       = mul(float4(vout.PosW,1), gViewProjTex);
 
-    vout.TexC                                           = vin.TexC;//mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
-    // vout.TexC                                           = mul(texC, matData.MatTransform).xy;
+	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
+	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
 
     vout.ShadowPosH                                     = mul(float4(vout.PosW,1), gShadowTransform);
 

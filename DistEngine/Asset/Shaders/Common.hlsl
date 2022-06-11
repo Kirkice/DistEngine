@@ -26,36 +26,36 @@
 #endif
 
 //平行光
-struct DirectionLight
+struct DirLight
 {
-    float3                                                                          Direction;
-    float                                                                           Strength;
-    float3                                                                          Color;
-    float                                                                           CastShadow;
-    float3                                                                          Position;
-    float                                                                           Active;
+    float3                                                                              Direction;
+    float                                                                               Strength;
+    float3                                                                              Color;
+    float                                                                               CastShadow;
+    float3                                                                              Position;
+    float                                                                               Active;
 };
  
 //点光源
 struct PointLight
 {
-    float3                                                                          Color;
-    float                                                                           rangeFactory;
-    float3                                                                          Position;
-    float                                                                           Strength;
-    float                                                                           Active;
+    float3                                                                              Color;
+    float                                                                               rangeFactory;
+    float3                                                                              Position;
+    float                                                                               Strength;
+    float                                                                               Active;
 };
 
 //聚光灯
 struct SpotLight
 {
-    float3                                                                          Color;
-    float                                                                           rangeFactory;
-    float3                                                                          Position;
-    float                                                                           spotLightsStrength;
-    float3                                                                          Direction;
-    float                                                                           spotAngle;
-    float                                                                           spotLightsActive;
+    float3                                                                              Color;
+    float                                                                               rangeFactory;
+    float3                                                                              Position;
+    float                                                                               spotLightsStrength;
+    float3                                                                              Direction;
+    float                                                                               spotAngle;
+    float                                                                               spotLightsActive;
 };
  
 //PBR Material
@@ -227,7 +227,7 @@ cbuffer cbPass : register(b2)
     float                                                                               gTotalTime;
     float                                                                               gDeltaTime;
 
-    DirectionLight                                                                      gDirectionLights;
+    DirLight                                                                            gDirectionLights;
     PointLight                                                                          gPointLights;
     SpotLight                                                                           gSpotLights;
 };

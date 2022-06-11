@@ -169,7 +169,7 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData
 		if (mMeshRender[i]->material.MatCBIndex < 1)
 		{
 			SkyBoxMaterialData matData;
-			matData.Tint = mat->Tint;
+			matData.Tint = Vector4(mat->Tint);
 			matData.Exposure = mat->Exposure;
 			matData.Rotation = mat->Rotation;
 			matData.ACES = mat->ACES;
@@ -183,11 +183,11 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData
 			XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
 			PBRMaterialData matData;
-			matData.DiffuseColor = mat->DiffuseColor;
+			matData.DiffuseColor = Vector4(mat->DiffuseColor);
 			matData.Smoothness = mat->Smoothness;
 			matData.Metallic = mat->Metallic;
 			matData.Occlusion = mat->Occlusion;
-			matData.EmissionColor = mat->EmissionColor;
+			matData.EmissionColor = Vector4(mat->EmissionColor);
 			matData.EmissionStrength = mat->EmissionStrength;
 			XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
 			matData.DiffuseMapIndex = mat->DiffuseMapIndex;
