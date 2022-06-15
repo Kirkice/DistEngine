@@ -120,6 +120,7 @@
       <PrecompiledHeader />
       <AdditionalIncludeDirectories>Mathf/;../ThirdParty/ImGUI;../ThirdParty/Spdlog/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +147,6 @@
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
-    <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="LogSystem.cpp" />
@@ -166,7 +166,6 @@
     <ClInclude Include="DDS.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DirectXHelpers.h" />
-    <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="LoaderHelpers.h" />

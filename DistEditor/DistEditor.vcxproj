@@ -119,6 +119,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>../Core/;../System/;../Core/Mathf/;../ImGUI/;../ThirdParty/Fbxsdk/include;../Component;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;../Render/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

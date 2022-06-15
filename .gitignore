@@ -7,6 +7,7 @@
 /ThirdParty/Spdlog/Spdlog/x64/*
 /ThirdParty/stb/x64/*
 /ThirdParty/Tinyobjloader/x64/*
+/ThirdParty/Jolt/x64/*
 /DistEngine/x64/*
 /DistEngine/.vs/*
 /Component/x64/*
