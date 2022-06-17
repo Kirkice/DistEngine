@@ -13,7 +13,7 @@ AABBTreeBuilder::Node::Node()
 	mChild[1] = nullptr; 
 }
 
-AABBTreeBuilder::Node::~Node() 
+AABBTreeBuilder::Node::~Node()    
 { 
 	delete mChild[0]; 
 	delete mChild[1]; 
