@@ -13,6 +13,12 @@ public:
 	ShaderManager();
 	~ShaderManager();
 
+	static ShaderManager& getInstance() {
+		static ShaderManager instance;
+		return instance;
+	}
+
+public:
 	void Build();
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;

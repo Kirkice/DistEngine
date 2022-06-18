@@ -249,12 +249,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	//Light
 
-	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.getInstance().forward;
-	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.getInstance().intensity;
-	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.getInstance().color);
+	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.color);
 	mMainPassCB.DirectionLights.CastShadow = 1;
-	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.getInstance().position;
-	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.getInstance().Enable;
+	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.position;
+	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
@@ -490,7 +490,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 void GraphicsCore::BuildShadersAndInputLayout()
 {
-	mShaderManager.Build();
+	mShaderManager.getInstance().Build();
 }
 
 void GraphicsCore::BuildPSOs()

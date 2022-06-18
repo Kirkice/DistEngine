@@ -27,11 +27,6 @@ public:
 	DirectionLight(bool isMain, Color color);
 	DirectionLight(bool isMain, Color color, float inten);
 	~DirectionLight();
-
-	static DirectionLight& getInstance() {
-		static DirectionLight instance;
-		return instance;
-	}
 };
 
 #endif
