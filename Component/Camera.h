@@ -18,7 +18,7 @@ public:
 	}
 
 public:
-	void tick(const GameTimer& gt);
+	void tick(const GameTimer& gt)override;
 
 	// Get/Set world camera position.
 	XMVECTOR GetPosition()const;

@@ -136,7 +136,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	mSceneManager.getInstance().mMainLight.Tick();
+	mSceneManager.getInstance().mMainLight.tick(gt);
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
@@ -249,12 +249,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	//Light
 
-	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
-	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;
-	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.color);
+	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.getInstance().forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.getInstance().intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.getInstance().color);
 	mMainPassCB.DirectionLights.CastShadow = 1;
-	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.position;
-	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.Enable;
+	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.getInstance().position;
+	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.getInstance().Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);

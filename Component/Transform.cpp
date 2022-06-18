@@ -29,7 +29,6 @@ Transform::Transform(Vector3 pos, Vector3 rot)
 	eulerangle = rot;
 	scale = Vector3::one;
 	forward = Vector3(0, 0, -1);
-	Tick();
 	quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 }
 
@@ -40,7 +39,6 @@ Transform::Transform(Vector3 pos, Vector3 rot, Vector3 scale)
 	eulerangle = rot;
 	scale = scale;
 	forward = Vector3(0, 0, -1);
-	Tick();
 	quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 }
 
@@ -76,8 +74,10 @@ void Transform::SetArray2Vector()
 }
 
 //	更新
-void Transform::Tick()
+void Transform::tick(const GameTimer& gt)
 {
+	GameObject::tick(gt);
+
 	//	设置方向
 	XMMATRIX rot_dir = XMMatrixRotationX((eulerangle.x / 180) * Mathf::Pi) * XMMatrixRotationY((eulerangle.y / 180) * Mathf::Pi) * XMMatrixRotationZ((eulerangle.z / 180) * Mathf::Pi);
 

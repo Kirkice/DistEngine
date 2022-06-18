@@ -14,6 +14,8 @@ Camera::~Camera()
 //	更新相机
 void Camera::tick(const GameTimer& gt)
 {
+	Transform::tick(gt);
+
 	position = { position3f.x, position3f.y, position3f.z };
 }
 

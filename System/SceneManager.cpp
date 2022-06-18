@@ -92,15 +92,15 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 
 
 	//	设为主光源
-	mMainLight.isMainLight = true;
+	mMainLight.getInstance().isMainLight = true;
 	//	灯光颜色
-	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
+	mMainLight.getInstance().color = Color(1, 0.9568627f, 0.8392157f, 1);
 	//	设置灯光位置
-	mMainLight.position = Vector3(0, 3, 0);
+	mMainLight.getInstance().position = Vector3(0, 3, 0);
 	//	设置灯光欧拉角
-	mMainLight.eulerangle = Vector3(50, -30, 0);
+	mMainLight.getInstance().eulerangle = Vector3(50, -30, 0);
 	//	主光源名字
-	mMainLight.name = "Direction Light";
+	mMainLight.getInstance().name = "Direction Light";
 
 	//	天空球设置
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);

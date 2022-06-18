@@ -9,6 +9,7 @@
 
 class DirectionLight : public Transform
 {
+
 public:
 	//	是否是主光源 产生阴影
 	bool isMainLight;
@@ -26,6 +27,11 @@ public:
 	DirectionLight(bool isMain, Color color);
 	DirectionLight(bool isMain, Color color, float inten);
 	~DirectionLight();
+
+	static DirectionLight& getInstance() {
+		static DirectionLight instance;
+		return instance;
+	}
 };
 
 #endif

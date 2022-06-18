@@ -50,8 +50,6 @@ public:
 	//	数组值传递给向量
 	void SetArray2Vector();
 
-	void Tick();
-
 	//	获取四元数
 	Quaternion GetQuaternion();
 
@@ -60,6 +58,8 @@ public:
 
 	//	获取世界矩阵
 	XMFLOAT4X4 GetWorldXMMatrix();
+
+	virtual void tick(const GameTimer& gt)override;
 
 private:
 
