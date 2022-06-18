@@ -59,6 +59,8 @@ public:
 		float SlopeScaledDepthBias
 	);
 
+	void SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE Type);
+
 	void SetDepthStencilState(
 		bool DepthEnable,
 		D3D12_DEPTH_WRITE_MASK Mask,

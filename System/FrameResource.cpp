@@ -9,7 +9,7 @@ FrameResource::FrameResource(ID3D12Device* device, UINT passCount, UINT objectCo
     PassCB = std::make_unique<UploadBuffer<PassConstants>>(device, passCount, true);
     SsaoCB = std::make_unique<UploadBuffer<SsaoConstants>>(device, 1, true);
 	PBRMaterialBuffer = std::make_unique<UploadBuffer<PBRMaterialData>>(device, materialCount, false);
-    SkyBoxMaterialBuffer = std::make_unique<UploadBuffer<SkyBoxMaterialData>>(device, 1, true);
+    SkyBoxMaterialBuffer = std::make_unique<UploadBuffer<SkyBoxMaterialData>>(device, materialCount, false);
     PostMaterialBuffer = std::make_unique<UploadBuffer<PostprocessingData>>(device, materialCount, false);
     ObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(device, objectCount, true);
 }

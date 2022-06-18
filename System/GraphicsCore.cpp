@@ -42,7 +42,10 @@ bool GraphicsCore::Initialize()
 	BuildDescriptorHeaps();
 	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());
 	BuildShadersAndInputLayout();
-	mSceneManager.getInstance().BuildScene(mResourcesTextures);
+
+	matCBIndexUtils.getInstance().Init();
+	mGizmoManager.getInstance().BuildScene(mGizmosTextures, matCBIndexUtils);
+	mSceneManager.getInstance().BuildScene(mResourcesTextures, matCBIndexUtils);
 
 	BuildRenderItems();
 	BuildFrameResources();
@@ -164,8 +167,12 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 {
 	auto PBRMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
 	auto SkyBoxMaterialBuffer = mCurrFrameResource->SkyBoxMaterialBuffer.get();
-	//	更新材质Buffer
-	mSceneManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer);
+
+	////	更新GizmosBuffer
+	mGizmoManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer);
+
+	//	更新场景材质Buffer
+	mSceneManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer, matCBIndexUtils);
 }
 
    
@@ -495,12 +502,13 @@ void GraphicsCore::BuildShadersAndInputLayout()
 
 void GraphicsCore::BuildPSOs()
 {
-	// 	PSO for Bounding.
-	PipelineStateObject BoundingObject = PipelineStateObject();
-	BoundingObject.BuildDefault(mShaderManager,mRootSignature);
-	BoundingObject.SetShader(mShaderManager, mRootSignature, "boundingVS", "boundingPS");
-	BoundingObject.SetRasterizerState(D3D12_FILL_MODE_WIREFRAME, D3D12_CULL_MODE_NONE);
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(BoundingObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["bounding"])));
+	// 	PSO for Line.
+	PipelineStateObject LineObject = PipelineStateObject();
+	LineObject.BuildDefault(mShaderManager,mRootSignature);
+	LineObject.SetShader(mShaderManager, mRootSignature, "lineVS", "linePS");
+	LineObject.SetRasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	LineObject.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LineObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Line"])));
 
 	// 	PSO for Gizmo.
 	PipelineStateObject GizmoObject = PipelineStateObject();
@@ -681,15 +689,17 @@ void GraphicsCore::BuildFrameResources()
 			std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, 
 			(UINT)mAllRitems.size(),
+			(UINT)(mGizmoManager.getInstance().mMeshRender.size()) +
 			(UINT)(mSceneManager.getInstance().mMeshRender.size())
-				)
+			)
 		);
 	}
 }
 
 void GraphicsCore::BuildRenderItems()
 {
-	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
+	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size(),matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

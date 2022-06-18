@@ -71,6 +71,10 @@ void RenderCore::Draw(const GameTimer& gt)
 	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
 	RenderCore::DrawSkyBox();
+
+	//DrawGizmos
+	RenderCore::DrawGizmos();
+
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	RenderCore::CopyColorPass();
@@ -208,4 +212,11 @@ void RenderCore::DrawSkyBox()
 		mCommandList->SetPipelineState(mPSOs["sky"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Sky]);
 	}
+}
+
+//	DrawGizmos
+void RenderCore::DrawGizmos()
+{
+	mCommandList->SetPipelineState(mPSOs["Line"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
 }

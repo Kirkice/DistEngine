@@ -29,15 +29,19 @@ private:
 	//	Draw SSAO
 	void DrawSSAO(ID3D12Resource* matBuffer);
 
-	//DrawOpaque
+	//	DrawOpaque
 	void DrawOpaque();
 
-	//Draw GBuffer
+	//	Draw GBuffer
 	void DrawGBuffer0();
 	void DrawGBuffer1();
 	void DrawGBuffer2();
 	void DrawGBuffer3();
 
-	//DrawSkyBox
+	//	DrawSkyBox
 	void DrawSkyBox();
+
+
+	//	DrawGizmos
+	void DrawGizmos();
 };

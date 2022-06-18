@@ -8,31 +8,44 @@ SceneManager::SceneManager(SceneType tp)
 
 
 //	构建场景
-void SceneManager::BuildScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
+void SceneManager::BuildScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 	switch (Type)
 	{
-	case SceneType::Default:BuildDefaultScene(mResourcesTextures);
+	case SceneType::Default:BuildDefaultScene(mResourcesTextures, matCBIndexUtils);
 		break;
-	case SceneType::ConelBox:BuildConelBoxScene(mResourcesTextures);
+	case SceneType::ConelBox:BuildConelBoxScene(mResourcesTextures, matCBIndexUtils);
 		break;
-	case SceneType::Toon:BuildToonScene(mResourcesTextures);
+	case SceneType::Toon:BuildToonScene(mResourcesTextures, matCBIndexUtils);
 		break;
-	case SceneType::Water:BuildWaterScene(mResourcesTextures);
+	case SceneType::Water:BuildWaterScene(mResourcesTextures, matCBIndexUtils);
 		break;
-	default:BuildDefaultScene(mResourcesTextures);
+	default:BuildDefaultScene(mResourcesTextures, matCBIndexUtils);
 		break;
 	}
 }
 
-void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
+void SceneManager::BuildDefaultScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
+	//------------------------------
 	//	SkyBox
+	//------------------------------
+	// 
+	//	存储类型matCB开始值
+	matCBIndexUtils.getInstance().SaveTypeIndex("Sky", matCBIndexUtils.getInstance().GetIndex());
+
 	auto sky = std::make_unique<MeshRender>();
 	sky->name = "DGarden";
 	//构建材质
 	sky->material.Name = "DGarden_mat";
-	sky->material.MatCBIndex = 0;
+	sky->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
 	sky->material.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sky->material.Exposure = 1;
 	sky->material.Rotation = 0;
@@ -52,15 +65,20 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	mMeshRender.push_back(std::move(sky));
 
 
-
-	//	球的MeshRender
+	//------------------------------
+	//	物体的MeshRender
+	//------------------------------
+	// 
+	//	存储类型matCB开始值
+	matCBIndexUtils.getInstance().SaveTypeIndex("Opaque", matCBIndexUtils.getInstance().GetIndex());
 
 	auto sphere = std::make_unique<MeshRender>();
 	sphere->name = "ak47_render";
 
 	//构建材质
 	sphere->material.Name = "ak47";
-	sphere->material.MatCBIndex = 1;
+	sphere->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
 	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	sphere->material.Smoothness = 1.0f;
 	sphere->material.Metallic = 1.0f;
@@ -121,47 +139,63 @@ void SceneManager::BuildDefaultScene(std::unordered_map<std::string, std::unique
 	mLightSetting.Step = 0;
 }
 
-void SceneManager::BuildConelBoxScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
+void SceneManager::BuildConelBoxScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
 
-void SceneManager::BuildToonScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
+void SceneManager::BuildToonScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
 
-void SceneManager::BuildWaterScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
+void SceneManager::BuildWaterScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
 
 
 //	更新场景材质
-void SceneManager::UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+void SceneManager::UpdateSceneMaterialBuffer(
+	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
+	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 	switch (Type)
 	{
-	case SceneType::Default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+	case SceneType::Default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 		break;
-	case SceneType::ConelBox:UpdateConelBoxSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+	case SceneType::ConelBox:UpdateConelBoxSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 		break;
-	case SceneType::Toon:UpdateToonSceneMaterialBuffer(PBRMaterialBuffer, 
-		SkyMaterialBuffer);
+	case SceneType::Toon:UpdateToonSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 		break;
-	case SceneType::Water:UpdateWaterSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+	case SceneType::Water:UpdateWaterSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 		break;
-	default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer);
+	default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 		break;
 	}
 }
 
-void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+void SceneManager::UpdateDefaultSceneMaterialBuffer(
+	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
+	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
 		Material* mat = &(mMeshRender[i]->material);
-		if (mMeshRender[i]->material.MatCBIndex < 1)
+		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			SkyBoxMaterialData matData;
 			matData.Tint = Vector4(mat->Tint);
@@ -198,17 +232,28 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(UploadBuffer<PBRMaterialData
 	}
 }
 
-void SceneManager::UpdateConelBoxSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+void SceneManager::UpdateConelBoxSceneMaterialBuffer(
+	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
+	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
 
-void SceneManager::UpdateToonSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+void SceneManager::UpdateToonSceneMaterialBuffer(
+	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
+	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
 
-void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer)
+void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
+	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 
 }
@@ -217,14 +262,21 @@ void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>*
 
 
 //	创建RenderItem
-void SceneManager::BuildRenderItem(std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], std::vector<std::unique_ptr<RenderItem>>& mAllRitems, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
+void SceneManager::BuildRenderItem(
+	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], 
+	std::vector<std::unique_ptr<RenderItem>>& mAllRitems, 
+	Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, 
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, 
+	UINT CurrentSize,
+	MaterialIndexUtils& matCBIndexUtils
+)
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
 		auto Ritem = std::make_unique<RenderItem>();
 		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
-		Ritem->ObjCBIndex = i;
+		Ritem->ObjCBIndex = CurrentSize + i;
 		Ritem->Mat = &mMeshRender[i]->material;
 		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -232,7 +284,7 @@ void SceneManager::BuildRenderItem(std::vector<RenderItem*> mRitemLayer[(int)Ren
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 
-		if (mMeshRender[i]->material.MatCBIndex < 1)
+		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
 		}

@@ -1,15 +1,15 @@
-/* $Header: BoundingPass.hlsl                                           6/26/21 20:55p KirkZhu $ */
+/* $Header: LinePass.hlsl                                           6/26/21 20:55p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *
 *                                                                                             *
-*                    File Name : BoundingPass.hlsl                                            *
+*                    File Name : LinePass.hlsl                                            	  *
 *                                                                                             *
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
-#ifndef BOUNDING_INCLUDE
-#define BOUNDING_INCLUDE
+#ifndef LINE_INCLUDE
+#define LINE_INCLUDE
 
 #include "Core.hlsl"
 
@@ -38,7 +38,8 @@ VertexOut VS(VertexIn vin)
  
 float4 PS(VertexOut pin) : SV_Target
 {
-    return float4(0,0,1,1);
+    PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
+    return matData.DiffuseColor;
 }
  
 #endif

@@ -57,7 +57,7 @@ struct SpotLight
     float                                                                               spotAngle;
     float                                                                               spotLightsActive;
 };
- 
+
 //PBR Material
 struct PBRMaterialData
 {
@@ -158,7 +158,7 @@ struct PostprocessingData
     
                         
 }; 
- 
+
 StructuredBuffer<PBRMaterialData> gMaterialData                                         : register(t0, space1);
 
 StructuredBuffer<SkyBoxMaterialData> gSkyMaterialData                                   : register(t0, space1);

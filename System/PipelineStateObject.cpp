@@ -155,6 +155,15 @@ void PipelineStateObject::SetRasterizerDepth(
 }
 
 /// <summary>
+/// SetPrimitiveTopologyType
+/// </summary>
+/// <param name="Type"></param>
+void PipelineStateObject::SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE Type)
+{
+	PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+}
+
+/// <summary>
 /// SetBlend
 /// </summary>
 /// <param name="enable"></param>

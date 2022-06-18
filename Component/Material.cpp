@@ -36,3 +36,28 @@ Material::~Material()
 {
 
 }
+
+void MaterialIndexUtils::Init()
+{
+	Index = 0;
+}
+
+int MaterialIndexUtils::GetIndex()
+{
+	return Index;
+}
+
+void MaterialIndexUtils::OffsetIndex()
+{
+	Index++;
+}
+
+void MaterialIndexUtils::SaveTypeIndex(std::string type, int Index)
+{
+	mMatTypeIndexMap[type] = Index;
+}
+
+int MaterialIndexUtils::GetTypeIndexStart(std::string type)
+{
+	return mMatTypeIndexMap[type];
+}

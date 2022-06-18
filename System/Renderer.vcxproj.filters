@@ -55,6 +55,9 @@
     <ClCompile Include="FrameResource.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="GizmosManager.cpp">
+      <Filter>SceneManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputSystem.h">
@@ -116,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="FrameResource.h">
       <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmosManager.h">
+      <Filter>SceneManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,7 @@
 #include "PipelineStateObject.h"
 #include "RenderTarget.h"
 #include "GBufferPass.h"
+#include "GizmosManager.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -84,6 +85,8 @@ public:
 	std::unordered_map<std::string, std::unique_ptr<TextureCube>> mCubeMapTextures;
 
 	//	场景管理
+	MaterialIndexUtils matCBIndexUtils = MaterialIndexUtils();
+	GizmosManager mGizmoManager = GizmosManager();
 	SceneManager mSceneManager = SceneManager(SceneType::Default);
 
 

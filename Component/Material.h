@@ -1,8 +1,10 @@
 #pragma once
-#ifndef MATERIAL_LIGHT_H
-#define MATERIAL_LIGHT_H
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 #include "../Core/Mathf/Color.h"
+#include <string>
+#include <unordered_map>
 
 //	PBR²ÄÖÊ
 class Material
@@ -59,4 +61,33 @@ public:
 	~Material();
 };
 
+
+class MaterialIndexUtils
+{
+public:
+
+	MaterialIndexUtils() = default;
+	~MaterialIndexUtils() = default;
+
+	static MaterialIndexUtils& getInstance() {
+		static MaterialIndexUtils instance;
+		return instance;
+	}
+
+public:
+
+	void Init();
+
+	int GetIndex();
+	void OffsetIndex();
+
+	void SaveTypeIndex(std::string type, int Index);
+
+	int GetTypeIndexStart(std::string type);
+
+private:
+	int Index = -1;
+
+	std::unordered_map<std::string, int> mMatTypeIndexMap;
+};
 #endif
