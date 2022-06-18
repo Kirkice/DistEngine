@@ -128,8 +128,5 @@
     <ClInclude Include="Macro.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Common</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

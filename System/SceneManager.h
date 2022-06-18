@@ -17,15 +17,16 @@ using namespace DirectX::PackedVector;
 class SceneManager
 {
 
-private:
-	static SceneManager instance;
-
 public:
 	SceneManager() = default;
 	~SceneManager() = default;
 	SceneManager(SceneType type);
-	SceneManager(const SceneManager&);
-	SceneManager& operator = (const SceneManager&);
+
+	static SceneManager& getInstance() {
+		static SceneManager instance;
+		return instance;
+	}
+
 
 public:
 	//	³¡¾°ÀàĞÍ
@@ -44,11 +45,6 @@ public:
 	LightSetting mLightSetting;
 
 public:
-
-	static SceneManager& getInstance() {
-		static SceneManager instance;
-		return instance;
-	}
 
 	void BuildScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures);
 

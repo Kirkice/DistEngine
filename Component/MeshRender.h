@@ -2,7 +2,6 @@
 #ifndef MESH_RENDER_H
 #define MESH_RENDER_H
 #include "Transform.h"
-#include "../Core/Singleton.h"
 #include "../Core/Mathf/Mathf.h"
 #include "Material.h"
 #include "MeshFliter.h"

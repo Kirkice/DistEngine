@@ -2,7 +2,6 @@
 #ifndef MATERIAL_LIGHT_H
 #define MATERIAL_LIGHT_H
 
-#include "../Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 
 //	PBR²ÄÖÊ

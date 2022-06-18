@@ -3,16 +3,21 @@
 #define CAMERA_H
 
 #include "Transform.h"
-#include "../Core/Singleton.h"
 
 using namespace Mathf;
 
 class Camera : public Transform
 {
-
 public:
 	Camera();
 	~Camera();
+
+	static Camera& getInstance() {
+		static Camera instance;
+		return instance;
+	}
+
+public:
 
 	void tickCamera();
 

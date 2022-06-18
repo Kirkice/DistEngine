@@ -3,7 +3,6 @@
 #define DIRECTION_LIGHT_H
 
 #include "Transform.h"
-#include "../Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 #include "BoundingSphere.h"
 

@@ -4,7 +4,6 @@
 
 #include "Transform.h"
 #include "BoundingSphere.h"
-#include "../Core/Singleton.h"
 #include "../Core/Mathf/Color.h"
 
 

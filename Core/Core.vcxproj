@@ -181,7 +181,6 @@
     <ClInclude Include="Mathf\Vector4.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="PlatformHelpers.h" />
-    <ClInclude Include="Singleton.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="zconf.h" />

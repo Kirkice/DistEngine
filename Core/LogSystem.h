@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 
 #include <spdlog/spdlog.h>
 
@@ -7,7 +6,7 @@
 #include <stdexcept>
 
 
-class LogSystem final : public Singleton<LogSystem>
+class LogSystem final
 {
 public:
 	enum class LogLevel : uint8_t

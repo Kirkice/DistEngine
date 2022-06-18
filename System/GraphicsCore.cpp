@@ -24,7 +24,7 @@ bool GraphicsCore::Initialize()
 	// Reset the command list to prep for initialization commands.
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
-	mCamera.SetPosition(0.0f, 2.0f, -15.0f);
+	mCamera.getInstance().SetPosition(0.0f, 2.0f, -15.0f);
 
 	//ShadowMap Init
 	mShadowMap = std::make_unique<ShadowMap>(md3dDevice.Get(), 2048, 2048);
@@ -94,7 +94,7 @@ void GraphicsCore::OnResize()
 {
 	D3DApp::OnResize();
 
-	mCamera.SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
+	mCamera.getInstance().SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
 
 	if (mSsao != nullptr)
 	{
@@ -108,7 +108,7 @@ void GraphicsCore::OnResize()
 void GraphicsCore::Update(const GameTimer& gt)
 {
 	OnKeyboardInput(gt);
-	mCamera.SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
+	mCamera.getInstance().SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
 
 	// Cycle through the circular frame resource array.
 	mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;
@@ -212,8 +212,8 @@ void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 
 void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 {
-	XMMATRIX view = mCamera.GetView();
-	XMMATRIX proj = mCamera.GetProj();
+	XMMATRIX view = mCamera.getInstance().GetView();
+	XMMATRIX proj = mCamera.getInstance().GetProj();
 
 	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
@@ -238,8 +238,8 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
 	XMStoreFloat4x4(&mMainPassCB.ViewProjTex, XMMatrixTranspose(viewProjTex));
 	XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
-	mCamera.tickCamera();
-	mMainPassCB.EyePosW = mCamera.position;
+	mCamera.getInstance().tickCamera();
+	mMainPassCB.EyePosW = mCamera.getInstance().position;
 	mMainPassCB.RenderTargetSize = Vector2((float)mClientWidth, (float)mClientHeight);
 	mMainPassCB.InvRenderTargetSize = Vector2(1.0f / mClientWidth, 1.0f / mClientHeight);
 	mMainPassCB.NearZ = 1.0f;
@@ -293,7 +293,7 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 {
 	SsaoConstants ssaoCB;
 
-	XMMATRIX P = mCamera.GetProj();
+	XMMATRIX P = mCamera.getInstance().GetProj();
 
 	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
 	XMMATRIX T(

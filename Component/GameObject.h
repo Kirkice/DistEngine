@@ -4,10 +4,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "../Core/Singleton.h"
 
-
-class GameObject : public Singleton<GameObject>
+class GameObject
 {
 public:
 	//	GOµÄÃû×Ö

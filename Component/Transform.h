@@ -3,7 +3,6 @@
 #define TRANSFORM_H
 
 #include "GameObject.h"
-#include "../Core/Singleton.h"
 #include "../Core/Mathf/Mathf.h"
 
 using namespace Mathf;

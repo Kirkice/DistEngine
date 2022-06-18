@@ -20,18 +20,18 @@ void InputSystem::OnKeyboardInput(const GameTimer& gt)
 	const float dt = gt.DeltaTime();
 
 	if (GetAsyncKeyState('W') & 0x8000)
-		mCamera.Walk(10.0f * dt);
+		mCamera.getInstance().Walk(10.0f * dt);
 
 	if (GetAsyncKeyState('S') & 0x8000)
-		mCamera.Walk(-10.0f * dt);
+		mCamera.getInstance().Walk(-10.0f * dt);
 
 	if (GetAsyncKeyState('A') & 0x8000)
-		mCamera.Strafe(-10.0f * dt);
+		mCamera.getInstance().Strafe(-10.0f * dt);
 
 	if (GetAsyncKeyState('D') & 0x8000)
-		mCamera.Strafe(10.0f * dt);
+		mCamera.getInstance().Strafe(10.0f * dt);
 
-	mCamera.UpdateViewMatrix();
+	mCamera.getInstance().UpdateViewMatrix();
 }
 
 void InputSystem::OnMouseDown(WPARAM btnState, int x, int y)
@@ -56,8 +56,8 @@ void InputSystem::OnMouseMove(WPARAM btnState, int x, int y)
 		float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
 		float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
 
-		mCamera.Pitch(dy);
-		mCamera.RotateY(dx);
+		mCamera.getInstance().Pitch(dy);
+		mCamera.getInstance().RotateY(dx);
 	}
 
 	mLastMousePos.x = x;
