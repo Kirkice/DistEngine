@@ -36,17 +36,17 @@ void PipelineStateObject::Build(
 )
 {
 	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PSODesc.InputLayout = { mShaderManager.getInstance().mInputLayout.data(), (UINT)mShaderManager.getInstance().mInputLayout.size() };
+	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
 	PSODesc.pRootSignature = mRootSignature.GetSignature();
 	PSODesc.VS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders[VS]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders[VS]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[VS]->GetBufferPointer()),
+		mShaderManager.mShaders[VS]->GetBufferSize()
 	};
 	PSODesc.PS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders[PS]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders[PS]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[PS]->GetBufferPointer()),
+		mShaderManager.mShaders[PS]->GetBufferSize()
 	};
 
 	PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
@@ -72,17 +72,17 @@ void PipelineStateObject::BuildDefault(
 )
 {
 	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PSODesc.InputLayout = { mShaderManager.getInstance().mInputLayout.data(), (UINT)mShaderManager.getInstance().mInputLayout.size() };
+	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
 	PSODesc.pRootSignature = mRootSignature.GetSignature();
 	PSODesc.VS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders["litVS"]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders["litVS"]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litVS"]->GetBufferPointer()),
+		mShaderManager.mShaders["litVS"]->GetBufferSize()
 	};
 	PSODesc.PS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders["litPS"]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders["litPS"]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litPS"]->GetBufferPointer()),
+		mShaderManager.mShaders["litPS"]->GetBufferSize()
 	};
 
 	PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
@@ -111,17 +111,17 @@ void PipelineStateObject::SetShader(
 	std::string PS
 )
 {
-	PSODesc.InputLayout = { mShaderManager.getInstance().mInputLayout.data(), (UINT)mShaderManager.getInstance().mInputLayout.size() };
+	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
 	PSODesc.pRootSignature = mRootSignature.GetSignature();
 	PSODesc.VS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders[VS]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders[VS]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[VS]->GetBufferPointer()),
+		mShaderManager.mShaders[VS]->GetBufferSize()
 	};
 	PSODesc.PS =
 	{
-		reinterpret_cast<BYTE*>(mShaderManager.getInstance().mShaders[PS]->GetBufferPointer()),
-		mShaderManager.getInstance().mShaders[PS]->GetBufferSize()
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[PS]->GetBufferPointer()),
+		mShaderManager.mShaders[PS]->GetBufferSize()
 	};
 }
 

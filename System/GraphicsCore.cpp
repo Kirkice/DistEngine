@@ -490,7 +490,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 void GraphicsCore::BuildShadersAndInputLayout()
 {
-	mShaderManager.getInstance().Build();
+	mShaderManager.Build();
 }
 
 void GraphicsCore::BuildPSOs()
