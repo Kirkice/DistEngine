@@ -6,7 +6,10 @@ template<typename T>
 class Singleton
 {
 protected:
-	Singleton() {}
+	Singleton() = default;
+	~Singleton() = default;
+	Singleton(const Singleton&);
+	Singleton& operator = (const Singleton&);
 
 public:
 	static T& getInstance() noexcept(std::is_nothrow_constructible<T>::value)
@@ -14,7 +17,4 @@ public:
 		static T instance;
 		return instance;
 	}
-	virtual ~Singleton() noexcept {}
-	//Singleton(const Singleton&) = delete;
-	//Singleton& operator=(const Singleton&) = delete;
 };

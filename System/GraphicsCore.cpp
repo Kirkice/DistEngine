@@ -42,7 +42,7 @@ bool GraphicsCore::Initialize()
 	BuildDescriptorHeaps();
 	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());
 	BuildShadersAndInputLayout();
-	mSceneManager.BuildScene(mResourcesTextures);
+	mSceneManager.getInstance().BuildScene(mResourcesTextures);
 
 	BuildRenderItems();
 	BuildFrameResources();
@@ -136,7 +136,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	mSceneManager.mMainLight.Tick();
+	mSceneManager.getInstance().mMainLight.Tick();
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
@@ -165,7 +165,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 	auto PBRMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
 	auto SkyBoxMaterialBuffer = mCurrFrameResource->SkyBoxMaterialBuffer.get();
 	//	更新材质Buffer
-	mSceneManager.UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer);
+	mSceneManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer);
 }
 
    
@@ -173,7 +173,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 {
 	// Only the first "main" light casts a shadow.
-	XMVECTOR lightDir = mSceneManager.mMainLight.forward.ToSIMD();
+	XMVECTOR lightDir = mSceneManager.getInstance().mMainLight.forward.ToSIMD();
 	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
 	XMVECTOR targetPos = XMLoadFloat3(&mSceneBounds.Center);
 	XMVECTOR lightUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -249,12 +249,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 
 	//Light
 
-	mMainPassCB.DirectionLights.Direction = mSceneManager.mMainLight.forward;
-	mMainPassCB.DirectionLights.Strength = mSceneManager.mMainLight.intensity;
-	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.mMainLight.color);
+	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.color);
 	mMainPassCB.DirectionLights.CastShadow = 1;
-	mMainPassCB.DirectionLights.Position = mSceneManager.mMainLight.position;
-	mMainPassCB.DirectionLights.Active = mSceneManager.mMainLight.Enable;
+	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.position;
+	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
@@ -681,7 +681,7 @@ void GraphicsCore::BuildFrameResources()
 			std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, 
 			(UINT)mAllRitems.size(),
-			(UINT)(mSceneManager.mMeshRender.size())
+			(UINT)(mSceneManager.getInstance().mMeshRender.size())
 				)
 		);
 	}
@@ -689,7 +689,7 @@ void GraphicsCore::BuildFrameResources()
 
 void GraphicsCore::BuildRenderItems()
 {
-	mSceneManager.BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

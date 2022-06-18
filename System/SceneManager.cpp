@@ -6,11 +6,6 @@ SceneManager::SceneManager(SceneType tp)
 	Type = tp;
 }
 
-SceneManager::~SceneManager()
-{
-
-}
-
 
 //	¹¹½¨³¡¾°
 void SceneManager::BuildScene(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures)
