@@ -73,6 +73,7 @@ void RenderCore::Draw(const GameTimer& gt)
 	RenderCore::DrawSkyBox();
 
 	//DrawGizmos
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 	RenderCore::DrawGizmos();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));

@@ -18,7 +18,7 @@ void GizmosManager::BuildScene(
 	plane->material.DiffuseColor = Color(0.8f, 0.8f, 0.8f, 1.0f);
 
 	//	创建平面网格
-	plane->mesh.CreateGrid(30, 30, 60, 60);
+	plane->mesh.CreateGrid(60, 60, 240, 240);
 
 	//	设置坐标
 	plane->position = Vector3(0, 0, 0);
@@ -75,7 +75,7 @@ void GizmosManager::BuildRenderItem(
 		Ritem->ObjCBIndex = i;
 		Ritem->Mat = &mMeshRender[i]->material;
 		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
-		Ritem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		Ritem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
