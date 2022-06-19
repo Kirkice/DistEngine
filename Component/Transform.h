@@ -21,7 +21,7 @@ public:
 	Vector3 scale;
 
 	Vector3 forward;
-
+	Vector3 rotateForward = Vector3(0, 0, -1);
 
 	//	世界坐标 数组
 	float positionArray[3] = { 0.0f, 0.0f, 0.0f };
@@ -44,11 +44,14 @@ public:
 	Transform(Vector3 pos, Vector3 rot, Vector3 scale);
 	~Transform();
 
-	//	向量值传递给数组
-	void SetVector2Array();
+	void SetPosition(Vector3& pos);
+	void SetPosition(float x, float y, float z);
 
-	//	数组值传递给向量
-	void SetArray2Vector();
+	void SetEulerangle(Vector3& euler);
+	void SetEulerangle(float x, float y, float z);
+
+	void SetScale(Vector3& scale);
+	void SetScale(float x, float y, float z);
 
 	//	获取四元数
 	Quaternion GetQuaternion();

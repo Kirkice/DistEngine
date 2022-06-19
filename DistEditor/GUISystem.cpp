@@ -108,7 +108,7 @@ void GUISystem::InitHierachyItems()
 	DirectionLightItem->Name = mSceneManager.getInstance().mMainLight.getName();
 	DirectionLightItem->type = HierachyType::DirectionLight;
 	DirectionLightItem->selected = false;
-	DirectionLightItem->mDirectionLight = mSceneManager.getInstance().mMainLight;
+	DirectionLightItem->mDirectionLight = &mSceneManager.getInstance().mMainLight;
 
 	mHierachyItems.push_back(std::move(DirectionLightItem));
 
@@ -247,30 +247,30 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::Separator();
 					ImGui::Text("Transform");
 
-					float position[3] = { mHierachyItems[i]->mDirectionLight.position.x,mHierachyItems[i]->mDirectionLight.position.y,mHierachyItems[i]->mDirectionLight.position.z};
+					float position[3] = { mHierachyItems[i]->mDirectionLight->position.x,mHierachyItems[i]->mDirectionLight->position.y,mHierachyItems[i]->mDirectionLight->position.z};
 					ImGui::InputFloat3("Position", position);
-					mHierachyItems[i]->mDirectionLight.position = Vector3(position[0], position[1], position[2]);
+					mHierachyItems[i]->mDirectionLight->position = Vector3(position[0], position[1], position[2]);
 
-					float eulerangle[3] = { mHierachyItems[i]->mDirectionLight.eulerangle.x,mHierachyItems[i]->mDirectionLight.eulerangle.y,mHierachyItems[i]->mDirectionLight.eulerangle.z };
+					float eulerangle[3] = { mHierachyItems[i]->mDirectionLight->eulerangle.x,mHierachyItems[i]->mDirectionLight->eulerangle.y,mHierachyItems[i]->mDirectionLight->eulerangle.z };
 					ImGui::InputFloat3("Rotation", eulerangle);
-					mHierachyItems[i]->mDirectionLight.eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
+					mHierachyItems[i]->mDirectionLight->eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
 
-					float scale[3] = { mHierachyItems[i]->mDirectionLight.scale.x,mHierachyItems[i]->mDirectionLight.scale.y,mHierachyItems[i]->mDirectionLight.scale.z };
+					float scale[3] = { mHierachyItems[i]->mDirectionLight->scale.x,mHierachyItems[i]->mDirectionLight->scale.y,mHierachyItems[i]->mDirectionLight->scale.z };
 					ImGui::InputFloat3("Scale", scale);
-					mHierachyItems[i]->mDirectionLight.scale = Vector3(scale[0], scale[1], scale[2]);
+					mHierachyItems[i]->mDirectionLight->scale = Vector3(scale[0], scale[1], scale[2]);
 
 					ImGui::Separator();
 				}
 
 				if (ImGui::CollapsingHeader("Direction Light"))
 				{
-					ImGui::Checkbox("Direction Enable", &mHierachyItems[i]->mDirectionLight.Enable);
-					float lightColor[4] = { mHierachyItems[i]->mDirectionLight.color.R(),mHierachyItems[i]->mDirectionLight.color.G(),mHierachyItems[i]->mDirectionLight.color.B(),mHierachyItems[i]->mDirectionLight.color.A()};
+					ImGui::Checkbox("Direction Enable", &mHierachyItems[i]->mDirectionLight->Enable);
+					float lightColor[4] = { mHierachyItems[i]->mDirectionLight->color.R(),mHierachyItems[i]->mDirectionLight->color.G(),mHierachyItems[i]->mDirectionLight->color.B(),mHierachyItems[i]->mDirectionLight->color.A()};
 					ImGui::ColorEdit3("(D)Color", lightColor);
-					mHierachyItems[i]->mDirectionLight.color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
+					mHierachyItems[i]->mDirectionLight->color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
 
-					ImGui::SliderFloat("(D)Intensity", &mHierachyItems[i]->mDirectionLight.intensity, 0.0f, 10);
-					ImGui::Checkbox("Is MainLight", &mHierachyItems[i]->mDirectionLight.isMainLight);
+					ImGui::SliderFloat("(D)Intensity", &mHierachyItems[i]->mDirectionLight->intensity, 0.0f, 10);
+					ImGui::Checkbox("Is MainLight", &mHierachyItems[i]->mDirectionLight->isMainLight);
 				}
 
 				break;
@@ -283,44 +283,48 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::Text("Transform");
 					float position[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.z};
 					ImGui::InputFloat3("Position", position); 
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position = Vector3(position[0], position[1], position[2]);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetPosition(Vector3(position[0], position[1], position[2]));
 
 					float eulerangle[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.z };
 					ImGui::InputFloat3("Rotation", eulerangle);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetEulerangle(Vector3(eulerangle[0], eulerangle[1], eulerangle[2]));
 
 					float scale[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.z };
 					ImGui::InputFloat3("Scale", scale);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale = Vector3(scale[0], scale[1], scale[2]);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetScale(Vector3(scale[0], scale[1], scale[2]));
 
 					ImGui::Separator();
 				}
 
 				if (ImGui::CollapsingHeader("Materials"))
 				{
+					Material* currentMat = &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material;
+
+
 					float DiffuseColor[4] = {
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.R(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.G(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.B(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.A(),
+						currentMat->DiffuseColor.R(),
+						currentMat->DiffuseColor.G(),
+						currentMat->DiffuseColor.B(),
+						currentMat->DiffuseColor.A(),
 					};
 					ImGui::ColorEdit3("Diffuse", DiffuseColor);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor = Color(DiffuseColor[0], DiffuseColor[1], DiffuseColor[2], DiffuseColor[3]);
+					currentMat->DiffuseColor = Color(DiffuseColor[0], DiffuseColor[1], DiffuseColor[2], DiffuseColor[3]);
 
-					ImGui::SliderFloat("Smoothness", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Smoothness, 0, 1);
-					ImGui::SliderFloat("Metallic", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Metallic, 0, 1);
-					ImGui::SliderFloat("Occlusion", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Occlusion, 0, 1);
+					ImGui::SliderFloat("Smoothness", &currentMat->Smoothness, 0, 1);
+					ImGui::SliderFloat("Metallic", &currentMat->Metallic, 0, 1);
+					ImGui::SliderFloat("Occlusion", &currentMat->Occlusion, 0, 1);
 
 					float EmissionColor[4] = {
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.R(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.G(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.B(),
-						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.A(),
+						currentMat->EmissionColor.R(),
+						currentMat->EmissionColor.G(),
+						currentMat->EmissionColor.B(),
+						currentMat->EmissionColor.A(),
 					};
 					ImGui::ColorEdit3("Emission", EmissionColor);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor = Color(EmissionColor[0], EmissionColor[1], EmissionColor[2], EmissionColor[3]);
+					currentMat->EmissionColor = Color(EmissionColor[0], EmissionColor[1], EmissionColor[2], EmissionColor[3]);
 
-					ImGui::SliderFloat("Strength", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionStrength, 0, 1);
+					ImGui::SliderFloat("Strength", &currentMat->EmissionStrength, 0, 1);
+					currentMat->NumFramesDirty++;
 				}
 				break;
 

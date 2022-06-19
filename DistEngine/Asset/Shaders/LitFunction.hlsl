@@ -128,7 +128,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     //Albedo
     float4 diffuseAlbedo                                = matData.DiffuseColor;
     uint diffuseMapIndex                                = matData.DiffuseMapIndex;
-    diffuseAlbedo                                    	= gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, uv);
+    diffuseAlbedo                                       *= gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, uv);
 
     //Normal
 	uint normalMapIndex                                 = matData.NormalMapIndex;
@@ -150,7 +150,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     outSurfaceData.Albedo                               = diffuseAlbedo;
     outSurfaceData.Metallic                             = Metallic;
     outSurfaceData.Smoothness                           = Smoothness;
-    outSurfaceData.Normal                               = bumpedNormalW.rgb;
+    outSurfaceData.Normal                               = bumpedNormalW;
     outSurfaceData.Occlusion                            = Occlusion;
 
     outSurfaceData.Emission                             = emission;
@@ -575,14 +575,14 @@ float3 CalculateLighting( float3 L, float atten, float3 N, float3 V, float3 ligh
 float3 RED_SBS_CalculateLighting(float3 baseColor, float roughness, float metalness, float3 N, float3 V, float3 PosW)
 {
     Light mainLight                                     = GetMainLight();
-	float3 color                                        = CalculateLighting( float3(1,1,1), 1, N, V, float3(1,1,1), baseColor, roughness, metalness );
+	float3 color                                        = CalculateLighting( mainLight.direction, mainLight.distanceAttenuation, N, V, mainLight.color, baseColor, roughness, metalness );
 
 	Light pointLight 									= GetPointLight(PosW);
 	color											   += CalculateLighting( pointLight.direction, pointLight.distanceAttenuation, N, V, pointLight.color, baseColor, roughness, metalness );
 	return												  color;
 }
 
-float3 RED_SBS_GlobalIllumination(float3 albedo, float metallic, float smoothness, float occlusion, float3 normalWS, float3 viewDirectionWS)
+float3 RED_SBS_GlobalIllumination(float3 albedo, float metallic, float smoothness, float occlusion, float3 normalWS, float3 viewDirectionWS, float3 emission = float3(0,0,0))
 {
 	float3 reflectVector 								= reflect(-viewDirectionWS, normalWS);
     float fresnelTerm 									= Pow4(1.0 - saturate(dot(normalWS, viewDirectionWS)));
@@ -602,7 +602,7 @@ float3 RED_SBS_GlobalIllumination(float3 albedo, float metallic, float smoothnes
 	float3 specular 									= lerp(kDieletricSpec.rgb, albedo, metallic);
 	float grazingTerm 									= saturate(smoothness + 1.0 - oneMinusReflectivity);
     c 													+= surfaceReduction * indirectSpecular * lerp(lerp(kDieletricSpec.rgb, albedo, metallic), grazingTerm, fresnelTerm);
-
+	c													+= emission;
 	return c;
 }
 

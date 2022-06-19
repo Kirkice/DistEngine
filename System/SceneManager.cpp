@@ -40,7 +40,9 @@ void SceneManager::BuildDefaultScene(
 	//	设置灯光位置
 	mMainLight.position = Vector3(0, 3, 0);
 	//	设置灯光欧拉角
-	mMainLight.eulerangle = Vector3(50, -30, 0);
+	mMainLight.eulerangle = Vector3(30, -60, -50);
+	//	设置forward
+	mMainLight.forward = Vector3(0.57f, -0.57f, 0.57f);
 	//	主光源名字
 	mMainLight.name = "Direction Light";
 
@@ -124,7 +126,7 @@ void SceneManager::BuildDefaultScene(
 	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
 	sphere->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
 	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
-	sphere->material.EmissionMapIndex = mResourcesTextures["black"]->TexIndex;
+	sphere->material.EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
