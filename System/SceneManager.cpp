@@ -33,6 +33,42 @@ void SceneManager::BuildDefaultScene(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
+	//	设为主光源
+	mMainLight.isMainLight = true;
+	//	灯光颜色
+	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
+	//	设置灯光位置
+	mMainLight.position = Vector3(0, 3, 0);
+	//	设置灯光欧拉角
+	mMainLight.eulerangle = Vector3(50, -30, 0);
+	//	主光源名字
+	mMainLight.name = "Direction Light";
+
+	//	天空球设置
+	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mSkyBoxSetting.Exposure = 1.0f;
+	mSkyBoxSetting.Rotation = 0.0f;
+	mSkyBoxSetting.ACES = 1.0f;
+
+	//	灯光设置 
+	mLightSetting.ShadowColor = Color(0.3f, 0.3f, 0.3f, 1.0f);
+	mLightSetting.AmbientColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	mLightSetting.UseLinearFog = 0;
+	mLightSetting.Start = 0;
+	mLightSetting.End = 0;
+	mLightSetting.UseHieghtFog = 0;
+	mLightSetting.HeightMin = 0;
+	mLightSetting.HeightMax = 0;
+	mLightSetting.Feather = 0;
+	mLightSetting.Step = 0;
+
+	//	相机设置
+	mCameraSetting.mCamFov = 45;
+	mCameraSetting.mCamClipN = 0.3;
+	mCameraSetting.mCamClipF = 3000;
+	mCameraSetting.renderSkyBox = true;
+
+
 	//------------------------------
 	//	SkyBox
 	//------------------------------
@@ -46,10 +82,10 @@ void SceneManager::BuildDefaultScene(
 	sky->material.Name = "DGarden_mat";
 	sky->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	sky->material.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	sky->material.Exposure = 1;
-	sky->material.Rotation = 0;
-	sky->material.ACES = 0;
+	sky->material.Tint = mSkyBoxSetting.Tint;
+	sky->material.Exposure = mSkyBoxSetting.Exposure;
+	sky->material.Rotation = mSkyBoxSetting.Rotation;
+	sky->material.ACES = mSkyBoxSetting.ACES;
 
 	//	创建平面网格
 	sky->mesh.CreateSphere(0.5f, 20, 20);
@@ -106,43 +142,6 @@ void SceneManager::BuildDefaultScene(
 	sphere->bound.aabb.m_min = sphere->GetWorldMatrix() * sphere->bound.aabb.m_min;
 	sphere->bound.aabb.m_max = sphere->GetWorldMatrix() * sphere->bound.aabb.m_max;
 	mMeshRender.push_back(std::move(sphere));
-
-
-
-	//	设为主光源
-	mMainLight.isMainLight = true;
-	//	灯光颜色
-	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
-	//	设置灯光位置
-	mMainLight.position = Vector3(0, 3, 0);
-	//	设置灯光欧拉角
-	mMainLight.eulerangle = Vector3(50, -30, 0);
-	//	主光源名字
-	mMainLight.name = "Direction Light";
-
-	//	天空球设置
-	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	mSkyBoxSetting.Exposure = 1.0f;
-	mSkyBoxSetting.Rotation = 0.0f;
-	mSkyBoxSetting.ACES = 1.0f;
-
-	//	灯光设置 
-	mLightSetting.ShadowColor = Color(0.3f, 0.3f, 0.3f, 1.0f);
-	mLightSetting.AmbientColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-	mLightSetting.UseLinearFog = 0;
-	mLightSetting.Start = 0;
-	mLightSetting.End = 0;
-	mLightSetting.UseHieghtFog = 0;
-	mLightSetting.HeightMin = 0;
-	mLightSetting.HeightMax = 0;
-	mLightSetting.Feather = 0;
-	mLightSetting.Step = 0;
-
-	//	相机设置
-	mCameraSetting.mCamFov = 45;
-	mCameraSetting.mCamClipN = 0.3;
-	mCameraSetting.mCamClipF = 3000;
-	mCameraSetting.renderSkyBox = true;
 }
 
 void SceneManager::BuildConelBoxScene(
@@ -204,10 +203,10 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			SkyBoxMaterialData matData;
-			matData.Tint = Vector4(mat->Tint);
-			matData.Exposure = mat->Exposure;
-			matData.Rotation = mat->Rotation;
-			matData.ACES = mat->ACES;
+			matData.Tint = Vector4(mSkyBoxSetting.Tint);
+			matData.Exposure = mSkyBoxSetting.Exposure;
+			matData.Rotation = mSkyBoxSetting.Rotation;
+			matData.ACES = mSkyBoxSetting.ACES;
 			SkyMaterialBuffer->CopyData(mat->MatCBIndex, matData);
 
 			// Next FrameResource need to be updated too.

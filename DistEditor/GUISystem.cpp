@@ -489,31 +489,24 @@ void GUISystem::DrawProfileView()
 //	Light Settings
 void GUISystem::DrawLightSettings()
 {
-	////Render Item
-	//ImGui::SetWindowSize(ImVec2(180, 500));
-	//ImGui::Begin("Light Settings", &show_lightSetting_panel);
+	ImGui::SetWindowSize(ImVec2(180, 500));
+	ImGui::Begin("Light Settings", &show_lightSetting_panel);
 
-	//Material* currentMat = mMaterials["sky"].get();
+	if (ImGui::CollapsingHeader("Sky Box"))
+	{
+		float colorMain[4] = { Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).x,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).y,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).z,1 };
+		ImGui::ColorEdit3("Tint", colorMain);
+		mSceneManager.getInstance().mSkyBoxSetting.Tint = Color(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
 
-	////ImGui::Text("Environment");
+		ImGui::SliderFloat("Exposure", &mSceneManager.getInstance().mSkyBoxSetting.Exposure, 0, 8);
+		ImGui::SliderFloat("Rotation", &mSceneManager.getInstance().mSkyBoxSetting.Rotation, 0, 360);
 
-	////ImGui::ColorEdit3("Shadow Color", EnvironmentShadowColor);
+		bool UseAces = (bool)mSceneManager.getInstance().mSkyBoxSetting.ACES;
+		ImGui::Checkbox("Aces Enable", &UseAces);
+		mSceneManager.getInstance().mSkyBoxSetting.ACES = (int)UseAces;
+	}
 
-	//ImGui::Text("SkyBox");
-
-	//float colorMain[4] = { currentMat->SkyBoxTint.x,currentMat->SkyBoxTint.y,currentMat->SkyBoxTint.z,1 };
-	//ImGui::ColorEdit3("Tint", colorMain);
-	//currentMat->SkyBoxTint = Vector4(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
-
-	//ImGui::SliderFloat("Exposure", &currentMat->SkyBoxExposure, 0, 8);
-	//ImGui::SliderFloat("Rotation", &currentMat->SkyBoxRotation, 0, 360);
-
-	//bool UseAces = (bool)currentMat->ACES;
-	//ImGui::Checkbox("Aces Enable", &UseAces);
-	//currentMat->ACES = (int)UseAces;
-
-	//currentMat->NumFramesDirty++;
-	//ImGui::End();
+	ImGui::End();
 }
 
 //	PostProcessing
