@@ -40,6 +40,8 @@ private:
 
 	bool show_app_dockspace = true;
 
+	bool show_app_overlay = true;
+
 	//	灯光设置
 	bool show_lightSetting_panel = false;
 	//	物理设置
@@ -78,8 +80,8 @@ private:
 	//	绘制Debug
 	void DrawProjectEditor();
 
-	//	或者Overlay
-	void DrawOverLayProfile();
+	//	OverlayButton
+	void DrawOverLayButton(bool* p_open);
 
 	//	绘制灯光设置
 	void DrawLightSettings();

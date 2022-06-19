@@ -218,6 +218,9 @@ void RenderCore::DrawSkyBox()
 //	DrawGizmos
 void RenderCore::DrawGizmos()
 {
-	mCommandList->SetPipelineState(mPSOs["Line"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
+	if (ShowGizmos)
+	{
+		mCommandList->SetPipelineState(mPSOs["Line"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
+	}
 }

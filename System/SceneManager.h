@@ -70,6 +70,8 @@ public:
 		MaterialIndexUtils& matCBIndexUtils
 	);
 
+	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize);
+
 private:
 	void BuildDefaultScene(
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,

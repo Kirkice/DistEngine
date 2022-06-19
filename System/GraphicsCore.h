@@ -155,4 +155,6 @@ public:
 
 	//Bounding
 	bool ShowBounding = false;
+
+	bool ShowGizmos = true;
 };

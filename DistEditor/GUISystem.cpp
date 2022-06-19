@@ -97,6 +97,9 @@ void GUISystem::DrawEditor()
 	//	Profile
 	DrawProfileView();
 
+	//	Overlay
+	DrawOverLayButton(&show_app_overlay);
+
 	mCommandList->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
@@ -505,29 +508,19 @@ void GUISystem::DrawProjectEditor()
 }
 
 //	DrawOverLayProfile
-void GUISystem::DrawOverLayProfile()
+void GUISystem::DrawOverLayButton(bool* p_open)
 {
-	//static int corner = 0;
-	//ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
-	//if (ImGui::Begin("Example: Simple overlay"))
-	//{
-	//	ImGui::Text("Simple overlay\n" "in the corner of the screen.\n" "(right-click to change position)");
-	//	ImGui::Separator();
-	//	if (ImGui::IsMousePosValid())
-	//		ImGui::Text("Mouse Position: (%.1f,%.1f)", 0, 0);
-	//	else
-	//		ImGui::Text("Mouse Position: <invalid>");
-	//	if (ImGui::BeginPopupContextWindow())
-	//	{
-	//		if (ImGui::MenuItem("Custom", NULL, corner == -1)) corner = -1;
-	//		if (ImGui::MenuItem("Top-left", NULL, corner == 0)) corner = 0;
-	//		if (ImGui::MenuItem("Top-right", NULL, corner == 1)) corner = 1;
-	//		if (ImGui::MenuItem("Bottom-left", NULL, corner == 2)) corner = 2;
-	//		if (ImGui::MenuItem("Bottom-right", NULL, corner == 3)) corner = 3;
-	//		ImGui::EndPopup();
-	//	}
-	//}
-	//ImGui::End();
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+	ImGui::SetNextWindowBgAlpha(0.4f);
+	if (ImGui::Begin("Example: Simple overlay", p_open, window_flags))
+	{
+		if(ImGui::Button("Gizmos"))
+		{
+			ShowGizmos = !ShowGizmos;
+		}
+	}
+	ImGui::End();
 }
 
 //	DrawPhysicsSettings

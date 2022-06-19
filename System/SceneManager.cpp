@@ -302,3 +302,20 @@ void SceneManager::BuildRenderItem(
 		mAllRitems.push_back(std::move(Ritem));
 	}
 }
+
+/// <summary>
+/// ¸üÐÂCBuffer
+/// </summary>
+void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize)
+{
+	for (size_t i = 0; i < mAllRitems.size(); i++)
+	{
+		for (size_t j = 0; j < mMeshRender.size(); j++)
+		{
+			if (mAllRitems[i]->ObjCBIndex == (CurrentSize + j))
+			{
+				mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+			}
+		}
+	}
+}

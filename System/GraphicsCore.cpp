@@ -144,6 +144,7 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
+	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 	for (auto& e : mAllRitems)
 	{
