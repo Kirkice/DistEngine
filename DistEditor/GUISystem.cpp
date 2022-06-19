@@ -14,6 +14,16 @@ GUISystem::~GUISystem()
 		FlushCommandQueue();
 }
 
+bool GUISystem::Initialize()
+{
+	if (!RenderCore::Initialize())
+		return false;
+
+	InitHierachyItems();
+
+	return true;
+}
+
 void GUISystem::Draw(const GameTimer& gt)
 {
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
@@ -90,6 +100,28 @@ void GUISystem::DrawEditor()
 	mCommandList->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
+}
+
+void GUISystem::InitHierachyItems()
+{
+	auto DirectionLightItem = std::make_unique<HierachyItem>();
+	DirectionLightItem->Name = mSceneManager.getInstance().mMainLight.getName();
+	DirectionLightItem->type = HierachyType::DirectionLight;
+	DirectionLightItem->selected = false;
+	DirectionLightItem->mDirectionLight = mSceneManager.getInstance().mMainLight;
+
+	mHierachyItems.push_back(std::move(DirectionLightItem));
+
+	//	从1 开始去掉天空球
+	for (size_t i = 1; i < mSceneManager.getInstance().mMeshRender.size(); i++)
+	{
+		auto MeshRenderItem = std::make_unique<HierachyItem>();
+		MeshRenderItem->Name = mSceneManager.getInstance().mMeshRender[i]->getName();
+		MeshRenderItem->type = HierachyType::MeshRender;
+		MeshRenderItem->selected = false;
+		MeshRenderItem->mMeshRender = &mSceneManager.getInstance().mMeshRender[i];
+		mHierachyItems.push_back(std::move(MeshRenderItem));
+	}
 }
 
 //	设置DockSpace
@@ -172,9 +204,76 @@ void GUISystem::DrawHierachyEditor()
 
 	ImGui::Begin("Hierachy");
 
+	static int selected = 0;
+	{
+		ImGui::BeginChild("Hierachy", ImVec2(320, 0), true);
+		for (int i = 0; i < mHierachyItems.size(); i++)
+		{
+			char label[128];
+			sprintf(label, mHierachyItems[i]->Name.c_str());
+			if (ImGui::Selectable(label, selected == i))
+			{
+				selected = i;
+				mHierachyItems[i]->selected = true;
+			}
+			else
+			{
+				mHierachyItems[i]->selected = false;
+			}
+		}
+		ImGui::EndChild();
+	}
+
+
 	ImGui::End();
 }
 
+static void ShowPlaceholderObject(const char* prefix, int uid)
+{
+    // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
+    ImGui::PushID(uid);
+
+    // Text and Tree nodes are less high than framed widgets, using AlignTextToFramePadding() we add vertical spacing to make the tree lines equal high.
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
+    ImGui::TableSetColumnIndex(1);
+    ImGui::Text("my sailor is rich");
+
+    if (node_open)
+    {
+        static float placeholder_members[8] = { 0.0f, 0.0f, 1.0f, 3.1416f, 100.0f, 999.0f };
+        for (int i = 0; i < 8; i++)
+        {
+            ImGui::PushID(i); // Use field index as identifier.
+            if (i < 2)
+            {
+                ShowPlaceholderObject("Child", 424242);
+            }
+            else
+            {
+                // Here we use a TreeNode to highlight on hover (we could use e.g. Selectable as well)
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::AlignTextToFramePadding();
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
+                ImGui::TreeNodeEx("Field", flags, "Field_%d", i);
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::SetNextItemWidth(-FLT_MIN);
+                if (i >= 5)
+                    ImGui::InputFloat("##value", &placeholder_members[i], 1.0f);
+                else
+                    ImGui::DragFloat("##value", &placeholder_members[i], 0.01f);
+                ImGui::NextColumn();
+            }
+            ImGui::PopID();
+        }
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+}
 //	DrawInspectorEditor
 void GUISystem::DrawInspectorEditor()
 {

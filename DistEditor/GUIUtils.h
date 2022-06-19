@@ -2,6 +2,17 @@
 #include "ResourcesManager.h"
 #include "ResourcesPath.h"
 
+
+//Render Layer
+enum class HierachyType : int
+{
+	DirectionLight = 0,
+	PointLight = 1,
+	SpotLight = 2,
+	MeshRender = 3,
+};
+
+
 class GUIUtils
 {
 public:

@@ -2,6 +2,8 @@
 #include "GUIUtils.h"
 #include "../Core/Mathf/Mathf.h"
 #include "RenderCore.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 #include "../ThirdParty/ImGUI/imgui.h"
 #include "../ThirdParty/ImGUI/imgui_impl_win32.h"
@@ -11,13 +13,26 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
+struct HierachyItem
+{
+	std::string Name = "";
+	HierachyType type = HierachyType::MeshRender;
+	bool selected = false;
+	DirectionLight mDirectionLight;
+	PointLight mPointLight;
+	SpotLight mSpotLight;
+	std::unique_ptr<MeshRender>* mMeshRender; 
+};
+
 class GUISystem : public RenderCore
 {
 public:
 	GUISystem(HINSTANCE hInstance);
-	GUISystem(const GUISystem& rhs) = delete;
+	GUISystem(const GUISystem& rhs) = delete; 
 	GUISystem& operator=(const GUISystem& rhs) = delete;
 	~GUISystem();
+
+	virtual bool Initialize()override;
 
 private:
 
@@ -90,6 +105,15 @@ private:
 	//	绘制性能分析
 	void DrawProfileView();
 
+
+
+
 	//	设置DockSpace
 	void SetDockSpace(bool* p_open);
+
+	//	初始化场景物件表
+	void InitHierachyItems();
+
+private:
+	std::vector<std::unique_ptr<HierachyItem>> mHierachyItems;
 };

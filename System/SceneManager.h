@@ -30,7 +30,7 @@ public:
 
 public:
 	//	场景类型
-	SceneType Type;
+	SceneType Type; 
 
 	//	主光源
 	DirectionLight mMainLight;
