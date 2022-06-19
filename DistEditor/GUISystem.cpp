@@ -79,14 +79,14 @@ void GUISystem::DrawEditor()
 	if (show_frame_debugger_panel)
 		DrawFrameDebugger();
 
-	//	Draw Inspector
-	DrawInspectorEditor();
+	//	Draw Hierachy
+	DrawHierachyEditor();
 
 	//	Draw Camera
 	DrawCameraEditor();
 
-	//	Draw Hierachy
-	DrawHierachyEditor();
+	//	Draw Inspector
+	DrawInspectorEditor();
 
 	//	Project
 	DrawProjectEditor();
@@ -119,7 +119,7 @@ void GUISystem::InitHierachyItems()
 		MeshRenderItem->Name = mSceneManager.getInstance().mMeshRender[i]->getName();
 		MeshRenderItem->type = HierachyType::MeshRender;
 		MeshRenderItem->selected = false;
-		MeshRenderItem->mMeshRender = &mSceneManager.getInstance().mMeshRender[i];
+		MeshRenderItem->MeshRenderIndex = i;
 		mHierachyItems.push_back(std::move(MeshRenderItem));
 	}
 }
@@ -212,68 +212,19 @@ void GUISystem::DrawHierachyEditor()
 			char label[128];
 			sprintf(label, mHierachyItems[i]->Name.c_str());
 			if (ImGui::Selectable(label, selected == i))
-			{
 				selected = i;
-				mHierachyItems[i]->selected = true;
-			}
-			else
-			{
-				mHierachyItems[i]->selected = false;
-			}
 		}
+
+		for (int i = 0; i < mHierachyItems.size(); i++)
+			mHierachyItems[i]->selected = false;
+
+		mHierachyItems[selected]->selected = true;
+
 		ImGui::EndChild();
 	}
-
-
 	ImGui::End();
 }
 
-static void ShowPlaceholderObject(const char* prefix, int uid)
-{
-    // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
-    ImGui::PushID(uid);
-
-    // Text and Tree nodes are less high than framed widgets, using AlignTextToFramePadding() we add vertical spacing to make the tree lines equal high.
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
-    ImGui::TableSetColumnIndex(1);
-    ImGui::Text("my sailor is rich");
-
-    if (node_open)
-    {
-        static float placeholder_members[8] = { 0.0f, 0.0f, 1.0f, 3.1416f, 100.0f, 999.0f };
-        for (int i = 0; i < 8; i++)
-        {
-            ImGui::PushID(i); // Use field index as identifier.
-            if (i < 2)
-            {
-                ShowPlaceholderObject("Child", 424242);
-            }
-            else
-            {
-                // Here we use a TreeNode to highlight on hover (we could use e.g. Selectable as well)
-                ImGui::TableNextRow();
-                ImGui::TableSetColumnIndex(0);
-                ImGui::AlignTextToFramePadding();
-                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
-                ImGui::TreeNodeEx("Field", flags, "Field_%d", i);
-
-                ImGui::TableSetColumnIndex(1);
-                ImGui::SetNextItemWidth(-FLT_MIN);
-                if (i >= 5)
-                    ImGui::InputFloat("##value", &placeholder_members[i], 1.0f);
-                else
-                    ImGui::DragFloat("##value", &placeholder_members[i], 0.01f);
-                ImGui::NextColumn();
-            }
-            ImGui::PopID();
-        }
-        ImGui::TreePop();
-    }
-    ImGui::PopID();
-}
 //	DrawInspectorEditor
 void GUISystem::DrawInspectorEditor()
 {
@@ -284,12 +235,103 @@ void GUISystem::DrawInspectorEditor()
 	//Render Item
 	ImGui::Begin("Inspector");
 
-	if (ImGui::CollapsingHeader("Transform"))
+	for (size_t i = 0; i < mHierachyItems.size(); i++)
 	{
+		if (mHierachyItems[i]->selected)
+		{
+			switch (mHierachyItems[i]->type)
+			{
+			case HierachyType::DirectionLight : 
+				if (ImGui::CollapsingHeader("Transform"))
+				{
+					ImGui::Separator();
+					ImGui::Text("Transform");
+
+					float position[3] = { mHierachyItems[i]->mDirectionLight.position.x,mHierachyItems[i]->mDirectionLight.position.y,mHierachyItems[i]->mDirectionLight.position.z};
+					ImGui::InputFloat3("Position", position);
+					mHierachyItems[i]->mDirectionLight.position = Vector3(position[0], position[1], position[2]);
+
+					float eulerangle[3] = { mHierachyItems[i]->mDirectionLight.eulerangle.x,mHierachyItems[i]->mDirectionLight.eulerangle.y,mHierachyItems[i]->mDirectionLight.eulerangle.z };
+					ImGui::InputFloat3("Rotation", eulerangle);
+					mHierachyItems[i]->mDirectionLight.eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
+
+					float scale[3] = { mHierachyItems[i]->mDirectionLight.scale.x,mHierachyItems[i]->mDirectionLight.scale.y,mHierachyItems[i]->mDirectionLight.scale.z };
+					ImGui::InputFloat3("Scale", scale);
+					mHierachyItems[i]->mDirectionLight.scale = Vector3(scale[0], scale[1], scale[2]);
+
+					ImGui::Separator();
+				}
+
+				if (ImGui::CollapsingHeader("Direction Light"))
+				{
+					ImGui::Checkbox("Direction Enable", &mHierachyItems[i]->mDirectionLight.Enable);
+					float lightColor[4] = { mHierachyItems[i]->mDirectionLight.color.R(),mHierachyItems[i]->mDirectionLight.color.G(),mHierachyItems[i]->mDirectionLight.color.B(),mHierachyItems[i]->mDirectionLight.color.A()};
+					ImGui::ColorEdit3("(D)Color", lightColor);
+					mHierachyItems[i]->mDirectionLight.color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
+
+					ImGui::SliderFloat("(D)Intensity", &mHierachyItems[i]->mDirectionLight.intensity, 0.0f, 10);
+					ImGui::Checkbox("Is MainLight", &mHierachyItems[i]->mDirectionLight.isMainLight);
+				}
+
+				break;
+			case HierachyType::PointLight:break;
+			case HierachyType::SpotLight:break;
+			case HierachyType::MeshRender:
+				if (ImGui::CollapsingHeader("Transform"))
+				{
+					ImGui::Separator();
+					ImGui::Text("Transform");
+					float position[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.z};
+					ImGui::InputFloat3("Position", position); 
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position = Vector3(position[0], position[1], position[2]);
+
+					float eulerangle[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.z };
+					ImGui::InputFloat3("Rotation", eulerangle);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
+
+					float scale[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.z };
+					ImGui::InputFloat3("Scale", scale);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale = Vector3(scale[0], scale[1], scale[2]);
+
+					ImGui::Separator();
+				}
+
+				if (ImGui::CollapsingHeader("Materials"))
+				{
+					float DiffuseColor[4] = {
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.R(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.G(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.B(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor.A(),
+					};
+					ImGui::ColorEdit3("Diffuse", DiffuseColor);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.DiffuseColor = Color(DiffuseColor[0], DiffuseColor[1], DiffuseColor[2], DiffuseColor[3]);
+
+					ImGui::SliderFloat("Smoothness", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Smoothness, 0, 1);
+					ImGui::SliderFloat("Metallic", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Metallic, 0, 1);
+					ImGui::SliderFloat("Occlusion", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.Occlusion, 0, 1);
+
+					float EmissionColor[4] = {
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.R(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.G(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.B(),
+						mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor.A(),
+					};
+					ImGui::ColorEdit3("Emission", EmissionColor);
+					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionColor = Color(EmissionColor[0], EmissionColor[1], EmissionColor[2], EmissionColor[3]);
+
+					ImGui::SliderFloat("Strength", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material.EmissionStrength, 0, 1);
+				}
+				break;
+
+			default:
+				break;
+			}
+
+
+		}
 	}
-	if (ImGui::CollapsingHeader("Material"))
-	{
-	}
+
 	ImGui::End();
 }
 

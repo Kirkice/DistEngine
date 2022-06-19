@@ -21,7 +21,7 @@ struct HierachyItem
 	DirectionLight mDirectionLight;
 	PointLight mPointLight;
 	SpotLight mSpotLight;
-	std::unique_ptr<MeshRender>* mMeshRender; 
+	int MeshRenderIndex; 
 };
 
 class GUISystem : public RenderCore
@@ -112,7 +112,7 @@ private:
 	void SetDockSpace(bool* p_open);
 
 	//	初始化场景物件表
-	void InitHierachyItems();
+	void InitHierachyItems(); 
 
 private:
 	std::vector<std::unique_ptr<HierachyItem>> mHierachyItems;
