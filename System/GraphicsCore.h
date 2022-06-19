@@ -153,64 +153,6 @@ public:
 	XMFLOAT4X4 mLightProj = Mathf::Identity4x4();
 	XMFLOAT4X4 mShadowTransform = Mathf::Identity4x4();
 
-	float BackGroundTransform[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float BackGroundRotation = 0.0f;
-	float BackGroundScale[4] = { 0.6f, 0.6f, 0.6f, 0.6f };
-
-
-	//��ȾĿ�����
-	float TargetTransform[3] = { 0.0f, 1.0f, 0.0f };
-	float TargetScale[3] = { 2.0f, 2.0f, 2.0f };
-	float TargetRotationAngle[3] = { 0,0,0 };
-
-	//Camera
-	float mCamFov = 45;
-	float mCamClipN = 0.3;
-	float mCamClipF = 1000;
-
-	bool renderSkyBox = true;
-	float SolidColor[4] = { 0,0,0,1 };
-
 	//Bounding
 	bool ShowBounding = false;
-
-	//Lighting Settings
-	float EnvironmentShadowColor[3] = { 0.3f,0.3f,0.3f };
-	float SkyBoxTintColor[3] = { 1,1,1 };
-	float SkyBoxExposure = 1;
-	float SkyBoxRotation = 0;
-	float  ACES = 1;
-
-	//Light
-	//Direction Lights
-	XMFLOAT3 mRotatedLightDirections;
-	XMFLOAT3 mDirectionLightsDir = { 0.57f,-0.57f,0.57f };
-	XMFLOAT3 mDirectionLightsPos = { -2,5,0 };
-	float mDirectionLightsColor[3] = { 1,1,1 };
-	float mDirectionLightsAngle[3] = { 0,0,0 };
-	float mDirectionLightsScale[3] = { 1,1,1 };
-	float mDirectionLightsStrength = 1.2f;
-	bool mDirectionLightsCastShadow = true;
-	bool mDirectionLightsActive = true;
-
-	//Point Lights
-	XMFLOAT3 mPointLightsPos = { 1.5f,2,0 };
-	float mPointLightsColor[3] = { 1,1,1 };
-	float mPointLightsRange = 3.0;
-	float mPointLightsRot[3] = { 0,0,0 };
-	float mPointLightsScale[3] = { 1,1,1 };
-	float mPointLightsStrength = 3;
-	bool mPointLightsActive = false;
-
-	//SpotLights
-	XMFLOAT3 mRotatedLightSpots;
-	XMFLOAT3 mSpotLightsDir = { 0.57f,-0.57f,0.57f };
-	XMFLOAT3 mSpotLightsPos = { 0,0,0 };
-	float mSpotLightsColor[3] = { 1,1,1 };
-	float mSpotLightsAngle[3] = { 0,0,0 };
-	float mSpotLightsScale[3] = { 1,1,1 };
-	float mSpotLightsRange = 15.0;
-	float mSpotLightsStrength = 1;
-	float mSpotLightsCutAngle = 30;
-	bool mSpotLightsActive = true;
 };

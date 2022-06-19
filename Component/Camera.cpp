@@ -17,6 +17,22 @@ void Camera::tick(const GameTimer& gt)
 	Transform::tick(gt);
 
 	position = { position3f.x, position3f.y, position3f.z };
+
+	positionArray[0] = position.x;
+	positionArray[1] = position.y;
+	positionArray[2] = position.z;
+
+	float Y = atan(mLook.x / mLook.z);
+	float X = atan(mLook.y / mLook.z);
+	float Z = atan(mLook.y / mLook.x);
+
+	eulerangleArray[0] = X * 180;
+	eulerangleArray[1] = Y * 180;
+	eulerangleArray[2] = Z * 180;
+
+	scaleArray[0] = scale.x;
+	scaleArray[1] = scale.y;
+	scaleArray[2] = scale.z;
 }
 
 //	获取相机坐标

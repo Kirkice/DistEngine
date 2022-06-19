@@ -97,7 +97,7 @@ void GraphicsCore::OnResize()
 {
 	D3DApp::OnResize();
 
-	mCamera.getInstance().SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
+	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
 
 	if (mSsao != nullptr)
 	{
@@ -111,7 +111,7 @@ void GraphicsCore::OnResize()
 void GraphicsCore::Update(const GameTimer& gt)
 {
 	OnKeyboardInput(gt);
-	mCamera.getInstance().SetLens((mCamFov / 180) * Mathf::Pi, AspectRatio(), mCamClipN, mCamClipF);
+	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
 
 	// Cycle through the circular frame resource array.
 	mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;

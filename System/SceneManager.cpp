@@ -137,6 +137,12 @@ void SceneManager::BuildDefaultScene(
 	mLightSetting.HeightMax = 0;
 	mLightSetting.Feather = 0;
 	mLightSetting.Step = 0;
+
+	//	œ‡ª˙…Ë÷√
+	mCameraSetting.mCamFov = 45;
+	mCameraSetting.mCamClipN = 0.3;
+	mCameraSetting.mCamClipF = 3000;
+	mCameraSetting.renderSkyBox = true;
 }
 
 void SceneManager::BuildConelBoxScene(

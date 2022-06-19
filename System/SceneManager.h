@@ -44,6 +44,9 @@ public:
 	//	灯光设置
 	LightSetting mLightSetting;
 
+	//	相机设置
+	CameraSetting mCameraSetting;
+
 public:
 
 	void BuildScene(

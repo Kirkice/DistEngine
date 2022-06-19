@@ -84,6 +84,16 @@ struct LightSetting
 	float Step;
 };
 
+//	œ‡ª˙…Ë÷√
+struct CameraSetting
+{
+	float mCamFov = 45;
+	float mCamClipN = 0.3;
+	float mCamClipF = 3000;
+	bool renderSkyBox = true;
+	float SolidColor[4] = { 0,0,0,1 };
+};
+
 class GraphicsUtils
 {
 public:

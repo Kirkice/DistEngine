@@ -57,6 +57,9 @@ private:
 	//	绘制渲染项目
 	void DrawInspectorEditor();
 
+	//	绘制相机设置
+	void DrawCameraEditor();
+
 	//	绘制Debug
 	void DrawProjectEditor();
 

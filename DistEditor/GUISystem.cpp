@@ -72,6 +72,9 @@ void GUISystem::DrawEditor()
 	//	Draw Inspector
 	DrawInspectorEditor();
 
+	//	Draw Camera
+	DrawCameraEditor();
+
 	//	Draw Hierachy
 	DrawHierachyEditor();
 
@@ -187,6 +190,34 @@ void GUISystem::DrawInspectorEditor()
 	}
 	if (ImGui::CollapsingHeader("Material"))
 	{
+	}
+	ImGui::End();
+}
+
+//	DrawCameraEditor
+void GUISystem::DrawCameraEditor()
+{
+	ImGui::Begin("Camera Properties");
+
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader("Transform"))
+	{
+		ImGui::Text("Transform");
+		ImGui::InputFloat3("Position", mCamera.getInstance().positionArray);
+		ImGui::InputFloat3("Rotation", mCamera.getInstance().eulerangleArray);
+		ImGui::InputFloat3("Scale", mCamera.getInstance().scaleArray);
+	}
+
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		ImGui::SliderFloat("FOV(Y)", &mSceneManager.getInstance().mCameraSetting.mCamFov, 0, 179);
+		ImGui::InputFloat("Near Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipN);
+		ImGui::InputFloat("Far Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipF);
+		ImGui::Checkbox("RenderSkyBox", &mSceneManager.getInstance().mCameraSetting.renderSkyBox);
+		ImGui::ColorEdit3("SolidColor", mSceneManager.getInstance().mCameraSetting.SolidColor);
+		ImGui::InputFloat2("ViewPort", RectXY);
+		ImGui::InputFloat2("Rect", RectWH);
 	}
 	ImGui::End();
 }

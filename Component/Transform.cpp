@@ -84,7 +84,7 @@ void Transform::tick(const GameTimer& gt)
 	XMVECTOR dir = forward.ToSIMD();
 	forward = Vector3(XMVector3TransformNormal(dir, rot_dir));
 
-	SetArray2Vector();
+	//SetArray2Vector();
 }
 
 //	获取四元数
