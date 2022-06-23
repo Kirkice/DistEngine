@@ -43,7 +43,7 @@ void GizmosManager::BuildScene(
 	DirectionLightGizmo->material.DiffuseMapIndex = mGizmosTextures["DirectionalLight"]->TexIndex;
 
 	//	创建平面网格
-	DirectionLightGizmo->mesh.CreateGrid(1, 1, 2, 2);
+	DirectionLightGizmo->mesh.CreateGrid(6, 6, 4, 4);
 
 	//	设置坐标
 	DirectionLightGizmo->position = Vector3(0, 0, 0);

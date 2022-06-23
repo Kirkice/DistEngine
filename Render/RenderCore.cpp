@@ -222,5 +222,8 @@ void RenderCore::DrawGizmos()
 	{
 		mCommandList->SetPipelineState(mPSOs["Line"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
+
+		mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Gizmo]);
 	}
 }
