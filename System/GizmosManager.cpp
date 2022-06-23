@@ -11,6 +11,7 @@ void GizmosManager::BuildScene(
 	//	Plane
 	auto plane = std::make_unique<MeshRender>();
 	plane->name = "Plane";
+
 	//构建材质
 	plane->material.Name = "Plane_mat";
 	plane->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
@@ -27,8 +28,31 @@ void GizmosManager::BuildScene(
 
 	//	创建碰撞盒
 	plane->bound.aabb = BoundingAABB();
-
 	mMeshRender.push_back(std::move(plane));
+
+
+	//	灯光图标
+	auto DirectionLightGizmo = std::make_unique<MeshRender>();
+	DirectionLightGizmo->name = "DirectionLightGizmo";
+
+	//	构建材质
+	DirectionLightGizmo->material.Name = "DirGizmo";
+	DirectionLightGizmo->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	DirectionLightGizmo->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	DirectionLightGizmo->material.DiffuseMapIndex = mGizmosTextures["DirectionalLight"]->TexIndex;
+
+	//	创建平面网格
+	DirectionLightGizmo->mesh.CreateGrid(1, 1, 2, 2);
+
+	//	设置坐标
+	DirectionLightGizmo->position = Vector3(0, 0, 0);
+	DirectionLightGizmo->eulerangle = Vector3(0, 0, 0);
+	DirectionLightGizmo->scale = Vector3(2.0f, 2.0f, 2.0f);
+
+	//	创建碰撞盒
+	DirectionLightGizmo->bound.aabb = BoundingAABB();
+	mMeshRender.push_back(std::move(DirectionLightGizmo));
 }
 
 
@@ -69,18 +93,59 @@ void GizmosManager::BuildRenderItem(
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
-		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
-		Ritem->TexTransform = Mathf::Identity4x4();
-		Ritem->ObjCBIndex = i;
-		Ritem->Mat = &mMeshRender[i]->material;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
-		Ritem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
-		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
-		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+		if (i < 1)
+		{
+			auto Ritem = std::make_unique<RenderItem>();
+			Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+			Ritem->TexTransform = Mathf::Identity4x4();
+			Ritem->ObjCBIndex = i;
+			Ritem->Mat = &mMeshRender[i]->material;
+			Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+			Ritem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+			Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+			Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+			Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 
-		mRitemLayer[(int)RenderLayer::Line].push_back(Ritem.get());
-		mAllRitems.push_back(std::move(Ritem));
+			mRitemLayer[(int)RenderLayer::Line].push_back(Ritem.get());
+			mAllRitems.push_back(std::move(Ritem));
+		}
+		else
+		{
+			auto Ritem = std::make_unique<RenderItem>();
+			Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+			Ritem->TexTransform = Mathf::Identity4x4();
+			Ritem->ObjCBIndex = i;
+			Ritem->Mat = &mMeshRender[i]->material;
+			Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+			Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+			Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+			Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+
+			mRitemLayer[(int)RenderLayer::Gizmo].push_back(Ritem.get());
+			mAllRitems.push_back(std::move(Ritem));
+		}
+	}
+}
+
+/// <summary>
+/// 更新CBuffer
+/// </summary>
+void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight)
+{
+	for (size_t i = 0; i < mAllRitems.size(); i++)
+	{
+		for (size_t j = 0; j < mMeshRender.size(); j++)
+		{
+			
+			if (j > 0)
+			{
+				if (mAllRitems[i]->ObjCBIndex == j)
+				{
+					mMeshRender[j]->SetPosition(mMainLight.position);
+					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+				}
+			}
+		}
 	}
 }

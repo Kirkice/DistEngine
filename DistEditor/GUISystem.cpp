@@ -111,7 +111,7 @@ void GUISystem::InitHierachyItems()
 	DirectionLightItem->Name = mSceneManager.getInstance().mMainLight.getName();
 	DirectionLightItem->type = HierachyType::DirectionLight;
 	DirectionLightItem->selected = false;
-	DirectionLightItem->mDirectionLight = &mSceneManager.getInstance().mMainLight;
+	DirectionLightItem->mDirectionLight = &(mSceneManager.getInstance().mMainLight);
 
 	mHierachyItems.push_back(std::move(DirectionLightItem));
 

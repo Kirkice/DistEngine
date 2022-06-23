@@ -38,7 +38,7 @@ void SceneManager::BuildDefaultScene(
 	//	灯光颜色
 	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
 	//	设置灯光位置
-	mMainLight.position = Vector3(0, 3, 0);
+	mMainLight.position = Vector3(3, 10, 3);
 	//	设置灯光欧拉角
 	mMainLight.eulerangle = Vector3(30, -60, -50);
 	//	设置forward

@@ -43,4 +43,6 @@ public:
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList
 	);
 
+	//	¸üÐÂCBuffer
+	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight);
 };
