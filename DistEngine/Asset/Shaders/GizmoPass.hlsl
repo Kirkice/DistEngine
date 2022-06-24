@@ -52,7 +52,9 @@ float4 PS(VertexOut pin) : SV_Target
 {
     PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
     uint diffuseMapIndex                                = matData.DiffuseMapIndex;
-    float4 color                                        = gGizmoTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(gDirectionLights.Color,1);
+    float4 color                                        = gGizmoTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC);
+    clip(color.a - 0.5);
+    color                                               = gGizmoTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC) * float4(gDirectionLights.Color,1);
     return color;
 }
 

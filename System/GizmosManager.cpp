@@ -46,9 +46,9 @@ void GizmosManager::BuildScene(
 	DirectionLightGizmo->mesh.CreateGrid(6, 6, 4, 4);
 
 	//	设置坐标
-	DirectionLightGizmo->position = Vector3(0, 0, 0);
+	DirectionLightGizmo->position = Vector3(-20, 30, 20);
 	DirectionLightGizmo->eulerangle = Vector3(0, 0, 0);
-	DirectionLightGizmo->scale = Vector3(2.0f, 2.0f, 2.0f);
+	DirectionLightGizmo->scale = Vector3(0.5f, 0.5f, 0.5f);
 
 	//	创建碰撞盒
 	DirectionLightGizmo->bound.aabb = BoundingAABB();
