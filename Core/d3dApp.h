@@ -125,6 +125,10 @@ protected:
 	DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	int mClientWidth = 1920;
 	int mClientHeight = 1080;
+
+	int fps = 0;
+	int mspf = 0;
+
 	float RectXY[2] = { 0, 0 };
 	float RectWH[2] = { 1 ,1 };
 };
