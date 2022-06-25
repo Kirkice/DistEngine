@@ -157,4 +157,6 @@ public:
 	bool ShowBounding = false;
 
 	bool ShowGizmos = true;
+
+	bool ShowWire = true;
 };

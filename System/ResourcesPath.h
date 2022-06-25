@@ -18,7 +18,12 @@
 		"Asset/Textures/ICON/Mat.png",
 		"Asset/Textures/ICON/Mesh.png",
 		"Asset/Textures/ICON/Scene.png",
-		"Asset/Textures/ICON/Back.png"
+		"Asset/Textures/ICON/Back.png",
+		"Asset/Textures/ICON/TransformIcon.png",
+		"Asset/Textures/ICON/RotationIcon.png",
+		"Asset/Textures/ICON/ScaleIcon.png",
+		"Asset/Textures/ICON/LightIcon.png",
+		"Asset/Textures/ICON/WireIcon.png",
 	};
 
 	const std::vector<std::string> mProjectIconName =				//	ICONŒ∆¿Ì√˚≥∆
@@ -31,7 +36,12 @@
 		"Mat",
 		"Mesh",
 		"Scene",
-		"Back"
+		"Back",
+		"TransformIcon",
+		"RotationIcon",
+		"ScaleIcon",
+		"LightIcon",
+		"WireIcon",
 	};
 
 

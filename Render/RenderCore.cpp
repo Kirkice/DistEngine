@@ -220,10 +220,13 @@ void RenderCore::DrawGizmos()
 {
 	if (ShowGizmos)
 	{
-		mCommandList->SetPipelineState(mPSOs["Line"].Get());
-		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
-
 		mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Gizmo]);
+	}
+
+	if (ShowWire)
+	{
+		mCommandList->SetPipelineState(mPSOs["Line"].Get());
+		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
 	}
 }

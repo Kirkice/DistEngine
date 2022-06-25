@@ -512,12 +512,29 @@ void GUISystem::DrawOverLayButton(bool* p_open)
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
-	ImGui::SetNextWindowBgAlpha(0.4f);
 	if (ImGui::Begin("Example: Simple overlay", p_open, window_flags))
 	{
-		if(ImGui::Button("Gizmos"))
+		//	Transform
+		if (ImGui::ImageButton((ImTextureID)mIconTextures["TransformIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
+		{
+		}
+		//	Rotation
+		if (ImGui::ImageButton((ImTextureID)mIconTextures["RotationIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
+		{
+		}
+		//	Scale
+		if (ImGui::ImageButton((ImTextureID)mIconTextures["ScaleIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
+		{
+		}
+		//	Light
+		if (ImGui::ImageButton((ImTextureID)mIconTextures["LightIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
 		{
 			ShowGizmos = !ShowGizmos;
+		}
+		//	Wire
+		if (ImGui::ImageButton((ImTextureID)mIconTextures["WireIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
+		{
+			ShowWire = !ShowWire;
 		}
 	}
 	ImGui::End();
