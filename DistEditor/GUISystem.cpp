@@ -632,7 +632,7 @@ void GUISystem::DrawProfileView()
 		average /= (float)IM_ARRAYSIZE(values);
 
 		char overlay[32];
-		sprintf(overlay, "avg %f", average);
+		sprintf(overlay, "FPS: %f", fps);
 		ImGui::PlotLines(" ", values, IM_ARRAYSIZE(values), values_offset, overlay, -1.0f, 1.0f, ImVec2(300, 300));
 	}
 

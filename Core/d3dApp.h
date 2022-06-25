@@ -126,8 +126,8 @@ protected:
 	int mClientWidth = 1920;
 	int mClientHeight = 1080;
 
-	int fps = 0;
-	int mspf = 0;
+	float fps = 0;
+	float mspf = 0;
 
 	float RectXY[2] = { 0, 0 };
 	float RectWH[2] = { 1 ,1 };
