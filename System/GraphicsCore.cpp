@@ -29,8 +29,8 @@ bool GraphicsCore::Initialize()
 	//ShadowMap Init
 	mShadowMap = std::make_unique<ShadowMap>(md3dDevice.Get(), 2048, 2048);
 
-	//SSAO Init
-	mSsao = std::make_unique<Ssao>(md3dDevice.Get(), mCommandList.Get(), mClientWidth, mClientHeight);
+	//DepthPass Init
+	mDepthPass = std::make_unique<DepthPass>(md3dDevice.Get());
 
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
@@ -50,8 +50,6 @@ bool GraphicsCore::Initialize()
 	BuildRenderItems();
 	BuildFrameResources();
 	BuildPSOs();
-
-	mSsao->SetPSOs(mPSOs["ssao"].Get(), mPSOs["ssaoBlur"].Get());
 
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
@@ -98,14 +96,6 @@ void GraphicsCore::OnResize()
 	D3DApp::OnResize();
 
 	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
-
-	if (mSsao != nullptr)
-	{
-		mSsao->OnResize(mClientWidth, mClientHeight);
-
-		// Resources changed, so need to rebuild descriptors.
-		mSsao->RebuildDescriptors(mDepthStencilBuffer.Get());
-	}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -133,7 +123,6 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateShadowTransform(gt);
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
-	UpdateSsaoCB(gt);
 }
 
 
@@ -315,42 +304,6 @@ void GraphicsCore::UpdateShadowPassCB(const GameTimer& gt)
 	currPassCB->CopyData(1, mShadowPassCB); 
 }
 
-void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
-{
-	SsaoConstants ssaoCB;
-
-	XMMATRIX P = mCamera.getInstance().GetProj();
-
-	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
-	XMMATRIX T(
-		0.5f, 0.0f, 0.0f, 0.0f,
-		0.0f, -0.5f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f, 1.0f);
-
-	ssaoCB.Proj = mMainPassCB.Proj;
-	ssaoCB.InvProj = mMainPassCB.InvProj;
-	XMStoreFloat4x4(&ssaoCB.ProjTex, XMMatrixTranspose(P * T));
-
-	mSsao->GetOffsetVectors(ssaoCB.OffsetVectors);
-
-	auto blurWeights = mSsao->CalcGaussWeights(2.5f);
-	ssaoCB.BlurWeights[0] = XMFLOAT4(&blurWeights[0]);
-	ssaoCB.BlurWeights[1] = XMFLOAT4(&blurWeights[4]);
-	ssaoCB.BlurWeights[2] = XMFLOAT4(&blurWeights[8]);
-
-	ssaoCB.InvRenderTargetSize = XMFLOAT2(1.0f / mSsao->SsaoMapWidth(), 1.0f / mSsao->SsaoMapHeight());
-
-	// Coordinates given in view space.
-	ssaoCB.OcclusionRadius = 0.5f;
-	ssaoCB.OcclusionFadeStart = 0.2f;
-	ssaoCB.OcclusionFadeEnd = 2.0f;
-	ssaoCB.SurfaceEpsilon = 0.05f;
-
-	auto currSsaoCB = mCurrFrameResource->SsaoCB.get();
-	currSsaoCB->CopyData(0, ssaoCB);
-}
-
 void GraphicsCore::UpdateRenderItems(const GameTimer& gt)
 {
 
@@ -359,7 +312,6 @@ void GraphicsCore::UpdateRenderItems(const GameTimer& gt)
 void GraphicsCore::BuildRootSignature()
 {
 	mRootSignature.Build(RootSignature::RootSignatureType::Default, md3dDevice, 9, 0, 0, 20, 9, 0);
-	mSsaoRootSignature.Build(RootSignature::RootSignatureType::SSAO, md3dDevice, 2, 0, 0, 1, 2, 0);
 }
 
 //swap chain  BuildDescriptorHeaps
@@ -502,13 +454,11 @@ void GraphicsCore::BuildDescriptorHeaps()
 		mCbvSrvUavDescriptorSize
 	);
 
-	mSsao->BuildDescriptors(
+	mDepthPass->BuildDescriptors(
 		mDepthStencilBuffer.Get(),
 		CPUDescriptor,
 		GPUDescriptor,
-		GetRtv(SwapChainBufferCount),
-		mCbvSrvUavDescriptorSize,
-		mRtvDescriptorSize
+		mCbvSrvUavDescriptorSize
 	);
 
 	mGBuffer->BuildDescriptors(
@@ -587,23 +537,6 @@ void GraphicsCore::BuildPSOs()
 	DebugObject.BuildDefault(mShaderManager, mRootSignature);
 	DebugObject.SetShader(mShaderManager, mRootSignature, "debugVS", "debugPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(DebugObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["debug"])));
-
-	// PSO for drawing normals.
-	PipelineStateObject DrawNormalsObject = PipelineStateObject();
-	DrawNormalsObject.Build(mShaderManager, mRootSignature, "drawNormalsVS", "drawNormalsPS", 1, Ssao::NormalMapFormat,false,0, mDepthStencilFormat);
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(DrawNormalsObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["drawNormals"])));
-
-	// PSO for SSAO.
-	PipelineStateObject SsaoObject = PipelineStateObject();
-	SsaoObject.Build(mShaderManager, mRootSignature, "ssaoVS", "ssaoPS", 1, DXGI_FORMAT_R8G8B8A8_UNORM, false, 0, DXGI_FORMAT_UNKNOWN);
-	SsaoObject.SetDepthStencilState(false, D3D12_DEPTH_WRITE_MASK_ZERO);
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SsaoObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["ssao"])));
-
-	// PSO for SSAO blur.
-	PipelineStateObject SsaoBlurObject = PipelineStateObject();
-	SsaoBlurObject.Build(mShaderManager, mRootSignature, "ssaoBlurVS", "ssaoBlurPS", 1, DXGI_FORMAT_R8G8B8A8_UNORM, false, 0, DXGI_FORMAT_UNKNOWN);
-	SsaoBlurObject.SetDepthStencilState(false, D3D12_DEPTH_WRITE_MASK_ZERO);
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SsaoBlurObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["ssaoBlur"])));
 
 	// 	PSO for FinalBlit
 	PipelineStateObject FinalBlitObject = PipelineStateObject();
@@ -776,38 +709,6 @@ void GraphicsCore::DrawSceneToShadowMap()
 	// Change back to GENERIC_READ so we can read the texture in a shader.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
-}
-
-void GraphicsCore::DrawNormalsAndDepth()
-{
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
-
-	auto normalMap = mSsao->NormalMap();
-	auto normalMapRtv = mSsao->NormalMapRtv();
-
-	// Change to RENDER_TARGET.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(normalMap,
-		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	// Clear the screen normal map and depth buffer.
-	float clearValue[] = { 0.0f, 0.0f, 1.0f, 0.0f };
-	mCommandList->ClearRenderTargetView(normalMapRtv, clearValue, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	// Specify the buffers we are going to render to.
-	mCommandList->OMSetRenderTargets(1, &normalMapRtv, true, &DepthStencilView());
-
-	// Bind the constant buffer for this pass.
-	auto passCB = mCurrFrameResource->PassCB->Resource();
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
-
-	mCommandList->SetPipelineState(mPSOs["drawNormals"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
-
-	// Change back to GENERIC_READ so we can read the texture in a shader.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(normalMap,
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetDsv(int index)const

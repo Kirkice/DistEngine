@@ -578,7 +578,7 @@ void GUISystem::DrawFrameDebugger()
 
 	if (ImGui::CollapsingHeader("Draw Depth"))
 	{
-		ImGui::Image((ImTextureID)mSsao->DepthBufferSrv().ptr, ImVec2(256, 144));
+		ImGui::Image((ImTextureID)mDepthPass->Srv().ptr, ImVec2(256, 144));
 	}
 
 	if (ImGui::CollapsingHeader("GBuffer0"))
@@ -881,14 +881,6 @@ void GUISystem::DrawPostProcessingSettings()
 
 	//	}
 	//	currentMat->NumFramesDirty++;
-	//}
-
-	///// <summary>
-	///// SSAO
-	///// </summary>
-	//if (ImGui::CollapsingHeader("SSAO"))
-	//{
-	//	ImGui::Checkbox("Enable SSAO", &UseSSAO);
 	//}
 
 	///// <summary>

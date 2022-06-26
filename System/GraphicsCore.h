@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "FrameResource.h"
 #include "ShadowMap.h"
-#include "Ssao.h"
+#include "DepthPass.h"
 #include "ResourcesManager.h"
 #include "SceneManager.h"
 #include "RootSignature.h"
@@ -48,8 +48,6 @@ public:
 	void UpdateMainPassCB(const GameTimer& gt);
 	//	更新ShadowPass
 	void UpdateShadowPassCB(const GameTimer& gt);
-	//	更新SSAO PASS
-	void UpdateSsaoCB(const GameTimer& gt);
 	//	更新渲染项
 	void UpdateRenderItems(const GameTimer& gt);
 
@@ -72,7 +70,6 @@ public:
 
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 	void DrawSceneToShadowMap();
-	void DrawNormalsAndDepth();
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetDsv(int index)const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetRtv(int index)const;
@@ -97,7 +94,6 @@ public:
 
 	//	根签名
 	RootSignature mRootSignature = RootSignature();
-	RootSignature mSsaoRootSignature = RootSignature();
 
 	//	描述符堆
 	DescriptorHeap mSrvDescriptorHeap = DescriptorHeap();
@@ -141,8 +137,8 @@ public:
 
 	std::unique_ptr<RenderTarget> mRenderTarget;
 	std::unique_ptr<ShadowMap> mShadowMap;
+	std::unique_ptr<DepthPass> mDepthPass;
 	std::unique_ptr<GBuffer> mGBuffer;
-	std::unique_ptr<Ssao> mSsao;
 
 	DirectX::BoundingSphere mSceneBounds;
 

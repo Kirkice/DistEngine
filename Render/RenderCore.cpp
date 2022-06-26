@@ -27,11 +27,6 @@ void RenderCore::Draw(const GameTimer& gt)
 	//Draw ShadowMap
 	DrawShadowMap(matBuffer);
 
-	//SSAO
-	DrawSSAO(matBuffer);
-
-
-
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
@@ -103,19 +98,6 @@ void RenderCore::DrawShadowMap(ID3D12Resource* matBuffer)
 
 	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	DrawSceneToShadowMap();
-}
-
-void RenderCore::DrawSSAO(ID3D12Resource* matBuffer)
-{
-	RenderCore::DrawDepthNormal();
-	mCommandList->SetGraphicsRootSignature(mSsaoRootSignature.GetSignature());
-	mSsao->ComputeSsao(mCommandList.Get(), mCurrFrameResource, 2);
-}
-
-//	DrawDepthNormal
-void RenderCore::DrawDepthNormal()
-{
-	DrawNormalsAndDepth();
 }
 
 //	DrawOpaque

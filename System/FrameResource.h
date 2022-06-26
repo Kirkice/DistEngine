@@ -57,25 +57,6 @@ struct PassConstants
     DirLight DirectionLights;
 };
 
-struct SsaoConstants
-{
-    DirectX::XMFLOAT4X4 Proj;
-    DirectX::XMFLOAT4X4 InvProj;
-    DirectX::XMFLOAT4X4 ProjTex;
-    DirectX::XMFLOAT4 OffsetVectors[14];
-
-    // For SsaoBlur.hlsl
-    DirectX::XMFLOAT4 BlurWeights[3];
-
-    XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
-
-    // Coordinates given in view space.
-    float OcclusionRadius  = 0.5f;
-    float OcclusionFadeStart = 0.2f;
-    float OcclusionFadeEnd = 2.0f;
-    float SurfaceEpsilon = 0.05f;
-};
-
 struct SkyBoxMaterialData
 {
     Vector4 Tint = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -242,7 +223,6 @@ public:
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
     std::unique_ptr<UploadBuffer<SkinnedConstants>> SkinnedCB = nullptr;
-    std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 	std::unique_ptr<UploadBuffer<PBRMaterialData>> PBRMaterialBuffer = nullptr;
     std::unique_ptr<UploadBuffer<SkyBoxMaterialData>> SkyBoxMaterialBuffer = nullptr;
     std::unique_ptr<UploadBuffer<PostprocessingData>> PostMaterialBuffer = nullptr;

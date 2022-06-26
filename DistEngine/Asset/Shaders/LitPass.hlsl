@@ -129,7 +129,10 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return REDPBRColor(pin);
+    // return REDPBRColor(pin);
+    pin.SsaoPosH                                        /= pin.SsaoPosH.w;
+    float ambientAccess                                 = gCameraDepthTexture.Sample(gsamLinearClamp, pin.SsaoPosH.xy, 0.0f).r;
+    return ambientAccess.xxxx;
 }
 
 #endif

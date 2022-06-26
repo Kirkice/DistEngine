@@ -171,7 +171,7 @@ TextureCube gCubeMap                                                            
 
 Texture2D gRenderTarget                                                                 : register(t2);
 Texture2D gShadowMap                                                                    : register(t3);
-Texture2D gSsaoMap                                                                      : register(t4);
+Texture2D gCameraDepthTexture                                                           : register(t4);
 Texture2D gGBuffer0                                                                     : register(t5);
 Texture2D gGBuffer1                                                                     : register(t6);
 Texture2D gGBuffer2                                                                     : register(t7);

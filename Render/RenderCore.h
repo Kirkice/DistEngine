@@ -23,12 +23,6 @@ private:
 	//	DrawShadowMap
 	void DrawShadowMap(ID3D12Resource* matBuffer);
 
-	//	DrawDepthNormal
-	void DrawDepthNormal();
-
-	//	Draw SSAO
-	void DrawSSAO(ID3D12Resource* matBuffer);
-
 	//	DrawOpaque
 	void DrawOpaque();
 
