@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
 #include "MeshFliter.h"
+#include <DirectXCollision.h>
 
 struct BoundingAABB
 {
@@ -14,6 +15,8 @@ struct BoundingAABB
 	Vector3 GetMin();
 	Vector3 GetMax();
 	Vector3 GetCenter();
+	Vector3 GetExtents();
+	BoundingBox ToBoundBox();
 
 	void Update(float4x4 mat);
 

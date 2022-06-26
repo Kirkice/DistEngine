@@ -98,7 +98,7 @@ void SceneManager::BuildDefaultScene(
 	sky->scale = Vector3(5000, 5000, 5000);
 
 	//	创建碰撞盒
-	sky->bound.aabb = BoundingAABB();
+	sky->bound.aabb = BoundingAABB(sky->mesh.data);
 
 	mMeshRender.push_back(std::move(sky));
 
@@ -280,6 +280,7 @@ void SceneManager::BuildRenderItem(
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
+		//	创建渲染项
 		auto Ritem = std::make_unique<RenderItem>();
 		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
@@ -290,6 +291,7 @@ void SceneManager::BuildRenderItem(
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
 
 		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{

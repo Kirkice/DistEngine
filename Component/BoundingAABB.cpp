@@ -48,6 +48,17 @@ Vector3 BoundingAABB::GetCenter()
 	return (m_min + m_max) * 0.5f;
 }
 
+Vector3 BoundingAABB::GetExtents()
+{
+	return Vector3((m_max.x - m_min.x) / 2, (m_max.y - m_min.y) / 2, (m_max.z - m_min.z) / 2);
+}
+
+BoundingBox BoundingAABB::ToBoundBox()
+{
+	BoundingBox boundingBox = BoundingBox(XMFLOAT3(GetCenter().x, GetCenter().y, GetCenter().z), XMFLOAT3(GetExtents().x, GetExtents().y, GetExtents().z));
+	return boundingBox;
+}
+
 void BoundingAABB::Update(float4x4 mat)
 {
 	this->m_min = mat * this->m_min;

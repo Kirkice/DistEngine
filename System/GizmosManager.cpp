@@ -27,7 +27,7 @@ void GizmosManager::BuildScene(
 	plane->scale = Vector3(10, 10, 10);
 
 	//	创建碰撞盒
-	plane->bound.aabb = BoundingAABB();
+	plane->bound.aabb = BoundingAABB(plane->mesh.data);
 	mMeshRender.push_back(std::move(plane));
 
 
@@ -51,7 +51,7 @@ void GizmosManager::BuildScene(
 	DirectionLightGizmo->scale = Vector3(0.5f, 0.5f, 0.5f);
 
 	//	创建碰撞盒
-	DirectionLightGizmo->bound.aabb = BoundingAABB();
+	DirectionLightGizmo->bound.aabb = BoundingAABB(DirectionLightGizmo->mesh.data);
 	mMeshRender.push_back(std::move(DirectionLightGizmo));
 }
 
@@ -93,38 +93,29 @@ void GizmosManager::BuildRenderItem(
 {
 	for (size_t i = 0; i < mMeshRender.size(); i++)
 	{
+		auto Ritem = std::make_unique<RenderItem>();
+		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+		Ritem->TexTransform = Mathf::Identity4x4();
+		Ritem->ObjCBIndex = i;
+		Ritem->Mat = &mMeshRender[i]->material;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
+		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
+		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
+
 		if (i < 1)
 		{
-			auto Ritem = std::make_unique<RenderItem>();
-			Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
-			Ritem->TexTransform = Mathf::Identity4x4();
-			Ritem->ObjCBIndex = i;
-			Ritem->Mat = &mMeshRender[i]->material;
-			Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
 			Ritem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-			Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
-			Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
-			Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-
 			mRitemLayer[(int)RenderLayer::Line].push_back(Ritem.get());
-			mAllRitems.push_back(std::move(Ritem));
 		}
 		else
 		{
-			auto Ritem = std::make_unique<RenderItem>();
-			Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
-			Ritem->TexTransform = Mathf::Identity4x4();
-			Ritem->ObjCBIndex = i;
-			Ritem->Mat = &mMeshRender[i]->material;
-			Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
 			Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
-			Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
-			Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-
 			mRitemLayer[(int)RenderLayer::Gizmo].push_back(Ritem.get());
-			mAllRitems.push_back(std::move(Ritem));
 		}
+
+		mAllRitems.push_back(std::move(Ritem));
 	}
 }
 

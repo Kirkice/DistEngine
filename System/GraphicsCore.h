@@ -50,7 +50,8 @@ public:
 	void UpdateShadowPassCB(const GameTimer& gt);
 	//	更新SSAO PASS
 	void UpdateSsaoCB(const GameTimer& gt);
-
+	//	更新渲染项
+	void UpdateRenderItems(const GameTimer& gt);
 
 	//	构建根签名
 	void BuildRootSignature();

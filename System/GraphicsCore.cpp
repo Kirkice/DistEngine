@@ -147,7 +147,12 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
 	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight);
 
+	XMMATRIX view = mCamera.getInstance().GetView();//WorldToView的变换矩阵
+	auto viewDeterminant = XMMatrixDeterminant(view);
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);//ViewToWorld的变换矩阵
+
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
+
 	for (auto& e : mAllRitems)
 	{
 		XMFLOAT4X4* eWorldMatrix = &e->World;
@@ -155,14 +160,25 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
 		XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 		XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
-
-		ObjectConstants objConstants;
-		XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-		XMStoreFloat4x4(&objConstants.InvWorld, XMMatrixTranspose(InvWorld));
-		XMStoreFloat4x4(&objConstants.TexTransform, XMMatrixTranspose(texTransform));
-		objConstants.MaterialIndex = e->Mat->MatCBIndex;
 		
-		currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+		//	视锥剔除
+		XMMATRIX viewToLocal = XMMatrixMultiply(invView, InvWorld);
+		//	创建视锥体
+		BoundingFrustum localSpaceFrustum;
+		localSpaceFrustum.CreateFromMatrix(localSpaceFrustum, mCamera.GetProj());
+		//	将视锥体从观察空间变换到局部空间
+		localSpaceFrustum.Transform(localSpaceFrustum, viewToLocal);
+
+		if (localSpaceFrustum.Contains(e->Bound) != DirectX::DISJOINT)
+		{
+			ObjectConstants objConstants;
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+			XMStoreFloat4x4(&objConstants.InvWorld, XMMatrixTranspose(InvWorld));
+			XMStoreFloat4x4(&objConstants.TexTransform, XMMatrixTranspose(texTransform));
+			objConstants.MaterialIndex = e->Mat->MatCBIndex;
+
+			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+		}
 	}
 }
 
@@ -333,6 +349,11 @@ void GraphicsCore::UpdateSsaoCB(const GameTimer& gt)
 
 	auto currSsaoCB = mCurrFrameResource->SsaoCB.get();
 	currSsaoCB->CopyData(0, ssaoCB);
+}
+
+void GraphicsCore::UpdateRenderItems(const GameTimer& gt)
+{
+
 }
 
 void GraphicsCore::BuildRootSignature()
@@ -702,7 +723,7 @@ void GraphicsCore::BuildFrameResources()
 void GraphicsCore::BuildRenderItems()
 {
 	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
-	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size(),matCBIndexUtils);
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size(), matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

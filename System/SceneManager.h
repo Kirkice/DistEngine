@@ -62,9 +62,9 @@ public:
 	);
 
 	void BuildRenderItem(
-		std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], 
+		std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count],
 		std::vector<std::unique_ptr<RenderItem>>& mAllRitems,
-		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, 
+		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList,
 		UINT CurrentSize,
 		MaterialIndexUtils& matCBIndexUtils
