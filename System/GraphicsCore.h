@@ -156,4 +156,7 @@ public:
 	bool ShowGizmos = true;
 
 	bool ShowWire = true;
+
+	//	Fog Settings
+	FogSetting mFogSettings;
 };

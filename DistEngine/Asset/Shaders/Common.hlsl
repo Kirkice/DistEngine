@@ -227,6 +227,10 @@ cbuffer cbPass : register(b2)
     float                                                                               gTotalTime;
     float                                                                               gDeltaTime;
 
+    float4                                                                              gFogColor;
+    float4                                                                              gLinearFogParam;
+    float4                                                                              gHeightFogParam;
+
     DirLight                                                                            gDirectionLights;
     PointLight                                                                          gPointLights;
     SpotLight                                                                           gSpotLights;

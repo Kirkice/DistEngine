@@ -67,7 +67,7 @@ void SceneManager::BuildDefaultScene(
 	//	œ‡ª˙…Ë÷√
 	mCameraSetting.mCamFov = 45;
 	mCameraSetting.mCamClipN = 0.3;
-	mCameraSetting.mCamClipF = 3000;
+	mCameraSetting.mCamClipF = 1000;
 	mCameraSetting.renderSkyBox = true;
 
 

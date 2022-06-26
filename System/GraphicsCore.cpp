@@ -262,8 +262,13 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.TotalTime = gt.TotalTime();
 	mMainPassCB.DeltaTime = gt.DeltaTime();
 
-	//Light
+	//Fog
+	mMainPassCB.FogColor = mFogSettings.FogColor;
+	mMainPassCB.LinearFogParam = Vector4(mFogSettings.fogStrat, mFogSettings.fogEnd, mFogSettings.FogDensity, mFogSettings.EnableHeightFog);
+	mMainPassCB.HeightFogParam = Vector4(mFogSettings.FogFeather,mFogSettings.FogStep,mFogSettings.HeightMin,mFogSettings.HeightMax);
 
+
+	//Light
 	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
 	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;
 	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.color);

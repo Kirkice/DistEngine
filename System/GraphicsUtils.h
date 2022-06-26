@@ -90,9 +90,25 @@ struct CameraSetting
 {
 	float mCamFov = 45;
 	float mCamClipN = 0.3;
-	float mCamClipF = 3000;
+	float mCamClipF = 1000;
 	bool renderSkyBox = true;
 	float SolidColor[4] = { 0,0,0,1 };
+};
+
+struct FogSetting
+{
+	Vector4 FogColor = Vector4{ 1, 1, 1, 1 };
+	//	Linear Fog
+	float fogStrat = 0.0f;
+	float fogEnd = 5.0f;
+	float FogDensity = 0.08f;
+
+	float EnableHeightFog = 0;
+	//	Height Fog
+	float FogFeather = 0.5f;
+	float FogStep = 0.5f;
+	float HeightMin = 0;
+	float HeightMax = 5;
 };
 
 class GraphicsUtils

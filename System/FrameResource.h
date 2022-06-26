@@ -52,6 +52,9 @@ struct PassConstants
     float FarZ = 0.0f;
     float TotalTime = 0.0f;
     float DeltaTime = 0.0f;
+    Vector4 FogColor = { 1.0f,1.0f,1.0f,1.0f};
+    Vector4 LinearFogParam = { 0.0f, 5.0f, 0.08f, 0 };
+    Vector4 HeightFogParam = { 0.5f, 0.5f, 0, 5};
 
     //Light
     DirLight DirectionLights;

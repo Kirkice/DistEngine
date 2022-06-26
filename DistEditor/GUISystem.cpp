@@ -69,9 +69,6 @@ void GUISystem::DrawEditor()
 	//	Scene
 	DrawSceneGameView();
 
-	//	Draw MainMenu
-	if (show_lightSetting_panel)
-		DrawLightSettings();
 	if (show_physicsSetting_panel)
 		DrawPhysicsSettings();
 	if (show_postprocessingSetting_panel)
@@ -188,7 +185,6 @@ void GUISystem::DrawMenuEditor()
 		}
 		if (ImGui::BeginMenu("Window"))
 		{
-			ImGui::MenuItem("Light Settings", NULL, &show_lightSetting_panel);
 			ImGui::MenuItem("Physics Settings", NULL, &show_physicsSetting_panel);
 			ImGui::MenuItem("PostProcessing Settings", NULL, &show_postprocessingSetting_panel);
 			ImGui::MenuItem("Frame Debugger", NULL, &show_frame_debugger_panel);
@@ -562,6 +558,50 @@ void GUISystem::DrawSceneGameView()
 void GUISystem::DrawRenderSetting()
 {
 	ImGui::Begin("Render Setting");
+
+	if (ImGui::CollapsingHeader("SkyBox Settings"))
+	{
+		float colorMain[4] = { Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).x,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).y,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).z,1 };
+		ImGui::ColorEdit3("Tint", colorMain);
+		mSceneManager.getInstance().mSkyBoxSetting.Tint = Color(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
+
+		ImGui::SliderFloat("Exposure", &mSceneManager.getInstance().mSkyBoxSetting.Exposure, 0, 8);
+		ImGui::SliderFloat("Rotation", &mSceneManager.getInstance().mSkyBoxSetting.Rotation, 0, 360);
+
+		bool UseAces = (bool)mSceneManager.getInstance().mSkyBoxSetting.ACES;
+		ImGui::Checkbox("Aces Enable", &UseAces);
+		mSceneManager.getInstance().mSkyBoxSetting.ACES = (int)UseAces;
+	}
+
+	if (ImGui::CollapsingHeader("Fog Settings"))
+	{
+		ImGui::Text("Fog Color");
+		bool UseLinearFog = (bool)mFogSettings.FogColor.w;
+		float colorMain[4] = { mFogSettings.FogColor.x,mFogSettings.FogColor.y,mFogSettings.FogColor.z,1};
+		ImGui::ColorEdit3("FogColor", colorMain);
+		mFogSettings.FogColor = Vector4(colorMain[0], colorMain[1], colorMain[2], (int)UseLinearFog);
+
+		//	Linear Fog
+		ImGui::Text("Linear Fog");
+		ImGui::Checkbox("LinearFog Enable", &UseLinearFog);
+		mFogSettings.FogColor.w = (int)UseLinearFog;
+
+		ImGui::InputFloat("FogDensity", &mFogSettings.FogDensity);
+		ImGui::InputFloat("FogStrat", &mFogSettings.fogStrat);
+		ImGui::InputFloat("FogEnd", &mFogSettings.fogEnd);
+
+		//	Height Fog
+		ImGui::Text("Height Fog");
+		bool UseHeightFog = (bool)mFogSettings.EnableHeightFog;
+		ImGui::Checkbox("HeightFog Enable", &UseHeightFog);
+		mFogSettings.EnableHeightFog = (int)UseHeightFog;
+
+		ImGui::SliderFloat("Feather", &mFogSettings.FogFeather, 0, 1);
+		ImGui::SliderFloat("Step", &mFogSettings.FogStep, 0, 1);
+		ImGui::InputFloat("MinHeight", &mFogSettings.HeightMin);
+		ImGui::InputFloat("MaxHeight", &mFogSettings.HeightMax);
+	}
+
 	ImGui::End();
 }
 
@@ -634,30 +674,6 @@ void GUISystem::DrawProfileView()
 		char overlay[32];
 		sprintf(overlay, "FPS: %f", fps);
 		ImGui::PlotLines(" ", values, IM_ARRAYSIZE(values), values_offset, overlay, -1.0f, 1.0f, ImVec2(300, 300));
-	}
-
-	ImGui::End();
-}
-
-
-//	Light Settings
-void GUISystem::DrawLightSettings()
-{
-	ImGui::SetWindowSize(ImVec2(180, 500));
-	ImGui::Begin("Light Settings", &show_lightSetting_panel);
-
-	if (ImGui::CollapsingHeader("Sky Box"))
-	{
-		float colorMain[4] = { Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).x,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).y,Vector4(mSceneManager.getInstance().mSkyBoxSetting.Tint).z,1 };
-		ImGui::ColorEdit3("Tint", colorMain);
-		mSceneManager.getInstance().mSkyBoxSetting.Tint = Color(colorMain[0], colorMain[1], colorMain[2], colorMain[3]);
-
-		ImGui::SliderFloat("Exposure", &mSceneManager.getInstance().mSkyBoxSetting.Exposure, 0, 8);
-		ImGui::SliderFloat("Rotation", &mSceneManager.getInstance().mSkyBoxSetting.Rotation, 0, 360);
-
-		bool UseAces = (bool)mSceneManager.getInstance().mSkyBoxSetting.ACES;
-		ImGui::Checkbox("Aces Enable", &UseAces);
-		mSceneManager.getInstance().mSkyBoxSetting.ACES = (int)UseAces;
 	}
 
 	ImGui::End();

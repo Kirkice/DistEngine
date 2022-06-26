@@ -1033,13 +1033,39 @@ float3 Dist_DirectionalLight(float3 baseColor,float smoothness, half metallic, f
 //----------------------------  Shadow  ---------------------------------------
 float3 DistShadow(InputData inputData, half3 outColor)
 {
-    half Shadow                                         = inputData.ShadowCoord;
-    return                                              lerp(outColor * half3(0.2,0.2,0.2),outColor,Shadow);
+    half Shadow                                         	= inputData.ShadowCoord;
+    return                                              	lerp(outColor * half3(0.2,0.2,0.2),outColor,Shadow);
 }
 
 float GetShadow(InputData inputData)
 {
-	half Shadow                                         = inputData.ShadowCoord;
-	return 												Shadow;
+	half Shadow                                         	= inputData.ShadowCoord;
+	return 													Shadow;
 }
+
+//----------------------------  Fog  ---------------------------------------
+
+float GetFogRatioByDistance(float3 worldPos)
+{
+    float f 												= 1 - (gLinearFogParam.y - abs(worldPos.z - GetCameraPositionWS().z))/(gLinearFogParam.y - gLinearFogParam.x);
+    return f;
+}
+
+
+float3 SetLinearFog(float3 PosW, float3 outColor)
+{
+    float fogDensity 										= GetFogRatioByDistance(PosW);
+    fogDensity 												= saturate(fogDensity * gLinearFogParam.z);
+	fogDensity												= (gFogColor.a > 0.5) ? fogDensity : 0;
+	return 													lerp(outColor, gFogColor.rgb, fogDensity);
+}
+
+float3 SetHeightFog(float3 PosW, float3 outColor)
+{
+    PosW.y                                                  = saturate(remap(PosW.y, gHeightFogParam.z,gHeightFogParam.w, 0, 1 ));
+    PosW.y                                                  = saturate(((PosW.y - (gHeightFogParam.y -gHeightFogParam.x)) * - 1.0 ) / (gHeightFogParam.y - (gHeightFogParam.y-gHeightFogParam.x)) + 1 );
+    PosW.y													= (gLinearFogParam.w > 0.5) ? PosW.y : 0;
+	return                                                 	lerp(outColor, gFogColor.rgb, PosW.y);
+}
+
 #endif

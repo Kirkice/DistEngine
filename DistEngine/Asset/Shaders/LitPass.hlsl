@@ -112,6 +112,9 @@ float4 REDPBRColor(VertexOut pin)
     float3 outColor                                     = RED_SBS_CalculateLighting(surfaceData.Albedo.rgb, (1 - surfaceData.Smoothness), surfaceData.Metallic, inputData.NormalW, inputData.ViewW, pin.PosW); 
     outColor                                            += RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW, surfaceData.Emission.rgb);
     // outColor.rgb                                        = DistShadow(inputData,outColor.rgb);
+
+    outColor                                            = SetLinearFog(pin.PosW, outColor);
+    outColor                                            = SetHeightFog(pin.PosW, outColor);
     return float4(outColor.rgb,1);
 }
 
@@ -129,10 +132,7 @@ float4 Dist_IBL(VertexOut pin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    // return REDPBRColor(pin);
-    pin.SsaoPosH                                        /= pin.SsaoPosH.w;
-    float ambientAccess                                 = gCameraDepthTexture.Sample(gsamLinearClamp, pin.SsaoPosH.xy, 0.0f).r;
-    return ambientAccess.xxxx;
+    return REDPBRColor(pin);
 }
 
 #endif

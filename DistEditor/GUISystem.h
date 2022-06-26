@@ -83,9 +83,6 @@ private:
 	//	OverlayButton
 	void DrawOverLayButton(bool* p_open);
 
-	//	绘制灯光设置
-	void DrawLightSettings();
-
 	//	绘制物理设置
 	void DrawPhysicsSettings();
 
