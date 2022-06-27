@@ -597,7 +597,7 @@ void GUISystem::DrawRenderSetting()
 		mFogSettings.EnableHeightFog = (int)UseHeightFog;
 
 		ImGui::SliderFloat("Feather", &mFogSettings.FogFeather, 0, 1);
-		ImGui::SliderFloat("Step", &mFogSettings.FogStep, 0, 1);
+		ImGui::SliderFloat("Step", &mFogSettings.FogStep, 0, 1);  
 		ImGui::InputFloat("MinHeight", &mFogSettings.HeightMin);
 		ImGui::InputFloat("MaxHeight", &mFogSettings.HeightMax);
 	}
