@@ -605,7 +605,7 @@ void GUISystem::DrawRenderSetting()
 	ImGui::End();
 }
 
-void GUISystem::DrawFrameDebugger()
+void GUISystem::DrawFrameDebugger()  
 {
 	//Frame Debugger
 	ImGui::SetWindowSize(ImVec2(256, 760));
