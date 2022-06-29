@@ -231,6 +231,14 @@ cbuffer cbPass : register(b2)
     float4                                                                              gLinearFogParam;
     float4                                                                              gHeightFogParam;
 
+    float                                                                               gEnableScatteringSky;
+    float                                                                               gSunHeight;
+    float4                                                                              gGroundColor;
+    float                                                                               gHeightRay;
+    float                                                                               gHeightMie;
+    float                                                                               gHeightAbsorption;
+    float                                                                               gAbsorpationFallOff;
+
     DirLight                                                                            gDirectionLights;
     PointLight                                                                          gPointLights;
     SpotLight                                                                           gSpotLights;

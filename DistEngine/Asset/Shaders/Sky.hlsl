@@ -66,13 +66,12 @@ VertexOut VS(VertexIn vin)
 #define AMBIENT_BETA float3(0,0,0)							/* ambient, affects the scattering color when there is no lighting from the sun */
 #define ABSORPTION_BETA float3(2.04e-5, 4.97e-5, 1.95e-6)	/* what color gets absorbed by the atmosphere (Due to things like ozone) */
 
-#define Height -0.99
+#define Height gSunHeight
 #define GroundColor float3(0.32, 0.37, 0.47)
-#define HEIGHT_RAY 8000
-#define HEIGHT_MIE 220
-#define HEIGHT_ABSORPTION 56000
-#define ABSORPTION_FALLOFF 3000
-#define _ScreenParams float2(1920,1080)
+#define HEIGHT_RAY gHeightRay
+#define HEIGHT_MIE gHeightMie
+#define HEIGHT_ABSORPTION gHeightAbsorption
+#define ABSORPTION_FALLOFF gAbsorpationFallOff
 
 float3 calculate_scattering(
 	float3 start, 				// the start of the ray (the camera position)
@@ -339,7 +338,7 @@ float4 PS(VertexOut pin) : SV_Target
 
 	// return float4(color,1);
 
-	float3 camera_vector = float3(pin.PosL.xy,-1);
+	float3 camera_vector = float3(pin.PosL.xy, -1);
 	float3 camera_position = float3(0.0, ATMOS_RADIUS + (Height * (ATMOS_RADIUS - PLANET_RADIUS - 1.0)), 0.0);
 	float3 light_dir = float3(0.5,1,0.5);
 	float4 scene = render_scene(camera_position, camera_vector, light_dir);

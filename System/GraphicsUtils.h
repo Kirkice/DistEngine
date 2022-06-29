@@ -61,13 +61,21 @@ enum class SceneType
 	Water,
 };
 
-//	天空盒设置
+//	天空盒设置	大气渲染
 struct SkyBoxSetting
 {
 	Color Tint;
 	float Exposure;
 	float Rotation;
 	float ACES;
+
+	float EnableScatteringSky = 0;
+	float SunHeight = 0.9f;
+	Vector4 GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
+	float HeightRay = 8000;
+	float HeightMie = 220;
+	float HeightAbsorption = 56000;
+	float AbsorpationFallOff = 3000;
 };
 
 //	灯光设置

@@ -159,4 +159,5 @@ public:
 
 	//	Fog Settings
 	FogSetting mFogSettings;
+
 };

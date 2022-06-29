@@ -571,6 +571,23 @@ void GUISystem::DrawRenderSetting()
 		bool UseAces = (bool)mSceneManager.getInstance().mSkyBoxSetting.ACES;
 		ImGui::Checkbox("Aces Enable", &UseAces);
 		mSceneManager.getInstance().mSkyBoxSetting.ACES = (int)UseAces;
+
+
+		ImGui::Text("Scattering Settings");
+		bool UseScattering = (bool)mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky;
+		ImGui::Checkbox("Enable Scattering", &UseScattering);
+		mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky = (int)UseScattering;
+
+		ImGui::SliderFloat("SunHeight", &mSceneManager.getInstance().mSkyBoxSetting.SunHeight, -0.99f, 1.0f);
+
+		float colorGround[4] = { mSceneManager.getInstance().mSkyBoxSetting.GroundColor.x,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.y,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.z,1};
+		ImGui::ColorEdit3("Ground Color", colorGround);
+		mSceneManager.getInstance().mSkyBoxSetting.GroundColor = Vector4(colorGround[0], colorGround[1], colorGround[2], colorGround[3]);
+
+		ImGui::InputFloat("HeightRay", &mSceneManager.getInstance().mSkyBoxSetting.HeightRay);
+		ImGui::InputFloat("HeightMie", &mSceneManager.getInstance().mSkyBoxSetting.HeightMie);
+		ImGui::InputFloat("HeightAbsorption", &mSceneManager.getInstance().mSkyBoxSetting.HeightAbsorption);
+		ImGui::InputFloat("AbsorpationFallOff", &mSceneManager.getInstance().mSkyBoxSetting.AbsorpationFallOff);
 	}
 
 	if (ImGui::CollapsingHeader("Fog Settings"))

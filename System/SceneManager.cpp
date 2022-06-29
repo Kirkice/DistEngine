@@ -130,7 +130,7 @@ void SceneManager::BuildDefaultScene(
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(sphere->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);
