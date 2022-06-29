@@ -56,13 +56,11 @@ struct PassConstants
     Vector4 LinearFogParam = { 0.0f, 5.0f, 0.08f, 0 };
     Vector4 HeightFogParam = { 0.5f, 0.5f, 0, 5};
 
-    float EnableScatteringSky = 0;
-    float SunHeight = 0.9f;
+    //  PARMAES 01 --- EnableScatteringSky/SunHeight/HeightRay/HeightMie
+    //  Parames02 --- HeightAbsorption/AbsorpationFallOff
+    Vector4 Parames01 = Vector4(0, -0.9f, 8000, 220);
+    Vector4 Parames02 = Vector4(56000, 3000,0,0);
     Vector4 GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
-    float HeightRay = 8000;
-    float HeightMie = 220;
-    float HeightAbsorption = 56000;
-    float AbsorpationFallOff = 3000;
 
     //Light
     DirLight DirectionLights;

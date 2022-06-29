@@ -51,6 +51,13 @@ void SceneManager::BuildDefaultScene(
 	mSkyBoxSetting.Exposure = 1.0f;
 	mSkyBoxSetting.Rotation = 0.0f;
 	mSkyBoxSetting.ACES = 1.0f;
+	mSkyBoxSetting.EnableScatteringSky = 0;
+	mSkyBoxSetting.SunHeight = -0.9f;
+	mSkyBoxSetting.GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
+	mSkyBoxSetting.HeightRay = 8000;
+	mSkyBoxSetting.HeightMie = 220;
+	mSkyBoxSetting.HeightAbsorption = 56000;
+	mSkyBoxSetting.AbsorpationFallOff = 3000;
 
 	//	灯光设置 
 	mLightSetting.ShadowColor = Color(0.3f, 0.3f, 0.3f, 1.0f);
@@ -130,7 +137,7 @@ void SceneManager::BuildDefaultScene(
 	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
 	sphere->position = Vector3(0, 0, 0);

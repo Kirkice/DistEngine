@@ -66,12 +66,12 @@ VertexOut VS(VertexIn vin)
 #define AMBIENT_BETA float3(0,0,0)							/* ambient, affects the scattering color when there is no lighting from the sun */
 #define ABSORPTION_BETA float3(2.04e-5, 4.97e-5, 1.95e-6)	/* what color gets absorbed by the atmosphere (Due to things like ozone) */
 
-#define Height gSunHeight
-#define GroundColor float3(0.32, 0.37, 0.47)
-#define HEIGHT_RAY gHeightRay
-#define HEIGHT_MIE gHeightMie
-#define HEIGHT_ABSORPTION gHeightAbsorption
-#define ABSORPTION_FALLOFF gAbsorpationFallOff
+#define Height gParames01.y
+#define GroundColor gGroundColor//float3(0.32, 0.37, 0.47)
+#define HEIGHT_RAY gParames01.z
+#define HEIGHT_MIE gParames01.w
+#define HEIGHT_ABSORPTION gParames02.x
+#define ABSORPTION_FALLOFF gParames02.y
 
 float3 calculate_scattering(
 	float3 start, 				// the start of the ray (the camera position)
@@ -325,20 +325,8 @@ float3 get_camera_vector(float2 resolution, float2 coord)
     return normalize(float3(uv.x, -uv.y, 1.0));
 }
 
-
-float4 PS(VertexOut pin) : SV_Target
+float3 GetScatteringColor(float3 camera_vector)
 {
-	// SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
-	// float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
-	// color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
-
-	// // color													= pow(color.rgb,0.454545);
-	// if(matData.ACES > 0.5)
-	// 	color 												= aces_approx(color);
-
-	// return float4(color,1);
-
-	float3 camera_vector = float3(pin.PosL.xy, -1);
 	float3 camera_position = float3(0.0, ATMOS_RADIUS + (Height * (ATMOS_RADIUS - PLANET_RADIUS - 1.0)), 0.0);
 	float3 light_dir = float3(0.5,1,0.5);
 	float4 scene = render_scene(camera_position, camera_vector, light_dir);
@@ -370,7 +358,24 @@ float4 PS(VertexOut pin) : SV_Target
 	    
 	col = 1.0 - exp(-col);
     
-    return float4(pow(col,2.2),1);
+    return pow(col,2.2);
+}
 
+float4 PS(VertexOut pin) : SV_Target
+{
+	SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
+	float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
+
+
+	float3 camera_vector = float3(pin.PosL.xy, -1);
+	float3 scatteringColor	 								= GetScatteringColor(camera_vector);
+	color													= color * (1 - gParames01).xxx + gParames01.xxx * scatteringColor;
+
+	color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
+
+	if(matData.ACES > 0.5)
+		color 												= aces_approx(color);
+
+	return float4(color,1);
 }
 

@@ -268,13 +268,9 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.HeightFogParam = Vector4(mFogSettings.FogFeather,mFogSettings.FogStep,mFogSettings.HeightMin,mFogSettings.HeightMax);
 
 	//Scattering
-	mMainPassCB.EnableScatteringSky = mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky;
-	mMainPassCB.SunHeight = mSceneManager.getInstance().mSkyBoxSetting.SunHeight;
+	mMainPassCB.Parames01 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky, mSceneManager.getInstance().mSkyBoxSetting.SunHeight, mSceneManager.getInstance().mSkyBoxSetting.HeightRay, mSceneManager.getInstance().mSkyBoxSetting.HeightMie);
+	mMainPassCB.Parames02 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.HeightAbsorption, mSceneManager.getInstance().mSkyBoxSetting.AbsorpationFallOff, 0, 0);
 	mMainPassCB.GroundColor = mSceneManager.getInstance().mSkyBoxSetting.GroundColor;
-	mMainPassCB.HeightRay = mSceneManager.getInstance().mSkyBoxSetting.HeightRay;
-	mMainPassCB.HeightMie = mSceneManager.getInstance().mSkyBoxSetting.HeightMie;
-	mMainPassCB.HeightAbsorption = mSceneManager.getInstance().mSkyBoxSetting.HeightAbsorption;
-	mMainPassCB.AbsorpationFallOff = mSceneManager.getInstance().mSkyBoxSetting.AbsorpationFallOff;
 
 	//Light
 	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
