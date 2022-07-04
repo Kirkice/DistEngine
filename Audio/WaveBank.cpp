@@ -56,7 +56,7 @@ public:
 
         if (mEngine)
         {
-            mEngine->UnregisterNotify(this, true, false);
+            mEngine->UnregisterNotify(this, true, false);  
             mEngine = nullptr;
         }
     }
