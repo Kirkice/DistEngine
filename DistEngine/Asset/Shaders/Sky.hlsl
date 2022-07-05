@@ -376,6 +376,6 @@ float4 PS(VertexOut pin) : SV_Target
 	if(matData.ACES > 0.5)
 		color 												= aces_approx(color);
 
-	return float4(color,1);
+	return float4(color,1);  
 }
 
