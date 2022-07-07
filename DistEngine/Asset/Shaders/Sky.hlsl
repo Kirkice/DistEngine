@@ -363,19 +363,19 @@ float3 GetScatteringColor(float3 camera_vector)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
-	float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
+	// SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
+	// float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
 
 
 	float3 camera_vector = float3(pin.PosL.xy, -1);
 	float3 scatteringColor	 								= GetScatteringColor(camera_vector);
-	color													= color * (1 - gParames01).xxx + gParames01.xxx * scatteringColor;
+	// color													= color * (1 - gParames01).xxx + gParames01.xxx * scatteringColor;
 
-	color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
+	// color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
 
-	if(matData.ACES > 0.5)
-		color 												= aces_approx(color);
+	// if(matData.ACES > 0.5)
+	// 	color 												= aces_approx(color);
 
-	return float4(color,1);  
+	return float4(scatteringColor,1);  
 }
 
