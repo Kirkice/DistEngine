@@ -578,7 +578,7 @@ void GUISystem::DrawRenderSetting()
 		ImGui::Checkbox("Enable Scattering", &UseScattering);
 		mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky = (int)UseScattering;
 
-		ImGui::SliderFloat("SunHeight", &mSceneManager.getInstance().mSkyBoxSetting.SunHeight, -0.99f, 1.0f);
+		ImGui::SliderFloat("SunHeight", &mSceneManager.getInstance().mSkyBoxSetting.SunHeight, 0.0f, 2.0f);
 
 		float colorGround[4] = { mSceneManager.getInstance().mSkyBoxSetting.GroundColor.x,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.y,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.z,1};
 		ImGui::ColorEdit3("Ground Color", colorGround);
