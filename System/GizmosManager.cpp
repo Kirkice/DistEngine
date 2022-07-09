@@ -28,6 +28,7 @@ void GizmosManager::BuildScene(
 
 	//	创建碰撞盒
 	plane->bound.aabb = BoundingAABB(plane->mesh.data);
+	plane->Enable = true;
 	mMeshRender.push_back(std::move(plane));
 
 
@@ -52,6 +53,7 @@ void GizmosManager::BuildScene(
 
 	//	创建碰撞盒
 	DirectionLightGizmo->bound.aabb = BoundingAABB(DirectionLightGizmo->mesh.data);
+	DirectionLightGizmo->Enable = true;
 	mMeshRender.push_back(std::move(DirectionLightGizmo));
 }
 
@@ -103,6 +105,7 @@ void GizmosManager::BuildRenderItem(
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
+		Ritem->Enable = mMeshRender[i]->Enable;
 
 		if (i < 1)
 		{
@@ -134,6 +137,7 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
 					mMeshRender[j]->SetPosition(mMainLight.position);
+					mAllRitems[i]->Enable = mMeshRender[j]->Enable;
 					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
 				}
 			}
