@@ -580,14 +580,14 @@ void GUISystem::DrawRenderSetting()
 
 		ImGui::SliderFloat("SunHeight", &mSceneManager.getInstance().mSkyBoxSetting.SunHeight, 0.0f, 2.0f);
 
-		float colorGround[4] = { mSceneManager.getInstance().mSkyBoxSetting.GroundColor.x,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.y,mSceneManager.getInstance().mSkyBoxSetting.GroundColor.z,1};
-		ImGui::ColorEdit3("Ground Color", colorGround);
-		mSceneManager.getInstance().mSkyBoxSetting.GroundColor = Vector4(colorGround[0], colorGround[1], colorGround[2], colorGround[3]);
+		float colorSky[4] = { mSceneManager.getInstance().mSkyBoxSetting.SkyColor.x,mSceneManager.getInstance().mSkyBoxSetting.SkyColor.y,mSceneManager.getInstance().mSkyBoxSetting.SkyColor.z,1};
+		ImGui::ColorEdit3("Sky Color", colorSky);
+		mSceneManager.getInstance().mSkyBoxSetting.SkyColor = Vector4(colorSky[0], colorSky[1], colorSky[2], colorSky[3]);
 
-		ImGui::InputFloat("HeightRay", &mSceneManager.getInstance().mSkyBoxSetting.HeightRay);
-		ImGui::InputFloat("HeightMie", &mSceneManager.getInstance().mSkyBoxSetting.HeightMie);
-		ImGui::InputFloat("HeightAbsorption", &mSceneManager.getInstance().mSkyBoxSetting.HeightAbsorption);
-		ImGui::InputFloat("AbsorpationFallOff", &mSceneManager.getInstance().mSkyBoxSetting.AbsorpationFallOff);
+		ImGui::InputFloat("ZenithOffset", &mSceneManager.getInstance().mSkyBoxSetting.ZenithOffset);
+		ImGui::SliderFloat("Density", &mSceneManager.getInstance().mSkyBoxSetting.Density,0.01f,5.0f);
+		ImGui::InputFloat("MultiScatterPhase", &mSceneManager.getInstance().mSkyBoxSetting.MultiScatterPhase);
+		ImGui::InputFloat("AnisotropicIntensity", &mSceneManager.getInstance().mSkyBoxSetting.AnisotropicIntensity);
 	}
 
 	if (ImGui::CollapsingHeader("Fog Settings"))

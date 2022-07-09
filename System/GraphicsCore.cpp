@@ -268,9 +268,9 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.HeightFogParam = Vector4(mFogSettings.FogFeather,mFogSettings.FogStep,mFogSettings.HeightMin,mFogSettings.HeightMax);
 
 	//Scattering
-	mMainPassCB.Parames01 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky, mSceneManager.getInstance().mSkyBoxSetting.SunHeight, mSceneManager.getInstance().mSkyBoxSetting.HeightRay, mSceneManager.getInstance().mSkyBoxSetting.HeightMie);
-	mMainPassCB.Parames02 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.HeightAbsorption, mSceneManager.getInstance().mSkyBoxSetting.AbsorpationFallOff, 0, 0);
-	mMainPassCB.GroundColor = mSceneManager.getInstance().mSkyBoxSetting.GroundColor;
+	mMainPassCB.Parames01 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky, mSceneManager.getInstance().mSkyBoxSetting.SunHeight, mSceneManager.getInstance().mSkyBoxSetting.ZenithOffset, mSceneManager.getInstance().mSkyBoxSetting.Density);
+	mMainPassCB.Parames02 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.MultiScatterPhase, mSceneManager.getInstance().mSkyBoxSetting.AnisotropicIntensity, 0, 0);
+	mMainPassCB.SkyColor = mSceneManager.getInstance().mSkyBoxSetting.SkyColor;
 
 	//Light
 	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
@@ -446,8 +446,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 		}
 	}
 
-	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_diffuseIBL");
-	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "DGarden_specularIBL");
+	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_diffuseIBL");
+	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_specularIBL");
 
 	mRenderTarget->BuildDescriptors(
 		CPUDescriptor,

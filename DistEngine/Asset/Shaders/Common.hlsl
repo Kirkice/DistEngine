@@ -233,7 +233,7 @@ cbuffer cbPass : register(b2)
 
     float4                                                                              gParames01;
     float4                                                                              gParames02;
-    float4                                                                              gGroundColor;
+    float4                                                                              gSkyColor;
 
     DirLight                                                                            gDirectionLights;
     PointLight                                                                          gPointLights;

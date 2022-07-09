@@ -3,7 +3,6 @@
 //=============================================================================
 
 // Include common HLSL code.
-#include "Core.hlsl"
 #include "Atmosphere.hlsl"
 
 struct VertexIn
@@ -53,33 +52,19 @@ VertexOut VS(VertexIn vin)
 	return 													vout;
 }
 
-#define Height gParames01.y
-#define GroundColor gGroundColor//float3(0.32, 0.37, 0.47)
-#define HEIGHT_RAY gParames01.z
-#define HEIGHT_MIE gParames01.w
-#define HEIGHT_ABSORPTION gParames02.x
-#define ABSORPTION_FALLOFF gParames02.y
-
 
 float4 PS(VertexOut pin) : SV_Target
 {
 	SkyBoxMaterialData matData                             	= gSkyMaterialData[gMaterialIndex];
-	// float3 color 											= gCubeMap.Sample(gsamLinearWrap, pin.PosL).rgb;
+	float4 outColor											= float4(0,0,0,1);
 
+	GetScatteringSkyColor(pin.PosL.xy, outColor);
 
-	// color													= color * (1 - gParames01).xxx + gParames01.xxx * scatteringColor;
+	outColor.rgb											= outColor.rgb * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
 
-    float2 setUV = pin.PosL.xy * 4;
-	float2 position = setUV * 2.0;
-	float2 lightPosition = float2(1.0, Height);
-
-	float3 color 											= getAtmosphericScattering(position, lightPosition) * PI;
-	color 													= jodieReinhardTonemap(color);
-	color 													= pow(color, float3(2.2,2.2,2.2)); //Back to linear
-	color													= color * matData.SkyBoxTint.rgb * matData.SkyBoxExposure;
 	if(matData.ACES > 0.5)
-		color 												= aces_approx(color);
+		outColor.rgb 										= aces_approx(outColor.rgb);
 
-	return float4(color,1);  
+	return outColor;  
 }
 

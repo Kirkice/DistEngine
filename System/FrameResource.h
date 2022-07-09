@@ -56,11 +56,11 @@ struct PassConstants
     Vector4 LinearFogParam = { 0.0f, 5.0f, 0.08f, 0 };
     Vector4 HeightFogParam = { 0.5f, 0.5f, 0, 5};
 
-    //  PARMAES 01 --- EnableScatteringSky/SunHeight/HeightRay/HeightMie
-    //  Parames02 --- HeightAbsorption/AbsorpationFallOff
-    Vector4 Parames01 = Vector4(0, -0.9f, 8000, 220);
-    Vector4 Parames02 = Vector4(56000, 3000,0,0);
-    Vector4 GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
+    //  PARMAES 01 --- EnableScatteringSky/SunHeight/ZenithOffset/density
+    //  Parames02 --- MultiScatterPhase/AnisotropicIntensity
+    Vector4 Parames01 = Vector4(0, 0.45f, 0.1f, 0.7f);
+    Vector4 Parames02 = Vector4(0.1f, 0,0,0);
+    Vector4 SkyColor = Vector4(0.39f, 0.57f, 1.0f,1.0f);
 
     //Light
     DirLight DirectionLights;

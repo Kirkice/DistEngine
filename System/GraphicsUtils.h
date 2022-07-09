@@ -69,13 +69,13 @@ struct SkyBoxSetting
 	float Rotation;
 	float ACES;
 
-	float EnableScatteringSky = 0;
-	float SunHeight = 0.9f;
-	Vector4 GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
-	float HeightRay = 8000;
-	float HeightMie = 220;
-	float HeightAbsorption = 56000;
-	float AbsorpationFallOff = 3000;
+	float EnableScatteringSky = 1;
+	float SunHeight = 0.4f;
+	Vector4 SkyColor = Vector4(0.39f, 0.57f, 1.0f, 1.0f);
+	float ZenithOffset = 0.1;
+	float Density = 0.7f;
+	float MultiScatterPhase = 0.1;
+	float AnisotropicIntensity = 0;
 };
 
 //	µ∆π‚…Ë÷√
@@ -105,7 +105,7 @@ struct CameraSetting
 
 struct FogSetting
 {
-	Vector4 FogColor = Vector4{ 1, 1, 1, 1 };
+	Vector4 FogColor = Vector4{ 1, 1, 1, 0};
 	//	Linear Fog
 	float fogStrat = 0.0f;
 	float fogEnd = 5.0f;

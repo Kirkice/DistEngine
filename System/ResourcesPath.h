@@ -111,14 +111,14 @@
 	//	-----------------CubeMap------------------
 	const std::vector<std::wstring> mProjectCubeMapTextures =					//	CubeMap×ÊÔ´
 	{
-		L"Asset/Textures/CubeMap/DGarden_diffuseIBL.dds",
-		L"Asset/Textures/CubeMap/DGarden_specularIBL.dds",
+		L"Asset/Textures/CubeMap/Sky_diffuseIBL.dds",
+		L"Asset/Textures/CubeMap/Sky_specularIBL.dds",
 	};
 
 	const std::vector<std::string> mProjectCubeMapName =						//	CubeMapÃû³Æ
 	{
-		"DGarden_diffuseIBL",
-		"DGarden_specularIBL",
+		"Sky_diffuseIBL",
+		"Sky_specularIBL",
 	};
 
 

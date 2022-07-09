@@ -50,14 +50,14 @@ void SceneManager::BuildDefaultScene(
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mSkyBoxSetting.Exposure = 1.0f;
 	mSkyBoxSetting.Rotation = 0.0f;
-	mSkyBoxSetting.ACES = 1.0f;
-	mSkyBoxSetting.EnableScatteringSky = 0;
-	mSkyBoxSetting.SunHeight = -0.9f;
-	mSkyBoxSetting.GroundColor = Vector4(0.32f, 0.37f, 0.47f, 1.0f);
-	mSkyBoxSetting.HeightRay = 8000;
-	mSkyBoxSetting.HeightMie = 220;
-	mSkyBoxSetting.HeightAbsorption = 56000;
-	mSkyBoxSetting.AbsorpationFallOff = 3000;
+	mSkyBoxSetting.ACES = 0.0f;
+	mSkyBoxSetting.EnableScatteringSky = 1;
+	mSkyBoxSetting.SunHeight = 0.45f;
+	mSkyBoxSetting.SkyColor = Vector4(0.39f, 0.57f, 1.0f, 1.0f);
+	mSkyBoxSetting.ZenithOffset = 0.1f;
+	mSkyBoxSetting.Density = 0.7f;
+	mSkyBoxSetting.MultiScatterPhase = 0.1f;
+	mSkyBoxSetting.AnisotropicIntensity = 0;
 
 	//	µ∆π‚…Ë÷√ 
 	mLightSetting.ShadowColor = Color(0.3f, 0.3f, 0.3f, 1.0f);
