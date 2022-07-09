@@ -279,6 +279,8 @@ void GUISystem::DrawInspectorEditor()
 				if (ImGui::CollapsingHeader("Transform"))
 				{
 					ImGui::Separator();
+					ImGui::Text("RenderItem Active");
+					ImGui::Checkbox("Enable", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->Enable);
 					ImGui::Text("Transform");
 					float position[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.z};
 					ImGui::InputFloat3("Position", position); 

@@ -106,7 +106,7 @@ void SceneManager::BuildDefaultScene(
 
 	//	创建碰撞盒
 	sky->bound.aabb = BoundingAABB(sky->mesh.data);
-
+	sky->Enable = true;
 	mMeshRender.push_back(std::move(sky));
 
 
@@ -117,40 +117,40 @@ void SceneManager::BuildDefaultScene(
 	//	存储类型matCB开始值
 	matCBIndexUtils.getInstance().SaveTypeIndex("Opaque", matCBIndexUtils.getInstance().GetIndex());
 
-	auto sphere = std::make_unique<MeshRender>();
-	sphere->name = "ak47_render";
+	auto model_ak47 = std::make_unique<MeshRender>();
+	model_ak47->name = "ak47_render";
 
 	//构建材质
-	sphere->material.Name = "ak47";
-	sphere->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	model_ak47->material.Name = "ak47";
+	model_ak47->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	sphere->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	sphere->material.Smoothness = 1.0f;
-	sphere->material.Metallic = 1.0f;
-	sphere->material.Occlusion = 1.0f;
-	sphere->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-	sphere->material.EmissionStrength = 0.0f;
-	sphere->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
-	sphere->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
-	sphere->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
-	sphere->material.EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
-	sphere->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+	model_ak47->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	model_ak47->material.Smoothness = 1.0f;
+	model_ak47->material.Metallic = 1.0f;
+	model_ak47->material.Occlusion = 1.0f;
+	model_ak47->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	model_ak47->material.EmissionStrength = 0.0f;
+	model_ak47->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
+	model_ak47->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
+	model_ak47->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
+	model_ak47->material.EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	model_ak47->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
-	ObjLoader::LoadObj(sphere->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(model_ak47->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
-	sphere->position = Vector3(0, 0, 0);
-	sphere->eulerangle = Vector3(0, 0, 0);
-	sphere->scale = Vector3(3, 3, 3);
+	model_ak47->position = Vector3(0, 0, 0);
+	model_ak47->eulerangle = Vector3(0, 0, 0);
+	model_ak47->scale = Vector3(3, 3, 3);
 
 	//	创建碰撞盒
-	sphere->bound.aabb = BoundingAABB(sphere->mesh.data);
-
+	model_ak47->bound.aabb = BoundingAABB(model_ak47->mesh.data);
+	model_ak47->Enable = true;
 	//	设置AABB的世界坐标
-	sphere->bound.aabb.m_min = sphere->GetWorldMatrix() * sphere->bound.aabb.m_min;
-	sphere->bound.aabb.m_max = sphere->GetWorldMatrix() * sphere->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(sphere));
+	model_ak47->bound.aabb.m_min = model_ak47->GetWorldMatrix() * model_ak47->bound.aabb.m_min;
+	model_ak47->bound.aabb.m_max = model_ak47->GetWorldMatrix() * model_ak47->bound.aabb.m_max;
+	mMeshRender.push_back(std::move(model_ak47));
 }
 
 void SceneManager::BuildConelBoxScene(
@@ -299,6 +299,7 @@ void SceneManager::BuildRenderItem(
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
+		Ritem->Enable = mMeshRender[i]->Enable;
 
 		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
@@ -324,6 +325,7 @@ void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& 
 			if (mAllRitems[i]->ObjCBIndex == (CurrentSize + j))
 			{
 				mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+				mAllRitems[i]->Enable = mMeshRender[j]->Enable;
 			}
 		}
 	}

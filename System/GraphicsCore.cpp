@@ -158,7 +158,8 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		//	将视锥体从观察空间变换到局部空间
 		localSpaceFrustum.Transform(localSpaceFrustum, viewToLocal);
 
-		if (localSpaceFrustum.Contains(e->Bound) != DirectX::DISJOINT)
+		bool enable = e->Enable;
+		if ((localSpaceFrustum.Contains(e->Bound) != DirectX::DISJOINT) && enable)
 		{
 			ObjectConstants objConstants;
 			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
@@ -678,15 +679,18 @@ void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std
 	{
 		auto ri = ritems[i];
 
-		cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
-		cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
-		cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
+		if (ri->Enable)
+		{
+			cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
+			cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
+			cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
 
-		D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = objectCB->GetGPUVirtualAddress() + ri->ObjCBIndex * objCBByteSize;
+			D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = objectCB->GetGPUVirtualAddress() + ri->ObjCBIndex * objCBByteSize;
 
-		cmdList->SetGraphicsRootConstantBufferView(0, objCBAddress);
+			cmdList->SetGraphicsRootConstantBufferView(0, objCBAddress);
 
-		cmdList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
+			cmdList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
+		}
 	}
 }
 
