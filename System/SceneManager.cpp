@@ -142,7 +142,7 @@ void SceneManager::BuildDefaultScene(
 	//	设置坐标
 	model_ak47->position = Vector3(0, 0, 0);
 	model_ak47->eulerangle = Vector3(0, 0, 0);
-	model_ak47->scale = Vector3(3, 3, 3);
+	model_ak47->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒
 	model_ak47->bound.aabb = BoundingAABB(model_ak47->mesh.data);

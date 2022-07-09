@@ -134,7 +134,7 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
-	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight);
+	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight, mSceneManager.getInstance().mMeshRender[1]);
 
 	XMMATRIX view = mCamera.getInstance().GetView();//WorldToView的变换矩阵
 	auto viewDeterminant = XMMatrixDeterminant(view);
@@ -500,6 +500,14 @@ void GraphicsCore::BuildPSOs()
 	GizmoObject.SetShader(mShaderManager, mRootSignature, "gizmoVS", "gizmoPS");
 	GizmoObject.SetDefaultBlend();
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GizmoObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Gizmo"])));
+
+	//PSO for Unlit.
+	PipelineStateObject UnlitObject = PipelineStateObject();
+	UnlitObject.BuildDefault(mShaderManager, mRootSignature);
+	UnlitObject.SetShader(mShaderManager, mRootSignature, "unlitVS", "unlitPS");
+	UnlitObject.SetDefaultBlend();
+	UnlitObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_ALWAYS);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(UnlitObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Unlit"])));
 
 	// PSO for Lit.
 	PipelineStateObject LitObject = PipelineStateObject();

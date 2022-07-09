@@ -26,6 +26,9 @@ private:
 	//	DrawOpaque
 	void DrawOpaque();
 
+	//	DrawUnlit
+	void DrawUnlit();
+
 	//	Draw GBuffer
 	void DrawGBuffer0();
 	void DrawGBuffer1();

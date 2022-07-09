@@ -62,6 +62,8 @@ void RenderCore::Draw(const GameTimer& gt)
 
 	DrawOpaque();
 
+	DrawUnlit();
+
 	//SkyBox
 	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
@@ -105,6 +107,12 @@ void RenderCore::DrawOpaque()
 {
 	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
+}
+
+void RenderCore::DrawUnlit()
+{
+	mCommandList->SetPipelineState(mPSOs["Unlit"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Unlit]);
 }
 
 //	DrawGBuffer0

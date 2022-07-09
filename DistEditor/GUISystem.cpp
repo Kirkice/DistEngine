@@ -515,14 +515,17 @@ void GUISystem::DrawOverLayButton(bool* p_open)
 		//	Transform
 		if (ImGui::ImageButton((ImTextureID)mIconTextures["TransformIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
 		{
+			mGizmoManager.getInstance().ShowPosition();
 		}
 		//	Rotation
 		if (ImGui::ImageButton((ImTextureID)mIconTextures["RotationIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
 		{
+			mGizmoManager.getInstance().ShowRotation();
 		}
 		//	Scale
 		if (ImGui::ImageButton((ImTextureID)mIconTextures["ScaleIcon"]->GpuHandle.ptr, ImVec2(20, 20)))
 		{
+			mGizmoManager.getInstance().ShowScale();
 		}
 		//	Light
 		if (ImGui::ImageButton((ImTextureID)mIconTextures["LightIcon"]->GpuHandle.ptr, ImVec2(20, 20)))

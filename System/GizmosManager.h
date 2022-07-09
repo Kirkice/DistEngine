@@ -5,6 +5,7 @@
 #include "FrameResource.h"
 #include "d3dUtil.h"
 #include "Texture2D.h"
+#include "ObjLoader.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -44,5 +45,14 @@ public:
 	);
 
 	//	¸üÐÂCBuffer
-	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight);
+	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight, std::unique_ptr<MeshRender>& mTargetRender);
+
+	void ShowPosition();
+	void ShowRotation();
+	void ShowScale();
+
+private:
+	bool PositionUCSEnable = false;
+	bool RotationUCSEnable = false;
+	bool ScaleUCSEnable = false;
 };
