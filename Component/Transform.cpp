@@ -113,6 +113,22 @@ void Transform::SetScale(Vector3& scl)
 	scale = scl;
 }
 
+void Transform::AddPosition(Vector3 addPos)
+{
+	position = position + addPos;
+	position3f = XMFLOAT3(position.x, position.y, position.z);
+}
+
+void Transform::AddEulerangle(Vector3 addAngle)
+{
+	eulerangle = eulerangle + addAngle;
+}
+
+void Transform::AddScale(Vector3 addScale)
+{
+	scale = scale + addScale;
+}
+
 //	获取四元数
 Quaternion Transform::GetQuaternion()
 {

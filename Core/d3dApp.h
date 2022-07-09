@@ -48,6 +48,7 @@ protected:
 	virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
 	virtual void OnMouseUp(WPARAM btnState, int x, int y) { }
 	virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
+	virtual void OnMouseMoveAndSelect(WPARAM btnState, int x, int y) { }
 
 protected:
 

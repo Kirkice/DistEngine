@@ -51,7 +51,6 @@ public:
 	void ShowRotation();
 	void ShowScale();
 
-private:
 	bool PositionUCSEnable = false;
 	bool RotationUCSEnable = false;
 	bool ScaleUCSEnable = false;

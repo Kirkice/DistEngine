@@ -123,6 +123,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateShadowTransform(gt);
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
+	OnTestMove(gt);
 }
 
 
@@ -730,6 +731,115 @@ void GraphicsCore::DrawSceneToShadowMap()
 	// Change back to GENERIC_READ so we can read the texture in a shader.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
+}
+
+void GraphicsCore::OnMouseMoveAndSelect(WPARAM btnState, int x, int y)
+{
+	if ((btnState & MK_LBUTTON) != 0)
+	{
+		XMFLOAT4X4 P = mCamera.getInstance().GetProj4x4f();
+
+		// Compute picking ray in view space.
+		float vx = (+2.0f * x / mClientWidth - 1.0f) / P(0, 0);
+		float vy = (-2.0f * y / mClientHeight + 1.0f) / P(1, 1);
+
+		// Ray definition in view space.
+		XMVECTOR rayOrigin = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+		XMVECTOR rayDir = XMVectorSet(vx, vy, 1.0f, 0.0f);
+
+		XMMATRIX V = mCamera.getInstance().GetView();
+		XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(V), V);
+
+		for (auto ri : mRitemLayer[(int)RenderLayer::Unlit])
+		{
+			auto geo = ri->Geo;
+
+			XMMATRIX W = XMLoadFloat4x4(&ri->World);
+			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(W), W);
+
+			// Tranform ray to vi space of Mesh.
+			XMMATRIX toLocal = XMMatrixMultiply(invView, invWorld);
+
+			rayOrigin = XMVector3TransformCoord(rayOrigin, toLocal);
+			rayDir = XMVector3TransformNormal(rayDir, toLocal);
+
+			// Make the ray direction unit length for the intersection tests.
+			rayDir = XMVector3Normalize(rayDir);
+
+			float tmin = 1000.0f;
+			if (ri->Bound.Intersects(rayOrigin, rayDir, tmin))
+			{
+				//float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
+				//float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
+			}
+		}
+	}
+}
+
+void GraphicsCore::OnTestMove(const GameTimer& gt)
+{
+	const float dt = gt.DeltaTime();
+
+	if (mGizmoManager.getInstance().PositionUCSEnable)
+	{
+		if (GetAsyncKeyState('1') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(15 * dt,0,0));
+
+		if (GetAsyncKeyState('2') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(-15 * dt,0,0));
+
+		if (GetAsyncKeyState('3') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 15 * dt, 0));
+
+		if (GetAsyncKeyState('4') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, -15 * dt, 0));
+
+		if (GetAsyncKeyState('5') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, 15 * dt));
+
+		if (GetAsyncKeyState('6') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, -15 * dt));
+	}
+	else if(mGizmoManager.getInstance().RotationUCSEnable)
+	{
+		if (GetAsyncKeyState('1') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(50 * dt, 0, 0));
+
+		if (GetAsyncKeyState('2') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(-50 * dt, 0, 0));
+
+		if (GetAsyncKeyState('3') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 50 * dt, 0));
+
+		if (GetAsyncKeyState('4') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, -50 * dt, 0));
+
+		if (GetAsyncKeyState('5') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, 50 * dt));
+
+		if (GetAsyncKeyState('6') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, -50 * dt));
+	}
+	else if (mGizmoManager.getInstance().ScaleUCSEnable)
+	{
+		if (GetAsyncKeyState('1') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(2 * dt, 0, 0));
+
+		if (GetAsyncKeyState('2') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(-2 * dt, 0, 0));
+
+		if (GetAsyncKeyState('3') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 2 * dt, 0));
+
+		if (GetAsyncKeyState('4') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, -2 * dt, 0));
+
+		if (GetAsyncKeyState('5') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, 2 * dt));
+
+		if (GetAsyncKeyState('6') & 0x8000)
+			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, -2 * dt));
+	}
 }
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetDsv(int index)const

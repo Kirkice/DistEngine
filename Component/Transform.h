@@ -53,6 +53,10 @@ public:
 	void SetScale(Vector3& scale);
 	void SetScale(float x, float y, float z);
 
+	void AddPosition(Vector3 addPos);
+	void AddEulerangle(Vector3 addAngle);
+	void AddScale(Vector3 scale);
+
 	//	获取四元数
 	Quaternion GetQuaternion();
 
