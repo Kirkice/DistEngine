@@ -65,7 +65,7 @@ public:
 	void BuildRenderItems();
 
 	void OnMouseMoveAndSelect(WPARAM btnState, int x, int y);
-	void OnTestMove(const GameTimer& gt);
+	//void OnTestMove(const GameTimer& gt);
 
 
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);

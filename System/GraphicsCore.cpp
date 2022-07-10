@@ -123,7 +123,7 @@ void GraphicsCore::Update(const GameTimer& gt)
 	UpdateShadowTransform(gt);
 	UpdateMainPassCB(gt);
 	UpdateShadowPassCB(gt);
-	OnTestMove(gt);
+	//OnTestMove(gt);
 }
 
 
@@ -135,6 +135,7 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
+	//	更新CB
 	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight, mSceneManager.getInstance().mMeshRender[1]);
 
 	XMMATRIX view = mCamera.getInstance().GetView();//WorldToView的变换矩阵
@@ -776,71 +777,71 @@ void GraphicsCore::OnMouseMoveAndSelect(WPARAM btnState, int x, int y)
 	}
 }
 
-void GraphicsCore::OnTestMove(const GameTimer& gt)
-{
-	const float dt = gt.DeltaTime();
-
-	if (mGizmoManager.getInstance().PositionUCSEnable)
-	{
-		if (GetAsyncKeyState('1') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(15 * dt,0,0));
-
-		if (GetAsyncKeyState('2') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(-15 * dt,0,0));
-
-		if (GetAsyncKeyState('3') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 15 * dt, 0));
-
-		if (GetAsyncKeyState('4') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, -15 * dt, 0));
-
-		if (GetAsyncKeyState('5') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, 15 * dt));
-
-		if (GetAsyncKeyState('6') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, -15 * dt));
-	}
-	else if(mGizmoManager.getInstance().RotationUCSEnable)
-	{
-		if (GetAsyncKeyState('1') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(50 * dt, 0, 0));
-
-		if (GetAsyncKeyState('2') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(-50 * dt, 0, 0));
-
-		if (GetAsyncKeyState('3') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 50 * dt, 0));
-
-		if (GetAsyncKeyState('4') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, -50 * dt, 0));
-
-		if (GetAsyncKeyState('5') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, 50 * dt));
-
-		if (GetAsyncKeyState('6') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, -50 * dt));
-	}
-	else if (mGizmoManager.getInstance().ScaleUCSEnable)
-	{
-		if (GetAsyncKeyState('1') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(2 * dt, 0, 0));
-
-		if (GetAsyncKeyState('2') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(-2 * dt, 0, 0));
-
-		if (GetAsyncKeyState('3') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 2 * dt, 0));
-
-		if (GetAsyncKeyState('4') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, -2 * dt, 0));
-
-		if (GetAsyncKeyState('5') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, 2 * dt));
-
-		if (GetAsyncKeyState('6') & 0x8000)
-			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, -2 * dt));
-	}
-}
+//void GraphicsCore::OnTestMove(const GameTimer& gt)
+//{
+//	const float dt = gt.DeltaTime();
+//
+//	if (mGizmoManager.getInstance().PositionUCSEnable)
+//	{
+//		if (GetAsyncKeyState('1') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(15 * dt,0,0));
+//
+//		if (GetAsyncKeyState('2') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(-15 * dt,0,0));
+//
+//		if (GetAsyncKeyState('3') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 15 * dt, 0));
+//
+//		if (GetAsyncKeyState('4') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, -15 * dt, 0));
+//
+//		if (GetAsyncKeyState('5') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, 15 * dt));
+//
+//		if (GetAsyncKeyState('6') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddPosition(Vector3(0, 0, -15 * dt));
+//	}
+//	else if(mGizmoManager.getInstance().RotationUCSEnable)
+//	{
+//		if (GetAsyncKeyState('1') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(50 * dt, 0, 0));
+//
+//		if (GetAsyncKeyState('2') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(-50 * dt, 0, 0));
+//
+//		if (GetAsyncKeyState('3') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 50 * dt, 0));
+//
+//		if (GetAsyncKeyState('4') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, -50 * dt, 0));
+//
+//		if (GetAsyncKeyState('5') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, 50 * dt));
+//
+//		if (GetAsyncKeyState('6') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddEulerangle(Vector3(0, 0, -50 * dt));
+//	}
+//	else if (mGizmoManager.getInstance().ScaleUCSEnable)
+//	{
+//		if (GetAsyncKeyState('1') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(2 * dt, 0, 0));
+//
+//		if (GetAsyncKeyState('2') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(-2 * dt, 0, 0));
+//
+//		if (GetAsyncKeyState('3') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 2 * dt, 0));
+//
+//		if (GetAsyncKeyState('4') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, -2 * dt, 0));
+//
+//		if (GetAsyncKeyState('5') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, 2 * dt));
+//
+//		if (GetAsyncKeyState('6') & 0x8000)
+//			mSceneManager.getInstance().mMeshRender[1]->AddScale(Vector3(0, 0, -2 * dt));
+//	}
+//}
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE GraphicsCore::GetDsv(int index)const
 {
