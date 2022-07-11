@@ -510,6 +510,7 @@ float FuncG(float roughness, float NoV, float NoL )
 	return                                              (2 / (lambda_v + lambda_l));
 }
 
+
 float ComputeSpecularHorizonOcclusion( float NoL )
 {
 	// Horizon fading trick from http://marmosetco.tumblr.com/post/81245981087
