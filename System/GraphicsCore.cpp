@@ -140,7 +140,7 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 
 	XMMATRIX view = mCamera.getInstance().GetView();//WorldToView的变换矩阵
 	auto viewDeterminant = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);//ViewToWorld的变换矩阵
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);//ViewToWorld的变换矩阵 
 
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
