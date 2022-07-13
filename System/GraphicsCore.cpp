@@ -145,7 +145,7 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
 	for (auto& e : mAllRitems)
-	{
+	{ 
 		XMFLOAT4X4* eWorldMatrix = &e->World;
 
 		XMMATRIX world = XMLoadFloat4x4(eWorldMatrix);
