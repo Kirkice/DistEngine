@@ -138,9 +138,9 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	//	更新CB
 	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight, mSceneManager.getInstance().mMeshRender[1]);
 
-	XMMATRIX view = mCamera.getInstance().GetView();//WorldToView的变换矩阵
+	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩阵
 	auto viewDeterminant = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);//ViewToWorld的变换矩阵 
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩阵 
 
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
