@@ -157,6 +157,7 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="PipelineStateObject.cpp" />
+    <ClCompile Include="PostProcessManager.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="ResourcesPath.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="MeshGeometry.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="PipelineStateObject.h" />
+    <ClInclude Include="PostProcessManager.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="ResourcesPath.h" />

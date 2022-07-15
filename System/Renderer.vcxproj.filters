@@ -58,6 +58,7 @@
     <ClCompile Include="DepthPass.cpp">
       <Filter>RenderPass</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputSystem.h">
@@ -123,6 +124,7 @@
     <ClInclude Include="DepthPass.h">
       <Filter>RenderPass</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">
