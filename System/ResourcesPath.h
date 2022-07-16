@@ -213,6 +213,7 @@
 		"oilPaintVS",
 		"reliefVS",
 		"edgeDetectionVS",
+		"volumeFogVS",
 	};
 
 	/// <summary>
@@ -251,6 +252,7 @@
 		"oilPaintPS",
 		"reliefPS",
 		"edgeDetectionPS",
+		"volumeFogPS",
 	};
 
 	/// <summary>
@@ -289,4 +291,5 @@
 		L"Asset\\Shaders\\OilPaint.hlsl",
 		L"Asset\\Shaders\\Relief.hlsl",
 		L"Asset\\Shaders\\EdgeDetection.hlsl",
+		L"Asset\\Shaders\\VolumeFog.hlsl",
 	};

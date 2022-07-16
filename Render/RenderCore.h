@@ -41,4 +41,7 @@ private:
 
 	//	DrawGizmos
 	void DrawGizmos();
+
+	//	DrawPostProcess
+	void DrawPostProcess(ID3D12Resource* matBuffer);
 };

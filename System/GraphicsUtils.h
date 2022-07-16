@@ -49,7 +49,7 @@ enum class RenderLayer : int
 	Gizmo = 4,
 	Unlit = 5,
 	Line = 6,
-	PostProcessing = 7,
+	PostProcess = 7,
 	Count
 };
 

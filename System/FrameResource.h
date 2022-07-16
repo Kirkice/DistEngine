@@ -198,6 +198,7 @@ struct PostprocessingData
 	//FidelityFX Super Resolution
 	float ResoultionLevel = 0;
 	float FSRSharpen = 0;
+
 };
 
 struct Vertex

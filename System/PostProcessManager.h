@@ -33,7 +33,7 @@ public:
 
 	//	更新场景的Material Buffer
 	void UpdateMaterialBuffer(
-		UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
+		UploadBuffer<PostprocessingData>* PostProcessBuffer,
 		MaterialIndexUtils& matCBIndexUtils
 	);
 
@@ -45,6 +45,4 @@ public:
 		UINT CurrentSize,
 		MaterialIndexUtils& matCBIndexUtils
 	);
-
-	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize);
 };

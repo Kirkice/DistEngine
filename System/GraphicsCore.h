@@ -15,6 +15,7 @@
 #include "RenderTarget.h"
 #include "GBufferPass.h"
 #include "GizmosManager.h"
+#include "PostProcessManager.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -86,7 +87,7 @@ public:
 	MaterialIndexUtils matCBIndexUtils = MaterialIndexUtils();
 	GizmosManager mGizmoManager = GizmosManager();
 	SceneManager mSceneManager = SceneManager(SceneType::Default);
-
+	PostProcessManager mPostProcessManager = PostProcessManager();
 
 	std::vector<std::unique_ptr<FrameResource>> mFrameResources;
 	FrameResource* mCurrFrameResource = nullptr;

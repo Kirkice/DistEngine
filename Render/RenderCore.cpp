@@ -55,23 +55,25 @@ void RenderCore::Draw(const GameTimer& gt)
 
 	matBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
-	RenderCore::DrawGBuffer0();
-	RenderCore::DrawGBuffer1();
-	RenderCore::DrawGBuffer2();
-	RenderCore::DrawGBuffer3();
+	//RenderCore::DrawGBuffer0();
+	//RenderCore::DrawGBuffer1();
+	//RenderCore::DrawGBuffer2();
+	//RenderCore::DrawGBuffer3();
 
 	DrawOpaque();
 
 	DrawUnlit();
 
 	//SkyBox
-	auto skyMatBuufer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuufer->GetGPUVirtualAddress());
+	auto skyMatBuffer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuffer->GetGPUVirtualAddress());
 	RenderCore::DrawSkyBox();
 
 	//DrawGizmos
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 	RenderCore::DrawGizmos();
+
+	DrawPostProcess(matBuffer);
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
@@ -219,4 +221,27 @@ void RenderCore::DrawGizmos()
 		mCommandList->SetPipelineState(mPSOs["Line"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
 	}
+}
+
+//	DrawPostProcess
+void RenderCore::DrawPostProcess(ID3D12Resource* matBuffer)
+{
+	matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+
+	mCommandList->SetPipelineState(mPSOs["VolumeFog"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcess]);
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+	mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }

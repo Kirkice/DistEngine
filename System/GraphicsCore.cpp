@@ -46,6 +46,7 @@ bool GraphicsCore::Initialize()
 	matCBIndexUtils.getInstance().Init();
 	mGizmoManager.getInstance().BuildScene(mGizmosTextures, matCBIndexUtils);
 	mSceneManager.getInstance().BuildScene(mResourcesTextures, matCBIndexUtils);
+	mPostProcessManager.getInstance().Build(matCBIndexUtils);
 
 	BuildRenderItems();
 	BuildFrameResources();
@@ -134,9 +135,10 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
-	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
 	//	更新CB
 	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight, mSceneManager.getInstance().mMeshRender[1]);
+	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
+
 
 	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩阵
 	auto viewDeterminant = XMMatrixDeterminant(view);
@@ -178,12 +180,16 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 {
 	auto PBRMaterialBuffer = mCurrFrameResource->PBRMaterialBuffer.get();
 	auto SkyBoxMaterialBuffer = mCurrFrameResource->SkyBoxMaterialBuffer.get();
+	auto PostProcessBuffer = mCurrFrameResource->PostMaterialBuffer.get();
 
-	////	更新GizmosBuffer
+	//	更新GizmosBuffer
 	mGizmoManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer);
 
 	//	更新场景材质Buffer
 	mSceneManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer, matCBIndexUtils);
+
+	//	更新后处理材质Buffer
+	mPostProcessManager.getInstance().UpdateMaterialBuffer(PostProcessBuffer, matCBIndexUtils);
 }
 
    
@@ -649,6 +655,12 @@ void GraphicsCore::BuildPSOs()
 	EdgeDetectionObject.SetShader(mShaderManager, mRootSignature, "edgeDetectionVS", "edgeDetectionPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(EdgeDetectionObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
+	// 	PSO for VolumeFog
+	PipelineStateObject VolumeFogObject = PipelineStateObject();
+	VolumeFogObject.BuildDefault(mShaderManager, mRootSignature);
+	VolumeFogObject.SetShader(mShaderManager, mRootSignature, "volumeFogVS", "volumeFogPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VolumeFogObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["VolumeFog"])));
+
 	// PSO for sky.
 	PipelineStateObject SkyBoxObject = PipelineStateObject();
 	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);
@@ -667,7 +679,8 @@ void GraphicsCore::BuildFrameResources()
 			2, 
 			(UINT)mAllRitems.size(),
 			(UINT)(mGizmoManager.getInstance().mMeshRender.size()) +
-			(UINT)(mSceneManager.getInstance().mMeshRender.size())
+			(UINT)(mSceneManager.getInstance().mMeshRender.size()) + 
+			(UINT)(mPostProcessManager.getInstance().mMeshRender.size())
 			)
 		);
 	}
@@ -677,6 +690,7 @@ void GraphicsCore::BuildRenderItems()
 {
 	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
 	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size(), matCBIndexUtils);
+	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size() + mSceneManager.getInstance().mMeshRender.size(), matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
