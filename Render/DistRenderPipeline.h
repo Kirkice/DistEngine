@@ -6,6 +6,15 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
  
+
+//Render Layer
+enum class MatBufferType : int
+{
+	PBR = 0,
+	SkyBox = 1,
+	PostProcess = 2,
+};
+
 class DistRenderPipeline: public GraphicsCore
 {
 public:
@@ -19,8 +28,7 @@ public:
 
 private:
 
-	ID3D12Resource* GetMatBuffer();
-
+	//	RenderPass
 	void RenderShadowPass(ID3D12Resource* matBuffer);
 
 	void DepthPrePass();
@@ -39,12 +47,20 @@ private:
 
 	void RenderGizmosPass();
 
-	void RenderPostProcessPass(ID3D12Resource* matBuffer);
+	void RenderPostProcessPass();
 
-	void DrawVolumeFog(ID3D12Resource* matBuffer);
+	void DrawVolumeFog();
 
 
+	//	RenderUtils
 
+	ID3D12Resource* mMatBuffer = nullptr;
+
+	void SetDescriptorHeap();
+
+	void SetRootSignature();
+
+	void SetMatBuffer(MatBufferType type);
 
 	void CopyColorPass();
 };

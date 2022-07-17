@@ -19,16 +19,21 @@ DistRenderPipeline::~DistRenderPipeline()
 
 void DistRenderPipeline::Render()
 {
-	//	获取材质Buffer
-	auto MatBuffer = GetMatBuffer();
+	//	设置描述堆
+	SetDescriptorHeap();
+
+	//	设置根签名
+	SetRootSignature();
+
+	//	设置材质Buffer
+	SetMatBuffer(MatBufferType::PBR);
 
 	//	绘制阴影Pass
-	RenderShadowPass(MatBuffer);
+	RenderShadowPass(mMatBuffer);
 
-	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
+	SetRootSignature();
 
-	MatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, MatBuffer->GetGPUVirtualAddress());
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -50,40 +55,29 @@ void DistRenderPipeline::Render()
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
 
-	MatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, MatBuffer->GetGPUVirtualAddress());
+	SetMatBuffer(MatBufferType::PBR);
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 
 	RenderOpaquePass();
 
 	RenderAxisPass();
 
 	//SkyBox
-	auto skyMatBuffer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, skyMatBuffer->GetGPUVirtualAddress());
+	SetMatBuffer(MatBufferType::SkyBox);
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 	RenderSkyBoxPass();
 
 	//DrawGizmos
-	mCommandList->SetGraphicsRootShaderResourceView(3, MatBuffer->GetGPUVirtualAddress());
+	SetMatBuffer(MatBufferType::PBR);
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 	RenderGizmosPass();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	CopyColorPass();
 
-	RenderPostProcessPass(MatBuffer);
+	RenderPostProcessPass();
 
-}
-
-/// <summary>
-/// 获取MatBuffer
-/// </summary>
-/// <returns></returns>
-ID3D12Resource* DistRenderPipeline::GetMatBuffer()
-{
-	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get() };
-	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
-	return mCurrFrameResource->PBRMaterialBuffer->Resource();
 }
 
 /// <summary>
@@ -160,19 +154,19 @@ void DistRenderPipeline::RenderGizmosPass()
 	}
 }
 
-void DistRenderPipeline::RenderPostProcessPass(ID3D12Resource* matBuffer)
+void DistRenderPipeline::RenderPostProcessPass()
 {
 	if (mPostProcessSwitch.ShowVolumeFog)
-		DrawVolumeFog(matBuffer);
+		DrawVolumeFog();
 
 }
 
 //	DrawVolumeFog
-void DistRenderPipeline::DrawVolumeFog(ID3D12Resource* matBuffer)
+void DistRenderPipeline::DrawVolumeFog()
 {
 	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
-	matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
-	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+	SetMatBuffer(MatBufferType::PostProcess);
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 
 	mCommandList->SetPipelineState(mPSOs["VolumeFog"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcess]);
@@ -189,6 +183,44 @@ void DistRenderPipeline::DrawVolumeFog(ID3D12Resource* matBuffer)
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+}
+
+/// <summary>
+/// 设置描述堆
+/// </summary>
+/// <returns></returns>
+void DistRenderPipeline::SetDescriptorHeap()
+{
+	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get() };
+	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+}
+
+/// <summary>
+/// 设置根签名
+/// </summary>
+void DistRenderPipeline::SetRootSignature()
+{
+	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
+}
+
+/// <summary>
+/// 设置材质Buffer
+/// </summary>
+/// <param name="type"></param>
+void DistRenderPipeline::SetMatBuffer(MatBufferType type)
+{
+	switch (type)
+	{
+	case MatBufferType::PBR: mMatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+		break;
+	case MatBufferType::SkyBox:	mMatBuffer = mCurrFrameResource->SkyBoxMaterialBuffer->Resource();
+		break;
+	case MatBufferType::PostProcess: mMatBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
+		break;
+
+	default: mMatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
+		break;
+	}
 }
 
 
