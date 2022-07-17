@@ -101,8 +101,8 @@ float sdBox(float3 p, float3 b)
 float map(float3 pos ) 
 {
     float res = far;
-    // res = min(res, sdSphere(pos-float3(-20.0,0.25, 0.0), 10.25));
-    res = min(res, sdBox(pos - CubePos, CubeScale));
+    res = min(res, sdSphere(pos-CubePos, 10.25));
+    // res = min(res, sdBox(pos - CubePos, CubeScale));
     res += wigglyness * cnoise(0.1 * pos);
     
     return res;        

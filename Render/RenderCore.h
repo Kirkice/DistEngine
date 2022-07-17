@@ -44,4 +44,6 @@ private:
 
 	//	DrawPostProcess
 	void DrawPostProcess(ID3D12Resource* matBuffer);
+
+	void DrawVolumeFog(ID3D12Resource* matBuffer);
 };

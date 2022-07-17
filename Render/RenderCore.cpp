@@ -227,20 +227,14 @@ void RenderCore::DrawGizmos()
 //	DrawPostProcess
 void RenderCore::DrawPostProcess(ID3D12Resource* matBuffer)
 {
-	//mCommandList->RSSetViewports(1, &mScreenViewport);
-	//mCommandList->RSSetScissorRects(1, &mScissorRect);
+	if(mPostProcessSwitch.ShowVolumeFog)
+		DrawVolumeFog(matBuffer);
+}
 
-	//mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	//mCommandList->ClearRenderTargetView(CurrentBackBufferView(), mSceneManager.getInstance().mCameraSetting.SolidColor, 0, nullptr);
-	//mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	//mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-	render_target_descriptor.Offset(UINT(25), mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
-
+//	DrawVolumeFog
+void RenderCore::DrawVolumeFog(ID3D12Resource* matBuffer)
+{
+	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
 	matBuffer = mCurrFrameResource->PostMaterialBuffer->Resource();
 	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
 

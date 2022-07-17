@@ -158,6 +158,8 @@ public:
 
 	bool ShowWire = true;
 
+	PostProcessSwitch mPostProcessSwitch = PostProcessSwitch();
+
 	//	Fog Settings
 	FogSetting mFogSettings;
 

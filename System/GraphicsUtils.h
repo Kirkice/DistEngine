@@ -125,6 +125,11 @@ struct FogSetting
 	Vector4 CameraDir = { 0,0,8,1 };
 };
 
+struct PostProcessSwitch
+{
+	bool ShowVolumeFog = false;
+};
+
 class GraphicsUtils
 {
 public:

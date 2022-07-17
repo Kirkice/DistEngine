@@ -625,24 +625,22 @@ void GUISystem::DrawRenderSetting()
 
 		//	Volume Fog
 		ImGui::Text("Volume Fog");
-		//bool UseHeightFog = (bool)mFogSettings.EnableHeightFog;
-		//ImGui::Checkbox("HeightFog Enable", &UseHeightFog);
-		//mFogSettings.EnableHeightFog = (int)UseHeightFog;
+		ImGui::Checkbox("VolumeFog Enable", &(mPostProcessSwitch.ShowVolumeFog));
 
 		ImGui::SliderFloat("NoiseStrength", &mFogSettings.NoiseStrength, -5, 5);
 
 		float cubePosArray[3] = { mFogSettings.CubePos.x,mFogSettings.CubePos.y,mFogSettings.CubePos.z };
-		ImGui::InputFloat3("CubePosition", cubePosArray);
+		ImGui::InputFloat3("FogPosition", cubePosArray);
 		mFogSettings.CubePos = Vector3(cubePosArray[0], cubePosArray[1], cubePosArray[2]);
 
 		float cubeScaleArray[3] = { mFogSettings.CubeScale.x,mFogSettings.CubeScale.y,mFogSettings.CubeScale.z };
-		ImGui::InputFloat3("CubeScale", cubeScaleArray);
+		ImGui::InputFloat3("FogScale", cubeScaleArray);
 		mFogSettings.CubeScale = Vector4(cubeScaleArray[0], cubeScaleArray[1], cubeScaleArray[2],1);
 
 
-		float cameraDirArray[3] = { mFogSettings.CameraDir.x,mFogSettings.CameraDir.y,mFogSettings.CameraDir.z };
-		ImGui::InputFloat3("CameraDir", cameraDirArray);
-		mFogSettings.CameraDir = Vector4(cameraDirArray[0], cameraDirArray[1], cameraDirArray[2], 1);
+		//float cameraDirArray[3] = { mFogSettings.CameraDir.x,mFogSettings.CameraDir.y,mFogSettings.CameraDir.z };
+		//ImGui::InputFloat3("CameraDir", cameraDirArray);
+		//mFogSettings.CameraDir = Vector4(cameraDirArray[0], cameraDirArray[1], cameraDirArray[2], 1);
 	}
 
 	ImGui::End();
