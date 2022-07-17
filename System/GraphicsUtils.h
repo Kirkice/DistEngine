@@ -118,6 +118,11 @@ struct FogSetting
 	float FogStep = 0.5f;
 	float HeightMin = 0;
 	float HeightMax = 5;
+
+	float NoiseStrength = 1.0f;
+	Vector3 CubePos = { 0,8,-5 };
+	Vector4 CubeScale = { 8,8,8,1 };
+	Vector4 CameraDir = { 0,0,8,1 };
 };
 
 class GraphicsUtils

@@ -275,6 +275,9 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.FogColor = mFogSettings.FogColor;
 	mMainPassCB.LinearFogParam = Vector4(mFogSettings.fogStrat, mFogSettings.fogEnd, mFogSettings.FogDensity, mFogSettings.EnableHeightFog);
 	mMainPassCB.HeightFogParam = Vector4(mFogSettings.FogFeather,mFogSettings.FogStep,mFogSettings.HeightMin,mFogSettings.HeightMax);
+	mMainPassCB.VolumeFogParam0 = Vector4(mFogSettings.CubePos, mFogSettings.NoiseStrength);
+	mMainPassCB.VolumeFogParam1 = Vector4(mFogSettings.CubeScale);
+	mMainPassCB.VolumeFogParam2 = Vector4(mFogSettings.CameraDir);
 
 	//Scattering
 	mMainPassCB.Parames01 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky, mSceneManager.getInstance().mSkyBoxSetting.SunHeight, mSceneManager.getInstance().mSkyBoxSetting.ZenithOffset, mSceneManager.getInstance().mSkyBoxSetting.Density);

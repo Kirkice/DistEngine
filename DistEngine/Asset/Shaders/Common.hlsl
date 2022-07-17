@@ -230,6 +230,9 @@ cbuffer cbPass : register(b2)
     float4                                                                              gFogColor;
     float4                                                                              gLinearFogParam;
     float4                                                                              gHeightFogParam;
+    float4                                                                              gVolumeFogParam0;
+    float4                                                                              gVolumeFogParam1;
+    float4                                                                              gVolumeFogParam2;
 
     float4                                                                              gParames01;
     float4                                                                              gParames02;

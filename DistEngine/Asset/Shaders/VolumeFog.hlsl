@@ -37,12 +37,16 @@ VertexOut VS(VertexIn vin)
 #define near 5.0;
 #define far 90.0;
 #define use_noise 1
-#define wigglyness (4.0 * (1.0 + sin(gTotalTime)))
+#define wigglyness gVolumeFogParam0.w
 
 #define insideOffset 0.1
 #define fallofDist 20.0
 #define opac 0.05
-#define fogFraction 0.005
+#define fogFraction 0.004
+
+#define CubePos gVolumeFogParam0.xyz
+#define CubeScale gVolumeFogParam1.xyz
+#define CameraDir float3(0,0,3)
 
 float hash(float3 p)  // replace this by something better
 {
@@ -97,8 +101,8 @@ float sdBox(float3 p, float3 b)
 float map(float3 pos ) 
 {
     float res = far;
-    res = min(res, sdSphere(pos-float3(-20.0,0.25, 0.0), 10.25));
-    res = min(res, sdBox(pos-float3( 20.0,0.25, 0.0), float3(10.3,10.25,10.1)));
+    // res = min(res, sdSphere(pos-float3(-20.0,0.25, 0.0), 10.25));
+    res = min(res, sdBox(pos - CubePos, CubeScale));
     res += wigglyness * cnoise(0.1 * pos);
     
     return res;        
@@ -148,7 +152,7 @@ float4 PS(VertexOut pin) : SV_Target
 
     // camera	
     float3 ta = float3( 0, 0, 0 );
-    float3 ro = ta + float3( 0 , 0, 8);
+    float3 ro = ta + CameraDir;
 
 	// camera-to-world transformation
 	float3x3 ca = setCamera( ro, ta, 0.0 );
@@ -156,8 +160,10 @@ float4 PS(VertexOut pin) : SV_Target
 	float2 p = pin.TexC * float2(10,5)  - float2(5,2.5);
 	// ray direction
 	float3 rd = mul(ca, normalize(float3(p,1.5)));
-
-	return float4(render(ro, rd).xxx, 1.0 );
+	float fog = clamp(render(ro, rd),0,1);
+	float4 source = gRenderTarget.Sample(gsamLinearClamp, pin.TexC);
+	float3 outColor = lerp(source.rgb, gFogColor.rgb, fog);
+	return float4(outColor,1);
 }
 
 #endif
