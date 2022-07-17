@@ -513,12 +513,12 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GizmoObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Gizmo"])));
 
 	//PSO for Unlit.
-	PipelineStateObject UnlitObject = PipelineStateObject();
-	UnlitObject.BuildDefault(mShaderManager, mRootSignature);
-	UnlitObject.SetShader(mShaderManager, mRootSignature, "unlitVS", "unlitPS");
-	UnlitObject.SetDefaultBlend();
-	UnlitObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_ALWAYS);
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(UnlitObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Unlit"])));
+	PipelineStateObject AxisObject = PipelineStateObject();
+	AxisObject.BuildDefault(mShaderManager, mRootSignature);
+	AxisObject.SetShader(mShaderManager, mRootSignature, "unlitVS", "unlitPS");
+	AxisObject.SetDefaultBlend();
+	AxisObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_ALWAYS);
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(AxisObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Axis"])));
 
 	// PSO for Lit.
 	PipelineStateObject LitObject = PipelineStateObject();
@@ -768,7 +768,7 @@ void GraphicsCore::OnMouseMoveAndSelect(WPARAM btnState, int x, int y)
 		XMMATRIX V = mCamera.getInstance().GetView();
 		XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(V), V);
 
-		for (auto ri : mRitemLayer[(int)RenderLayer::Unlit])
+		for (auto ri : mRitemLayer[(int)RenderLayer::Axis])
 		{
 			auto geo = ri->Geo;
 

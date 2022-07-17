@@ -47,7 +47,7 @@ enum class RenderLayer : int
 	Debug = 2,
 	Sky = 3,
 	Gizmo = 4,
-	Unlit = 5,
+	Axis = 5,
 	Line = 6,
 	PostProcess = 7,
 	Count

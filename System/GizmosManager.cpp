@@ -295,7 +295,7 @@ void GizmosManager::BuildRenderItem(
 		else
 		{
 			Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			mRitemLayer[(int)RenderLayer::Unlit].push_back(Ritem.get());
+			mRitemLayer[(int)RenderLayer::Axis].push_back(Ritem.get());
 		}
 
 		mAllRitems.push_back(std::move(Ritem));

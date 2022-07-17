@@ -143,10 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DistRenderPipeline.h" />
     <ClInclude Include="RenderCore.h" />
+    <ClInclude Include="RenderUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DistRenderPipeline.cpp" />
     <ClCompile Include="RenderCore.cpp" />
+    <ClCompile Include="RenderUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,9 +18,21 @@
     <ClInclude Include="RenderCore.h">
       <Filter>RenderPipeline</Filter>
     </ClInclude>
+    <ClInclude Include="DistRenderPipeline.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderUtils.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderCore.cpp">
+      <Filter>RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="DistRenderPipeline.cpp">
+      <Filter>RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderUtils.cpp">
       <Filter>RenderPipeline</Filter>
     </ClCompile>
   </ItemGroup>
