@@ -29,7 +29,7 @@ public:
 private:
 
 	//	RenderPass
-	void RenderShadowPass(ID3D12Resource* matBuffer);
+	void RenderShadowPass();
 
 	void DepthPrePass();
 
@@ -63,4 +63,6 @@ private:
 	void SetMatBuffer(MatBufferType type);
 
 	void CopyColorPass();
+
+	void SetViewAndRect();
 };

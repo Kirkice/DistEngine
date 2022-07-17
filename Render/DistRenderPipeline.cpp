@@ -25,18 +25,11 @@ void DistRenderPipeline::Render()
 	//	设置根签名
 	SetRootSignature();
 
-	//	设置材质Buffer
-	SetMatBuffer(MatBufferType::PBR);
-
 	//	绘制阴影Pass
-	RenderShadowPass(mMatBuffer);
+	RenderShadowPass();
 
-	SetRootSignature();
-
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
-
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
+	//	设置View和Rect
+	SetViewAndRect();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
@@ -51,25 +44,17 @@ void DistRenderPipeline::Render()
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 
-
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
-
-	SetMatBuffer(MatBufferType::PBR);
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 
 	RenderOpaquePass();
 
 	RenderAxisPass();
 
 	//SkyBox
-	SetMatBuffer(MatBufferType::SkyBox);
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 	RenderSkyBoxPass();
 
 	//DrawGizmos
-	SetMatBuffer(MatBufferType::PBR);
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 	RenderGizmosPass();
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -84,9 +69,9 @@ void DistRenderPipeline::Render()
 /// 绘制阴影Pass
 /// </summary>
 /// <param name="matBuffer"></param>
-void DistRenderPipeline::RenderShadowPass(ID3D12Resource* matBuffer)
+void DistRenderPipeline::RenderShadowPass()
 {
-	mCommandList->SetGraphicsRootShaderResourceView(3, matBuffer->GetGPUVirtualAddress());
+	SetMatBuffer(MatBufferType::PBR);
 	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
 	DrawSceneToShadowMap();
@@ -107,6 +92,7 @@ void DistRenderPipeline::RenderGBuffer()
 /// </summary>
 void DistRenderPipeline::RenderOpaquePass()
 {
+	SetMatBuffer(MatBufferType::PBR);
 	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 }
@@ -123,6 +109,7 @@ void DistRenderPipeline::RenderSkyBoxPass()
 {
 	if (mSceneManager.getInstance().mCameraSetting.renderSkyBox)
 	{
+		SetMatBuffer(MatBufferType::SkyBox);
 		mCommandList->SetPipelineState(mPSOs["sky"].Get());
 		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Sky]);
 	}
@@ -141,6 +128,9 @@ void DistRenderPipeline::RenderAxisPass()
 
 void DistRenderPipeline::RenderGizmosPass()
 {
+	if (ShowGizmos || ShowWire)
+		SetMatBuffer(MatBufferType::PBR);
+
 	if (ShowGizmos)
 	{
 		mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
@@ -166,7 +156,6 @@ void DistRenderPipeline::DrawVolumeFog()
 {
 	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
 	SetMatBuffer(MatBufferType::PostProcess);
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 
 	mCommandList->SetPipelineState(mPSOs["VolumeFog"].Get());
 	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcess]);
@@ -221,8 +210,14 @@ void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 	default: mMatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 		break;
 	}
+	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 }
 
+void DistRenderPipeline::SetViewAndRect()
+{
+	mCommandList->RSSetViewports(1, &mScreenViewport);
+	mCommandList->RSSetScissorRects(1, &mScissorRect);
+}
 
 void DistRenderPipeline::CopyColorPass()
 {
