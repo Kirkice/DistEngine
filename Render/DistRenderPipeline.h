@@ -65,4 +65,14 @@ private:
 	void CopyColorPass();
 
 	void SetViewAndRect();
+
+	void SetPresentToTarget(ID3D12Resource* Resource);
+
+	void SetRenderTarget();
+
+	void SetCBuffer();
+
+	void SetCubeMapRootDescriptorTable();
+
+	void SetTargetToPresnet(ID3D12Resource* Resource);
 };
