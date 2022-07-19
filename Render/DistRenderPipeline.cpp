@@ -31,111 +31,108 @@ void DistRenderPipeline::Render()
 	//	设置View和Rect
 	SetViewAndRect();
 
+	//	资源屏障 - 展示到目标
 	SetPresentToTarget(CurrentBackBuffer());
 
+	//	设置为渲染目标
 	SetRenderTarget();
 
+	//	设置CBuffer
 	SetCBuffer();
 
+	//	设置环境贴图到跟描述符表
 	SetCubeMapRootDescriptorTable();
 
+	//	渲染不透明物体
 	RenderOpaquePass();
 
+	//	渲染坐标轴
 	RenderAxisPass();
 
-	//SkyBox
+	//	渲染天空球
 	RenderSkyBoxPass();
 
-	//DrawGizmos
+	//	渲染图标
 	RenderGizmosPass();
 
+	//	资源屏障 - 设置目标到展示
 	SetTargetToPresnet(CurrentBackBuffer());
 
+	//	拷贝Pass
 	CopyColorPass();
 
+	//	渲染后处理
 	RenderPostProcessPass();
-
 }
 
-/// <summary>
-/// 绘制阴影Pass
-/// </summary>
-/// <param name="matBuffer"></param>
+//	渲染阴影
 void DistRenderPipeline::RenderShadowPass()
 {
 	SetMatBuffer(MatBufferType::PBR);
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-
 	DrawSceneToShadowMap();
 }
 
+//	提前深度
 void DistRenderPipeline::DepthPrePass()
 {
 
 }
 
+//	渲染GBuffer
 void DistRenderPipeline::RenderGBuffer()
 {
 
 }
 
-/// <summary>
-/// 绘制不透明材质
-/// </summary>
+//	渲染不透明物体
 void DistRenderPipeline::RenderOpaquePass()
 {
 	SetMatBuffer(MatBufferType::PBR);
-	mCommandList->SetPipelineState(mPSOs["litOpaque"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
+	DrawRenderItemFormLayer("litOpaque", (int)RenderLayer::Opaque);
 }
 
+//	延迟渲染
 void DistRenderPipeline::DeferredRenderPass()
 {
 
 }
 
-/// <summary>
-/// 绘制天空球
-/// </summary>
+//	渲染天空球
 void DistRenderPipeline::RenderSkyBoxPass()
 {
 	if (mSceneManager.getInstance().mCameraSetting.renderSkyBox)
 	{
 		SetMatBuffer(MatBufferType::SkyBox);
-		mCommandList->SetPipelineState(mPSOs["sky"].Get());
-		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Sky]);
+		DrawRenderItemFormLayer("sky", (int)RenderLayer::Sky);
 	}
 }
 
+//	渲染透明物体
 void DistRenderPipeline::RenderTransparentPass()
 {
 
 }
 
+//	渲染坐标轴
 void DistRenderPipeline::RenderAxisPass()
 {
-	mCommandList->SetPipelineState(mPSOs["Axis"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Axis]);
+	DrawRenderItemFormLayer("Axis", (int)RenderLayer::Axis);
 }
 
+//	渲染图标
 void DistRenderPipeline::RenderGizmosPass()
 {
 	if (ShowGizmos || ShowWire)
 		SetMatBuffer(MatBufferType::PBR);
 
 	if (ShowGizmos)
-	{
-		mCommandList->SetPipelineState(mPSOs["Gizmo"].Get());
-		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Gizmo]);
-	}
+		DrawRenderItemFormLayer("Gizmo", (int)RenderLayer::Gizmo);
 
 	if (ShowWire)
-	{
-		mCommandList->SetPipelineState(mPSOs["Line"].Get());
-		DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Line]);
-	}
+		DrawRenderItemFormLayer("Line", (int)RenderLayer::Line);
 }
 
+//	渲染后处理
 void DistRenderPipeline::RenderPostProcessPass()
 {
 	if (mPostProcessSwitch.ShowVolumeFog)
@@ -143,51 +140,49 @@ void DistRenderPipeline::RenderPostProcessPass()
 
 }
 
-//	DrawVolumeFog
+//	渲染体积雾
 void DistRenderPipeline::DrawVolumeFog()
 {
 	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
 	SetMatBuffer(MatBufferType::PostProcess);
 
-	mCommandList->SetPipelineState(mPSOs["VolumeFog"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::PostProcess]);
+	DrawRenderItemFormLayer("VolumeFog", (int)RenderLayer::PostProcess);
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	SetTargetToPresnet(CurrentBackBuffer());
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+	SetReadToDest(mRenderTarget->Resource());
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+	SetPresentToSource(CurrentBackBuffer());
 
-	mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+	SetSourceToPresent(CurrentBackBuffer());
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+	SetDestToRead(mRenderTarget->Resource());
 }
 
+
+
+
 /// <summary>
-/// 设置描述堆
+//	RenderUtils
 /// </summary>
-/// <returns></returns>
+
+//	设置描述符堆
 void DistRenderPipeline::SetDescriptorHeap()
 {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 }
 
-/// <summary>
-/// 设置根签名
-/// </summary>
+//	设置根签名
 void DistRenderPipeline::SetRootSignature()
 {
 	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
 }
 
-/// <summary>
-/// 设置材质Buffer
-/// </summary>
-/// <param name="type"></param>
+
+//	设置材质Buffer
 void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 {
 	switch (type)
@@ -205,17 +200,20 @@ void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 }
 
+//	设置ViewheRect
 void DistRenderPipeline::SetViewAndRect()
 {
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 }
 
+//	资源屏障 - 展示到目标
 void DistRenderPipeline::SetPresentToTarget(ID3D12Resource* Resource)
 {
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 }
 
+//	设置为渲染目标
 void DistRenderPipeline::SetRenderTarget()
 {
 	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), mSceneManager.getInstance().mCameraSetting.SolidColor, 0, nullptr);
@@ -224,6 +222,7 @@ void DistRenderPipeline::SetRenderTarget()
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 }
 
+//	拷贝Pass
 void DistRenderPipeline::CopyColorPass()
 {
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
@@ -238,19 +237,60 @@ void DistRenderPipeline::CopyColorPass()
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
+//	设置CBuffer
 void DistRenderPipeline::SetCBuffer()
 {
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 }
 
+//	设置环境贴图到跟描述符表
 void DistRenderPipeline::SetCubeMapRootDescriptorTable()
 {
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
 	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
 }
 
+//	资源屏障 - 设置目标到展示
 void DistRenderPipeline::SetTargetToPresnet(ID3D12Resource* Resource)
 {
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+}
+
+//	资源屏障 - 设置读取到目标
+void DistRenderPipeline::SetReadToDest(ID3D12Resource* Resource)
+{
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+}
+
+//	绘制渲染项目 Layer
+void DistRenderPipeline::DrawRenderItemFormLayer(std::string PSO, int Layer)
+{
+	mCommandList->SetPipelineState(mPSOs[PSO].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[Layer]);
+}
+
+//	资源屏障 - 设置展示到源
+void DistRenderPipeline::SetPresentToSource(ID3D12Resource* Resource)
+{
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+}
+
+//	资源屏障 - 设置源到展示
+void DistRenderPipeline::SetSourceToPresent(ID3D12Resource* Resource)
+{
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+}
+
+//	资源屏障 - 设置目标到读取
+void DistRenderPipeline::SetDestToRead(ID3D12Resource* Resource)
+{
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+}
+
+//	拷贝复制
+void DistRenderPipeline::CopyBlit(ID3D12Resource* dest, ID3D12Resource* source)
+{
+	mCommandList->CopyResource(dest, source);
 }

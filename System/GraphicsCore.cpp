@@ -723,6 +723,8 @@ void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std
 
 void GraphicsCore::DrawSceneToShadowMap()
 {
+	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+
 	mCommandList->RSSetViewports(1, &mShadowMap->Viewport());
 	mCommandList->RSSetScissorRects(1, &mShadowMap->ScissorRect());
 
