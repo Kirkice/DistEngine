@@ -1,4 +1,6 @@
 #include "SceneManager.h"
+#include "ResourcesPath.h"
+
 const int ProjectTexStart = 14;
 
 SceneManager::SceneManager(SceneType tp)
@@ -137,7 +139,7 @@ void SceneManager::BuildDefaultScene(
 	model_ak47->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
-	ObjLoader::LoadObj(model_ak47->mesh.data, "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(model_ak47->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
 
 	//	设置坐标
 	model_ak47->position = Vector3(0, 0, 0);
