@@ -69,7 +69,7 @@ void GizmosManager::BuildScene(
 	PositionUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	PositionUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoX->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_x.obj");
+	ObjLoader::LoadObj(PositionUCSGizmoX->mesh.data, (char*)mPositionUCSGizmoXPath.c_str());
 	//	设置坐标
 	PositionUCSGizmoX->position = Vector3(0, 0, 0);
 	PositionUCSGizmoX->eulerangle = Vector3(0, 0, 0);
@@ -87,7 +87,7 @@ void GizmosManager::BuildScene(
 	PositionUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	PositionUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoY->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_y.obj");
+	ObjLoader::LoadObj(PositionUCSGizmoY->mesh.data, (char*)mPositionUCSGizmoYPath.c_str());
 	//	设置坐标
 	PositionUCSGizmoY->position = Vector3(0, 0, 0);
 	PositionUCSGizmoY->eulerangle = Vector3(0, 0, 0);
@@ -105,7 +105,7 @@ void GizmosManager::BuildScene(
 	PositionUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	PositionUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoZ->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_z.obj");
+	ObjLoader::LoadObj(PositionUCSGizmoZ->mesh.data, (char*)mPositionUCSGizmoZPath.c_str());
 	//	设置坐标
 	PositionUCSGizmoZ->position = Vector3(0, 0, 0);
 	PositionUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
@@ -127,7 +127,7 @@ void GizmosManager::BuildScene(
 	RotationUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	RotationUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoX->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_x.obj");
+	ObjLoader::LoadObj(RotationUCSGizmoX->mesh.data, (char*)mRotationUCSGizmoXPath.c_str());
 	//	设置坐标
 	RotationUCSGizmoX->position = Vector3(0, 0, 0);
 	RotationUCSGizmoX->eulerangle = Vector3(0, 0, 0);
@@ -145,7 +145,7 @@ void GizmosManager::BuildScene(
 	RotationUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	RotationUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoY->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_y.obj");
+	ObjLoader::LoadObj(RotationUCSGizmoY->mesh.data, (char*)mRotationUCSGizmoYPath.c_str());
 	//	设置坐标
 	RotationUCSGizmoY->position = Vector3(0, 0, 0);
 	RotationUCSGizmoY->eulerangle = Vector3(0, 0, 0);
@@ -163,7 +163,7 @@ void GizmosManager::BuildScene(
 	RotationUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	RotationUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoZ->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_z.obj");
+	ObjLoader::LoadObj(RotationUCSGizmoZ->mesh.data, (char*)mRotationUCSGizmoZPath.c_str());
 	//	设置坐标
 	RotationUCSGizmoZ->position = Vector3(0, 0, 0);
 	RotationUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
@@ -185,7 +185,7 @@ void GizmosManager::BuildScene(
 	ScaleUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	ScaleUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoX->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_x.obj");
+	ObjLoader::LoadObj(ScaleUCSGizmoX->mesh.data, (char*)mScaleUCSGizmoXPath.c_str());
 	//	设置坐标
 	ScaleUCSGizmoX->position = Vector3(0, 0, 0);
 	ScaleUCSGizmoX->eulerangle = Vector3(0, 0, 0);
@@ -203,7 +203,7 @@ void GizmosManager::BuildScene(
 	ScaleUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	ScaleUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoY->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_y.obj");
+	ObjLoader::LoadObj(ScaleUCSGizmoY->mesh.data, (char*)mScaleUCSGizmoYPath.c_str());
 	//	设置坐标
 	ScaleUCSGizmoY->position = Vector3(0, 0, 0);
 	ScaleUCSGizmoY->eulerangle = Vector3(0, 0, 0);
@@ -221,7 +221,7 @@ void GizmosManager::BuildScene(
 	ScaleUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	ScaleUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoZ->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_z.obj");
+	ObjLoader::LoadObj(ScaleUCSGizmoZ->mesh.data, (char*)mScaleUCSGizmoZPath.c_str());
 	//	设置坐标
 	ScaleUCSGizmoZ->position = Vector3(0, 0, 0);
 	ScaleUCSGizmoZ->eulerangle = Vector3(0, 0, 0);

@@ -139,7 +139,7 @@ void SceneManager::BuildDefaultScene(
 	model_ak47->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	创建球网格
-	ObjLoader::LoadObj(model_ak47->mesh.data, "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/ak47.obj");
+	ObjLoader::LoadObj(model_ak47->mesh.data, (char*)mAk47ObjPath.c_str());
 
 	//	设置坐标
 	model_ak47->position = Vector3(0, 0, 0);

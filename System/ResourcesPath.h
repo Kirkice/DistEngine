@@ -296,18 +296,18 @@
 
 
 	//	Mesh Path
-	//char* mAk47ObjPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/ak47.obj"; 
+	const std::string mAk47ObjPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/ak47.obj";
 
-	//char* mPositionUCSGizmoXPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_x.obj";
-	//char* mPositionUCSGizmoYPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_y.obj";
-	//char* mPositionUCSGizmoZPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/position_z.obj";
+	const std::string mPositionUCSGizmoXPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/position_x.obj";
+	const std::string mPositionUCSGizmoYPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/position_y.obj";
+	const std::string mPositionUCSGizmoZPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/position_z.obj";
 
-	//char* mRotationUCSGizmoXPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_x.obj";
-	//char* mRotationUCSGizmoYPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_y.obj";
-	//char* mRotationUCSGizmoZPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/rotation_z.obj";
+	const std::string mRotationUCSGizmoXPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/rotation_x.obj";
+	const std::string mRotationUCSGizmoYPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/rotation_y.obj";
+	const std::string mRotationUCSGizmoZPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/rotation_z.obj";
 
-	//char* mScaleUCSGizmoXPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_x.obj";
-	//char* mScaleUCSGizmoYPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_y.obj";
-	//char* mScaleUCSGizmoZPath = "D:/MyEngine/DistEngine/DistEngine/Asset/Mesh/scale_z.obj";
+	const std::string mScaleUCSGizmoXPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/scale_x.obj";
+	const std::string mScaleUCSGizmoYPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/scale_y.obj";
+	const std::string mScaleUCSGizmoZPath = "F:/Engine/DistEngine/DistEngine/Asset/Mesh/scale_z.obj";
 
 
