@@ -664,6 +664,12 @@ void GraphicsCore::BuildPSOs()
 	VolumeFogObject.SetShader(mShaderManager, mRootSignature, "volumeFogVS", "volumeFogPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VolumeFogObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["VolumeFog"])));
 
+	// 	PSO for FxAA
+	PipelineStateObject FxAAObject = PipelineStateObject();
+	FxAAObject.BuildDefault(mShaderManager, mRootSignature);
+	FxAAObject.SetShader(mShaderManager, mRootSignature, "FastApproximateAntialiasingVS", "FastApproximateAntialiasingPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(FxAAObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["FxAA"])));
+
 	// PSO for sky.
 	PipelineStateObject SkyBoxObject = PipelineStateObject();
 	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);

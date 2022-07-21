@@ -128,6 +128,7 @@ struct FogSetting
 struct PostProcessSwitch
 {
 	bool ShowVolumeFog = false;
+	bool ShowFxAA = false;
 };
 
 class GraphicsUtils

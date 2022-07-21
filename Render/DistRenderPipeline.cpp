@@ -135,17 +135,19 @@ void DistRenderPipeline::RenderGizmosPass()
 //	渲染后处理
 void DistRenderPipeline::RenderPostProcessPass()
 {
+	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
+	SetMatBuffer(MatBufferType::PostProcess);
+
 	if (mPostProcessSwitch.ShowVolumeFog)
 		DrawVolumeFog();
 
+	if (mPostProcessSwitch.ShowFxAA)
+		DrawFxAA();
 }
 
 //	渲染体积雾
 void DistRenderPipeline::DrawVolumeFog()
 {
-	mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
-	SetMatBuffer(MatBufferType::PostProcess);
-
 	DrawRenderItemFormLayer("VolumeFog", (int)RenderLayer::PostProcess);
 
 	SetTargetToPresnet(CurrentBackBuffer());
@@ -161,7 +163,23 @@ void DistRenderPipeline::DrawVolumeFog()
 	SetDestToRead(mRenderTarget->Resource());
 }
 
+//	渲染快速近似抗锯齿
+void DistRenderPipeline::DrawFxAA()
+{
+	DrawRenderItemFormLayer("FxAA", (int)RenderLayer::PostProcess);
 
+	SetTargetToPresnet(CurrentBackBuffer());
+
+	SetReadToDest(mRenderTarget->Resource());
+
+	SetPresentToSource(CurrentBackBuffer());
+
+	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
+
+	SetSourceToPresent(CurrentBackBuffer());
+
+	SetDestToRead(mRenderTarget->Resource());
+}
 
 
 /// <summary>

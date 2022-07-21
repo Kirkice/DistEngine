@@ -2,6 +2,10 @@
 
 void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 {
+	/// <summary>
+	/// 体积雾
+	/// </summary>
+	/// <param name="matCBIndexUtils"></param>
 	auto VolumeFog = std::make_unique<MeshRender>();
 	VolumeFog->name = "VolumeFog";
 	//构建材质
@@ -15,6 +19,25 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 	//	创建碰撞盒
 	VolumeFog->Enable = true;
 	mMeshRender.push_back(std::move(VolumeFog));
+
+	/// <summary>
+	/// FxAA
+	/// </summary>
+	/// <param name="matCBIndexUtils"></param>
+	auto FastApproximateAntialiasing = std::make_unique<MeshRender>();
+	FastApproximateAntialiasing->name = "FastApproximateAntialiasing";
+	//构建材质
+	FastApproximateAntialiasing->material.Name = "FastApproximateAntialiasing_mat";
+	FastApproximateAntialiasing->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+
+	//	创建平面网格
+	FastApproximateAntialiasing->mesh.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+
+	//	创建碰撞盒
+	FastApproximateAntialiasing->Enable = true;
+	mMeshRender.push_back(std::move(FastApproximateAntialiasing));
+
 }
 
 void PostProcessManager::UpdateMaterialBuffer(
@@ -63,6 +86,8 @@ void PostProcessManager::UpdateMaterialBuffer(
 		matData.Distance = mat->Distance;
 		matData.ResoultionLevel = mat->ResoultionLevel;
 		matData.FSRSharpen = matData.FSRSharpen;
+		PostProcessBuffer->CopyData(mat->MatCBIndex, matData);
+		mat->NumFramesDirty--;
 	}
 }
 

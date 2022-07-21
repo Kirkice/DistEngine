@@ -361,6 +361,7 @@ void GUISystem::DrawCameraEditor()
 		ImGui::InputFloat("Near Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipN);
 		ImGui::InputFloat("Far Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipF);
 		ImGui::Checkbox("RenderSkyBox", &mSceneManager.getInstance().mCameraSetting.renderSkyBox);
+		ImGui::Checkbox("Enable FxAA", &mPostProcessSwitch.ShowFxAA);
 		ImGui::ColorEdit3("SolidColor", mSceneManager.getInstance().mCameraSetting.SolidColor);
 		ImGui::InputFloat2("ViewPort", RectXY);
 		ImGui::InputFloat2("Rect", RectWH);

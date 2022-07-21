@@ -1,15 +1,16 @@
-/* $Header: RGBSplit.hlsl                                           6/26/21 20:55p KirkZhu $ */
+/* $Header: FxAA.hlsl                                                7/21/22 20:06p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *
 *                                                                                             *
-*                    File Name : RGBSplit.hlsl                                                *
+*                    File Name : FxAA.hlsl                                                    *
 *                                                                                             *
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
-#ifndef RGBSPLIT_INCLUDE
-#define RGBSPLIT_INCLUDE
+
+#ifndef FXAA_INCLUDE
+#define FXAA_INCLUDE
 
 #include "Core.hlsl"
 
@@ -36,17 +37,8 @@ VertexOut VS(VertexIn vin)
 float4 PS(VertexOut pin) : SV_Target
 {
 	PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
-	float Scale											= 1 - matData.RGBSplitStrength;
-	float2 newTextureCoordinate	 						= float2((Scale - 1.0) * 0.5 + pin.TexC.x / Scale,(Scale - 1.0) *0.5 + pin.TexC.y /Scale);
-
-	float4 textureColor 								= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate); 
-
-	float4 shiftColor1 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.05 * (Scale - 1.0), - 0.05 *(Scale - 1.0)));
-	float4 shiftColor2 									= gRenderTarget.Sample(gsamLinearClamp, newTextureCoordinate + float2(-0.1 * (Scale - 1.0), - 0.1 *(Scale - 1.0)));
-	float3 blendFirstColor 								= float3(textureColor.r , textureColor.g, shiftColor1.b);
-	float3 blend3DColor 								= float3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
-	return 												float4(blend3DColor,textureColor.a);  
+	float4 outColor 								    = gRenderTarget.Sample(gsamLinearClamp, pin.TexC); 
+	return 												outColor;  
 }
 
 #endif
-

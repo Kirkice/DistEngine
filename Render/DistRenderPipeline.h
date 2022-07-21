@@ -61,7 +61,8 @@ private:
 	//	渲染体积雾
 	void DrawVolumeFog();
 
-
+	//	渲染快速近似抗锯齿
+	void DrawFxAA();
 
 
 	//	RenderUtils
