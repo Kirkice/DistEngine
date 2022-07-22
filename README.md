@@ -1,43 +1,48 @@
-<p align="center">
-  <img height="256" width="256" src="https://imgur.com/SrDBxy0.png">
-</p>
+<div align="center">
 
-# Dist Engine
+# 💡 DistEngine
+
+**Personal real-time global illumination toy engine made with DirectX 12**
+
+[![DIST](https://img.shields.io/badge/dist-open%20source-blueviolet.svg)]()
+[![DIST](https://img.shields.io/badge/demo-20220722-brightgreen)]()
+[![DIST](https://img.shields.io/static/v1?label=license&message=MIT&color=green)](https://opensource.org/licenses/MIT)
+</div>
 
 
-ScreenShot:
-<p align="center">
-  <img height="401px" width="743px" src="https://i.imgur.com/NUXVEsY.png">
-</p>
+This is an open source rendering engine for learning. In the future,various rendering functions will be added continuously. As it is a project for learning, performance overhead will not be considered.
+
+`DistEngine` will include various lighting models and rendering functions in the future, such as real physics rendering, cartoon rendering, and water rendering. DXR ray tracing, SSGI, SH and other global lighting technologies.
 
 
-# Version 1.0
+![image (5)](https://imgur.com/Oeovi71.png)
+_Simple scene rendered in DitEngine. 
 
-- v1.0 Include：
-  - Forward Renderer Path
-  - Simple PBR Material
-  - Simple NPR Material
-  - IMGUI Ctrl
+## Features(done)
 
-NPR Material 
-<p align="center">
-    <img height="401px" width="743px" src="https://i.imgur.com/0cHQx8Y.png">
-</p>
+* Fbx Obj mesh loading
+* Atmospheric rendering skybox
+* Deferred rendering path and forward rendering path
+* Standard PBR with GGX and roughness/metalness
+  * Energy-preserving multi-scattering BRDF
+* Fast Approximate Anti-Aliasing and anti-aliasing
+* GlobalFog System(Linear Fog、Height Fog、Volume Fog)
+* PostProcess
+  * Natural tone mapping
+  * RGBSplit
+  * RadialBlur
+  * Vignette
+  * Decolor
+  * Brightness
+  * HSV
+  * Mosaic
+  * Sharpen
+  * Spherize
+  * WhiteBalance
+  * OilPaint
+  * Relief
+  * EdgeDetection
 
-NPR Material 
-<p align="center">
-    <img height="401px" width="743px" src="https://i.imgur.com/tKSvek0.png">
-</p>
-
-PBR Material
-<p align="center">
-    <img height="401px" width="743px" src="https://i.imgur.com/u2hFz0x.png">
-</p>
-
-PBR Material
-<p align="center">
-    <img height="401px" width="743px" src="https://i.imgur.com/uU9jIau.png">
-</p>
 
 # Dependencies
 - Visual Studio 2019
