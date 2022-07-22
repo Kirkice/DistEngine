@@ -25,28 +25,41 @@ _Simple scene rendered in DitEngine.
 * Deferred rendering path and forward rendering path
 * Standard PBR with GGX and roughness/metalness
   * Energy-preserving multi-scattering BRDF
-* Fast Approximate Anti-Aliasing and anti-aliasing
-* GlobalFog System(Linear Fog、Height Fog、Volume Fog)
+* Fast approximate anti-Aliasing
+* Screen-space ambient occlusion
+* Screen-space global illumination
+* Global fog system
+* FidelityFX Super Resolution 1.0
 * PostProcess
-  * Natural tone mapping
-  * RGBSplit
-  * RadialBlur
-  * Vignette
-  * Decolor
-  * Brightness
-  * HSV
-  * Mosaic
-  * Sharpen
-  * Spherize
-  * WhiteBalance
-  * OilPaint
-  * Relief
-  * EdgeDetection
+
+## Features(todo)
+
+* Cluster based light culling
+* Direct X ray tracing
+* Water Rendering
+* Jolit physics system
 
 
-# Dependencies
-- Visual Studio 2019
-- DirectX 3D 12
+## Technical details
+
+* Repository highlights:
+  * HLSL shaders: [`DistEngine/Asset/Shaders`](DistEngine/Asset/Shaders)
+  * Core code: [`Core`](Core)
+  * Main render graph passes: [`Render`](Render)
+
+## Primary platforms
+
+`kajiya` currently works on a limited range of operating systems and hardware.
+
+Hardware:
+
+* Nvidia RTX series
+* Nvidia GTX 1060 and newer _with 6+ GB of VRAM_ (slow: driver-emulated ray-tracing)
+* AMD Radeon RX 6000 series
+
+Operating systems:
+
+* Windows
 
 # Community
 Technical exchange can visit me from this link ：https://www.zhihu.com/people/kirk-54-38.
