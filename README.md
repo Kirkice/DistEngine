@@ -14,17 +14,13 @@ This is an open source rendering engine for learning. In the future,various rend
 
 `DistEngine` will include various lighting models and rendering functions in the future, such as real physics rendering, cartoon rendering, and water rendering. DXR ray tracing, SSGI, SH and other global lighting technologies.
 
-<p align="left">
-  <img height="438px" width="802px" src="https://imgur.com/Oeovi71.png">
-</p>
+![image (5)](https://imgur.com/Oeovi71.png)
 
-_Simple scene rendered in DitEngine. 
+***
 
-<p align="left">
-  <img height="438px" width="802px" src="https://imgur.com/hS6ojTH.png">
-</p>
+![image (5)](https://imgur.com/hS6ojTH.png)
 
-_Simple screen space global illumination in DitEngine.[Scene]() by ConelBox
+Simple screen space global illumination in DitEngine.[Scene]() by ConelBox
 
 ## Features `done`
 
