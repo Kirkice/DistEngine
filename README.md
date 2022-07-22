@@ -14,11 +14,19 @@ This is an open source rendering engine for learning. In the future,various rend
 
 `DistEngine` will include various lighting models and rendering functions in the future, such as real physics rendering, cartoon rendering, and water rendering. DXR ray tracing, SSGI, SH and other global lighting technologies.
 
+<p align="left">
+  <img height="438px" width="802px" src="https://imgur.com/Oeovi71.png">
+</p>
 
-![image (5)](https://imgur.com/Oeovi71.png)
 _Simple scene rendered in DitEngine. 
 
-## Features(done)
+<p align="left">
+  <img height="438px" width="802px" src="https://imgur.com/hS6ojTH.png">
+</p>
+
+_Simple screen space global illumination in DitEngine.[Scene]() by ConelBox
+
+## Features `done`
 
 * Fbx Obj mesh loading
 * Atmospheric rendering skybox
@@ -26,30 +34,63 @@ _Simple scene rendered in DitEngine.
 * Standard PBR with GGX and roughness/metalness
   * Energy-preserving multi-scattering BRDF
 * Fast approximate anti-Aliasing
-* Screen-space ambient occlusion
-* Screen-space global illumination
+* Dynamic global illumination
+  * Screen-space global illumination
 * Global fog system
 * FidelityFX Super Resolution 1.0
+* Imgui editor manager
 * PostProcess
+  * RGB-split feature
+  * Radial blur feature
+  * Vignette feature
+  * Decolor feature
+  * Brightness feature
+  * HSV feature
+  * Screen mosaic feature
+  * Sharpen feature
+  * White balance feature
+  * Oil paint feature
+  * Relief feature
+  * Robert edge detection feature
+  * Screen-space ambient occlusion
 
-## Features(todo)
+## Features `todo`
 
+* Temporal super-resolution and anti-aliasing
+* Natural tone mapping
+* Basic motion blur
 * Cluster based light culling
+* Dynamic global illumination
+  * Voxel global illumination
+* Nvidia Optix Denoiser
 * Direct X ray tracing
+* Volumetric Lighting
+* Carton rendering shader
+* Proceduralcontent generation terrain mesh
 * Water Rendering
-* Jolit physics system
+* Jolit physics system add
 
+## Controls in the `view` app
+
+* WSAD - movement
+* Mouse + RMB - rotate the camera
+* Mouse + LMB - select game object
 
 ## Technical details
 
 * Repository highlights:
   * HLSL shaders: [`DistEngine/Asset/Shaders`](DistEngine/Asset/Shaders)
+  * Model meshs: [`DistEngine/Asset/Mesh`](DistEngine/Asset/Mesh)
+  * Textures: [`DistEngine/Asset/Textures`](DistEngine/Asset/Textures)
   * Core code: [`Core`](Core)
-  * Main render graph passes: [`Render`](Render)
+  * Component code: [`Component`](Component)
+  * Logic code: [`System`](System)
+  * Rendering code: [`Render`](Render)
+  * Editor code: [`Editor`](Editor)
 
 ## Primary platforms
 
-`kajiya` currently works on a limited range of operating systems and hardware.
+`DistEngine` currently works on a limited range of operating systems and hardware.
 
 Hardware:
 
@@ -57,9 +98,10 @@ Hardware:
 * Nvidia GTX 1060 and newer _with 6+ GB of VRAM_ (slow: driver-emulated ray-tracing)
 * AMD Radeon RX 6000 series
 
-Operating systems:
+Operating systems and language:
 
 * Windows
+* C++ 17
 
 # Community
 Technical exchange can visit me from this link ：https://www.zhihu.com/people/kirk-54-38.
