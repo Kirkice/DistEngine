@@ -227,7 +227,7 @@ void GizmosManager::BuildScene(
 	ScaleUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
 	ScaleUCSGizmoZ->scale = Vector3(1, 1, 1);
 	ScaleUCSGizmoZ->bound.aabb = BoundingAABB(ScaleUCSGizmoZ->mesh.data);
-	ScaleUCSGizmoZ->Enable = ScaleUCSEnable;
+	ScaleUCSGizmoZ->Enable = ScaleUCSEnable; 
 	ScaleUCSGizmoZ->bound.aabb.m_min = ScaleUCSGizmoZ->GetWorldMatrix() * ScaleUCSGizmoZ->bound.aabb.m_min;
 	ScaleUCSGizmoZ->bound.aabb.m_max = ScaleUCSGizmoZ->GetWorldMatrix() * ScaleUCSGizmoZ->bound.aabb.m_max;
 	mMeshRender.push_back(std::move(ScaleUCSGizmoZ));
