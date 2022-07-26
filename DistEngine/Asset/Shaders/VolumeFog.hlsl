@@ -148,7 +148,7 @@ float3x3 setCamera(float3 ro, float3 ta, float cr )
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	PostprocessingData matData = gPostprocessingData[29];
+	PostprocessingData matData = gPostprocessingData[gMaterialIndex];
 
     // camera	
     float3 ta = float3( 0, 0, 0 );
