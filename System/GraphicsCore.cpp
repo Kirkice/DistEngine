@@ -344,7 +344,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUDescriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
 	UINT mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+	UINT RenderTargetStartIndex = 0;
 	UINT TextureIndex = 0;
 	//Load Icon
 	for (size_t i = 0; i < mProjectIconTextures.size(); i++)
@@ -437,6 +437,8 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	}
 
+	RenderTargetStartIndex = TextureIndex;
+
 	//Load CubeMap
 	for (size_t i = 0; i < mProjectCubeMapTextures.size(); i++)
 	{
@@ -470,7 +472,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 
 	mShadowMap->BuildDescriptors(
 		CPUDescriptor, 
-		GPUDescriptor, 
+		GPUDescriptor,
 		GetDsv(1), 
 		mCbvSrvUavDescriptorSize
 	);

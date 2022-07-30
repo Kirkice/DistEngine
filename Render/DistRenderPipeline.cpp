@@ -135,7 +135,7 @@ void DistRenderPipeline::RenderGizmosPass()
 //	äÖÈ¾ºó´¦Àí
 void DistRenderPipeline::RenderPostProcessPass()
 {
-	//mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());   
+	//mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
 	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	render_target_descriptor.Offset(UINT(25), mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
