@@ -162,5 +162,6 @@ public:
 
 	//	Fog Settings
 	FogSetting mFogSettings;
-
+	//	AntialiasingSettings
+	AntialiasingSettings mAntialiasingSettings;
 };

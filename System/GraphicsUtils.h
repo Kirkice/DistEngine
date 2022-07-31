@@ -125,10 +125,18 @@ struct FogSetting
 	Vector4 CameraDir = { 0,0,8,1 };
 };
 
+struct AntialiasingSettings
+{
+	float AbsoluteLumaThreshold = 0.08f;
+	float RelativeLumaThreshold = 0.25f;
+	float ConsoleCharpness = 4;
+	float DebugMode = 0;
+};
+
 struct PostProcessSwitch
 {
 	bool ShowVolumeFog = false;
-	bool ShowFxAA = false;
+	bool ShowFxAA = true;
 };
 
 class GraphicsUtils

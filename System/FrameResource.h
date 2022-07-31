@@ -64,6 +64,9 @@ struct PassConstants
     Vector4 Parames02 = Vector4(0.1f, 0,0,0);
     Vector4 SkyColor = Vector4(0.39f, 0.57f, 1.0f,1.0f);
 
+    // AntialiasingSettings
+    Vector4 FxaaParames = Vector4(0.08f, 0.25f, 4.0f, 0.0f);
+
     //Light
     DirLight DirectionLights;
 };

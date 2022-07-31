@@ -361,7 +361,6 @@ void GUISystem::DrawCameraEditor()
 		ImGui::InputFloat("Near Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipN);
 		ImGui::InputFloat("Far Clip", &mSceneManager.getInstance().mCameraSetting.mCamClipF);
 		ImGui::Checkbox("RenderSkyBox", &mSceneManager.getInstance().mCameraSetting.renderSkyBox);
-		ImGui::Checkbox("Enable FxAA", &mPostProcessSwitch.ShowFxAA);
 		ImGui::ColorEdit3("SolidColor", mSceneManager.getInstance().mCameraSetting.SolidColor);
 		ImGui::InputFloat2("ViewPort", RectXY);
 		ImGui::InputFloat2("Rect", RectWH);
@@ -642,6 +641,18 @@ void GUISystem::DrawRenderSetting()
 		//float cameraDirArray[3] = { mFogSettings.CameraDir.x,mFogSettings.CameraDir.y,mFogSettings.CameraDir.z };
 		//ImGui::InputFloat3("CameraDir", cameraDirArray);
 		//mFogSettings.CameraDir = Vector4(cameraDirArray[0], cameraDirArray[1], cameraDirArray[2], 1);
+	}
+
+	if (ImGui::CollapsingHeader("Antialiasing Settings"))
+	{
+		ImGui::Text("Fast Approximate Antialiasing");
+		ImGui::Checkbox("Enable FxAA", &mPostProcessSwitch.ShowFxAA);
+		bool DebugMode = (bool)mAntialiasingSettings.DebugMode;
+		ImGui::Checkbox("Debug Mode", &DebugMode);
+		mAntialiasingSettings.DebugMode = (int)DebugMode;
+		ImGui::SliderFloat("AbsoluteLumaThreshold", &mAntialiasingSettings.AbsoluteLumaThreshold, 0.01f, 0.5f);
+		ImGui::SliderFloat("RelativeLumaThreshold", &mAntialiasingSettings.RelativeLumaThreshold, 0.1f, 0.5f);
+		ImGui::SliderFloat("ConsoleCharpness", &mAntialiasingSettings.ConsoleCharpness, 0.1f, 10.0f);
 	}
 
 	ImGui::End();

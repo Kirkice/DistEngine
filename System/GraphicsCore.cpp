@@ -284,6 +284,9 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.Parames02 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.MultiScatterPhase, mSceneManager.getInstance().mSkyBoxSetting.AnisotropicIntensity, 0, 0);
 	mMainPassCB.SkyColor = mSceneManager.getInstance().mSkyBoxSetting.SkyColor;
 
+	//AntialiasingSettings
+	mMainPassCB.FxaaParames = Vector4(mAntialiasingSettings.AbsoluteLumaThreshold, mAntialiasingSettings.RelativeLumaThreshold, mAntialiasingSettings.ConsoleCharpness, mAntialiasingSettings.DebugMode);
+
 	//Light
 	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
 	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;

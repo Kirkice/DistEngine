@@ -15,9 +15,10 @@
 #include "Core.hlsl"
 
 #define ScreenParams float4(1920, 1080, 1.000521, 1.000926)
-#define AbsoluteLumaThreshold 0.08
-#define RelativeLumaThreshold 0.25
-#define ConsoleCharpness 4
+#define AbsoluteLumaThreshold gFxaaParames.x
+#define RelativeLumaThreshold gFxaaParames.y
+#define ConsoleCharpness gFxaaParames.z
+#define DebugMode gFxaaParames.w
 
 
 struct VertexIn
@@ -273,9 +274,6 @@ float4 PS(VertexOut pin) : SV_Target
         dir.y                                           = sWMinNE - sEMinNW;
 
         dir = normalize(dir);
-        //FXAA_DEBUG_EDGE
-        // return half4(abs(dir),0,1);
-
 
         half4 rgblP1                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC + dir * invTextureSize * 0.5);
         half4 rgblN1                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC - dir * invTextureSize * 0.5);
@@ -299,8 +297,8 @@ float4 PS(VertexOut pin) : SV_Target
     }
     else
     {
-        // FXAA_DEBUG_CULL_PASS
-        // return half4(0,0,0,1);
+        if(DebugMode > 0.5)
+            return half4(0,0,0,1);
 
         return half4(rgblM.rgb,1);
     }
