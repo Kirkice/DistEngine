@@ -250,9 +250,6 @@ inline float GetEdgeBlend(Texture2D tex,float2 uv,FXAAEdge edge,FXAACrossData cr
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
-	float4 outColor 								    = gRenderTarget.Sample(gsamLinearClamp, pin.TexC); 
-
     float2 invTextureSize                               = (ScreenParams.zw - 1);
     float4 offset                                       = float4(1,1,-1,-1) * invTextureSize.xyxy * 0.5;
     FXAACornerData corner                               = SampleCorners(gRenderTarget,pin.TexC,offset);
@@ -302,7 +299,6 @@ float4 PS(VertexOut pin) : SV_Target
 
         return half4(rgblM.rgb,1);
     }
-	// return 												outColor;  
 }
 
 #endif
