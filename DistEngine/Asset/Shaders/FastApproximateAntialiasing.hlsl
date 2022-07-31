@@ -14,9 +14,11 @@
 
 #include "Core.hlsl"
 
-#define FXAA_SPAN_MAX           (8.0)
-#define FXAA_REDUCE_MUL         (1.0 / 8.0)
-#define FXAA_REDUCE_MIN         (1.0 / 128.0)
+#define ScreenParams float4(1920, 1080, 1.000521, 1.000926)
+#define AbsoluteLumaThreshold 0.08
+#define RelativeLumaThreshold 0.25
+#define ConsoleCharpness 4
+
 
 struct VertexIn
 { 
@@ -38,31 +40,211 @@ VertexOut VS(VertexIn vin)
     return vout;
 }
 
-half3 Fetch(float2 coords, float2 offset)
+//究极抗锯齿
+#define FXAA_MAX_EAGE_SEARCH_SAMPLE_COUNT 12
+static half edgeSearchSteps[FXAA_MAX_EAGE_SEARCH_SAMPLE_COUNT] = {
+    1,1,1,1,1,
+    1.5,2,2,2,2,
+    4,8
+};
+
+struct FXAACrossData{
+    half4 M;
+    half4 N;
+    half4 S;
+    half4 W;
+    half4 E;
+};
+
+struct FXAACornerData{
+    half4 NW;
+    half4 NE;
+    half4 SW;
+    half4 SE;
+};
+
+struct FXAAEdge{
+    half2 dir;
+    half2 normal;
+    bool isHorz;
+    half lumaEdge; //往normal方向偏移0.5个像素的亮度
+    half4 oppRGBL;
+};
+
+inline float rgb2luma(half3 color)
 {
-    float2 uv 											= coords + offset;
-    return 												gRenderTarget.Sample(gsamLinearClamp, uv).xyz;
+    return dot(color,half3(0.299,0.587,0.114));
 }
 
-half3 Load(int2 icoords, int idx, int idy)
+inline half4 SampleLinear(Texture2D tex,float2 uv)
 {
-    float2 uv 											= (icoords + int2(idx, idy));
-    return 												gRenderTarget.Sample(gsamLinearClamp, uv).xyz;
+    return tex.Sample(gsamLinearClamp,uv);
 }
 
-half Luminance(half3 inputColor)
+inline half4 SampleRGBLumaLinear(Texture2D tex,float2 uv)
 {
-	return 												0.2125 * inputColor.r + 0.7154 * inputColor.g + 0.0721 * inputColor.b;
+    half3 color = SampleLinear(tex,uv).rgb;
+    return half4(color,rgb2luma(color));
 }
 
-float3 Min3(float a, float b, float c)
+///采集上下左右4个像素 + 中心像素
+inline FXAACrossData SampleCross(Texture2D tex,float2 uv,float4 offset)
 {
-	return min(min(a, b), c);
+    FXAACrossData crossData;
+    crossData.M = SampleRGBLumaLinear(tex,uv);
+    crossData.S = SampleRGBLumaLinear(tex,uv + float2(0,-offset.y));
+    crossData.N = SampleRGBLumaLinear(tex,uv + float2(0,offset.y));
+    crossData.W = SampleRGBLumaLinear(tex,uv + float2(-offset.x,0));
+    crossData.E = SampleRGBLumaLinear(tex,uv + float2(offset.x,0));
+    return crossData;
 }
 
-float3 Max3(float a, float b, float c)
+inline half4 CalculateContrast(in FXAACrossData cross)
 {
-	return max(max(a, b), c);
+    half lumaMin = min(min(min(cross.N.a,cross.S.a),min(cross.W.a,cross.E.a)),cross.M.a);
+    half lumaMax = max(max(max(cross.N.a,cross.S.a),max(cross.W.a,cross.E.a)),cross.M.a);
+    half lumaContrast = lumaMax - lumaMin;
+    return half4(lumaContrast,lumaMin,lumaMax,0);
+}
+
+//offset由(x,y,-x,-y)组成
+inline FXAACornerData SampleCorners(Texture2D tex,float2 uv,float4 offset)
+{
+    FXAACornerData cornerData;
+    half3 rgbNW = SampleLinear(tex,uv + offset.zy);
+    half3 rgbSW = SampleLinear(tex,uv + offset.zw);
+    half3 rgbNE = SampleLinear(tex,uv + offset.xy);
+    half3 rgbSE = SampleLinear(tex,uv + offset.xw);
+
+    cornerData.NW = half4(rgbNW,rgb2luma(rgbNW));
+    cornerData.NE = half4(rgbNE,rgb2luma(rgbNE));
+    cornerData.SW = half4(rgbSW,rgb2luma(rgbSW));
+    cornerData.SE = half4(rgbSE,rgb2luma(rgbSE));
+    return cornerData;
+}
+
+inline FXAAEdge GetEdge(in FXAACrossData cross ,in FXAACornerData corner)
+{
+
+    FXAAEdge edge;
+
+    half lumaM = cross.M.a;
+    half lumaN = cross.N.a;
+    half lumaS = cross.S.a;
+    half lumaW = cross.W.a;
+    half lumaE = cross.E.a;
+
+    half lumaGradS = lumaS - lumaM;
+    half lumaGradN = lumaN - lumaM;
+    half lumaGradW = lumaW - lumaM;
+    half lumaGradE = lumaE - lumaM;
+
+    half lumaGradH = abs(lumaGradW + lumaGradE);
+    half lumaGradV = abs(lumaGradS + lumaGradN);
+
+    half lumaNW = corner.NW.a;
+    half lumaNE = corner.NE.a;
+    half lumaSW = corner.SW.a;
+    half lumaSE = corner.SE.a;
+
+    lumaGradH = abs(lumaNW + lumaNE - 2 * lumaN) 
+    + 2 * lumaGradH
+    + abs(lumaSW + lumaSE - 2 * lumaS);
+
+    lumaGradV = abs(lumaNW + lumaSW - 2 * lumaW) 
+    + 2 * lumaGradV
+    + abs(lumaNE + lumaSE - 2 * lumaE);
+
+    bool isHorz = lumaGradV >= lumaGradH;
+    edge.isHorz = isHorz;
+    if(isHorz)
+    {
+        half s = sign(abs(lumaGradN) - abs(lumaGradS));
+        edge.dir = half2(1,0);
+        edge.normal = half2(0,s);
+        edge.lumaEdge = s > 0? (lumaN + lumaM) * 0.5:(lumaS + lumaM) * 0.5;
+        edge.oppRGBL = s > 0 ? cross.N:cross.S;
+    }
+    else
+    {
+        half s = sign(abs(lumaGradE) - abs(lumaGradW));
+        edge.dir = half2(0,1);
+        edge.normal = half2(s,0);
+        edge.lumaEdge = s > 0 ? (lumaE + lumaM) * 0.5:(lumaW + lumaM) * 0.5;
+        edge.oppRGBL = s > 0 ? cross.E:cross.W;
+    }
+    return edge;
+}
+
+inline half GetLumaGradient(FXAAEdge edge,FXAACrossData crossData)
+{
+    half luma1,luma2;
+    half lumaM = crossData.M.a;
+    if(edge.isHorz)
+    {
+        luma1 = crossData.S.a;
+        luma2 = crossData.N.a;
+    }
+    else
+    {
+        luma1 = crossData.W.a;
+        luma2 = crossData.E.a;
+    }
+    return max(abs(lumaM - luma1),abs(lumaM-luma2));
+}
+
+inline float GetEdgeBlend(Texture2D tex,float2 uv,FXAAEdge edge,FXAACrossData crossData){
+    float2 invScreenSize = (ScreenParams.zw-1);
+
+    half lumaM = crossData.M.a;
+    half lumaGrad = GetLumaGradient(edge,crossData);
+    half lumaGradScaled = lumaGrad * 0.25;
+    uv += edge.normal * 0.5 * invScreenSize;
+
+    half2 dir = edge.dir;
+
+    float lumaStart = edge.lumaEdge;
+
+    half4 rgblP,rgblN;
+
+    float2 posP = float2(0,0) ;
+    float2 posN = float2(0,0) ;
+    bool endP = false;
+    bool endN = false;
+
+    for(uint i = 0; i < FXAA_MAX_EAGE_SEARCH_SAMPLE_COUNT; i ++){
+        half step = edgeSearchSteps[i];
+        if(!endP){
+            posP += step * dir;
+            rgblP = SampleRGBLumaLinear(tex,uv + posP * invScreenSize);
+            endP = abs(rgblP.a - lumaStart) > lumaGradScaled;
+        }
+        if(!endN){
+            posN -= step * dir;
+            rgblN = SampleRGBLumaLinear(tex,uv + posN * invScreenSize);
+            endN = abs(rgblN.a - lumaStart) > lumaGradScaled;
+        }
+        if(endP && endN){
+            break;
+        }
+    }
+    posP = abs(posP);
+    posN = abs(posN);
+    float dstP = max(posP.x,posP.y);
+    float dstN = max(posN.x,posN.y);
+    float dst,lumaEnd;
+    if(dstP > dstN){
+        dst = dstN;
+        lumaEnd = rgblN.a;
+    }else{
+        dst = dstP;
+        lumaEnd = rgblP.a;
+    }
+    if((lumaM - lumaStart) * (lumaEnd - lumaStart) > 0){
+        return 0;
+    }
+    //blend的范围为0~0.5
+    return 0.5 - dst/(dstP + dstN);
 }
 
 float4 PS(VertexOut pin) : SV_Target
@@ -70,59 +252,59 @@ float4 PS(VertexOut pin) : SV_Target
 	PostprocessingData matData                          = gPostprocessingData[gMaterialIndex];
 	float4 outColor 								    = gRenderTarget.Sample(gsamLinearClamp, pin.TexC); 
 
-    float2 positionSS 									= pin.TexC;
+    float2 invTextureSize                               = (ScreenParams.zw - 1);
+    float4 offset                                       = float4(1,1,-1,-1) * invTextureSize.xyxy * 0.5;
+    FXAACornerData corner                               = SampleCorners(gRenderTarget,pin.TexC,offset);
+    corner.NE.a                                         += 1.0/384.0;
+    half4 rgblM                                         = SampleRGBLumaLinear(gRenderTarget,pin.TexC);
 
-    half3 color 										= Load(positionSS, 0, 0).xyz;
-    // Edge detection
-    half3 rgbNW 										= Load(positionSS, -1, -1);
-    half3 rgbNE 										= Load(positionSS,  1, -1);
-    half3 rgbSW 										= Load(positionSS, -1,  1);
-    half3 rgbSE 										= Load(positionSS,  1,  1);
+    half maxLuma                                        = max(max(corner.NW.a,corner.NE.a),max(corner.SW.a,corner.SE.a));
+    half minLuma                                        = min(min(corner.NW.a,corner.NE.a),min(corner.SW.a,corner.SE.a));
+    half lumaContrast                                   = max(rgblM.a,maxLuma) - min(rgblM.a,minLuma);
+    half edgeContrastThreshold                          = max(AbsoluteLumaThreshold, maxLuma * RelativeLumaThreshold);
 
-    rgbNW 												= saturate(rgbNW);
-    rgbNE 												= saturate(rgbNE);
-    rgbSW 												= saturate(rgbSW);
-    rgbSE 												= saturate(rgbSE);
-    color 												= saturate(color);
+    if(lumaContrast > edgeContrastThreshold){
+        half2 dir;
+        // dir.x = (corner.SW.a + corner.SE.a) - (corner.NW.a + corner.NE.a);
+        // dir.y = (corner.NW.a + corner.SW.a) - (corner.NE.a + corner.SE.a);
+        half sWMinNE                                    = corner.SW.a - corner.NE.a;
+        half sEMinNW                                    = corner.SE.a - corner.NW.a;
+        dir.x                                           = sWMinNE + sEMinNW;
+        dir.y                                           = sWMinNE - sEMinNW;
 
-    half lumaNW 										= Luminance(rgbNW);
-    half lumaNE 										= Luminance(rgbNE);
-    half lumaSW 										= Luminance(rgbSW);
-    half lumaSE 										= Luminance(rgbSE);
-    half lumaM 											= Luminance(color);
+        dir = normalize(dir);
+        //FXAA_DEBUG_EDGE
+        // return half4(abs(dir),0,1);
 
-    float2 dir;
-    dir.x 												= -((lumaNW + lumaNE) - (lumaSW + lumaSE));
-    dir.y 												= ((lumaNW + lumaSW) - (lumaNE + lumaSE));
 
-    half lumaSum 										= lumaNW + lumaNE + lumaSW + lumaSE;
-    float dirReduce 									= max(lumaSum * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
-    float rcpDirMin 									= rcp(min(abs(dir.x), abs(dir.y)) + dirReduce);
+        half4 rgblP1                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC + dir * invTextureSize * 0.5);
+        half4 rgblN1                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC - dir * invTextureSize * 0.5);
 
-    dir 												= min((FXAA_SPAN_MAX).xx, max((-FXAA_SPAN_MAX).xx, dir * rcpDirMin));
+        float dirAbsMinTimesC                           = min(abs(dir.x),abs(dir.y)) * ConsoleCharpness;
+        float2 dir2                                     = clamp(dir / dirAbsMinTimesC,-2,2);
 
-    // Blur
-    half3 rgb03 										= Fetch(positionSS, dir * (0.0 / 3.0 - 0.5));
-    half3 rgb13 										= Fetch(positionSS, dir * (1.0 / 3.0 - 0.5));
-    half3 rgb23 										= Fetch(positionSS, dir * (2.0 / 3.0 - 0.5));
-    half3 rgb33 										= Fetch(positionSS, dir * (3.0 / 3.0 - 0.5));
+        half4 rgblP2                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC + dir2 * invTextureSize * 2);
+        half4 rgblN2                                    = SampleRGBLumaLinear(gRenderTarget,pin.TexC - dir2 * invTextureSize * 2);
 
-    rgb03 												= saturate(rgb03);
-    rgb13 												= saturate(rgb13);
-    rgb23 												= saturate(rgb23);
-    rgb33 												= saturate(rgb33);
+        half4 rgblA                                     = rgblP1 + rgblN1;
+        half4 rgblB                                     = (rgblP2 + rgblN2) * 0.25 + rgblA * 0.25;
 
-    half3 rgbA 											= 0.5 * (rgb13 + rgb23);
-    half3 rgbB 											= rgbA * 0.5 + 0.25 * (rgb03 + rgb33);
+        bool twoTap                                     = rgblB.a < minLuma || rgblB.a > maxLuma;
 
-    half lumaB 											= Luminance(rgbB);
+        if(twoTap)
+        {
+            rgblB.rgb                                   = rgblA.rgb * 0.5;
+        }
+        return half4(rgblB.rgb,1);
+    }
+    else
+    {
+        // FXAA_DEBUG_CULL_PASS
+        // return half4(0,0,0,1);
 
-    half lumaMin 										= Min3(lumaM, lumaNW, Min3(lumaNE, lumaSW, lumaSE));
-    half lumaMax 										= Max3(lumaM, lumaNW, Max3(lumaNE, lumaSW, lumaSE));
-
-    color 												= ((lumaB < lumaMin) || (lumaB > lumaMax)) ? rgbA : rgbB;
-
-	return 												float4(color,1);  
+        return half4(rgblM.rgb,1);
+    }
+	// return 												outColor;  
 }
 
 #endif
