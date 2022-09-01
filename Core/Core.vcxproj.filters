@@ -4,8 +4,14 @@
     <Filter Include="Common">
       <UniqueIdentifier>{8a7e26bb-0f37-4e75-98c4-2b38f3a923e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mathf">
+    <Filter Include="Mathematics">
       <UniqueIdentifier>{e3c35327-67c1-43eb-81b3-6c5b2496d44f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LogSystem">
+      <UniqueIdentifier>{35cef455-14eb-4c5c-ac07-a0e91986172a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructure">
+      <UniqueIdentifier>{dde6b051-d97c-4455-9d63-7f69dd74d769}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,31 +31,34 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Vector2.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Vector3.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Vector4.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Matrix.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Quaternion.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Random.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="Mathf\Color.cpp">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClCompile>
     <ClCompile Include="LogSystem.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSystem\Log.cpp">
+      <Filter>LogSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,28 +84,28 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="MathHelper.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Vector2.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Vector3.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Vector4.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Matrix.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Quaternion.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Random.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Mathf.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
       <Filter>Common</Filter>
@@ -120,13 +129,55 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Mathf\Color.h">
-      <Filter>Mathf</Filter>
+      <Filter>Mathematics</Filter>
     </ClInclude>
     <ClInclude Include="LogSystem.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Macro.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="LogSystem\Log.h">
+      <Filter>LogSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\AVLTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\BinaryTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\BTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\CircularList.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\CircularQueue.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\DataStructure.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\DoubleLinkList.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\Heap.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\LinkedList.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\Queue.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\RBTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\SearchBinaryTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructure\Stack.h">
+      <Filter>DataStructure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

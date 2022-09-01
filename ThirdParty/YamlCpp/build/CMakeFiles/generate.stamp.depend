@@ -1,0 +1,33 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.23/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CheckCXXCompilerFlag.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CheckCXXSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Internal/CheckCompilerFlag.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Internal/CheckFlagCommonConfig.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/WriteBasicConfigVersionFile.cmake
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/CMakeLists.txt
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/build/CMakeFiles/3.23.2/CMakeCXXCompiler.cmake
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/build/CMakeFiles/3.23.2/CMakeRCCompiler.cmake
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/build/CMakeFiles/3.23.2/CMakeSystem.cmake
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/build/CMakeFiles/cmake.verify_globs
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/yaml-cpp-config.cmake.in
+D:/MyEngine/DistEngine_Restructure/ThirdParty/YamlCpp/yaml-cpp.pc.in
