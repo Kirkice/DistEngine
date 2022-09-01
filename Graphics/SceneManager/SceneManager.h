@@ -2,13 +2,13 @@
 #include "../Component/MeshRender.h"
 #include "../Component/DirectionLight.h"
 #include "../Component/Camera.h"
-#include "GraphicsUtils.h"
+#include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
 #include "d3dUtil.h"
-#include "Texture2D.h"
-#include "FrameResource.h"
-#include "FbxLoader.h"
-#include "ObjLoader.h"
+#include "../File/Texture2D.h"
+#include "../Graphics/FrameResource.h"
+#include "../Geometry/FbxLoader.h"
+#include "../Geometry/ObjLoader.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

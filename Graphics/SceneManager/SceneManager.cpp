@@ -1,5 +1,5 @@
 #include "SceneManager.h"
-#include "ResourcesPath.h"
+#include "../File/ResourcesPath.h"
 
 const int ProjectTexStart = 14;
 

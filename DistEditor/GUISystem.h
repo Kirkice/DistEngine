@@ -2,8 +2,8 @@
 #include "GUIUtils.h"
 #include "../Core/Mathf/Mathf.h"
 #include "RenderCore.h"
-#include "PointLight.h"
-#include "SpotLight.h"
+#include "Component/PointLight.h"
+#include "Component/SpotLight.h"
 
 #include "../ThirdParty/ImGUI/imgui.h"
 #include "../ThirdParty/ImGUI/imgui_impl_win32.h"

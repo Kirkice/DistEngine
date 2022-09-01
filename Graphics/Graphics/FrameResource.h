@@ -1,5 +1,5 @@
 #pragma once
-#include "DirectionLight.h"
+#include "../Component/DirectionLight.h"
 #include "d3dUtil.h"
 #include "../Core/Mathf/Mathf.h"
 #include "UploadBuffer.h"

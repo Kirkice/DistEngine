@@ -8,8 +8,7 @@
  
 #pragma comment(lib,"x64\\Debug\\Core.lib")
 #pragma comment(lib,"x64\\Debug\\ImGUI.lib") 
-#pragma comment(lib,"x64\\Debug\\System.lib")
-#pragma comment(lib,"x64\\Debug\\Component.lib")
+#pragma comment(lib,"x64\\Debug\\Graphics.lib")
 #pragma comment(lib,"x64\\Debug\\Stb.lib")
 #pragma comment(lib,"x64\\Debug\\TinyObjLoader.lib")
 #pragma comment(lib,"x64\\Debug\\Render.lib")

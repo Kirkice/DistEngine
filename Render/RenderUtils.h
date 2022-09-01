@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
-#include "GraphicsCore.h"
+#include "Graphics/GraphicsCore.h"
 
 using namespace Mathf;
 

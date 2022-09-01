@@ -1,5 +1,5 @@
 #include "GizmosManager.h"
-#include "ResourcesPath.h"
+#include "../File/ResourcesPath.h"
 
 void GizmosManager::BuildScene(
 	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mGizmosTextures,

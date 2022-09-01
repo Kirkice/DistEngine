@@ -2,10 +2,10 @@
 #include "FrameResource.h"
 #include "../Component/MeshFliter.h"
 #include "../Component/Material.h"
-#include "MeshGeometry.h" 
+#include "../Geometry/MeshGeometry.h" 
 #include "d3dUtil.h"
 #include "Mathf/Mathf.h"
-#include "ResourcesManager.h"
+#include "../File/ResourcesManager.h"
 
 using namespace Mathf;
 

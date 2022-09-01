@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Input\InputSystem.cpp">
+      <Filter>InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="File\ResourcesPath.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="File\ResourcesManager.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager\SceneManager.cpp">
+      <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsCore.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsUtils.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\FbxLoader.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\ObjLoader.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\CommandListManager.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DescriptorHeap.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RootSignature.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\ShaderManager.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\PipelineStateObject.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\GBufferPass.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShadowMap.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderTarget.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\FrameResource.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager\GizmosManager.cpp">
+      <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DepthPass.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager\PostProcessManager.cpp" />
+    <ClCompile Include="Component\BoundingAABB.cpp" />
+    <ClCompile Include="Component\BoundingBox.cpp" />
+    <ClCompile Include="Component\BoundingOBB.cpp" />
+    <ClCompile Include="Component\BoundingSphere.cpp" />
+    <ClCompile Include="Component\Camera.cpp" />
+    <ClCompile Include="Component\DirectionLight.cpp" />
+    <ClCompile Include="Component\GameObject.cpp" />
+    <ClCompile Include="Component\Material.cpp" />
+    <ClCompile Include="Component\MeshFliter.cpp" />
+    <ClCompile Include="Component\MeshRender.cpp" />
+    <ClCompile Include="Component\PointLight.cpp" />
+    <ClCompile Include="Component\SpotLight.cpp" />
+    <ClCompile Include="Component\Transform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsUtils.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="File\ResourcesPath.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="File\ResourcesManager.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="File\Texture2D.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager\SceneManager.h">
+      <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsCore.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\FbxLoader.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\ObjLoader.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CommandListManager.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DescriptorHeap.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RootSignature.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\ShaderManager.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\PipelineStateObject.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GBufferPass.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShadowMap.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTarget.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\MeshGeometry.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\FrameResource.h">
+      <Filter>GraphicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager\GizmosManager.h">
+      <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DepthPass.h">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager\PostProcessManager.h" />
+    <ClInclude Include="Component\BoundingAABB.h" />
+    <ClInclude Include="Component\BoundingBox.h" />
+    <ClInclude Include="Component\BoundingOBB.h" />
+    <ClInclude Include="Component\BoundingSphere.h" />
+    <ClInclude Include="Component\Camera.h" />
+    <ClInclude Include="Component\DirectionLight.h" />
+    <ClInclude Include="Component\GameObject.h" />
+    <ClInclude Include="Component\Material.h" />
+    <ClInclude Include="Component\MeshFliter.h" />
+    <ClInclude Include="Component\MeshRender.h" />
+    <ClInclude Include="Component\PointLight.h" />
+    <ClInclude Include="Component\SpotLight.h" />
+    <ClInclude Include="Component\Transform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="InputSystem">
+      <UniqueIdentifier>{e4291b71-b010-4f74-96e4-616553a91448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsSystem">
+      <UniqueIdentifier>{137a5663-10ee-4920-bbfa-084474969f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceManager">
+      <UniqueIdentifier>{90a1eba5-5d3f-4d55-8466-8e045c38501c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneManager">
+      <UniqueIdentifier>{7dba45c4-95e7-4d3c-a4d1-8f5c4f7d8df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass">
+      <UniqueIdentifier>{c692ffa6-d2a4-4345-a2d4-a5d51ce36225}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
