@@ -1,6 +1,5 @@
 #include "UploadBuffer.h"
 #include "GeometryGenerator.h"
-#include "GraphicsCore.h"
 #include "DistRenderPipeline.h"
 
 using Microsoft::WRL::ComPtr;

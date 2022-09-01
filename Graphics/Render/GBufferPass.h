@@ -3,7 +3,7 @@
 #pragma once
 
 #include "d3dUtil.h"
-#include "FrameResource.h"
+#include "../Graphics/FrameResource.h"
 
 class GBuffer
 {

@@ -10,9 +10,8 @@
 /ThirdParty/Jolt/x64/*
 /DistEngine/x64/*
 /DistEngine/.vs/*
-/Component/x64/*
 /Core/x64/*
 /DistEditor/x64/*
 /Render/x64/*
-/System/x64/*
+/Graphics/x64/*
 /Audio/x64/*

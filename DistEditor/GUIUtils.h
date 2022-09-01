@@ -1,6 +1,6 @@
 #pragma once
-#include "ResourcesManager.h"
-#include "ResourcesPath.h"
+#include "File/ResourcesManager.h"
+#include "File/ResourcesPath.h"
 
 
 //Render Layer

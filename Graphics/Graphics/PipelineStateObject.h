@@ -1,7 +1,7 @@
 #pragma once
 #include "RootSignature.h"
-#include "ShaderManager.h"
-#include "ResourcesManager.h"
+#include "../Shaders/ShaderManager.h"
+#include "../File/ResourcesManager.h"
 #include "../Core/Mathf/Mathf.h"
 #include "d3dApp.h"
 

@@ -24,7 +24,7 @@
     <ProjectGuid>{f650468e-d336-439d-b307-6da9177feb0e}</ProjectGuid>
     <RootNamespace>Renderer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>System</ProjectName>
+    <ProjectName>Graphics</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -118,7 +118,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../Core;../ThirdParty/ImGUI;../ThirdParty/Fbxsdk/include;../Core/Mathf;../Component;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Core;../ThirdParty/ImGUI;../ThirdParty/Fbxsdk/include;../Core/Mathf;../ThirdParty/Stb;../ThirdParty/Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -145,50 +145,76 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandListManager.cpp" />
-    <ClCompile Include="DepthPass.cpp" />
-    <ClCompile Include="DescriptorHeap.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="FrameResource.cpp" />
-    <ClCompile Include="GBufferPass.cpp" />
-    <ClCompile Include="GizmosManager.cpp" />
-    <ClCompile Include="GraphicsCore.cpp" />
-    <ClCompile Include="GraphicsUtils.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="ObjLoader.cpp" />
-    <ClCompile Include="PipelineStateObject.cpp" />
-    <ClCompile Include="PostProcessManager.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
-    <ClCompile Include="ResourcesManager.cpp" />
-    <ClCompile Include="ResourcesPath.cpp" />
-    <ClCompile Include="RootSignature.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="Graphics\CommandListManager.cpp" />
+    <ClCompile Include="Component\BoundingAABB.cpp" />
+    <ClCompile Include="Component\BoundingBox.cpp" />
+    <ClCompile Include="Component\BoundingOBB.cpp" />
+    <ClCompile Include="Component\BoundingSphere.cpp" />
+    <ClCompile Include="Component\Camera.cpp" />
+    <ClCompile Include="Component\DirectionLight.cpp" />
+    <ClCompile Include="Component\GameObject.cpp" />
+    <ClCompile Include="Component\Material.cpp" />
+    <ClCompile Include="Component\MeshFliter.cpp" />
+    <ClCompile Include="Component\MeshRender.cpp" />
+    <ClCompile Include="Component\PointLight.cpp" />
+    <ClCompile Include="Component\SpotLight.cpp" />
+    <ClCompile Include="Component\Transform.cpp" />
+    <ClCompile Include="Render\DepthPass.cpp" />
+    <ClCompile Include="Graphics\DescriptorHeap.cpp" />
+    <ClCompile Include="Geometry\FbxLoader.cpp" />
+    <ClCompile Include="Graphics\FrameResource.cpp" />
+    <ClCompile Include="Render\GBufferPass.cpp" />
+    <ClCompile Include="SceneManager\GizmosManager.cpp" />
+    <ClCompile Include="Graphics\GraphicsCore.cpp" />
+    <ClCompile Include="Graphics\GraphicsUtils.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Geometry\ObjLoader.cpp" />
+    <ClCompile Include="Graphics\PipelineStateObject.cpp" />
+    <ClCompile Include="SceneManager\PostProcessManager.cpp" />
+    <ClCompile Include="Render\RenderTarget.cpp" />
+    <ClCompile Include="File\ResourcesManager.cpp" />
+    <ClCompile Include="File\ResourcesPath.cpp" />
+    <ClCompile Include="Graphics\RootSignature.cpp" />
+    <ClCompile Include="SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Shaders\ShaderManager.cpp" />
+    <ClCompile Include="Render\ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandListManager.h" />
-    <ClInclude Include="DepthPass.h" />
-    <ClInclude Include="DescriptorHeap.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="FrameResource.h" />
-    <ClInclude Include="GBufferPass.h" />
-    <ClInclude Include="GizmosManager.h" />
-    <ClInclude Include="GraphicsCore.h" />
-    <ClInclude Include="GraphicsUtils.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="ObjLoader.h" />
-    <ClInclude Include="PipelineStateObject.h" />
-    <ClInclude Include="PostProcessManager.h" />
-    <ClInclude Include="RenderTarget.h" />
-    <ClInclude Include="ResourcesManager.h" />
-    <ClInclude Include="ResourcesPath.h" />
-    <ClInclude Include="RootSignature.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="ShadowMap.h" />
-    <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="Graphics\CommandListManager.h" />
+    <ClInclude Include="Component\BoundingAABB.h" />
+    <ClInclude Include="Component\BoundingBox.h" />
+    <ClInclude Include="Component\BoundingOBB.h" />
+    <ClInclude Include="Component\BoundingSphere.h" />
+    <ClInclude Include="Component\Camera.h" />
+    <ClInclude Include="Component\DirectionLight.h" />
+    <ClInclude Include="Component\GameObject.h" />
+    <ClInclude Include="Component\Material.h" />
+    <ClInclude Include="Component\MeshFliter.h" />
+    <ClInclude Include="Component\MeshRender.h" />
+    <ClInclude Include="Component\PointLight.h" />
+    <ClInclude Include="Component\SpotLight.h" />
+    <ClInclude Include="Component\Transform.h" />
+    <ClInclude Include="Render\DepthPass.h" />
+    <ClInclude Include="Graphics\DescriptorHeap.h" />
+    <ClInclude Include="Geometry\FbxLoader.h" />
+    <ClInclude Include="Graphics\FrameResource.h" />
+    <ClInclude Include="Render\GBufferPass.h" />
+    <ClInclude Include="SceneManager\GizmosManager.h" />
+    <ClInclude Include="Graphics\GraphicsCore.h" />
+    <ClInclude Include="Graphics\GraphicsUtils.h" />
+    <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="Geometry\MeshGeometry.h" />
+    <ClInclude Include="Geometry\ObjLoader.h" />
+    <ClInclude Include="Graphics\PipelineStateObject.h" />
+    <ClInclude Include="SceneManager\PostProcessManager.h" />
+    <ClInclude Include="Render\RenderTarget.h" />
+    <ClInclude Include="File\ResourcesManager.h" />
+    <ClInclude Include="File\ResourcesPath.h" />
+    <ClInclude Include="Graphics\RootSignature.h" />
+    <ClInclude Include="SceneManager\SceneManager.h" />
+    <ClInclude Include="Shaders\ShaderManager.h" />
+    <ClInclude Include="Render\ShadowMap.h" />
+    <ClInclude Include="File\Texture2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

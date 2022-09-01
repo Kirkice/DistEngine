@@ -1,11 +1,11 @@
 #pragma once
 #include "../Component/MeshRender.h"
-#include "GraphicsUtils.h"
+#include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
-#include "FrameResource.h"
+#include "../Graphics/FrameResource.h"
 #include "d3dUtil.h"
-#include "Texture2D.h"
-#include "ObjLoader.h"
+#include "../File/Texture2D.h"
+#include "../Geometry/ObjLoader.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

@@ -2,10 +2,10 @@
 #include "../Component/MeshRender.h"
 #include "../Component/DirectionLight.h"
 #include "../Component/Camera.h"
-#include "GraphicsUtils.h"
+#include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
 #include "d3dUtil.h"
-#include "FrameResource.h"
+#include "../Graphics/FrameResource.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
