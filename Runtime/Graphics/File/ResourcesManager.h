@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
-#include "../ThirdParty/ImGUI/imgui.h"
-#include "../ThirdParty/ImGUI/imgui_impl_win32.h"
-#include "../ThirdParty/ImGUI/imgui_impl_dx12.h"
+#include "../../ThirdParty/ImGUI/imgui.h"
+#include "../../ThirdParty/ImGUI/imgui_impl_win32.h"
+#include "../../ThirdParty/ImGUI/imgui_impl_dx12.h"
 #include "ResourcesPath.h"
 #include "Texture2D.h"
 
