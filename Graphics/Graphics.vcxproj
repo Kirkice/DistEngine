@@ -163,7 +163,9 @@
     <ClCompile Include="Graphics\DescriptorHeap.cpp" />
     <ClCompile Include="Geometry\FbxLoader.cpp" />
     <ClCompile Include="Graphics\FrameResource.cpp" />
+    <ClCompile Include="Render\DistRenderPipeline.cpp" />
     <ClCompile Include="Render\GBufferPass.cpp" />
+    <ClCompile Include="Render\RenderCore.cpp" />
     <ClCompile Include="SceneManager\GizmosManager.cpp" />
     <ClCompile Include="Graphics\GraphicsCore.cpp" />
     <ClCompile Include="Graphics\GraphicsUtils.cpp" />
@@ -198,7 +200,9 @@
     <ClInclude Include="Graphics\DescriptorHeap.h" />
     <ClInclude Include="Geometry\FbxLoader.h" />
     <ClInclude Include="Graphics\FrameResource.h" />
+    <ClInclude Include="Render\DistRenderPipeline.h" />
     <ClInclude Include="Render\GBufferPass.h" />
+    <ClInclude Include="Render\RenderCore.h" />
     <ClInclude Include="SceneManager\GizmosManager.h" />
     <ClInclude Include="Graphics\GraphicsCore.h" />
     <ClInclude Include="Graphics\GraphicsUtils.h" />

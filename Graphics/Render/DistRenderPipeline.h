@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
-#include "Graphics/GraphicsCore.h"
+#include "../Graphics/GraphicsCore.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
