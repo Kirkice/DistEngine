@@ -1,7 +1,7 @@
 #pragma once
 #include "GUIUtils.h"
 #include "../Core/Mathf/Mathf.h"
-#include "RenderCore.h"
+#include "Render/RenderCore.h"
 #include "Component/PointLight.h"
 #include "Component/SpotLight.h"
 

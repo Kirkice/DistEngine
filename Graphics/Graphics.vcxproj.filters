@@ -72,6 +72,8 @@
     <ClCompile Include="Component\PointLight.cpp" />
     <ClCompile Include="Component\SpotLight.cpp" />
     <ClCompile Include="Component\Transform.cpp" />
+    <ClCompile Include="Render\DistRenderPipeline.cpp" />
+    <ClCompile Include="Render\RenderCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputSystem.h">
@@ -151,6 +153,8 @@
     <ClInclude Include="Component\PointLight.h" />
     <ClInclude Include="Component\SpotLight.h" />
     <ClInclude Include="Component\Transform.h" />
+    <ClInclude Include="Render\DistRenderPipeline.h" />
+    <ClInclude Include="Render\RenderCore.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">
