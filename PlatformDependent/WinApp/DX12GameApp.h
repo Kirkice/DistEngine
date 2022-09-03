@@ -5,6 +5,7 @@
 #include <crtdbg.h>
 #endif
 
+#include "Event.h"
 #include "DX12Utils.h"
 #include "GameTimer.h"
 
@@ -53,6 +54,7 @@ protected:
 protected:
 
 	bool InitMainWindow();
+	void InitLogSystem();
 	bool InitDirect3D();
 	void CreateCommandObjects();
 	void CreateSwapChain();

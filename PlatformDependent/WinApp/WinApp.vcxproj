@@ -118,7 +118,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../../ThirdParty/ImGUI;../../ThirdParty/Spdlog/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../ThirdParty/ImGUI;../../ThirdParty/Spdlog/include;../Core/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -143,7 +143,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AppUtils.h" />
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DDS.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="DirectXHelpers.h" />
+    <ClInclude Include="DX12GameApp.h" />
+    <ClInclude Include="DX12Utils.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="LoaderHelpers.h" />
+    <ClInclude Include="PlatformHelpers.h" />
+    <ClInclude Include="UploadBuffer.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="zconf.h" />
+    <ClInclude Include="zlib.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppUtils.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="DX12GameApp.cpp" />
+    <ClCompile Include="DX12Utils.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,7 @@
 #include "../ThirdParty/ImGUI/imgui_impl_dx12.h"
  
 #pragma comment(lib,"x64\\Debug\\Core.lib")
+#pragma comment(lib,"x64\\Debug\\WinApp.lib")
 #pragma comment(lib,"x64\\Debug\\ImGUI.lib") 
 #pragma comment(lib,"x64\\Debug\\Graphics.lib")
 #pragma comment(lib,"x64\\Debug\\Stb.lib")

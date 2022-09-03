@@ -1,4 +1,4 @@
-#include "../Core/d3dx12.h"
+#include "d3dx12.h"
 #include <Audioclient.h>
 #include "Audio.h"
 #include "SoundCommon.h"

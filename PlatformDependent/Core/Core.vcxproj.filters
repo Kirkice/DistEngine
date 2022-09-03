@@ -10,15 +10,6 @@
     <Filter Include="DataStructure">
       <UniqueIdentifier>{dde6b051-d97c-4455-9d63-7f69dd74d769}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{93713bf4-ab64-4348-abf9-1a43c689a165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GfxDevice">
-      <UniqueIdentifier>{643d810e-2dc5-4c88-b2a0-38a9f50510a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GfxDevice\DirectX12">
-      <UniqueIdentifier>{5cbfe3aa-343c-4863-a11a-affea2526108}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MathHelper.cpp">
@@ -47,21 +38,6 @@
     </ClCompile>
     <ClCompile Include="LogSystem\Log.cpp">
       <Filter>LogSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="AppUtils.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12GameApp.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12Utils.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,48 +109,6 @@
     </ClInclude>
     <ClInclude Include="DataStructure\Stack.h">
       <Filter>DataStructure</Filter>
-    </ClInclude>
-    <ClInclude Include="AppUtils.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="GameTimer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="zconf.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="UploadBuffer.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12GameApp.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DDS.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXHelpers.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Utils.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="LoaderHelpers.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformHelpers.h">
-      <Filter>GfxDevice\DirectX12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

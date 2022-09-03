@@ -118,7 +118,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader />
-      <AdditionalIncludeDirectories>Mathf/;../../ThirdParty/ImGUI;../../ThirdParty/Spdlog/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Mathf/;../../ThirdParty/ImGUI;../../ThirdParty/Spdlog/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -144,11 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppUtils.cpp" />
-    <ClCompile Include="DX12GameApp.cpp" />
-    <ClCompile Include="DX12Utils.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="LogSystem\Log.cpp" />
     <ClCompile Include="Mathf\Color.cpp" />
     <ClCompile Include="Mathf\Matrix.cpp" />
@@ -160,10 +155,6 @@
     <ClCompile Include="MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppUtils.h" />
-    <ClInclude Include="DX12GameApp.h" />
-    <ClInclude Include="DX12Utils.h" />
-    <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DataStructure\AVLTree.h" />
     <ClInclude Include="DataStructure\BinaryTree.h" />
     <ClInclude Include="DataStructure\BTree.h" />
@@ -177,11 +168,6 @@
     <ClInclude Include="DataStructure\RBTree.h" />
     <ClInclude Include="DataStructure\SearchBinaryTree.h" />
     <ClInclude Include="DataStructure\Stack.h" />
-    <ClInclude Include="DDS.h" />
-    <ClInclude Include="DDSTextureLoader.h" />
-    <ClInclude Include="DirectXHelpers.h" />
-    <ClInclude Include="GameTimer.h" />
-    <ClInclude Include="LoaderHelpers.h" />
     <ClInclude Include="LogSystem\Log.h" />
     <ClInclude Include="Mathf\Color.h" />
     <ClInclude Include="Mathf\Mathf.h" />
@@ -192,11 +178,6 @@
     <ClInclude Include="Mathf\Vector3.h" />
     <ClInclude Include="Mathf\Vector4.h" />
     <ClInclude Include="MathHelper.h" />
-    <ClInclude Include="PlatformHelpers.h" />
-    <ClInclude Include="UploadBuffer.h" />
-    <ClInclude Include="Utility.h" />
-    <ClInclude Include="zconf.h" />
-    <ClInclude Include="zlib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

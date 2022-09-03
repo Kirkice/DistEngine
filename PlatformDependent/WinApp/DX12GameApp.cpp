@@ -7,6 +7,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h" 
 
+using namespace EventSystem;
 using Microsoft::WRL::ComPtr;
 using namespace std;
 using namespace DirectX;
@@ -121,6 +122,9 @@ bool DX12GameApp::Initialize()
 
 	if (!InitDirect3D())
 		return false;
+
+	//	初始化日志系统
+	InitLogSystem();
 
 	// Do the initial resize code.
 	OnResize();
@@ -440,6 +444,13 @@ bool DX12GameApp::InitMainWindow()
 
 
 	return true;
+}
+
+
+void DX12GameApp::InitLogSystem()
+{
+	LogSystem::Log::Init();
+	LogSystem::Log::Debug("日志系统 --- 初始化成功");
 }
 
 bool DX12GameApp::InitDirect3D()
