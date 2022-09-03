@@ -1,4 +1,5 @@
 #pragma once
+#include "../Component/Component.h"
 #include "../Core/Mathf/Mathf.h"
 #include "BoundingOBB.h"
 #include "BoundingAABB.h"
@@ -6,7 +7,7 @@
 
 namespace DistBound
 {
-	class BoundingBox
+	class BoundingBox : public Component
 	{
 	public:
 		//	AABB°üÎ§ºÐ
@@ -17,7 +18,7 @@ namespace DistBound
 		BoundingOBB obb;
 
 	public:
-		BoundingBox();
+		BoundingBox(std::string _name);
 		~BoundingBox();
 	};
 }

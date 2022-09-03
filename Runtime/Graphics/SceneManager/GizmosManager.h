@@ -1,11 +1,16 @@
 #pragma once
+#include "../Component/DirectionLight.h"
 #include "../Component/MeshRender.h"
+#include "../Component/Transform.h"
+#include "../Component/GameObject.h"
+#include "../Physics/BoundingBox.h"
 #include "../Graphics/GraphicsUtils.h"
-#include "GameTimer.h"
 #include "../Graphics/FrameResource.h"
-#include "DX12Utils.h"
+#include "../Serialization/JsonManager.h"
 #include "../File/Texture2D.h"
 #include "../Geometry/ObjLoader.h"
+#include "GameTimer.h"
+#include "DX12Utils.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -23,7 +28,7 @@ public:
 	}
 
 public:
-	std::vector<std::unique_ptr<MeshRender>> mMeshRender;
+	std::vector < std::unique_ptr<GameObject>> mRenderObjects;
 
 public:
 
@@ -45,7 +50,7 @@ public:
 	);
 
 	//	¸üÐÂCBuffer
-	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight, std::unique_ptr<MeshRender>& mTargetRender);
+	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, Transform* mMainLightPos, std::unique_ptr<GameObject>& mTargetRender);
 
 	void ShowPosition();
 	void ShowRotation();
@@ -54,4 +59,17 @@ public:
 	bool PositionUCSEnable = false;
 	bool RotationUCSEnable = false;
 	bool ScaleUCSEnable = false;
+
+private:
+
+	void BuildWirePlane(MaterialIndexUtils& matCBIndexUtils);
+
+	void BuildLightGizmo(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mGizmosTextures,
+		MaterialIndexUtils& matCBIndexUtils);
+
+	void BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils);
+
+	void BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils);
+
+	void BuildUCSScale(MaterialIndexUtils& matCBIndexUtils);
 };

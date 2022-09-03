@@ -2,13 +2,17 @@
 #include "../Component/MeshRender.h"
 #include "../Component/DirectionLight.h"
 #include "../Component/Camera.h"
+#include "../Component/Transform.h"
+#include "../Component/GameObject.h"
+#include "../Physics/BoundingBox.h"
 #include "../Graphics/GraphicsUtils.h"
-#include "GameTimer.h"
-#include "DX12Utils.h"
 #include "../File/Texture2D.h"
 #include "../Graphics/FrameResource.h"
 #include "../Geometry/FbxLoader.h"
 #include "../Geometry/ObjLoader.h"
+#include "../Serialization/JsonManager.h"
+#include "GameTimer.h"
+#include "DX12Utils.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -33,10 +37,10 @@ public:
 	SceneType Type; 
 
 	//	主光源
-	DirectionLight mMainLight;
+	GameObject* MainLight = new GameObject("MainLight");
 
 	//	Mesh Render	
-	std::vector<std::unique_ptr<MeshRender>> mMeshRender;
+	std::vector < std::unique_ptr<GameObject>> mRenderObjects;
 
 	//	天空盒设置 
 	SkyBoxSetting mSkyBoxSetting;
@@ -73,6 +77,15 @@ public:
 	void UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize);
 
 private:
+
+	void BuildGlobalConfig();
+
+	void BuildMainLight();
+
+	void BuildSkyBox(MaterialIndexUtils& matCBIndexUtils);
+
+	void BuildRenderObejct(std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures, MaterialIndexUtils& matCBIndexUtils);
+
 	void BuildDefaultScene(
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
 		MaterialIndexUtils& matCBIndexUtils

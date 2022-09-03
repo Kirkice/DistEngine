@@ -1,244 +1,443 @@
 #include "GizmosManager.h"
 #include "../File/ResourcesPath.h"
 
-void GizmosManager::BuildScene(
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mGizmosTextures,
-	MaterialIndexUtils& matCBIndexUtils
-)
+void GizmosManager::BuildWirePlane(MaterialIndexUtils& matCBIndexUtils)
 {
 	//	存储类型matCB开始值
 	matCBIndexUtils.getInstance().SaveTypeIndex("Gizmo", matCBIndexUtils.getInstance().GetIndex());
 
-	//	Plane
-	auto plane = std::make_unique<MeshRender>();
-	plane->name = "Plane";
+	auto planeRenderObject = std::make_unique<GameObject>("plane");
 
 	//构建材质
-	plane->material.Name = "Plane_mat";
-	plane->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	Material* mat_plane = new Material();
+	mat_plane->Name = "Plane_mat";
+	mat_plane->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	plane->material.DiffuseColor = Color(0.8f, 0.8f, 0.8f, 1.0f);
+	mat_plane->DiffuseColor = Color(0.8f, 0.8f, 0.8f, 1.0f);
 
-	//	创建平面网格
-	plane->mesh.CreateGrid(60, 60, 240, 240);
+	//	加载模型
+	MeshFliter* mesh_plane = new MeshFliter("MeshFliter");
+	mesh_plane->CreateGrid(60, 60, 240, 240);
+	MeshRender* meshRender_plane = new MeshRender(mesh_plane, mat_plane, "MeshRender");
 
 	//	设置坐标
-	plane->position = Vector3(0, 0, 0);
-	plane->eulerangle = Vector3(0, 0, 0);
-	plane->scale = Vector3(10, 10, 10);
+	Transform* transform_plane = new Transform("Transform");
+	transform_plane->position = Vector3(0, 0, 0);
+	transform_plane->eulerangle = Vector3(0, 0, 0);
+	transform_plane->scale = Vector3(10, 10, 10);
 
-	//	创建碰撞盒
-	plane->bound.aabb = BoundingAABB(plane->mesh.data);
-	plane->Enable = true;
-	mMeshRender.push_back(std::move(plane));
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_plane = new DistBound::BoundingBox("BoundingBox");
+	bound_plane->aabb = BoundingAABB(mesh_plane->data);
 
+	planeRenderObject->AddComponent(transform_plane);
+	planeRenderObject->AddComponent(meshRender_plane);
+	planeRenderObject->AddComponent(bound_plane);
+	planeRenderObject->Enable = true;
 
-	//	灯光图标
-	auto DirectionLightGizmo = std::make_unique<MeshRender>();
-	DirectionLightGizmo->name = "DirectionLightGizmo";
+	mRenderObjects.push_back(std::move(planeRenderObject));
+}
 
-	//	构建材质
-	DirectionLightGizmo->material.Name = "DirGizmo";
-	DirectionLightGizmo->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+void GizmosManager::BuildLightGizmo(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mGizmosTextures,
+	MaterialIndexUtils& matCBIndexUtils)
+{
+	auto directionLightGizmoObject = std::make_unique<GameObject>("DirectionLightGizmo");
+
+	//构建材质
+	Material* mat_dirGizmo = new Material();
+	mat_dirGizmo->Name = "DirGizmo";
+	mat_dirGizmo->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	DirectionLightGizmo->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	DirectionLightGizmo->material.DiffuseMapIndex = mGizmosTextures["DirectionalLight"]->TexIndex;
+	mat_dirGizmo->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_dirGizmo->DiffuseMapIndex = mGizmosTextures["DirectionalLight"]->TexIndex;
 
-	//	创建平面网格
-	DirectionLightGizmo->mesh.CreateGrid(6, 6, 4, 4);
+	//	加载模型
+	MeshFliter* mesh_dirGizmo = new MeshFliter("MeshFliter");
+	mesh_dirGizmo->CreateGrid(6, 6, 4, 4);
+	MeshRender* meshRender_plane = new MeshRender(mesh_dirGizmo, mat_dirGizmo, "MeshRender");
 
 	//	设置坐标
-	DirectionLightGizmo->position = Vector3(-20, 30, 20);
-	DirectionLightGizmo->eulerangle = Vector3(0, 0, 0);
-	DirectionLightGizmo->scale = Vector3(0.5f, 0.5f, 0.5f);
+	Transform* transform_dirGizmo = new Transform("Transform");
+	transform_dirGizmo->position = Vector3(-20, 30, 20);
+	transform_dirGizmo->eulerangle = Vector3(0, 0, 0);
+	transform_dirGizmo->scale = Vector3(0.5f, 0.5f, 0.5f);
 
-	//	创建碰撞盒
-	DirectionLightGizmo->bound.aabb = BoundingAABB(DirectionLightGizmo->mesh.data);
-	DirectionLightGizmo->Enable = true;
-	mMeshRender.push_back(std::move(DirectionLightGizmo));
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_dirGizmo = new DistBound::BoundingBox("BoundingBox");
+	bound_dirGizmo->aabb = BoundingAABB(mesh_dirGizmo->data);
 
+	directionLightGizmoObject->AddComponent(transform_dirGizmo);
+	directionLightGizmoObject->AddComponent(meshRender_plane);
+	directionLightGizmoObject->AddComponent(bound_dirGizmo);
+	directionLightGizmoObject->Enable = true;
 
+	mRenderObjects.push_back(std::move(directionLightGizmoObject));
+}
+
+void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
+{
 	//---------------------------------------------------------------
 	//						坐标
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("PositionUCS", matCBIndexUtils.getInstance().GetIndex());
-	auto PositionUCSGizmoX = std::make_unique<MeshRender>();
-	PositionUCSGizmoX->name = "PositionUCS";
-	//	构建材质
-	PositionUCSGizmoX->material.Name = "PositionUCS";
-	PositionUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	PositionUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoX->mesh.data, (char*)mPositionUCSGizmoXPath.c_str());
-	//	设置坐标
-	PositionUCSGizmoX->position = Vector3(0, 0, 0);
-	PositionUCSGizmoX->eulerangle = Vector3(0, 0, 0);
-	PositionUCSGizmoX->scale = Vector3(1, 1, 1);
-	PositionUCSGizmoX->bound.aabb = BoundingAABB(PositionUCSGizmoX->mesh.data);
-	PositionUCSGizmoX->Enable = PositionUCSEnable;
-	PositionUCSGizmoX->bound.aabb.m_min = PositionUCSGizmoX->GetWorldMatrix() * PositionUCSGizmoX->bound.aabb.m_min;
-	PositionUCSGizmoX->bound.aabb.m_max = PositionUCSGizmoX->GetWorldMatrix() * PositionUCSGizmoX->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(PositionUCSGizmoX));
 
-	auto PositionUCSGizmoY = std::make_unique<MeshRender>();
-	PositionUCSGizmoY->name = "PositionUCS";
-	//	构建材质
-	PositionUCSGizmoY->material.Name = "PositionUCS";
-	PositionUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	PositionUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoY->mesh.data, (char*)mPositionUCSGizmoYPath.c_str());
-	//	设置坐标
-	PositionUCSGizmoY->position = Vector3(0, 0, 0);
-	PositionUCSGizmoY->eulerangle = Vector3(0, 0, 0);
-	PositionUCSGizmoY->scale = Vector3(1, 1, 1);
-	PositionUCSGizmoY->bound.aabb = BoundingAABB(PositionUCSGizmoY->mesh.data);
-	PositionUCSGizmoY->Enable = PositionUCSEnable;
-	PositionUCSGizmoY->bound.aabb.m_min = PositionUCSGizmoY->GetWorldMatrix() * PositionUCSGizmoY->bound.aabb.m_min;
-	PositionUCSGizmoY->bound.aabb.m_max = PositionUCSGizmoY->GetWorldMatrix() * PositionUCSGizmoY->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(PositionUCSGizmoY));
+	auto PositionUCSGizmoX = std::make_unique<GameObject>("PositionUCSGizmoX");
 
-	auto PositionUCSGizmoZ = std::make_unique<MeshRender>();
-	PositionUCSGizmoZ->name = "PositionUCS";
-	//	构建材质
-	PositionUCSGizmoZ->material.Name = "PositionUCS";
-	PositionUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	//构建材质
+	Material* mat_ucsGizmoX = new Material();
+	mat_ucsGizmoX->Name = "PositionUCS";
+	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	PositionUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(PositionUCSGizmoZ->mesh.data, (char*)mPositionUCSGizmoZPath.c_str());
-	//	设置坐标
-	PositionUCSGizmoZ->position = Vector3(0, 0, 0);
-	PositionUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
-	PositionUCSGizmoZ->scale = Vector3(1, 1, 1);
-	PositionUCSGizmoZ->bound.aabb = BoundingAABB(PositionUCSGizmoZ->mesh.data);
-	PositionUCSGizmoZ->Enable = PositionUCSEnable;
-	PositionUCSGizmoZ->bound.aabb.m_min = PositionUCSGizmoZ->GetWorldMatrix() * PositionUCSGizmoZ->bound.aabb.m_min;
-	PositionUCSGizmoZ->bound.aabb.m_max = PositionUCSGizmoZ->GetWorldMatrix() * PositionUCSGizmoZ->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(PositionUCSGizmoZ));
+	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
 
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mPositionUCSGizmoXPath.c_str());
+	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoX = new Transform("Transform");
+	transform_ucsGizmoX->position = Vector3(0, 0, 0);
+	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+
+	PositionUCSGizmoX->AddComponent(transform_ucsGizmoX);
+	PositionUCSGizmoX->AddComponent(meshRender_ucsGizmoX);
+	PositionUCSGizmoX->AddComponent(bound_ucsGizmoX);
+	PositionUCSGizmoX->Enable = true;
+
+	mRenderObjects.push_back(std::move(PositionUCSGizmoX));
+
+
+
+
+	auto PositionUCSGizmoY = std::make_unique<GameObject>("PositionUCSGizmoY");
+
+	//构建材质
+	Material* mat_ucsGizmoY = new Material();
+	mat_ucsGizmoY->Name = "PositionUCS";
+	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mPositionUCSGizmoYPath.c_str());
+	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoY = new Transform("Transform");
+	transform_ucsGizmoY->position = Vector3(0, 0, 0);
+	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+
+	PositionUCSGizmoY->AddComponent(transform_ucsGizmoY);
+	PositionUCSGizmoY->AddComponent(meshRender_ucsGizmoY);
+	PositionUCSGizmoY->AddComponent(bound_ucsGizmoY);
+	PositionUCSGizmoY->Enable = true;
+
+	mRenderObjects.push_back(std::move(PositionUCSGizmoY));
+
+
+
+
+	auto PositionUCSGizmoZ = std::make_unique<GameObject>("PositionUCSGizmoZ");
+
+	//构建材质
+	Material* mat_ucsGizmoZ = new Material();
+	mat_ucsGizmoZ->Name = "PositionUCS";
+	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mPositionUCSGizmoZPath.c_str());
+	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoZ = new Transform("Transform");
+	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+
+	PositionUCSGizmoZ->AddComponent(transform_ucsGizmoZ);
+	PositionUCSGizmoZ->AddComponent(meshRender_ucsGizmoZ);
+	PositionUCSGizmoZ->AddComponent(bound_ucsGizmoZ);
+	PositionUCSGizmoZ->Enable = true;
+
+	mRenderObjects.push_back(std::move(PositionUCSGizmoZ));
+
+}
+
+void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
+{
 	//---------------------------------------------------------------
 	//						旋转
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("RotationUCS", matCBIndexUtils.getInstance().GetIndex());
-	auto RotationUCSGizmoX = std::make_unique<MeshRender>();
-	RotationUCSGizmoX->name = "RotationXUCS";
-	//	构建材质
-	RotationUCSGizmoX->material.Name = "RotationXUCS";
-	RotationUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	RotationUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoX->mesh.data, (char*)mRotationUCSGizmoXPath.c_str());
-	//	设置坐标
-	RotationUCSGizmoX->position = Vector3(0, 0, 0);
-	RotationUCSGizmoX->eulerangle = Vector3(0, 0, 0);
-	RotationUCSGizmoX->scale = Vector3(3, 3, 3);
-	RotationUCSGizmoX->bound.aabb = BoundingAABB(RotationUCSGizmoX->mesh.data);
-	RotationUCSGizmoX->Enable = RotationUCSEnable;
-	RotationUCSGizmoX->bound.aabb.m_min = RotationUCSGizmoX->GetWorldMatrix() * RotationUCSGizmoX->bound.aabb.m_min;
-	RotationUCSGizmoX->bound.aabb.m_max = RotationUCSGizmoX->GetWorldMatrix() * RotationUCSGizmoX->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(RotationUCSGizmoX));
 
-	auto RotationUCSGizmoY = std::make_unique<MeshRender>();
-	RotationUCSGizmoY->name = "RotationYUCS";
-	//	构建材质
-	RotationUCSGizmoY->material.Name = "RotationYUCS";
-	RotationUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	RotationUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoY->mesh.data, (char*)mRotationUCSGizmoYPath.c_str());
-	//	设置坐标
-	RotationUCSGizmoY->position = Vector3(0, 0, 0);
-	RotationUCSGizmoY->eulerangle = Vector3(0, 0, 0);
-	RotationUCSGizmoY->scale = Vector3(3, 3, 3);
-	RotationUCSGizmoY->bound.aabb = BoundingAABB(RotationUCSGizmoY->mesh.data);
-	RotationUCSGizmoY->Enable = RotationUCSEnable;
-	RotationUCSGizmoY->bound.aabb.m_min = RotationUCSGizmoY->GetWorldMatrix() * RotationUCSGizmoY->bound.aabb.m_min;
-	RotationUCSGizmoY->bound.aabb.m_max = RotationUCSGizmoY->GetWorldMatrix() * RotationUCSGizmoY->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(RotationUCSGizmoY));
+	auto RotationUCSGizmoX = std::make_unique<GameObject>("RotationUCSGizmoX");
 
-	auto RotationUCSGizmoZ = std::make_unique<MeshRender>();
-	RotationUCSGizmoZ->name = "RotationZUCS";
-	//	构建材质
-	RotationUCSGizmoZ->material.Name = "RotationZUCS";
-	RotationUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	//构建材质
+	Material* mat_ucsGizmoX = new Material();
+	mat_ucsGizmoX->Name = "RotationUCS";
+	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	RotationUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(RotationUCSGizmoZ->mesh.data, (char*)mRotationUCSGizmoZPath.c_str());
+	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mRotationUCSGizmoXPath.c_str());
+	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
+
 	//	设置坐标
-	RotationUCSGizmoZ->position = Vector3(0, 0, 0);
-	RotationUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
-	RotationUCSGizmoZ->scale = Vector3(3, 3, 3);
-	RotationUCSGizmoZ->bound.aabb = BoundingAABB(RotationUCSGizmoZ->mesh.data);
-	RotationUCSGizmoZ->Enable = RotationUCSEnable;
-	RotationUCSGizmoZ->bound.aabb.m_min = RotationUCSGizmoZ->GetWorldMatrix() * RotationUCSGizmoZ->bound.aabb.m_min;
-	RotationUCSGizmoZ->bound.aabb.m_max = RotationUCSGizmoZ->GetWorldMatrix() * RotationUCSGizmoZ->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(RotationUCSGizmoZ));
+	Transform* transform_ucsGizmoX = new Transform("Transform");
+	transform_ucsGizmoX->position = Vector3(0, 0, 0);
+	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoX->scale = Vector3(3, 3, 3);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+
+	RotationUCSGizmoX->AddComponent(transform_ucsGizmoX);
+	RotationUCSGizmoX->AddComponent(meshRender_ucsGizmoX);
+	RotationUCSGizmoX->AddComponent(bound_ucsGizmoX);
+	RotationUCSGizmoX->Enable = true;
+
+	mRenderObjects.push_back(std::move(RotationUCSGizmoX));
+
+
+
+
+	auto RotationUCSGizmoY = std::make_unique<GameObject>("RotationUCSGizmoY");
+
+	//构建材质
+	Material* mat_ucsGizmoY = new Material();
+	mat_ucsGizmoY->Name = "RotationUCS";
+	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mRotationUCSGizmoYPath.c_str());
+	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoY = new Transform("Transform");
+	transform_ucsGizmoY->position = Vector3(0, 0, 0);
+	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoY->scale = Vector3(3, 3, 3);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+
+	RotationUCSGizmoY->AddComponent(transform_ucsGizmoY);
+	RotationUCSGizmoY->AddComponent(meshRender_ucsGizmoY);
+	RotationUCSGizmoY->AddComponent(bound_ucsGizmoY);
+	RotationUCSGizmoY->Enable = true;
+
+	mRenderObjects.push_back(std::move(RotationUCSGizmoY));
+
+
+
+
+	auto RotationUCSGizmoZ = std::make_unique<GameObject>("RotationUCSGizmoZ");
+
+	//构建材质
+	Material* mat_ucsGizmoZ = new Material();
+	mat_ucsGizmoZ->Name = "RotationUCS";
+	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mRotationUCSGizmoZPath.c_str());
+	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoZ = new Transform("Transform");
+	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->scale = Vector3(3, 3, 3);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+
+	RotationUCSGizmoZ->AddComponent(transform_ucsGizmoZ);
+	RotationUCSGizmoZ->AddComponent(meshRender_ucsGizmoZ);
+	RotationUCSGizmoZ->AddComponent(bound_ucsGizmoZ);
+	RotationUCSGizmoZ->Enable = true;
+
+	mRenderObjects.push_back(std::move(RotationUCSGizmoZ));
+}
+
+void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
+{
 
 	//---------------------------------------------------------------
 	//						缩放
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("ScaleUCS", matCBIndexUtils.getInstance().GetIndex());
-	auto ScaleUCSGizmoX = std::make_unique<MeshRender>();
-	ScaleUCSGizmoX->name = "ScaleXUCS";
-	//	构建材质
-	ScaleUCSGizmoX->material.Name = "ScaleXUCS";
-	ScaleUCSGizmoX->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	ScaleUCSGizmoX->material.DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoX->mesh.data, (char*)mScaleUCSGizmoXPath.c_str());
-	//	设置坐标
-	ScaleUCSGizmoX->position = Vector3(0, 0, 0);
-	ScaleUCSGizmoX->eulerangle = Vector3(0, 0, 0);
-	ScaleUCSGizmoX->scale = Vector3(1, 1, 1);
-	ScaleUCSGizmoX->bound.aabb = BoundingAABB(ScaleUCSGizmoX->mesh.data);
-	ScaleUCSGizmoX->Enable = ScaleUCSEnable;
-	ScaleUCSGizmoX->bound.aabb.m_min = ScaleUCSGizmoX->GetWorldMatrix() * ScaleUCSGizmoX->bound.aabb.m_min;
-	ScaleUCSGizmoX->bound.aabb.m_max = ScaleUCSGizmoX->GetWorldMatrix() * ScaleUCSGizmoX->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(ScaleUCSGizmoX));
 
-	auto ScaleUCSGizmoY = std::make_unique<MeshRender>();
-	ScaleUCSGizmoY->name = "ScaleYUCS";
-	//	构建材质
-	ScaleUCSGizmoY->material.Name = "ScaleYUCS";
-	ScaleUCSGizmoY->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	ScaleUCSGizmoY->material.DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoY->mesh.data, (char*)mScaleUCSGizmoYPath.c_str());
-	//	设置坐标
-	ScaleUCSGizmoY->position = Vector3(0, 0, 0);
-	ScaleUCSGizmoY->eulerangle = Vector3(0, 0, 0);
-	ScaleUCSGizmoY->scale = Vector3(1, 1, 1);
-	ScaleUCSGizmoY->bound.aabb = BoundingAABB(ScaleUCSGizmoY->mesh.data);
-	ScaleUCSGizmoY->Enable = ScaleUCSEnable;
-	ScaleUCSGizmoY->bound.aabb.m_min = ScaleUCSGizmoY->GetWorldMatrix() * ScaleUCSGizmoY->bound.aabb.m_min;
-	ScaleUCSGizmoY->bound.aabb.m_max = ScaleUCSGizmoY->GetWorldMatrix() * ScaleUCSGizmoY->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(ScaleUCSGizmoY));
+	auto ScaleUCSGizmoX = std::make_unique<GameObject>("ScaleUCSGizmoX");
 
-	auto ScaleUCSGizmoZ = std::make_unique<MeshRender>();
-	ScaleUCSGizmoZ->name = "ScaleZUCS";
-	//	构建材质
-	ScaleUCSGizmoZ->material.Name = "ScaleZUCS";
-	ScaleUCSGizmoZ->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	//构建材质
+	Material* mat_ucsGizmoX = new Material();
+	mat_ucsGizmoX->Name = "ScaleUCS";
+	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	ScaleUCSGizmoZ->material.DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
-	ObjLoader::LoadObj(ScaleUCSGizmoZ->mesh.data, (char*)mScaleUCSGizmoZPath.c_str());
+	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mScaleUCSGizmoXPath.c_str());
+	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
+
 	//	设置坐标
-	ScaleUCSGizmoZ->position = Vector3(0, 0, 0);
-	ScaleUCSGizmoZ->eulerangle = Vector3(0, 0, 0);
-	ScaleUCSGizmoZ->scale = Vector3(1, 1, 1);
-	ScaleUCSGizmoZ->bound.aabb = BoundingAABB(ScaleUCSGizmoZ->mesh.data);
-	ScaleUCSGizmoZ->Enable = ScaleUCSEnable; 
-	ScaleUCSGizmoZ->bound.aabb.m_min = ScaleUCSGizmoZ->GetWorldMatrix() * ScaleUCSGizmoZ->bound.aabb.m_min;
-	ScaleUCSGizmoZ->bound.aabb.m_max = ScaleUCSGizmoZ->GetWorldMatrix() * ScaleUCSGizmoZ->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(ScaleUCSGizmoZ));
+	Transform* transform_ucsGizmoX = new Transform("Transform");
+	transform_ucsGizmoX->position = Vector3(0, 0, 0);
+	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoX->scale = Vector3(3, 3, 3);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
+
+	ScaleUCSGizmoX->AddComponent(transform_ucsGizmoX);
+	ScaleUCSGizmoX->AddComponent(meshRender_ucsGizmoX);
+	ScaleUCSGizmoX->AddComponent(bound_ucsGizmoX);
+	ScaleUCSGizmoX->Enable = true;
+
+	mRenderObjects.push_back(std::move(ScaleUCSGizmoX));
+
+
+
+
+	auto ScaleUCSGizmoY = std::make_unique<GameObject>("ScaleUCSGizmoY");
+
+	//构建材质
+	Material* mat_ucsGizmoY = new Material();
+	mat_ucsGizmoY->Name = "ScaleUCS";
+	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mScaleUCSGizmoYPath.c_str());
+	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoY = new Transform("Transform");
+	transform_ucsGizmoY->position = Vector3(0, 0, 0);
+	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoY->scale = Vector3(3, 3, 3);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
+
+	ScaleUCSGizmoY->AddComponent(transform_ucsGizmoY);
+	ScaleUCSGizmoY->AddComponent(meshRender_ucsGizmoY);
+	ScaleUCSGizmoY->AddComponent(bound_ucsGizmoY);
+	ScaleUCSGizmoY->Enable = true;
+
+	mRenderObjects.push_back(std::move(ScaleUCSGizmoY));
+
+
+
+
+	auto ScaleUCSGizmoZ = std::make_unique<GameObject>("ScaleUCSGizmoZ");
+
+	//构建材质
+	Material* mat_ucsGizmoZ = new Material();
+	mat_ucsGizmoZ->Name = "ScaleUCS";
+	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
+
+	//	加载模型
+	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mScaleUCSGizmoZPath.c_str());
+	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_ucsGizmoZ = new Transform("Transform");
+	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
+	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
+	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
+
+	ScaleUCSGizmoZ->AddComponent(transform_ucsGizmoZ);
+	ScaleUCSGizmoZ->AddComponent(meshRender_ucsGizmoZ);
+	ScaleUCSGizmoZ->AddComponent(bound_ucsGizmoZ);
+	ScaleUCSGizmoZ->Enable = true;
+
+	mRenderObjects.push_back(std::move(ScaleUCSGizmoZ));
+}
+
+void GizmosManager::BuildScene(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mGizmosTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
+{
+	BuildWirePlane(matCBIndexUtils);
+
+	BuildLightGizmo(mGizmosTextures, matCBIndexUtils);
+
+	BuildUCSPosition(matCBIndexUtils);
+
+	BuildUCSRotation(matCBIndexUtils);
+
+	BuildUCSScale(matCBIndexUtils);
 }
 
 
 void GizmosManager::UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer)
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = &(mMeshRender[i]->material);
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
 
 		XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
@@ -269,19 +468,19 @@ void GizmosManager::BuildRenderItem(
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList
 )
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = i;
-		Ritem->Mat = &mMeshRender[i]->material;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
-		Ritem->Enable = mMeshRender[i]->Enable;
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Enable = mRenderObjects[i]->Enable;
 
 		if (i < 1)
 		{
@@ -306,11 +505,11 @@ void GizmosManager::BuildRenderItem(
 /// <summary>
 /// 更新CBuffer
 /// </summary>
-void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, DirectionLight& mMainLight, std::unique_ptr<MeshRender>& mTargetRender)
+void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, Transform* mMainLightPos, std::unique_ptr<GameObject>& mTargetRender)
 {
 	for (size_t i = 0; i < mAllRitems.size(); i++)
 	{
-		for (size_t j = 0; j < mMeshRender.size(); j++)
+		for (size_t j = 0; j < mRenderObjects.size(); j++)
 		{
 
 			//	LightGizmo
@@ -318,9 +517,9 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mMeshRender[j]->SetPosition(mMainLight.position);
-					mAllRitems[i]->Enable = mMeshRender[j]->Enable;
-					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mMainLightPos.position);
+					mAllRitems[i]->Enable = mRenderObjects[j]->Enable;
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 				}
 			}
 			//	坐标
@@ -328,27 +527,27 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mMeshRender[j]->SetPosition(mTargetRender->position);
+					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
 					mAllRitems[i]->Enable = PositionUCSEnable;
-					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 				}
 			}
 			else if(j >= 5 && j < 8)
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mMeshRender[j]->SetPosition(mTargetRender->position);
+					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
 					mAllRitems[i]->Enable = RotationUCSEnable;
-					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 				}
 			}
 			else if (j >= 8 && j < 11)
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mMeshRender[j]->SetPosition(mTargetRender->position);
+					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
 					mAllRitems[i]->Enable = ScaleUCSEnable;
-					mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 				}
 			}
 		}

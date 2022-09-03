@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MathHelper.cpp">
-      <Filter>Mathematics</Filter>
-    </ClCompile>
     <ClCompile Include="Mathf\Vector2.cpp">
       <Filter>Mathematics</Filter>
     </ClCompile>
@@ -39,11 +36,11 @@
     <ClCompile Include="LogSystem\Log.cpp">
       <Filter>LogSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Mathf\MathHelper.cpp">
+      <Filter>Mathematics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MathHelper.h">
-      <Filter>Mathematics</Filter>
-    </ClInclude>
     <ClInclude Include="Mathf\Vector2.h">
       <Filter>Mathematics</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="DataStructure\Stack.h">
       <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathf\MathHelper.h">
+      <Filter>Mathematics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

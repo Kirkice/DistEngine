@@ -1,7 +1,21 @@
+/***********************************************************************************************
+ ***							C O R E  ---  D I S T E N G I N E                            ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : Core									   *
+ *                                                                                             *
+ *                                   File Name : Color.cpp                                     *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/2                                         *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 #include "Color.h"
 
-using DirectX::XMVECTORU32;
-
+namespace Mathf
+{
 	uint32_t Color::R11G11B10F(bool RoundToEven) const
 	{
 #if 1
@@ -136,3 +150,4 @@ using DirectX::XMVECTORU32;
 
 #endif
 	}
+}

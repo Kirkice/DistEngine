@@ -1,41 +1,31 @@
+#pragma once
 /***********************************************************************************************
- ***						W I N A P P  ---  D I S T E N G I N E                            ***
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
  ***********************************************************************************************
  *                                                                                             *
  *                                   Project Name : GraphicsCore							   *
  *                                                                                             *
- *                                   File Name : MeshRender.h								   *
+ *                                   File Name : Component.h	                               *
  *                                                                                             *
  *                                    Programmer : Kirk                                        *
  *                                                                                             *
- *                                     Date : 2022/8/12                                        *
+ *                                     Date : 2022/8/3                                         *
  *                                                                                             *
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-#include "MeshRender.h"
+#pragma once
+#include "DX12Utils.h"
 
-
-MeshRender::MeshRender(std::string _name = "MeshRender") : Component(_name)
+class Component
 {
-	this->mesh = &MeshFliter("Mesh Fliter");
-	this->mat = &Material();
-}
+protected:
+	std::string m_strComponent;
 
-MeshRender::MeshRender(
-	MeshFliter* mesh,
-	Material* mat,
-	std::string _name = "MeshRender") : Component(_name)
-{
-	this->mesh = mesh;
-	this->mat = mat;
-}
-
-MeshRender::~MeshRender()
-{
-
-}
-
-void MeshRender::Draw(const ComPtr<ID3D12GraphicsCommandList>& pCmdList, bool bundleUsingOverride = false)
-{
-
-}
+public:
+	Component(std::string _name) : m_strComponent(_name) {}
+	virtual ~Component() {}
+	virtual  std::string  getName()
+	{
+		return m_strComponent;
+	}
+};

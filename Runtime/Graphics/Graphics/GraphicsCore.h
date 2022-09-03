@@ -1,6 +1,6 @@
 #pragma once
 #include "../input/InputSystem.h"
-#include "../Component/Material.h"
+#include "../Materials/Material.h"
 #include "../Geometry/MeshGeometry.h"
 #include "../Component/Camera.h"
 #include "FrameResource.h"

@@ -35,19 +35,24 @@ void SceneManager::BuildDefaultScene(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	//	设为主光源
-	mMainLight.isMainLight = true;
-	//	灯光颜色
-	mMainLight.color = Color(1, 0.9568627f, 0.8392157f, 1);
-	//	设置灯光位置
-	mMainLight.position = Vector3(-20, 30, 20);
-	//	设置灯光欧拉角
-	mMainLight.eulerangle = Vector3(30, -60, -50);
-	//	设置forward
-	mMainLight.forward = Vector3(0.57f, -0.57f, 0.57f);
-	//	主光源名字
-	mMainLight.name = "Direction Light";
+	//	创建设置全局设置
+	BuildGlobalConfig();
 
+	//	创建主光源
+	BuildMainLight();
+
+	//	创建天空盒
+	BuildSkyBox(matCBIndexUtils);
+
+	//	渲染项
+	BuildRenderObejct(mResourcesTextures, matCBIndexUtils);
+}
+
+/// <summary>
+/// 全局设置
+/// </summary>
+void SceneManager::BuildGlobalConfig()
+{
 	//	天空球设置
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mSkyBoxSetting.Exposure = 1.0f;
@@ -78,81 +83,150 @@ void SceneManager::BuildDefaultScene(
 	mCameraSetting.mCamClipN = 0.3;
 	mCameraSetting.mCamClipF = 1000;
 	mCameraSetting.renderSkyBox = true;
+}
 
+void SceneManager::BuildMainLight()
+{
+	//	读取JSON
+	nl::json jsonValue;
+	ifstream jfile(mScenePath[0]);
+	jfile >> jsonValue;
+	SceneData data;
+	nl::from_json(jsonValue, data);
 
-	//------------------------------
-	//	SkyBox
-	//------------------------------
-	// 
+	Transform* mTransform = new Transform("Transform");
+	//	设置灯光位置
+	mTransform->position = Vector3(data.MainLightPosition[0], data.MainLightPosition[1], data.MainLightPosition[2]);
+	//	设置灯光欧拉角
+	mTransform->eulerangle = Vector3(data.MainLightEulerangle[0], data.MainLightEulerangle[1], data.MainLightEulerangle[2]);
+	//	设置forward
+	mTransform->forward = Vector3(data.MainLightForward[0], data.MainLightForward[1], data.MainLightForward[2]);
+	MainLight->AddComponent(mTransform);
+
+	DirectionLight* mDirectionLight = new DirectionLight("DirectionLight");
+	//	设为主光源
+	mDirectionLight->isMainLight = data.isMainLight;
+	//	灯光颜色
+	mDirectionLight->color = Color(data.MainLightColor[0], data.MainLightColor[1], data.MainLightColor[2], data.MainLightColor[3]);
+	MainLight->AddComponent(mDirectionLight);
+
+	//	主光源名字
+	MainLight->name = data.MainLightName;
+}
+
+/// <summary>
+/// 天空球
+/// </summary>
+/// <param name="matCBIndexUtils"></param>
+void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
+{
 	//	存储类型matCB开始值
 	matCBIndexUtils.getInstance().SaveTypeIndex("Sky", matCBIndexUtils.getInstance().GetIndex());
 
-	auto sky = std::make_unique<MeshRender>();
-	sky->name = "DGarden";
-	//构建材质
-	sky->material.Name = "DGarden_mat";
-	sky->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-	sky->material.Tint = mSkyBoxSetting.Tint;
-	sky->material.Exposure = mSkyBoxSetting.Exposure;
-	sky->material.Rotation = mSkyBoxSetting.Rotation;
-	sky->material.ACES = mSkyBoxSetting.ACES;
+	auto skyRenderObject = std::make_unique<GameObject>("sky");
 
-	//	创建平面网格
-	sky->mesh.CreateSphere(0.5f, 20, 20);
+	//	Build Material
+	Material* mat_sky = new Material();
+	mat_sky->Name = "SkyBoxMaterial";
+	mat_sky->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_sky->Tint = mSkyBoxSetting.Tint;
+	mat_sky->Exposure = mSkyBoxSetting.Exposure;
+	mat_sky->Rotation = mSkyBoxSetting.Rotation;
+	mat_sky->ACES = mSkyBoxSetting.ACES;
+
+	//	加载模型
+	MeshFliter* mesh_sky = new MeshFliter("MeshFliter");
+	mesh_sky->CreateSphere(0.5f, 20.0f, 20.0f);
+	MeshRender* meshRender_sky = new MeshRender(mesh_sky, mat_sky, "MeshRender");
 
 	//	设置坐标
-	sky->position = Vector3(0, 0, 0);
-	sky->eulerangle = Vector3(0, 0, 0);
-	sky->scale = Vector3(5000, 5000, 5000);
+	Transform* transform_sky = new Transform("Transform");
+	transform_sky->position = Vector3(0, 0, 0);
+	transform_sky->eulerangle = Vector3(0, 0, 0);
+	transform_sky->scale = Vector3(5000, 5000, 5000);
 
-	//	创建碰撞盒
-	sky->bound.aabb = BoundingAABB(sky->mesh.data);
-	sky->Enable = true;
-	mMeshRender.push_back(std::move(sky));
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_sky = new DistBound::BoundingBox("BoundingBox");
+	bound_sky->aabb = BoundingAABB(mesh_sky->data);
+
+	skyRenderObject->AddComponent(transform_sky);
+	skyRenderObject->AddComponent(meshRender_sky);
+	skyRenderObject->AddComponent(bound_sky);
+
+	skyRenderObject->Enable = true;
+
+	mRenderObjects.push_back(std::move(skyRenderObject));
+}
+
+/// <summary>
+/// 渲染Item
+/// </summary>
+/// <param name="mResourcesTextures"></param>
+/// <param name="matCBIndexUtils"></param>
+void SceneManager::BuildRenderObejct(
+	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
+	MaterialIndexUtils& matCBIndexUtils
+)
+{
+	//	读取场景JSON
+	nl::json sceneData;
+	ifstream sceneFile("Assets/Scene/default.scene");
+	sceneFile >> sceneData;
+	SceneData scene_data;
+	nl::from_json(sceneData, scene_data);
+
+	//	读取材质JSON
+	nl::json matData;
+	ifstream matFile(scene_data.MaterialPath);
+	matFile >> matData;
+	MaterialLitData mat_data;
+	nl::from_json(matData, mat_data);
 
 
-	//------------------------------
-	//	物体的MeshRender
-	//------------------------------
-	// 
-	//	存储类型matCB开始值
+
 	matCBIndexUtils.getInstance().SaveTypeIndex("Opaque", matCBIndexUtils.getInstance().GetIndex());
 
-	auto model_ak47 = std::make_unique<MeshRender>();
-	model_ak47->name = "ak47_render";
+	auto RenderObject = std::make_unique<GameObject>(scene_data.RenderObjectName);
 
-	//构建材质
-	model_ak47->material.Name = "ak47";
-	model_ak47->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	// Build Material
+	Material* mat_ak47 = new Material();
+	mat_ak47->Name = mat_data.Name;
+	mat_ak47->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	model_ak47->material.DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	model_ak47->material.Smoothness = 1.0f;
-	model_ak47->material.Metallic = 1.0f;
-	model_ak47->material.Occlusion = 1.0f;
-	model_ak47->material.EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-	model_ak47->material.EmissionStrength = 0.0f;
-	model_ak47->material.DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
-	model_ak47->material.NormalMapIndex =  mResourcesTextures["AK47Normal"]->TexIndex;
-	model_ak47->material.MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
-	model_ak47->material.EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
-	model_ak47->material.LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+	mat_ak47->DiffuseColor = Color(mat_data.DiffuseColor[0], mat_data.DiffuseColor[1], mat_data.DiffuseColor[2], mat_data.DiffuseColor[3]);
+	mat_ak47->Smoothness = mat_data.Smoothness;
+	mat_ak47->Metallic = mat_data.Metallic;
+	mat_ak47->Occlusion = mat_data.Occlusion;
+	mat_ak47->EmissionColor = Color(mat_data.EmissionColor[0], mat_data.EmissionColor[1], mat_data.EmissionColor[2], mat_data.EmissionColor[3]);
+	mat_ak47->EmissionStrength = mat_data.EmissionStrength;
+	mat_ak47->DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
+	mat_ak47->NormalMapIndex = mResourcesTextures["AK47Normal"]->TexIndex;
+	mat_ak47->MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
+	mat_ak47->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_ak47->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-	//	创建球网格
-	ObjLoader::LoadObj(model_ak47->mesh.data, (char*)mAk47ObjPath.c_str());
+	//	加载模型
+	MeshFliter* mesh_ak47 = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_ak47->data, (char*)scene_data.MeshPath.c_str());
+	MeshRender* meshRender_ak47 = new MeshRender(mesh_ak47, mat_ak47, "MeshRender");
 
 	//	设置坐标
-	model_ak47->position = Vector3(0, 0, 0);
-	model_ak47->eulerangle = Vector3(0, 0, 0);
-	model_ak47->scale = Vector3(1, 1, 1);
+	Transform* transform_ak47 = new Transform("Transform");
+	transform_ak47->position = Vector3(scene_data.RenderObjectPosition[0], scene_data.RenderObjectPosition[1], scene_data.RenderObjectPosition[2]);
+	transform_ak47->eulerangle = Vector3(scene_data.RenderObjectEulerAngle[0], scene_data.RenderObjectEulerAngle[1], scene_data.RenderObjectEulerAngle[2]);
+	transform_ak47->scale = Vector3(scene_data.RenderObjectScale[0], scene_data.RenderObjectScale[1], scene_data.RenderObjectScale[2]);
 
-	//	创建碰撞盒
-	model_ak47->bound.aabb = BoundingAABB(model_ak47->mesh.data);
-	model_ak47->Enable = true;
-	//	设置AABB的世界坐标
-	model_ak47->bound.aabb.m_min = model_ak47->GetWorldMatrix() * model_ak47->bound.aabb.m_min;
-	model_ak47->bound.aabb.m_max = model_ak47->GetWorldMatrix() * model_ak47->bound.aabb.m_max;
-	mMeshRender.push_back(std::move(model_ak47));
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_ak47 = new DistBound::BoundingBox("BoundingBox");
+	bound_ak47->aabb = BoundingAABB(mesh_ak47->data);
+
+	RenderObject->AddComponent(transform_ak47);
+	RenderObject->AddComponent(meshRender_ak47);
+	RenderObject->AddComponent(bound_ak47);
+	RenderObject->Enable = true;
+
+	mRenderObjects.push_back(std::move(RenderObject));
 }
 
 void SceneManager::BuildConelBoxScene(
@@ -208,10 +282,10 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = &(mMeshRender[i]->material);
-		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		if (mat->MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			SkyBoxMaterialData matData;
 			matData.Tint = Vector4(mSkyBoxSetting.Tint);
@@ -287,23 +361,23 @@ void SceneManager::BuildRenderItem(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
 		//	创建渲染项
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
-		Ritem->Mat = &mMeshRender[i]->material;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
-		Ritem->Enable = mMeshRender[i]->Enable;
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Enable = mRenderObjects[i]->Enable;
 
-		if (mMeshRender[i]->material.MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
+		if (mRenderObjects[i]->GetComponent<MeshRender>(1)->mat->MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
 		}
@@ -322,12 +396,12 @@ void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& 
 {
 	for (size_t i = 0; i < mAllRitems.size(); i++)
 	{
-		for (size_t j = 0; j < mMeshRender.size(); j++)
+		for (size_t j = 0; j < mRenderObjects.size(); j++)
 		{
 			if (mAllRitems[i]->ObjCBIndex == (CurrentSize + j))
 			{
-				mAllRitems[i]->World = mMeshRender[j]->GetWorldXMMatrix();
-				mAllRitems[i]->Enable = mMeshRender[j]->Enable;
+				mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+				mAllRitems[i]->Enable = mRenderObjects[j]->Enable;
 			}
 		}
 	}

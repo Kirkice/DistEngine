@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core/Mathf/Mathf.h"
-#include "MeshFliter.h"
+#include "../Component/MeshFliter.h"
 #include <DirectXCollision.h>
 
 struct BoundingAABB

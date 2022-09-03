@@ -1,6 +1,24 @@
-#pragma once
-#include "Mathf.h"
+/***********************************************************************************************
+ ***							C O R E  ---  D I S T E N G I N E                            ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : Core									   *
+ *                                                                                             *
+ *                                   File Name : Color.h                                       *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/2                                         *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+#pragma once
+#include "MathHelper.h"
+
+using namespace DirectX;
+
+namespace Mathf
+{
 	class Color
 	{
 	public:
@@ -134,3 +152,4 @@
 		uint32_t a = XMVectorGetIntW(result);
 		return a << 24 | b << 16 | g << 8 | r;
 	}
+}

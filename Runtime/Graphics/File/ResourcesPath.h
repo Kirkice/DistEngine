@@ -2,6 +2,25 @@
 #include "DX12Utils.h"
 #include <string>
 
+
+	/// <summary>
+	/// RESOURCES
+	/// </summary>
+
+const std::vector<std::string> mMaterialPath =
+{
+	"Asset/Materials/ak47.mat",
+};
+
+    const std::vector<std::string> mScenePath =
+    {
+    	"Assets/Scene/Default.scene",
+    };
+
+
+
+
+
 	/// <summary>
 	/// TEXTURES
 	/// </summary>		

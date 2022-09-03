@@ -1,7 +1,4 @@
 #include "Material.h"
-#include "DX12Utils.h"
-#include "../Core/Mathf/Color.h"
-
 
 /// <summary>
 /// PBR Material

@@ -2,7 +2,7 @@
 #include <string>
 
 
-Camera::Camera()
+Camera::Camera(std::string _name) : Transform(_name)
 {
 	SetLens(0.25f * Mathf::Pi, 1.0f, 1.0f, 1000.0f);
 }
@@ -14,7 +14,7 @@ Camera::~Camera()
 //	更新相机
 void Camera::tick(const GameTimer& gt)
 {
-	Transform::tick(gt);
+	Transform::Tick(gt);
 
 	position = { position3f.x, position3f.y, position3f.z };
 

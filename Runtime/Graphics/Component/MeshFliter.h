@@ -1,7 +1,21 @@
+/***********************************************************************************************
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : GraphicsCore							   *
+ *                                                                                             *
+ *                                   File Name : MeshFliter.h								   *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/12                                        *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 #pragma once
-#include <cstdint>
-#include "../Core/Mathf/Mathf.h"
-#include <vector>
+#include "DX12Utils.h"
+#include "Component.h";
+#include "Mathf.h"
 
 using namespace Mathf;
 
@@ -68,13 +82,13 @@ private:
 	std::vector<uint16> mIndices16;
 };
 
-class MeshFliter
+class MeshFliter : public Component
 {
 public:
-	MeshData data; 
+	MeshData data;
 
 public:
-	MeshFliter();
+	MeshFliter(std::string _name);
 	~MeshFliter();
 
 	//	´´½¨Box

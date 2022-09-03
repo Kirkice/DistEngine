@@ -118,7 +118,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;../../ThirdParty/Json11/include/;../../ThirdParty/Json11/single_include/;../../ThirdParty/YamlCpp/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -147,14 +147,14 @@
   <ItemGroup>
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Graphics\CommandListManager.cpp" />
-    <ClCompile Include="Component\BoundingAABB.cpp" />
-    <ClCompile Include="Component\BoundingBox.cpp" />
-    <ClCompile Include="Component\BoundingOBB.cpp" />
-    <ClCompile Include="Component\BoundingSphere.cpp" />
+    <ClCompile Include="Physics\BoundingAABB.cpp" />
+    <ClCompile Include="Physics\BoundingBox.cpp" />
+    <ClCompile Include="Physics\BoundingOBB.cpp" />
+    <ClCompile Include="Physics\BoundingSphere.cpp" />
     <ClCompile Include="Component\Camera.cpp" />
     <ClCompile Include="Component\DirectionLight.cpp" />
     <ClCompile Include="Component\GameObject.cpp" />
-    <ClCompile Include="Component\Material.cpp" />
+    <ClCompile Include="Materials\Material.cpp" />
     <ClCompile Include="Component\MeshFliter.cpp" />
     <ClCompile Include="Component\MeshRender.cpp" />
     <ClCompile Include="Component\PointLight.cpp" />
@@ -179,20 +179,23 @@
     <ClCompile Include="File\ResourcesPath.cpp" />
     <ClCompile Include="Graphics\RootSignature.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Serialization\JsonManager.cpp" />
+    <ClCompile Include="Serialization\YamlManager.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Render\ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Graphics\CommandListManager.h" />
-    <ClInclude Include="Component\BoundingAABB.h" />
-    <ClInclude Include="Component\BoundingBox.h" />
-    <ClInclude Include="Component\BoundingOBB.h" />
-    <ClInclude Include="Component\BoundingSphere.h" />
+    <ClInclude Include="Physics\BoundingAABB.h" />
+    <ClInclude Include="Physics\BoundingBox.h" />
+    <ClInclude Include="Physics\BoundingOBB.h" />
+    <ClInclude Include="Physics\BoundingSphere.h" />
     <ClInclude Include="Component\Camera.h" />
     <ClInclude Include="Component\DirectionLight.h" />
     <ClInclude Include="Component\GameObject.h" />
-    <ClInclude Include="Component\Material.h" />
+    <ClInclude Include="Materials\Material.h" />
     <ClInclude Include="Component\MeshFliter.h" />
     <ClInclude Include="Component\MeshRender.h" />
     <ClInclude Include="Component\PointLight.h" />
@@ -218,6 +221,9 @@
     <ClInclude Include="File\ResourcesPath.h" />
     <ClInclude Include="Graphics\RootSignature.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
+    <ClInclude Include="Serialization\JsonManager.h" />
+    <ClInclude Include="Serialization\SceneData.h" />
+    <ClInclude Include="Serialization\YamlManager.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Render\ShadowMap.h" />
     <ClInclude Include="File\Texture2D.h" />

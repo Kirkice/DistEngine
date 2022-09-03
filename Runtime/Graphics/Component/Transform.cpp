@@ -2,7 +2,7 @@
 
 
 //	构造Transform
-Transform::Transform()
+Transform::Transform(std::string _name = "Transform") : Component(_name)
 {
 	position3f = { 0,0,0 };
 	position = Vector3::zero;
@@ -12,7 +12,7 @@ Transform::Transform()
 	quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 }
 
-Transform::Transform(Vector3 pos)
+Transform::Transform(Vector3 pos, std::string _name = "Transform") : Component(_name)
 {
 	position3f = { pos.x, pos.y, pos.z };
 	position = pos;
@@ -22,7 +22,7 @@ Transform::Transform(Vector3 pos)
 	quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 }
 
-Transform::Transform(Vector3 pos, Vector3 rot)
+Transform::Transform(Vector3 pos, Vector3 rot, std::string _name = "Transform") : Component(_name)
 {
 	position3f = { pos.x, pos.y, pos.z };
 	position = pos;
@@ -32,7 +32,7 @@ Transform::Transform(Vector3 pos, Vector3 rot)
 	quaternion = Quaternion::FromEuler(eulerangle.x, eulerangle.y, eulerangle.z);
 }
 
-Transform::Transform(Vector3 pos, Vector3 rot, Vector3 scale)
+Transform::Transform(Vector3 pos, Vector3 rot, Vector3 scale, std::string _name = "Transform") : Component(_name)
 {
 	position3f = { pos.x, pos.y, pos.z };
 	position = pos;
@@ -49,10 +49,8 @@ Transform::~Transform()
 }
 
 //	更新
-void Transform::tick(const GameTimer& gt)
+void Transform::Tick(const GameTimer& gt)
 {
-	GameObject::tick(gt);
-
 	//	设置方向
 	XMMATRIX rot_dir = XMMatrixRotationX((eulerangle.x / 180) * Mathf::Pi) * XMMatrixRotationY((eulerangle.y / 180) * Mathf::Pi) * XMMatrixRotationZ((eulerangle.z / 180) * Mathf::Pi);
 

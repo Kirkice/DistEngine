@@ -9,7 +9,7 @@ using namespace Mathf;
 class Camera : public Transform
 {
 public:
-	Camera();
+	Camera(std::string _name = "MainCamera");
 	~Camera();
 
 	static Camera& getInstance() {
@@ -18,7 +18,7 @@ public:
 	}
 
 public:
-	void tick(const GameTimer& gt)override;
+	void tick(const GameTimer& gt);
 
 	// Get/Set world camera position.
 	XMVECTOR GetPosition()const;
