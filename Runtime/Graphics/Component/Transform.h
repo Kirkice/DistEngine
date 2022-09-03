@@ -7,7 +7,7 @@
 
 using namespace Mathf;
 
-class Transform : public GameObject
+class Transform : public Component
 {
 public:
 	//	世界坐标
@@ -38,11 +38,13 @@ private:
 	float4x4 mWorld = float4x4();
 
 public:
-	Transform();
-	Transform(Vector3 pos);
-	Transform(Vector3 pos, Vector3 rot);
-	Transform(Vector3 pos, Vector3 rot, Vector3 scale);
+	Transform(std::string _name);
+	Transform(Vector3 pos, std::string _name);
+	Transform(Vector3 pos, Vector3 rot, std::string _name);
+	Transform(Vector3 pos, Vector3 rot, Vector3 scale, std::string _name);
 	~Transform();
+
+	void Tick(const GameTimer& gt);
 
 	void SetPosition(Vector3& pos);
 	void SetPosition(float x, float y, float z);
@@ -65,8 +67,6 @@ public:
 
 	//	获取世界矩阵
 	XMFLOAT4X4 GetWorldXMMatrix();
-
-	virtual void tick(const GameTimer& gt)override;
 
 private:
 

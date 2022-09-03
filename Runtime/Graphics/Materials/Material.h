@@ -2,10 +2,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "../Core/Mathf/Color.h"
+#include "Material.h"
+#include "DX12Utils.h"
+#include "Mathf.h"
 #include <string>
 #include <unordered_map>
 
+using namespace Mathf;
 //	PBR²ÄÖÊ
 class Material
 {

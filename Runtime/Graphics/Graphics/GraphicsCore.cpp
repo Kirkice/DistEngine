@@ -130,14 +130,14 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	mSceneManager.getInstance().mMainLight.tick(gt);
+	mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->Tick(gt);
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
 	//	更新CB
-	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().mMainLight, mSceneManager.getInstance().mMeshRender[1]);
-	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mMeshRender.size());
+	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().MainLight->GetComponent<Transform>(0), mSceneManager.getInstance().mRenderObjects[1]);
+	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 
 	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩阵
@@ -197,7 +197,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 {
 	// Only the first "main" light casts a shadow.
-	XMVECTOR lightDir = mSceneManager.getInstance().mMainLight.forward.ToSIMD();
+	XMVECTOR lightDir = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->forward.ToSIMD();
 	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
 	XMVECTOR targetPos = XMLoadFloat3(&mSceneBounds.Center);
 	XMVECTOR lightUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -288,12 +288,12 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.FxaaParames = Vector4(mAntialiasingSettings.AbsoluteLumaThreshold, mAntialiasingSettings.RelativeLumaThreshold, mAntialiasingSettings.ConsoleCharpness, mAntialiasingSettings.DebugMode);
 
 	//Light
-	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().mMainLight.forward;
-	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().mMainLight.intensity;
-	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().mMainLight.color);
+	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1)->intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1)->color);
 	mMainPassCB.DirectionLights.CastShadow = 1;
-	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().mMainLight.position;
-	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().mMainLight.Enable;
+	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->position;
+	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().MainLight->Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
@@ -692,9 +692,9 @@ void GraphicsCore::BuildFrameResources()
 			std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, 
 			(UINT)mAllRitems.size(),
-			(UINT)(mGizmoManager.getInstance().mMeshRender.size()) +
-			(UINT)(mSceneManager.getInstance().mMeshRender.size()) + 
-			(UINT)(mPostProcessManager.getInstance().mMeshRender.size())
+			(UINT)(mGizmoManager.getInstance().mRenderObjects.size()) +
+			(UINT)(mSceneManager.getInstance().mRenderObjects.size()) +
+			(UINT)(mPostProcessManager.getInstance().mRenderObjects.size())
 			)
 		);
 	}
@@ -703,8 +703,8 @@ void GraphicsCore::BuildFrameResources()
 void GraphicsCore::BuildRenderItems()
 {
 	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
-	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size(), matCBIndexUtils);
-	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mMeshRender.size() + mSceneManager.getInstance().mMeshRender.size(), matCBIndexUtils);
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
+	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size() + mSceneManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)

@@ -1,13 +1,25 @@
+/***********************************************************************************************
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : GraphicsCore							   *
+ *                                                                                             *
+ *                                   File Name : SpotLight.h								   *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/12                                        *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 #pragma once
-#ifndef SPOT_LIGHT_H
-#define SPOT_LIGHT_H
+#include "DX12Utils.h"
+#include "Component.h";
+#include "Mathf.h"
 
-#include "Transform.h"
-#include "BoundingSphere.h"
-#include "../Core/Mathf/Color.h"
+using namespace Mathf;
 
-
-class SpotLight : public Transform
+class SpotLight : public Component
 {
 
 public:
@@ -19,16 +31,12 @@ public:
 	float spotAngle;
 	//	ÑÕÉ«
 	Color color;
-	//	ÇòÐÎÅö×²Æ÷
-	DistBound::BoundingSphere bound;
 
 public:
-	SpotLight();
-	SpotLight(Color color);
-	SpotLight(Color color, float range);
-	SpotLight(Color color, float range, float inten);
-	SpotLight(Color color, float range, float inten, float Angle);
+	SpotLight(std::string _name);
+	SpotLight(Color color, std::string _name);
+	SpotLight(Color color, float range, std::string _name);
+	SpotLight(Color color, float range, float inten, std::string _name);
+	SpotLight(Color color, float range, float inten, float Angle, std::string _name);
 	~SpotLight();
 };
-
-#endif

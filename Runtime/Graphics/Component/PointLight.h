@@ -1,13 +1,25 @@
+/***********************************************************************************************
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : GraphicsCore							   *
+ *                                                                                             *
+ *                                   File Name : PointLight.h								   *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/12                                        *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 #pragma once
-#ifndef POINT_LIGHT_H
-#define POINT_LIGHT_H
+#include "DX12Utils.h"
+#include "Component.h";
+#include "Mathf.h"
 
-#include "Transform.h"
-#include "BoundingSphere.h"
-#include "../Core/Mathf/Color.h"
+using namespace Mathf;
 
-
-class PointLight : public Transform
+class PointLight : public Component
 {
 public:
 	//	·¶Î§
@@ -16,15 +28,11 @@ public:
 	float intensity;
 	//	ÑÕÉ«
 	Color color;
-	//	ÇòÐÎÅö×²Æ÷
-	DistBound::BoundingSphere bound;
 
 public:
-	PointLight();
-	PointLight(Color color);
-	PointLight(Color color, float intens);
-	PointLight(Color color, float intens, float range);
+	PointLight(std::string _name);
+	PointLight(Color color, std::string _name);
+	PointLight(Color color, float intens, std::string _name);
+	PointLight(Color color, float intens, float range, std::string _name);
 	~PointLight();
 };
-
-#endif

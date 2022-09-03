@@ -2,6 +2,9 @@
 #include "../Component/MeshRender.h"
 #include "../Component/DirectionLight.h"
 #include "../Component/Camera.h"
+#include "../Component/Transform.h"
+#include "../Component/GameObject.h"
+#include "../Physics/BoundingBox.h"
 #include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
 #include "DX12Utils.h"
@@ -25,7 +28,7 @@ public:
 
 public:
 	//	Mesh Render	
-	std::vector<std::unique_ptr<MeshRender>> mMeshRender;
+	std::vector < std::unique_ptr<GameObject>> mRenderObjects;
 
 public:
 

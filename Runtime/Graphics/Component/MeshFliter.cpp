@@ -1,9 +1,20 @@
+/***********************************************************************************************
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : GraphicsCore							   *
+ *                                                                                             *
+ *                                   File Name : MeshFliter.cpp								   *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/12                                        *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 #include "MeshFliter.h"
-#include "../Core/Mathf/Mathf.h"
 #include <algorithm>
 
-
-MeshFliter::MeshFliter()
+MeshFliter::MeshFliter(std::string _name = "MeshFliter") : Component(_name)
 {
 
 }

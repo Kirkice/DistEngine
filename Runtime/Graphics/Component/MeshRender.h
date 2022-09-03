@@ -1,29 +1,45 @@
-#pragma once
-#ifndef MESH_RENDER_H
-#define MESH_RENDER_H
-#include "Transform.h"
-#include "../Core/Mathf/Mathf.h"
-#include "Material.h"
-#include "MeshFliter.h"
-#include "BoundingBox.h"
+/***********************************************************************************************
+ ***				      G R A P H I C S C O R E  ---  D I S T E N G I N E                  ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                   Project Name : GraphicsCore							   *
+ *                                                                                             *
+ *                                   File Name : MeshRender.h								   *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                     Date : 2022/8/12                                        *
+ *                                                                                             *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-// MeshRender
-class MeshRender : public Transform
+#pragma once
+#include "DX12Utils.h"
+#include "Component.h";
+#include "MeshFliter.h"
+#include "Mathf.h"
+#include "../Materials/Material.h"
+
+
+class MeshRender : public Component
 {
 public:
-	//	材质
-	Material material;
-	//	网格
-	MeshFliter mesh;
-	//	包围盒
-	DistBound::BoundingBox bound;
+    MeshRender(std::string _name);
 
+    MeshRender(
+        MeshFliter* mesh,
+        Material* mat,
+        std::string _name);
+
+    ~MeshRender();
 
 public:
-	MeshRender();
-	MeshRender(Material mat, MeshFliter mesh, DistBound::BoundingBox bound);
-	~MeshRender();
 
+    //  网格
+    MeshFliter* mesh;
+
+    //  Lit
+    Material* mat;
+
+    //  绘制
+    void Draw(const ComPtr<ID3D12GraphicsCommandList>& pCmdList, bool bundleUsingOverride);
 };
-
-#endif

@@ -1,7 +1,7 @@
 #pragma once
 #include "FrameResource.h"
 #include "../Component/MeshFliter.h"
-#include "../Component/Material.h"
+#include "../Materials/Material.h"
 #include "../Geometry/MeshGeometry.h" 
 #include "DX12Utils.h"
 #include "Mathf/Mathf.h"

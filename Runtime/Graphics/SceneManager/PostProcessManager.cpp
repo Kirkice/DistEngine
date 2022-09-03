@@ -6,37 +6,73 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 	/// 体积雾
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>
-	auto VolumeFog = std::make_unique<MeshRender>();
+	auto VolumeFog = std::make_unique<GameObject>();
 	VolumeFog->name = "VolumeFog";
+
+
 	//构建材质
-	VolumeFog->material.Name = "VolumeFog_mat";
-	VolumeFog->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	Material* mat_volumeFog = new Material();
+	mat_volumeFog->Name = "VolumeFog_mat";
+	mat_volumeFog->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 
 	//	创建平面网格
-	VolumeFog->mesh.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	MeshFliter* mesh_volumeFog = new MeshFliter("MeshFliter");
+	mesh_volumeFog->CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	MeshRender* meshRender_volumeFog = new MeshRender(mesh_volumeFog, mat_volumeFog, "MeshRender");
 
-	//	创建碰撞盒
+	//	设置坐标
+	Transform* transform_volumeFog = new Transform("Transform");
+	transform_volumeFog->position = Vector3(0, 0, 0);
+	transform_volumeFog->eulerangle = Vector3(0, 0, 0);
+	transform_volumeFog->scale = Vector3(1, 1, 1);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_volumeFog = new DistBound::BoundingBox("BoundingBox");
+	bound_volumeFog->aabb = BoundingAABB(mesh_volumeFog->data);
+
+	VolumeFog->AddComponent(transform_volumeFog);
+	VolumeFog->AddComponent(meshRender_volumeFog);
+	VolumeFog->AddComponent(bound_volumeFog);
+
 	VolumeFog->Enable = true;
-	mMeshRender.push_back(std::move(VolumeFog));
+	mRenderObjects.push_back(std::move(VolumeFog));
 
 	/// <summary>
 	/// FxAA
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>
-	auto FastApproximateAntialiasing = std::make_unique<MeshRender>();
+	auto FastApproximateAntialiasing = std::make_unique<GameObject>();
 	FastApproximateAntialiasing->name = "FastApproximateAntialiasing";
+
+
 	//构建材质
-	FastApproximateAntialiasing->material.Name = "FastApproximateAntialiasing_mat";
-	FastApproximateAntialiasing->material.MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	Material* mat_fxaa = new Material();
+	mat_fxaa->Name = "FastApproximateAntialiasing_mat";
+	mat_fxaa->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 
 	//	创建平面网格
-	FastApproximateAntialiasing->mesh.CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	MeshFliter* mesh_fxaa = new MeshFliter("MeshFliter");
+	mesh_fxaa->CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	MeshRender* meshRender_fxaa = new MeshRender(mesh_fxaa, mat_fxaa, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_fxaa = new Transform("Transform");
+	transform_fxaa->position = Vector3(0, 0, 0);
+	transform_fxaa->eulerangle = Vector3(0, 0, 0);
+	transform_fxaa->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒
+	DistBound::BoundingBox* bound_fxaa = new DistBound::BoundingBox("BoundingBox");
+	bound_fxaa->aabb = BoundingAABB(mesh_fxaa->data);
+
+	FastApproximateAntialiasing->AddComponent(transform_fxaa);
+	FastApproximateAntialiasing->AddComponent(meshRender_fxaa);
+	FastApproximateAntialiasing->AddComponent(bound_fxaa);
+
 	FastApproximateAntialiasing->Enable = true;
-	mMeshRender.push_back(std::move(FastApproximateAntialiasing));
+	mRenderObjects.push_back(std::move(FastApproximateAntialiasing));
 
 }
 
@@ -45,9 +81,10 @@ void PostProcessManager::UpdateMaterialBuffer(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = &(mMeshRender[i]->material);
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+
 		PostprocessingData matData;
 		matData.RGBSplitStrength = mat->RGBSplitStrength;
 		matData.DecolorStrength = mat->DecolorStrength;
@@ -100,21 +137,21 @@ void PostProcessManager::BuildRenderItem(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	for (size_t i = 0; i < mMeshRender.size(); i++)
+	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
 		//	创建渲染项
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mMeshRender[i]->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
-		Ritem->Mat = &mMeshRender[i]->material;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mMeshRender[i]->name, mMeshRender[i]->mesh.data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mMeshRender[i]->bound.aabb.ToBoundBox();
-		Ritem->Enable = mMeshRender[i]->Enable;
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Enable = mRenderObjects[i]->Enable;
 
 		mRitemLayer[(int)RenderLayer::PostProcess].push_back(Ritem.get());
 		mAllRitems.push_back(std::move(Ritem));

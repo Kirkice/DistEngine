@@ -1,5 +1,5 @@
 #pragma once
-#include "../MathHelper.h"
+#include "MathHelper.h"
 
 using namespace DirectX;
 

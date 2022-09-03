@@ -1,5 +1,5 @@
 #pragma once
-#include "../MathHelper.h"
+#include "MathHelper.h"
 #include "Matrix.h"
 #include "Vector3.h"
 

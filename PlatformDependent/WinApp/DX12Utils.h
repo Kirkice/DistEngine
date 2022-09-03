@@ -25,6 +25,10 @@
 #include <fstream>
 #include "AppUtils.h"
 
+using Microsoft::WRL::ComPtr;
+using namespace std;
+using namespace DirectX;
+
 const int gNumFrameResources = 3;
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
