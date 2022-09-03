@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 
 enum class TexturesType
 {

@@ -1,8 +1,8 @@
 #pragma once
 
 #pragma warning(disable : 4324)
-#include "d3dUtil.h"
-#include "d3dApp.h"
+#include "DX12Utils.h"
+#include "DX12GameApp.h"
 #include <exception>
 #include <memory>
 

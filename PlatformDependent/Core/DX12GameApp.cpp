@@ -1,4 +1,4 @@
-#include "d3dApp.h"
+#include "DX12GameApp.h"
 #include <WindowsX.h>
 
 #pragma comment(lib,"..\\DistEngine\\x64\\Debug\\ImGUI.lib")
@@ -24,50 +24,50 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
 	// before CreateWindow returns, and thus before mhMainWnd is valid.
-	return D3DApp::GetApp()->MsgProc(hwnd, msg, wParam, lParam);
+	return DX12GameApp::GetApp()->MsgProc(hwnd, msg, wParam, lParam);
 }
 
-D3DApp* D3DApp::mApp = nullptr;
-D3DApp* D3DApp::GetApp()
+DX12GameApp* DX12GameApp::mApp = nullptr;
+DX12GameApp* DX12GameApp::GetApp()
 {
 	return mApp;
 }
 
-D3DApp::D3DApp(HINSTANCE hInstance)
+DX12GameApp::DX12GameApp(HINSTANCE hInstance)
 	: mhAppInst(hInstance)
 {
-	// Only one D3DApp can be constructed.
+	// Only one DX12GameApp can be constructed.
 	assert(mApp == nullptr);
 	mApp = this;
 }
 
-D3DApp::~D3DApp()
+DX12GameApp::~DX12GameApp()
 {
 	if (md3dDevice != nullptr)
 		FlushCommandQueue();
 }
 
-HINSTANCE D3DApp::AppInst()const
+HINSTANCE DX12GameApp::AppInst()const
 {
 	return mhAppInst;
 }
 
-HWND D3DApp::MainWnd()const
+HWND DX12GameApp::MainWnd()const
 {
 	return mhMainWnd;
 }
 
-float D3DApp::AspectRatio()const
+float DX12GameApp::AspectRatio()const
 {
 	return static_cast<float>(mClientWidth) / mClientHeight;
 }
 
-bool D3DApp::Get4xMsaaState()const
+bool DX12GameApp::Get4xMsaaState()const
 {
 	return m4xMsaaState;
 }
 
-void D3DApp::Set4xMsaaState(bool value)
+void DX12GameApp::Set4xMsaaState(bool value)
 {
 	if (m4xMsaaState != value)
 	{
@@ -79,7 +79,7 @@ void D3DApp::Set4xMsaaState(bool value)
 	}
 }
 
-int D3DApp::Run()
+int DX12GameApp::Run()
 {
 	MSG msg = { 0 };
 
@@ -114,7 +114,7 @@ int D3DApp::Run()
 	return (int)msg.wParam;
 }
 
-bool D3DApp::Initialize()
+bool DX12GameApp::Initialize()
 {
 	if (!InitMainWindow())
 		return false;
@@ -128,7 +128,7 @@ bool D3DApp::Initialize()
 	return true;
 }
 
-void D3DApp::CreateRtvAndDsvDescriptorHeaps()
+void DX12GameApp::CreateRtvAndDsvDescriptorHeaps()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
 	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
@@ -156,7 +156,7 @@ void D3DApp::CreateRtvAndDsvDescriptorHeaps()
 		&SrvHeapDesc, IID_PPV_ARGS(mSrvHeap.GetAddressOf())));
 }
 
-void D3DApp::OnResize()
+void DX12GameApp::OnResize()
 {
 	assert(md3dDevice);
 	assert(mSwapChain);
@@ -259,7 +259,7 @@ void D3DApp::OnResize()
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT DX12GameApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam);
 
@@ -399,7 +399,7 @@ LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-bool D3DApp::InitMainWindow()
+bool DX12GameApp::InitMainWindow()
 {
 	WNDCLASS wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -442,7 +442,7 @@ bool D3DApp::InitMainWindow()
 	return true;
 }
 
-bool D3DApp::InitDirect3D()
+bool DX12GameApp::InitDirect3D()
 {
 //#if defined(DEBUG) || defined(_DEBUG) 
 //	// Enable the D3D12 debug layer.
@@ -512,7 +512,7 @@ bool D3DApp::InitDirect3D()
 	return true;
 }
 
-void D3DApp::CreateCommandObjects()
+void DX12GameApp::CreateCommandObjects()
 {
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -563,7 +563,7 @@ void D3DApp::CreateCommandObjects()
 	m_vertexBufferView.SizeInBytes = vertexBufferSize;
 }
 
-void D3DApp::CreateSwapChain()
+void DX12GameApp::CreateSwapChain()
 {
 	// Release the previous swapchain we will be recreating.
 	mSwapChain.Reset();
@@ -592,7 +592,7 @@ void D3DApp::CreateSwapChain()
 		mSwapChain.GetAddressOf()));
 }
 
-void D3DApp::FlushCommandQueue()
+void DX12GameApp::FlushCommandQueue()
 {
 	// Advance the fence value to mark commands up to this fence point.
 	mCurrentFence++;
@@ -616,12 +616,12 @@ void D3DApp::FlushCommandQueue()
 	}
 }
 
-ID3D12Resource* D3DApp::CurrentBackBuffer()const
+ID3D12Resource* DX12GameApp::CurrentBackBuffer()const
 {
 	return mSwapChainBuffer[mCurrBackBuffer].Get();
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE D3DApp::CurrentBackBufferView()const
+D3D12_CPU_DESCRIPTOR_HANDLE DX12GameApp::CurrentBackBufferView()const
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
 		mRtvHeap->GetCPUDescriptorHandleForHeapStart(),
@@ -629,12 +629,12 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DApp::CurrentBackBufferView()const
 		mRtvDescriptorSize);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE D3DApp::DepthStencilView()const
+D3D12_CPU_DESCRIPTOR_HANDLE DX12GameApp::DepthStencilView()const
 {
 	return mDsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
-void D3DApp::CalculateFrameStats()
+void DX12GameApp::CalculateFrameStats()
 {
 	// Code computes the average frames per second, and also the 
 	// average time it takes to render one frame.  These stats 
@@ -656,7 +656,7 @@ void D3DApp::CalculateFrameStats()
 	}
 }
 
-void D3DApp::LogAdapters()
+void DX12GameApp::LogAdapters()
 {
 	UINT i = 0;
 	IDXGIAdapter* adapter = nullptr;
@@ -684,7 +684,7 @@ void D3DApp::LogAdapters()
 	}
 }
 
-void D3DApp::LogAdapterOutputs(IDXGIAdapter* adapter)
+void DX12GameApp::LogAdapterOutputs(IDXGIAdapter* adapter)
 {
 	UINT i = 0;
 	IDXGIOutput* output = nullptr;
@@ -706,7 +706,7 @@ void D3DApp::LogAdapterOutputs(IDXGIAdapter* adapter)
 	}
 }
 
-void D3DApp::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format)
+void DX12GameApp::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format)
 {
 	UINT count = 0;
 	UINT flags = 0;

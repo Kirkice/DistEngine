@@ -113,10 +113,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../../ThirdParty/ImGUI;../../ThirdParty/Spdlog/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,24 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppUtils.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
-    <ClCompile Include="DX12GameApp.cpp" />
-    <ClCompile Include="DX12Utils.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="WinApp.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AppUtils.h" />
-    <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="DDS.h" />
-    <ClInclude Include="DDSTextureLoader.h" />
-    <ClInclude Include="DX12GameApp.h" />
-    <ClInclude Include="DX12Utils.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="GameTimer.h" />
-    <ClInclude Include="UploadBuffer.h" />
-    <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,13 +1,13 @@
 #pragma once
 #pragma once
-#include "d3dApp.h"
+#include "DX12GameApp.h"
 #include "../Component/Camera.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-class InputSystem : public D3DApp
+class InputSystem : public DX12GameApp
 {
 
 public:

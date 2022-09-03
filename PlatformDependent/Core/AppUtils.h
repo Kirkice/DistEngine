@@ -30,7 +30,7 @@
 #include <functional>
 #include <map>
 #include "GameTimer.h"
-#include "Log.h"
+//#include "Log.h"
 
 inline std::wstring AnsiToWString(const std::string& str)
 {

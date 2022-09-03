@@ -23,42 +23,32 @@
 #include "d3dx12.h"
 #include <comdef.h>
 #include <fstream>
-#include "WinApp.h"
-
-using Microsoft::WRL::ComPtr;
-using namespace std;
-using namespace DirectX;
+#include "AppUtils.h"
 
 const int gNumFrameResources = 3;
 
-//	Simple Vertex
-struct SimpleVertex
-{
-	XMFLOAT3 position;
-	XMFLOAT4 color;
-};
-
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {
-	if (obj)
-	{
-		obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
-	}
+    if(obj)
+    {
+        obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
+    }
 }
 inline void d3dSetDebugName(ID3D12Device* obj, const char* name)
 {
-	if (obj)
-	{
-		obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
-	}
+    if(obj)
+    {
+        obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
+    }
 }
 inline void d3dSetDebugName(ID3D12DeviceChild* obj, const char* name)
 {
-	if (obj)
-	{
-		obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
-	}
+    if(obj)
+    {
+        obj->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA(name), name);
+    }
 }
+
 
 class DX12Utils
 {
@@ -73,18 +63,29 @@ public:
 		return (byteSize + 255) & ~255;
 	}
 
-	static ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
+	static Microsoft::WRL::ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
 
-	static ComPtr<ID3D12Resource> CreateDefaultBuffer(
+	static Microsoft::WRL::ComPtr<ID3D12Resource> CreateDefaultBuffer(
 		ID3D12Device* device,
 		ID3D12GraphicsCommandList* cmdList,
 		const void* initData,
 		UINT64 byteSize,
-		ComPtr<ID3D12Resource>& uploadBuffer);
+		Microsoft::WRL::ComPtr<ID3D12Resource>& uploadBuffer);
 
-	static ComPtr<ID3DBlob> CompileShader(
+	static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
 		const std::wstring& filename,
 		const D3D_SHADER_MACRO* defines,
 		const std::string& entrypoint,
 		const std::string& target);
+};
+
+struct Texture
+{
+	// Unique material name for lookup.
+	std::string Name;
+
+	std::wstring Filename;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
 };

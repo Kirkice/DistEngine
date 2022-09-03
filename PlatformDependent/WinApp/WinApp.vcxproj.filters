@@ -15,55 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AppUtils.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="WinApp.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12GameApp.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClCompile>
-    <ClCompile Include="DX12Utils.cpp">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AppUtils.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="GameTimer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="WinApp.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h">
       <Filter>EventSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DDS.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12GameApp.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="DX12Utils.h">
-      <Filter>GfxDevice\DirectX12</Filter>
-    </ClInclude>
-    <ClInclude Include="UploadBuffer.h">
-      <Filter>GfxDevice\DirectX12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 #define GBUFFER_H
 #pragma once
 
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "../Graphics/FrameResource.h"
 
 class GBuffer

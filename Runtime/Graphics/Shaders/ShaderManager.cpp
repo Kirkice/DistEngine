@@ -24,8 +24,8 @@ void ShaderManager::BuildShaders()
 {
 	for (size_t i = 0; i < mBuiltinShaderPath.size(); i++)
 	{
-		mShaders[mBuiltinShaderVS[i]] = d3dUtil::CompileShader(mBuiltinShaderPath[i], nullptr, "VS", "vs_5_1");
-		mShaders[mBuiltinShaderPS[i]] = d3dUtil::CompileShader(mBuiltinShaderPath[i], nullptr, "PS", "ps_5_1");
+		mShaders[mBuiltinShaderVS[i]] = DX12Utils::CompileShader(mBuiltinShaderPath[i], nullptr, "VS", "vs_5_1");
+		mShaders[mBuiltinShaderPS[i]] = DX12Utils::CompileShader(mBuiltinShaderPath[i], nullptr, "PS", "ps_5_1");
 	}
 }
 

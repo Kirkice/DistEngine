@@ -1,5 +1,5 @@
 #include "UploadBuffer.h"
-#include "GeometryGenerator.h"
+#include "../Geometry/GeometryGenerator.h"
 #include "GraphicsCore.h"
 
 using Microsoft::WRL::ComPtr;
@@ -18,7 +18,7 @@ GraphicsCore::~GraphicsCore()
 
 bool GraphicsCore::Initialize()
 {
-	if (!D3DApp::Initialize())
+	if (!DX12GameApp::Initialize())
 		return false;
 
 	// Reset the command list to prep for initialization commands.
@@ -94,7 +94,7 @@ void GraphicsCore::CreateRtvAndDsvDescriptorHeaps()
 
 void GraphicsCore::OnResize()
 {
-	D3DApp::OnResize();
+	DX12GameApp::OnResize();
 
 	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
 }
@@ -709,7 +709,7 @@ void GraphicsCore::BuildRenderItems()
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
 {
-	UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+	UINT objCBByteSize = DX12Utils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
 
 	auto objectCB = mCurrFrameResource->ObjectCB->Resource();
 
@@ -751,7 +751,7 @@ void GraphicsCore::DrawSceneToShadowMap()
 	mCommandList->OMSetRenderTargets(0, nullptr, false, &mShadowMap->Dsv());
 
 	// Bind the pass constant buffer for the shadow map pass.
-	UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(PassConstants));
+	UINT passCBByteSize = DX12Utils::CalcConstantBufferByteSize(sizeof(PassConstants));
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);

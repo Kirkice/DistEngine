@@ -3,7 +3,7 @@
 #include "../Component/MeshFliter.h"
 #include "../Component/Material.h"
 #include "../Geometry/MeshGeometry.h" 
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "Mathf/Mathf.h"
 #include "../File/ResourcesManager.h"
 

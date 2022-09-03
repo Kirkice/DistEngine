@@ -1,5 +1,4 @@
 #include "UploadBuffer.h"
-#include "GeometryGenerator.h"
 #include "GUISystem.h"
 #include "EngineApp.h"
 

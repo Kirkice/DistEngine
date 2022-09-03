@@ -118,7 +118,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Graphics\CommandListManager.cpp" />
     <ClCompile Include="Component\BoundingAABB.cpp" />
     <ClCompile Include="Component\BoundingBox.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Render\ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry\GeometryGenerator.h" />
     <ClInclude Include="Graphics\CommandListManager.h" />
     <ClInclude Include="Component\BoundingAABB.h" />
     <ClInclude Include="Component\BoundingBox.h" />

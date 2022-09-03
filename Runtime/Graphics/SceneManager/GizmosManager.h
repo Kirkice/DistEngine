@@ -3,7 +3,7 @@
 #include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
 #include "../Graphics/FrameResource.h"
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "../File/Texture2D.h"
 #include "../Geometry/ObjLoader.h"
 

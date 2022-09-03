@@ -1,6 +1,6 @@
 #pragma once
 #include "../Component/DirectionLight.h"
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "../Core/Mathf/Mathf.h"
 #include "UploadBuffer.h"
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 
 enum class CubeMapFace : int
 {

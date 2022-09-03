@@ -38,10 +38,10 @@ MeshGeometry* GraphicsUtils::BuidlMeshGeometryFromMeshData(std::string name, Mes
 	ThrowIfFailed(D3DCreateBlob(ibByteSize, &MeshGeo->IndexBufferCPU));
 	CopyMemory(MeshGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
-	MeshGeo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
+	MeshGeo->VertexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice.Get(),
 		mCommandList.Get(), vertices.data(), vbByteSize, MeshGeo->VertexBufferUploader);
 
-	MeshGeo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(md3dDevice.Get(),
+	MeshGeo->IndexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice.Get(),
 		mCommandList.Get(), indices.data(), ibByteSize, MeshGeo->IndexBufferUploader);
 
 	MeshGeo->VertexByteStride = sizeof(Vertex);

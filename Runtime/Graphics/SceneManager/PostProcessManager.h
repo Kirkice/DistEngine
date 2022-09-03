@@ -4,7 +4,7 @@
 #include "../Component/Camera.h"
 #include "../Graphics/GraphicsUtils.h"
 #include "GameTimer.h"
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "../Graphics/FrameResource.h"
 
 using Microsoft::WRL::ComPtr;

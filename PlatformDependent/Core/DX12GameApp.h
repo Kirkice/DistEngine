@@ -5,7 +5,7 @@
 #include <crtdbg.h>
 #endif
 
-#include "d3dUtil.h"
+#include "DX12Utils.h"
 #include "GameTimer.h"
 
 // Link necessary d3d12 libraries.
@@ -13,18 +13,18 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-class D3DApp
+class DX12GameApp
 {
 protected:
 
-	D3DApp(HINSTANCE hInstance);
-	D3DApp(const D3DApp& rhs) = delete;
-	D3DApp& operator=(const D3DApp& rhs) = delete;
-	virtual ~D3DApp();
+	DX12GameApp(HINSTANCE hInstance);
+	DX12GameApp(const DX12GameApp& rhs) = delete;
+	DX12GameApp& operator=(const DX12GameApp& rhs) = delete;
+	virtual ~DX12GameApp();
 
 public:
 
-	static D3DApp* GetApp();
+	static DX12GameApp* GetApp();
 
 	HINSTANCE AppInst()const;
 	HWND      MainWnd()const;
@@ -71,7 +71,7 @@ protected:
 
 protected:
 
-	static D3DApp* mApp;
+	static DX12GameApp* mApp;
 
 	HINSTANCE mhAppInst = nullptr; // application instance handle
 	HWND      mhMainWnd = nullptr; // main window handle
@@ -120,7 +120,7 @@ protected:
 	UINT mCbvSrvUavDescriptorSize = 0;
 
 	// Derived class should set these in derived constructor to customize starting values.
-	std::wstring mMainWndCaption = L"Dist Engine v1.2 - Writer: Kirk - <DX12>";
+	std::wstring mMainWndCaption = L"Dist Engine v1.3 - Writer: Kirk - <DX12>";
 	D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;

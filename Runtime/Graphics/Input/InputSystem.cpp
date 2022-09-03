@@ -5,7 +5,7 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 
 
-InputSystem::InputSystem(HINSTANCE hInstance) : D3DApp(hInstance)
+InputSystem::InputSystem(HINSTANCE hInstance) : DX12GameApp(hInstance)
 {
 } 
  

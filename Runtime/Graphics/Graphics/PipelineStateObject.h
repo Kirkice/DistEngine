@@ -3,7 +3,7 @@
 #include "../Shaders/ShaderManager.h"
 #include "../File/ResourcesManager.h"
 #include "../Core/Mathf/Mathf.h"
-#include "d3dApp.h"
+#include "DX12GameApp.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

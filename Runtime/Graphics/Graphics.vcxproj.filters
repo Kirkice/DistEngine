@@ -74,6 +74,7 @@
     <ClCompile Include="Component\Transform.cpp" />
     <ClCompile Include="Render\DistRenderPipeline.cpp" />
     <ClCompile Include="Render\RenderCore.cpp" />
+    <ClCompile Include="Geometry\GeometryGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputSystem.h">
@@ -155,6 +156,7 @@
     <ClInclude Include="Component\Transform.h" />
     <ClInclude Include="Render\DistRenderPipeline.h" />
     <ClInclude Include="Render\RenderCore.h" />
+    <ClInclude Include="Geometry\GeometryGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">
