@@ -517,7 +517,7 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mMainLightPos.position);
+					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mMainLightPos->position);
 					mAllRitems[i]->Enable = mRenderObjects[j]->Enable;
 					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
 				}

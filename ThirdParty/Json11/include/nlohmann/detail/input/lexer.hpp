@@ -22,6 +22,8 @@
 #include <nlohmann/detail/input/position_t.hpp>
 #include <nlohmann/detail/macro_scope.hpp>
 
+#undef snprintf
+
 NLOHMANN_JSON_NAMESPACE_BEGIN
 namespace detail
 {

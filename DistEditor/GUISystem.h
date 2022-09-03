@@ -18,9 +18,6 @@ struct HierachyItem
 	std::string Name = "";
 	HierachyType type = HierachyType::MeshRender;
 	bool selected = false;
-	DirectionLight* mDirectionLight;
-	PointLight mPointLight;
-	SpotLight mSpotLight;
 	int MeshRenderIndex; 
 };
 

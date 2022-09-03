@@ -6,9 +6,7 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 	/// 体积雾
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>
-	auto VolumeFog = std::make_unique<GameObject>();
-	VolumeFog->name = "VolumeFog";
-
+	auto VolumeFog = std::make_unique<GameObject>("VolumeFog");
 
 	//构建材质
 	Material* mat_volumeFog = new Material();
@@ -42,9 +40,7 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 	/// FxAA
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>
-	auto FastApproximateAntialiasing = std::make_unique<GameObject>();
-	FastApproximateAntialiasing->name = "FastApproximateAntialiasing";
-
+	auto FastApproximateAntialiasing = std::make_unique<GameObject>("FastApproximateAntialiasing");
 
 	//构建材质
 	Material* mat_fxaa = new Material();

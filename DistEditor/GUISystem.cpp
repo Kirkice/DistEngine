@@ -105,18 +105,17 @@ void GUISystem::DrawEditor()
 void GUISystem::InitHierachyItems()
 {
 	auto DirectionLightItem = std::make_unique<HierachyItem>();
-	DirectionLightItem->Name = mSceneManager.getInstance().mMainLight.getName();
+	DirectionLightItem->Name = mSceneManager.getInstance().MainLight->getName();
 	DirectionLightItem->type = HierachyType::DirectionLight;
 	DirectionLightItem->selected = false;
-	DirectionLightItem->mDirectionLight = &(mSceneManager.getInstance().mMainLight);
 
 	mHierachyItems.push_back(std::move(DirectionLightItem));
 
 	//	从1 开始去掉天空球
-	for (size_t i = 1; i < mSceneManager.getInstance().mMeshRender.size(); i++)
+	for (size_t i = 1; i < mSceneManager.getInstance().mRenderObjects.size(); i++)
 	{
 		auto MeshRenderItem = std::make_unique<HierachyItem>();
-		MeshRenderItem->Name = mSceneManager.getInstance().mMeshRender[i]->getName();
+		MeshRenderItem->Name = mSceneManager.getInstance().mRenderObjects[i]->getName();
 		MeshRenderItem->type = HierachyType::MeshRender;
 		MeshRenderItem->selected = false;
 		MeshRenderItem->MeshRenderIndex = i;
@@ -246,30 +245,33 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::Separator();
 					ImGui::Text("Transform");
 
-					float position[3] = { mHierachyItems[i]->mDirectionLight->position.x,mHierachyItems[i]->mDirectionLight->position.y,mHierachyItems[i]->mDirectionLight->position.z};
+					Transform* mDirectionLightTransform = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0);
+
+					float position[3] = { mDirectionLightTransform->position.x,mDirectionLightTransform->position.y,mDirectionLightTransform->position.z};
 					ImGui::InputFloat3("Position", position);
-					mHierachyItems[i]->mDirectionLight->position = Vector3(position[0], position[1], position[2]);
+					mDirectionLightTransform->position = Vector3(position[0], position[1], position[2]);
 
-					float eulerangle[3] = { mHierachyItems[i]->mDirectionLight->eulerangle.x,mHierachyItems[i]->mDirectionLight->eulerangle.y,mHierachyItems[i]->mDirectionLight->eulerangle.z };
+					float eulerangle[3] = { mDirectionLightTransform->eulerangle.x,mDirectionLightTransform->eulerangle.y,mDirectionLightTransform->eulerangle.z };
 					ImGui::InputFloat3("Rotation", eulerangle);
-					mHierachyItems[i]->mDirectionLight->eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
+					mDirectionLightTransform->eulerangle = Vector3(eulerangle[0], eulerangle[1], eulerangle[2]);
 
-					float scale[3] = { mHierachyItems[i]->mDirectionLight->scale.x,mHierachyItems[i]->mDirectionLight->scale.y,mHierachyItems[i]->mDirectionLight->scale.z };
+					float scale[3] = { mDirectionLightTransform->scale.x,mDirectionLightTransform->scale.y,mDirectionLightTransform->scale.z };
 					ImGui::InputFloat3("Scale", scale);
-					mHierachyItems[i]->mDirectionLight->scale = Vector3(scale[0], scale[1], scale[2]);
+					mDirectionLightTransform->scale = Vector3(scale[0], scale[1], scale[2]);
 
 					ImGui::Separator();
 				}
 
 				if (ImGui::CollapsingHeader("Direction Light"))
 				{
-					ImGui::Checkbox("Direction Enable", &mHierachyItems[i]->mDirectionLight->Enable);
-					float lightColor[4] = { mHierachyItems[i]->mDirectionLight->color.R(),mHierachyItems[i]->mDirectionLight->color.G(),mHierachyItems[i]->mDirectionLight->color.B(),mHierachyItems[i]->mDirectionLight->color.A()};
+					ImGui::Checkbox("Direction Enable", &mSceneManager.getInstance().MainLight->Enable);
+					DirectionLight* mDirLight = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1);
+					float lightColor[4] = { mDirLight->color.R(),mDirLight->color.G(),mDirLight->color.B(),mDirLight->color.A()};
 					ImGui::ColorEdit3("(D)Color", lightColor);
-					mHierachyItems[i]->mDirectionLight->color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
+					mDirLight->color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
 
-					ImGui::SliderFloat("(D)Intensity", &mHierachyItems[i]->mDirectionLight->intensity, 0.0f, 10);
-					ImGui::Checkbox("Is MainLight", &mHierachyItems[i]->mDirectionLight->isMainLight);
+					ImGui::SliderFloat("(D)Intensity", &mDirLight->intensity, 0.0f, 10);
+					ImGui::Checkbox("Is MainLight", &mDirLight->isMainLight);
 				}
 
 				break;
@@ -280,26 +282,27 @@ void GUISystem::DrawInspectorEditor()
 				{
 					ImGui::Separator();
 					ImGui::Text("RenderItem Active");
-					ImGui::Checkbox("Enable", &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->Enable);
+					ImGui::Checkbox("Enable", &mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->Enable);
 					ImGui::Text("Transform");
-					float position[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->position.z};
+					Transform* mRenderObjectTransform = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<Transform>(0);
+					float position[3] = { mRenderObjectTransform->position.x, mRenderObjectTransform->position.y, mRenderObjectTransform->position.z};
 					ImGui::InputFloat3("Position", position); 
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetPosition(Vector3(position[0], position[1], position[2]));
+					mRenderObjectTransform->SetPosition(Vector3(position[0], position[1], position[2]));
 
-					float eulerangle[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->eulerangle.z };
+					float eulerangle[3] = { mRenderObjectTransform->eulerangle.x, mRenderObjectTransform->eulerangle.y, mRenderObjectTransform->eulerangle.z };
 					ImGui::InputFloat3("Rotation", eulerangle);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetEulerangle(Vector3(eulerangle[0], eulerangle[1], eulerangle[2]));
+					mRenderObjectTransform->SetEulerangle(Vector3(eulerangle[0], eulerangle[1], eulerangle[2]));
 
-					float scale[3] = { mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.x,mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.y, mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->scale.z };
+					float scale[3] = { mRenderObjectTransform->scale.x, mRenderObjectTransform->scale.y, mRenderObjectTransform->scale.z };
 					ImGui::InputFloat3("Scale", scale);
-					mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->SetScale(Vector3(scale[0], scale[1], scale[2]));
+					mRenderObjectTransform->SetScale(Vector3(scale[0], scale[1], scale[2]));
 
 					ImGui::Separator();
 				}
 
 				if (ImGui::CollapsingHeader("Materials"))
 				{
-					Material* currentMat = &mSceneManager.getInstance().mMeshRender[mHierachyItems[i]->MeshRenderIndex]->material;
+					Material* currentMat = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<MeshRender>(1)->mat;
 
 
 					float DiffuseColor[4] = {
