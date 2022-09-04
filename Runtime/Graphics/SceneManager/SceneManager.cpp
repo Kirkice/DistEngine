@@ -158,7 +158,7 @@ void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
 	skyRenderObject->AddComponent(bound_sky);
 
 	skyRenderObject->Enable = true;
-
+	skyRenderObject->name = "sky";
 	mRenderObjects.push_back(std::move(skyRenderObject));
 }
 
@@ -229,6 +229,8 @@ void SceneManager::BuildRenderObejct(
 	RenderObject->AddComponent(bound_ak47);
 	RenderObject->Enable = true;
 
+	RenderObject->Enable = true;
+	RenderObject->name = "ak47";
 	mRenderObjects.push_back(std::move(RenderObject));
 }
 

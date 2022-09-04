@@ -33,7 +33,7 @@ void GUISystem::Draw(const GameTimer& gt)
 
 	RenderCore::Draw(gt);
 
-	//DrawEditor();
+	DrawEditor();
 
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
