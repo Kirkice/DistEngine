@@ -7,6 +7,7 @@ void GizmosManager::BuildWirePlane(MaterialIndexUtils& matCBIndexUtils)
 	matCBIndexUtils.getInstance().SaveTypeIndex("Gizmo", matCBIndexUtils.getInstance().GetIndex());
 
 	auto planeRenderObject = std::make_unique<GameObject>("plane");
+	planeRenderObject->name = "plane";
 
 	//构建材质
 	Material* mat_plane = new Material();
@@ -32,6 +33,7 @@ void GizmosManager::BuildWirePlane(MaterialIndexUtils& matCBIndexUtils)
 
 	planeRenderObject->AddComponent(transform_plane);
 	planeRenderObject->AddComponent(meshRender_plane);
+
 	planeRenderObject->AddComponent(bound_plane);
 	planeRenderObject->Enable = true;
 
@@ -214,7 +216,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 	Transform* transform_ucsGizmoX = new Transform("Transform");
 	transform_ucsGizmoX->position = Vector3(0, 0, 0);
 	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
-	transform_ucsGizmoX->scale = Vector3(3, 3, 3);
+	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
@@ -250,7 +252,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 	Transform* transform_ucsGizmoY = new Transform("Transform");
 	transform_ucsGizmoY->position = Vector3(0, 0, 0);
 	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
-	transform_ucsGizmoY->scale = Vector3(3, 3, 3);
+	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
@@ -286,7 +288,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 	Transform* transform_ucsGizmoZ = new Transform("Transform");
 	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
-	transform_ucsGizmoZ->scale = Vector3(3, 3, 3);
+	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
@@ -328,7 +330,7 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 	Transform* transform_ucsGizmoX = new Transform("Transform");
 	transform_ucsGizmoX->position = Vector3(0, 0, 0);
 	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
-	transform_ucsGizmoX->scale = Vector3(3, 3, 3);
+	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
@@ -364,7 +366,7 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 	Transform* transform_ucsGizmoY = new Transform("Transform");
 	transform_ucsGizmoY->position = Vector3(0, 0, 0);
 	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
-	transform_ucsGizmoY->scale = Vector3(3, 3, 3);
+	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
@@ -471,7 +473,7 @@ void GizmosManager::BuildRenderItem(
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(2)->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = i;
 		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
