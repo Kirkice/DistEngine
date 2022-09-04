@@ -33,7 +33,7 @@ void GUISystem::Draw(const GameTimer& gt)
 
 	RenderCore::Draw(gt);
 
-	DrawEditor();
+	//DrawEditor();
 
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
@@ -245,7 +245,7 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::Separator();
 					ImGui::Text("Transform");
 
-					Transform* mDirectionLightTransform = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0);
+					Transform* mDirectionLightTransform = mSceneManager.getInstance().MainLight->GetComponent<Transform>(1);
 
 					float position[3] = { mDirectionLightTransform->position.x,mDirectionLightTransform->position.y,mDirectionLightTransform->position.z};
 					ImGui::InputFloat3("Position", position);
@@ -265,7 +265,7 @@ void GUISystem::DrawInspectorEditor()
 				if (ImGui::CollapsingHeader("Direction Light"))
 				{
 					ImGui::Checkbox("Direction Enable", &mSceneManager.getInstance().MainLight->Enable);
-					DirectionLight* mDirLight = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1);
+					DirectionLight* mDirLight = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(2);
 					float lightColor[4] = { mDirLight->color.R(),mDirLight->color.G(),mDirLight->color.B(),mDirLight->color.A()};
 					ImGui::ColorEdit3("(D)Color", lightColor);
 					mDirLight->color = Color(lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
@@ -284,7 +284,7 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::Text("RenderItem Active");
 					ImGui::Checkbox("Enable", &mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->Enable);
 					ImGui::Text("Transform");
-					Transform* mRenderObjectTransform = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<Transform>(0);
+					Transform* mRenderObjectTransform = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<Transform>(1);
 					float position[3] = { mRenderObjectTransform->position.x, mRenderObjectTransform->position.y, mRenderObjectTransform->position.z};
 					ImGui::InputFloat3("Position", position); 
 					mRenderObjectTransform->SetPosition(Vector3(position[0], position[1], position[2]));
@@ -302,7 +302,7 @@ void GUISystem::DrawInspectorEditor()
 
 				if (ImGui::CollapsingHeader("Materials"))
 				{
-					Material* currentMat = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<MeshRender>(1)->mat;
+					Material* currentMat = mSceneManager.getInstance().mRenderObjects[mHierachyItems[i]->MeshRenderIndex]->GetComponent<MeshRender>(2)->mat;
 
 
 					float DiffuseColor[4] = {

@@ -88,30 +88,33 @@ void SceneManager::BuildGlobalConfig()
 void SceneManager::BuildMainLight()
 {
 	//	读取JSON
-	nl::json jsonValue;
-	ifstream jfile(mScenePath[0]);
-	jfile >> jsonValue;
-	SceneData data;
-	nl::from_json(jsonValue, data);
+	//nl::json jsonValue;
+	//ifstream jfile(mScenePath[0]);
+	//jfile >> jsonValue;
+	//SceneData data;
+	//nl::from_json(jsonValue, data);
 
 	Transform* mTransform = new Transform("Transform");
 	//	设置灯光位置
-	mTransform->position = Vector3(data.MainLightPosition[0], data.MainLightPosition[1], data.MainLightPosition[2]);
+	mTransform->position = Vector3(-20, 30, 20);
 	//	设置灯光欧拉角
-	mTransform->eulerangle = Vector3(data.MainLightEulerangle[0], data.MainLightEulerangle[1], data.MainLightEulerangle[2]);
+	mTransform->eulerangle = Vector3(30, -60, -50);
 	//	设置forward
-	mTransform->forward = Vector3(data.MainLightForward[0], data.MainLightForward[1], data.MainLightForward[2]);
+	mTransform->forward = Vector3(0.57f, -0.57f, 0.57f);
 	MainLight->AddComponent(mTransform);
 
 	DirectionLight* mDirectionLight = new DirectionLight("DirectionLight");
 	//	设为主光源
-	mDirectionLight->isMainLight = data.isMainLight;
+	mDirectionLight->isMainLight = true;
 	//	灯光颜色
-	mDirectionLight->color = Color(data.MainLightColor[0], data.MainLightColor[1], data.MainLightColor[2], data.MainLightColor[3]);
+	mDirectionLight->color = Color(1, 0.9568627f, 0.8392157f, 1);
+	//	灯光强度
+	mDirectionLight->intensity = 1.0f;
+
 	MainLight->AddComponent(mDirectionLight);
 
 	//	主光源名字
-	MainLight->name = data.MainLightName;
+	MainLight->name = "Direction Light";
 }
 
 /// <summary>
@@ -169,37 +172,37 @@ void SceneManager::BuildRenderObejct(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	//	读取场景JSON
-	nl::json sceneData;
-	ifstream sceneFile("Assets/Scene/default.scene");
-	sceneFile >> sceneData;
-	SceneData scene_data;
-	nl::from_json(sceneData, scene_data);
+	////	读取场景JSON
+	//nl::json sceneData;
+	//ifstream sceneFile("Assets/Scene/default.scene");
+	//sceneFile >> sceneData;
+	//SceneData scene_data;
+	//nl::from_json(sceneData, scene_data);
 
-	//	读取材质JSON
-	nl::json matData;
-	ifstream matFile(scene_data.MaterialPath);
-	matFile >> matData;
-	MaterialLitData mat_data;
-	nl::from_json(matData, mat_data);
+	////	读取材质JSON
+	//nl::json matData;
+	//ifstream matFile(scene_data.MaterialPath);
+	//matFile >> matData;
+	//MaterialLitData mat_data;
+	//nl::from_json(matData, mat_data);
 
 
 
 	matCBIndexUtils.getInstance().SaveTypeIndex("Opaque", matCBIndexUtils.getInstance().GetIndex());
 
-	auto RenderObject = std::make_unique<GameObject>(scene_data.RenderObjectName);
+	auto RenderObject = std::make_unique<GameObject>("ak47");
 
 	// Build Material
 	Material* mat_ak47 = new Material();
-	mat_ak47->Name = mat_data.Name;
+	mat_ak47->Name = "ak47";
 	mat_ak47->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	mat_ak47->DiffuseColor = Color(mat_data.DiffuseColor[0], mat_data.DiffuseColor[1], mat_data.DiffuseColor[2], mat_data.DiffuseColor[3]);
-	mat_ak47->Smoothness = mat_data.Smoothness;
-	mat_ak47->Metallic = mat_data.Metallic;
-	mat_ak47->Occlusion = mat_data.Occlusion;
-	mat_ak47->EmissionColor = Color(mat_data.EmissionColor[0], mat_data.EmissionColor[1], mat_data.EmissionColor[2], mat_data.EmissionColor[3]);
-	mat_ak47->EmissionStrength = mat_data.EmissionStrength;
+	mat_ak47->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_ak47->Smoothness = 1.0f;
+	mat_ak47->Metallic = 1.0f;
+	mat_ak47->Occlusion = 1.0f;
+	mat_ak47->EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	mat_ak47->EmissionStrength =0.0f;
 	mat_ak47->DiffuseMapIndex = mResourcesTextures["AK47Albedo"]->TexIndex;
 	mat_ak47->NormalMapIndex = mResourcesTextures["AK47Normal"]->TexIndex;
 	mat_ak47->MsoMapIndex = mResourcesTextures["AK47MSO"]->TexIndex;
@@ -208,14 +211,14 @@ void SceneManager::BuildRenderObejct(
 
 	//	加载模型
 	MeshFliter* mesh_ak47 = new MeshFliter("MeshFliter");
-	ObjLoader::LoadObj(mesh_ak47->data, (char*)scene_data.MeshPath.c_str());
+	ObjLoader::LoadObj(mesh_ak47->data, (char*)mAk47ObjPath.c_str());
 	MeshRender* meshRender_ak47 = new MeshRender(mesh_ak47, mat_ak47, "MeshRender");
 
 	//	设置坐标
 	Transform* transform_ak47 = new Transform("Transform");
-	transform_ak47->position = Vector3(scene_data.RenderObjectPosition[0], scene_data.RenderObjectPosition[1], scene_data.RenderObjectPosition[2]);
-	transform_ak47->eulerangle = Vector3(scene_data.RenderObjectEulerAngle[0], scene_data.RenderObjectEulerAngle[1], scene_data.RenderObjectEulerAngle[2]);
-	transform_ak47->scale = Vector3(scene_data.RenderObjectScale[0], scene_data.RenderObjectScale[1], scene_data.RenderObjectScale[2]);
+	transform_ak47->position = Vector3(0, 0, 0);
+	transform_ak47->eulerangle = Vector3(0, 0, 0);
+	transform_ak47->scale = Vector3(1, 1, 1);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_ak47 = new DistBound::BoundingBox("BoundingBox");
@@ -284,7 +287,7 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 {
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
 		if (mat->MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			SkyBoxMaterialData matData;
@@ -365,19 +368,19 @@ void SceneManager::BuildRenderItem(
 	{
 		//	创建渲染项
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
-		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(3)->aabb.ToBoundBox();
 		Ritem->Enable = mRenderObjects[i]->Enable;
 
-		if (mRenderObjects[i]->GetComponent<MeshRender>(1)->mat->MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
+		if (mRenderObjects[i]->GetComponent<MeshRender>(2)->mat->MatCBIndex <= matCBIndexUtils.getInstance().GetTypeIndexStart("Sky"))
 		{
 			mRitemLayer[(int)RenderLayer::Sky].push_back(Ritem.get());
 		}
@@ -400,7 +403,7 @@ void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& 
 		{
 			if (mAllRitems[i]->ObjCBIndex == (CurrentSize + j))
 			{
-				mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+				mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				mAllRitems[i]->Enable = mRenderObjects[j]->Enable;
 			}
 		}

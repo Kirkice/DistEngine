@@ -69,7 +69,7 @@ Light GetMainLight()
     light.direction                                                                 = -gDirectionLights.Direction.xyz;
     light.distanceAttenuation                                                       = 1.0; // unity_LightData.z is 1 when not culled by the culling mask, otherwise 0.
     light.shadowAttenuation                                                         = 1.0;
-    light.color                                                                     = gDirectionLights.Color.rgb * gDirectionLights.Strength * gDirectionLights.Active;
+    light.color                                                                     = gDirectionLights.Color.rgb * gDirectionLights.Strength * saturate(gDirectionLights.Active);
     light.strength                                                                  = gDirectionLights.Strength;
     return                                                                          light;
 }

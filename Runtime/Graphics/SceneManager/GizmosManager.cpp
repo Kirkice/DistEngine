@@ -437,7 +437,7 @@ void GizmosManager::UpdateSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBR
 {
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
 
 		XMMATRIX matTransform = XMLoadFloat4x4(&mat->MatTransform);
 
@@ -471,15 +471,15 @@ void GizmosManager::BuildRenderItem(
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(2)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = i;
-		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(3)->aabb.ToBoundBox();
 		Ritem->Enable = mRenderObjects[i]->Enable;
 
 		if (i < 1)
@@ -517,9 +517,9 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mMainLightPos->position);
+					mRenderObjects[j]->GetComponent<Transform>(1)->SetPosition(mMainLightPos->position);
 					mAllRitems[i]->Enable = mRenderObjects[j]->Enable;
-					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				}
 			}
 			//	зјБъ
@@ -527,27 +527,27 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
+					mRenderObjects[j]->GetComponent<Transform>(1)->SetPosition(mTargetRender->GetComponent<Transform>(1)->position);
 					mAllRitems[i]->Enable = PositionUCSEnable;
-					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				}
 			}
 			else if(j >= 5 && j < 8)
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
+					mRenderObjects[j]->GetComponent<Transform>(1)->SetPosition(mTargetRender->GetComponent<Transform>(1)->position);
 					mAllRitems[i]->Enable = RotationUCSEnable;
-					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				}
 			}
 			else if (j >= 8 && j < 11)
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
 				{
-					mRenderObjects[j]->GetComponent<Transform>(0)->SetPosition(mTargetRender->GetComponent<Transform>(0)->position);
+					mRenderObjects[j]->GetComponent<Transform>(1)->SetPosition(mTargetRender->GetComponent<Transform>(1)->position);
 					mAllRitems[i]->Enable = ScaleUCSEnable;
-					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				}
 			}
 		}

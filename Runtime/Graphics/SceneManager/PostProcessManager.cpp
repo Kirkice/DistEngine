@@ -79,7 +79,7 @@ void PostProcessManager::UpdateMaterialBuffer(
 {
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
+		Material* mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
 
 		PostprocessingData matData;
 		matData.RGBSplitStrength = mat->RGBSplitStrength;
@@ -137,16 +137,16 @@ void PostProcessManager::BuildRenderItem(
 	{
 		//	¥¥Ω®‰÷»æœÓ
 		auto Ritem = std::make_unique<RenderItem>();
-		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(0)->GetWorldXMMatrix();
+		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
-		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(1)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(1)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
+		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(2)->aabb.ToBoundBox();
+		Ritem->Bound = mRenderObjects[i]->GetComponent<DistBound::BoundingBox>(3)->aabb.ToBoundBox();
 		Ritem->Enable = mRenderObjects[i]->Enable;
 
 		mRitemLayer[(int)RenderLayer::PostProcess].push_back(Ritem.get());

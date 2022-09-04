@@ -6,6 +6,8 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
+using namespace LogSystem;
+
 GraphicsCore::GraphicsCore(HINSTANCE hInstance) : InputSystem(hInstance)
 {
 }
@@ -130,13 +132,13 @@ void GraphicsCore::Update(const GameTimer& gt)
 
 void GraphicsCore::UpdateLights(const GameTimer& gt)
 {
-	mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->Tick(gt);
+	mSceneManager.getInstance().MainLight->GetComponent<Transform>(1)->Tick(gt);
 }
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
 	//	更新CB
-	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().MainLight->GetComponent<Transform>(0), mSceneManager.getInstance().mRenderObjects[1]);
+	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().MainLight->GetComponent<Transform>(1), mSceneManager.getInstance().mRenderObjects[1]);
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 
@@ -197,7 +199,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 void GraphicsCore::UpdateShadowTransform(const GameTimer& gt)
 {
 	// Only the first "main" light casts a shadow.
-	XMVECTOR lightDir = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->forward.ToSIMD();
+	XMVECTOR lightDir = mSceneManager.getInstance().MainLight->GetComponent<Transform>(1)->forward.ToSIMD();
 	XMVECTOR lightPos = -2.0f * mSceneBounds.Radius * lightDir;
 	XMVECTOR targetPos = XMLoadFloat3(&mSceneBounds.Center);
 	XMVECTOR lightUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -288,12 +290,13 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.FxaaParames = Vector4(mAntialiasingSettings.AbsoluteLumaThreshold, mAntialiasingSettings.RelativeLumaThreshold, mAntialiasingSettings.ConsoleCharpness, mAntialiasingSettings.DebugMode);
 
 	//Light
-	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->forward;
-	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1)->intensity;
-	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(1)->color);
+	mMainPassCB.DirectionLights.Direction = mSceneManager.getInstance().MainLight->GetComponent<Transform>(1)->forward;
+	mMainPassCB.DirectionLights.Strength = mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(2)->intensity;
+	mMainPassCB.DirectionLights.Color = Vector3(mSceneManager.getInstance().MainLight->GetComponent<DirectionLight>(2)->color);
 	mMainPassCB.DirectionLights.CastShadow = 1;
-	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().MainLight->GetComponent<Transform>(0)->position;
-	mMainPassCB.DirectionLights.Active = mSceneManager.getInstance().MainLight->Enable;
+	mMainPassCB.DirectionLights.Position = mSceneManager.getInstance().MainLight->GetComponent<Transform>(1)->position;
+	bool lightEnable = mSceneManager.getInstance().MainLight->Enable;
+	mMainPassCB.DirectionLights.Active = (int)mSceneManager.getInstance().MainLight->Enable;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
