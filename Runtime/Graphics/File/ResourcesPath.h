@@ -9,13 +9,13 @@
 
 const std::vector<std::string> mMaterialPath =
 {
-	"Asset/Materials/ak47.mat",
+	"E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat",
 };
 
-    const std::vector<std::string> mScenePath =
-    {
-    	"Assets/Scene/Default.scene",
-    };
+const std::vector<std::string> mScenePath =
+{
+	"E:/Engine Project/DistEngine/DistEngine/Asset/Scene/Default.scene",
+};
 
 
 
