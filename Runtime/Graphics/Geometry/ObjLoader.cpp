@@ -41,8 +41,17 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 			vert.Position.y = attrib.vertices[3 * index.vertex_index + 1];
 			vert.Position.z = attrib.vertices[3 * index.vertex_index + 2];
 
-			vert.TexC.x = attrib.texcoords[2 * index.texcoord_index + 0];
-			vert.TexC.y = attrib.texcoords[2 * index.texcoord_index + 1];
+			if (attrib.texcoords.size() > 0)
+			{
+				vert.TexC.x = attrib.texcoords[2 * index.texcoord_index + 0];
+				vert.TexC.y = attrib.texcoords[2 * index.texcoord_index + 1];
+			}
+			else
+			{
+				vert.TexC.x = 0;
+				vert.TexC.y = 0;
+			}
+
 
 			vert.Normal.x = 0; //attrib.vertices[3 * index.normal_index + 0];
 			vert.Normal.y = 0; //attrib.vertices[3 * index.normal_index + 1];

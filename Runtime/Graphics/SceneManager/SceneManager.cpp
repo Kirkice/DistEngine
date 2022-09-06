@@ -189,7 +189,7 @@ void SceneManager::BuildRenderObejct(
 
 	matCBIndexUtils.getInstance().SaveTypeIndex("Opaque", matCBIndexUtils.getInstance().GetIndex());
 
-	auto RenderObject = std::make_unique<GameObject>("ak47");
+	auto RenderObjectAk47 = std::make_unique<GameObject>("ak47");
 
 	// Build Material
 	Material* mat_ak47 = new Material();
@@ -223,14 +223,56 @@ void SceneManager::BuildRenderObejct(
 	DistBound::BoundingBox* bound_ak47 = new DistBound::BoundingBox("BoundingBox");
 	bound_ak47->aabb = BoundingAABB(mesh_ak47->data);
 
-	RenderObject->AddComponent(transform_ak47);
-	RenderObject->AddComponent(meshRender_ak47);
-	RenderObject->AddComponent(bound_ak47);
-	RenderObject->Enable = true;
+	RenderObjectAk47->AddComponent(transform_ak47);
+	RenderObjectAk47->AddComponent(meshRender_ak47);
+	RenderObjectAk47->AddComponent(bound_ak47);
+	RenderObjectAk47->Enable = true;
 
-	RenderObject->Enable = true;
-	RenderObject->name = scene_data.RenderObjectName;
-	mRenderObjects.push_back(std::move(RenderObject));
+	RenderObjectAk47->Enable = true;
+	RenderObjectAk47->name = scene_data.RenderObjectName;
+	mRenderObjects.push_back(std::move(RenderObjectAk47));
+
+
+	auto RenderObjectBunny = std::make_unique<GameObject>("Bunny");
+	// Build Material
+	Material* mat_Bunny = new Material();
+	mat_Bunny->Name = "Bunny";
+	mat_Bunny->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_Bunny->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_Bunny->Smoothness = 0.5f;
+	mat_Bunny->Metallic = 0.5f;
+	mat_Bunny->Occlusion = 1.0;
+	mat_Bunny->EmissionColor = Color(0.0f,0.0f,0.0f,0.0f);
+	mat_Bunny->EmissionStrength = 0.0f;
+	mat_Bunny->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Bunny->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Bunny->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Bunny->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Bunny->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+
+	//	加载模型
+	MeshFliter* mesh_Bunny = new MeshFliter("MeshFliter");
+	ObjLoader::LoadObj(mesh_Bunny->data, (char*)mBunnyObjPath.c_str());
+	MeshRender* meshRender_Bunny = new MeshRender(mesh_Bunny, mat_Bunny, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_Bunny = new Transform("Transform");
+	transform_Bunny->position = Vector3(5,0,0);
+	transform_Bunny->eulerangle = Vector3(0,0,0);
+	transform_Bunny->scale = Vector3(5,5,5);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
+	bound_Bunny->aabb = BoundingAABB(mesh_Bunny->data);
+
+	RenderObjectBunny->AddComponent(transform_Bunny);
+	RenderObjectBunny->AddComponent(meshRender_Bunny);
+	RenderObjectBunny->AddComponent(bound_Bunny);
+	RenderObjectBunny->Enable = true;
+
+	RenderObjectBunny->name = "Bunny";
+	mRenderObjects.push_back(std::move(RenderObjectBunny));
 }
 
 void SceneManager::BuildConelBoxScene(

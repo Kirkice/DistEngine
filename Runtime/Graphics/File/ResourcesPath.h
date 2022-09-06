@@ -103,7 +103,7 @@ const std::vector<std::string> mScenePath =
 		"Asset/Textures/DefaultTextures/sampleLUT.png",
 
 		"Asset/Textures/DefaultTextures/black.png",
-		"Asset/Textures/DefaultTextures/white.png"
+		"Asset/Textures/DefaultTextures/white.png",
 	};
 
 
@@ -319,6 +319,8 @@ const std::vector<std::string> mScenePath =
 	 
 	//	Mesh Path
 	const std::string mAk47ObjPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj";
+
+	const std::string mBunnyObjPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/Bunny.obj";
 
 	const std::string mPositionUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_x.obj";
 	const std::string mPositionUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_y.obj";
