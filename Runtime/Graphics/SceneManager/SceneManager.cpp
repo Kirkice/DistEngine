@@ -258,9 +258,9 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Bunny = new Transform("Transform");
-	transform_Bunny->position = Vector3(5,0,0);
-	transform_Bunny->eulerangle = Vector3(0,0,0);
-	transform_Bunny->scale = Vector3(5,5,5);
+	transform_Bunny->position = Vector3(0,0,1);
+	transform_Bunny->eulerangle = Vector3(0,-60,0);
+	transform_Bunny->scale = Vector3(8,8,8);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
