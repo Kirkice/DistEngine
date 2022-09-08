@@ -52,7 +52,10 @@ struct MaterialLitData
 	float EmissionStrength = 0.0f;
 	//	自发光颜色
 	float EmissionColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
+	//	使用法线贴图
+	float UseNormalMap = 0;
+	//	法线贴图强度
+	float NormalScale = 1.0f;
 	//	Diffuse贴图Index
 	UINT DiffuseMapIndex = 0;
 	//	法线贴图Index

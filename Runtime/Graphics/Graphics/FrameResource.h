@@ -87,7 +87,8 @@ struct PBRMaterialData
     float Occlusion = 0.0f;
     Vector4 EmissionColor = { 0.0f, 0.0f, 0.0f, 1.0f };
     float EmissionStrength = 0.0f;
-
+    float UseNormalMap = 0.0f;
+    float NormalScale = 1.0f;
 	// Used in texture mapping.
 	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 

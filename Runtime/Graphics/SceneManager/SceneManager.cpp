@@ -201,7 +201,9 @@ void SceneManager::BuildRenderObejct(
 	mat_ak47->Metallic = mat_data.Metallic;
 	mat_ak47->Occlusion = mat_data.Occlusion;
 	mat_ak47->EmissionColor = Color(mat_data.EmissionColor[0], mat_data.EmissionColor[1], mat_data.EmissionColor[2], mat_data.EmissionColor[3]);
-	mat_ak47->EmissionStrength =0.0f;
+	mat_ak47->EmissionStrength = mat_data.EmissionStrength;
+	mat_ak47->UseNormalMap = mat_data.UseNormalMap;
+	mat_ak47->NormalScale = mat_data.NormalScale;
 	mat_ak47->DiffuseMapIndex = mat_data.DiffuseMapIndex;
 	mat_ak47->NormalMapIndex = mat_data.NormalMapIndex;
 	mat_ak47->MsoMapIndex = mat_data.MsoMapIndex;
@@ -233,18 +235,27 @@ void SceneManager::BuildRenderObejct(
 	mRenderObjects.push_back(std::move(RenderObjectAk47));
 
 
+
+
+
+
+
+
+
 	auto RenderObjectBunny = std::make_unique<GameObject>("Bunny");
 	// Build Material
 	Material* mat_Bunny = new Material();
 	mat_Bunny->Name = "Bunny";
 	mat_Bunny->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	mat_Bunny->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	mat_Bunny->Smoothness = 0.5f;
-	mat_Bunny->Metallic = 0.5f;
+	mat_Bunny->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	mat_Bunny->Smoothness = 0.54f;
+	mat_Bunny->Metallic = 0.78f;
 	mat_Bunny->Occlusion = 1.0;
 	mat_Bunny->EmissionColor = Color(0.0f,0.0f,0.0f,0.0f);
 	mat_Bunny->EmissionStrength = 0.0f;
+	mat_Bunny->UseNormalMap = 0;
+	mat_Bunny->NormalScale = 1;
 	mat_Bunny->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Bunny->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Bunny->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
@@ -273,6 +284,66 @@ void SceneManager::BuildRenderObejct(
 
 	RenderObjectBunny->name = "Bunny";
 	mRenderObjects.push_back(std::move(RenderObjectBunny));
+
+
+
+
+	auto RenderObjectSphere01 = std::make_unique<GameObject>("Sphere01");
+	// Build Material
+	Material* mat_Sphere = new Material();
+	mat_Sphere->Name = "Sphere01";
+	mat_Sphere->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_Sphere->DiffuseColor = Color(-2.0f, 1.0f, -1.0f, 1.0f);
+	mat_Sphere->Smoothness = 0.1f;
+	mat_Sphere->Metallic = 0.1f;
+	mat_Sphere->Occlusion = 1.0;
+	mat_Sphere->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_Sphere->EmissionStrength = 0.0f;
+	mat_Sphere->UseNormalMap = 0;
+	mat_Sphere->NormalScale = 1;
+	mat_Sphere->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+
+	//	加载模型
+	MeshFliter* mesh_Sphere01 = new MeshFliter("MeshFliter");
+	mesh_Sphere01->CreateSphere(1.0f, 20.0f, 20.0f);
+
+	MeshRender* meshRender_Sphere01 = new MeshRender(mesh_Sphere01, mat_Sphere, "MeshRender");
+
+	//	设置坐标
+	Transform* transform_Sphere01 = new Transform("Transform");
+	transform_Sphere01->position = Vector3(0, 0, 0);
+	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
+	transform_Sphere01->scale = Vector3(2, 2, 2);
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_Sphere01 = new DistBound::BoundingBox("BoundingBox");
+	bound_Sphere01->aabb = BoundingAABB(mesh_Bunny->data);
+
+	RenderObjectSphere01->AddComponent(transform_Sphere01);
+	RenderObjectSphere01->AddComponent(meshRender_Sphere01);
+	RenderObjectSphere01->AddComponent(bound_Sphere01);
+	RenderObjectSphere01->Enable = true;
+
+	RenderObjectSphere01->name = "Sphere01";
+	mRenderObjects.push_back(std::move(RenderObjectSphere01));
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 void SceneManager::BuildConelBoxScene(
@@ -354,6 +425,8 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 			matData.Occlusion = mat->Occlusion;
 			matData.EmissionColor = Vector4(mat->EmissionColor);
 			matData.EmissionStrength = mat->EmissionStrength;
+			matData.UseNormalMap = mat->UseNormalMap;
+			matData.NormalScale = mat->NormalScale;
 			XMStoreFloat4x4(&matData.MatTransform, XMMatrixTranspose(matTransform));
 			matData.DiffuseMapIndex = mat->DiffuseMapIndex;
 			matData.NormalMapIndex = mat->NormalMapIndex;

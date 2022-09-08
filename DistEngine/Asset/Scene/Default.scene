@@ -1,1 +1,15 @@
-{"isMainLight":true,"MainLightColor":[1.0,0.9568626880645752,0.8392156958580017,1.0],"MainLightPosition":[-20.0,30.0,20.0],"MainLightEulerangle":[30.0,-60.0,-50.0],"MainLightForward":[0.5699999928474426,-0.5699999928474426,0.5699999928474426],"MainLightName":"Direction Light","RenderObjectName":"ak47","mMaterialType":0,"MaterialPath":"E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat","MeshPath":"E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj","RenderObjectPosition":[0.0,3.0,0.0],"RenderObjectEulerAngle":[0.0,0.0,0.0],"RenderObjectScale":[1.0,1.0,1.0]}
+{
+  "isMainLight": true,
+  "MainLightColor": [ 1.0, 0.9568626880645752, 0.8392156958580017, 1.0 ],
+  "MainLightPosition": [ -20.0, 30.0, 20.0 ],
+  "MainLightEulerangle": [ 30.0, -60.0, -50.0 ],
+  "MainLightForward": [ 0.5699999928474426, -0.5699999928474426, 0.5699999928474426 ],
+  "MainLightName": "Direction Light",
+  "RenderObjectName": "ak47",
+  "mMaterialType": 0,
+  "MaterialPath": "E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat",
+  "MeshPath": "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj",
+  "RenderObjectPosition": [ 0.0, 3.0, 0.0 ],
+  "RenderObjectEulerAngle": [ 0.0, 0.0, 0.0 ],
+  "RenderObjectScale": [ 1.0, 1.0, 1.0 ]
+}

@@ -133,7 +133,8 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     //Normal
 	uint normalMapIndex                                 = matData.NormalMapIndex;
     float4 normalMapSample                              = gTextureMaps[normalMapIndex].Sample(gsamAnisotropicWrap, uv);
-	float3 bumpedNormalW                                = NormalSampleToWorldSpace(normalMapSample.rgb, normalize(N), T);
+	float3 bumpedNormalW                                = NormalSampleToWorldSpace(normalMapSample.rgb, normalize(N), T, matData.NormalScale);
+
 
     //Occlusion
 	uint msoMapIndex                                    = matData.MsoMapIndex;
@@ -150,7 +151,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, float3 N, float3 T, out 
     outSurfaceData.Albedo                               = diffuseAlbedo;
     outSurfaceData.Metallic                             = Metallic;
     outSurfaceData.Smoothness                           = Smoothness;
-    outSurfaceData.Normal                               = bumpedNormalW;
+    outSurfaceData.Normal                               = bumpedNormalW * matData.UseNormalMap + (1 - matData.UseNormalMap) * N;
     outSurfaceData.Occlusion                            = Occlusion;
 
     outSurfaceData.Emission                             = emission;

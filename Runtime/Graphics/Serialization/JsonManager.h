@@ -35,4 +35,4 @@ namespace nlohmann {
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SceneData, isMainLight, MainLightColor, MainLightPosition, MainLightEulerangle, MainLightForward, MainLightName, RenderObjectName, mMaterialType, MaterialPath, MeshPath, RenderObjectPosition, RenderObjectEulerAngle, RenderObjectScale)
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MaterialLitData, Name, MatCBIndex, NumFramesDirty, DiffuseColor, Smoothness, Metallic, Occlusion, EmissionStrength, EmissionColor, DiffuseMapIndex, NormalMapIndex, MsoMapIndex, EmissionMapIndex, LUTMapIndex)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MaterialLitData, Name, MatCBIndex, NumFramesDirty, DiffuseColor, Smoothness, Metallic, Occlusion, EmissionStrength, EmissionColor, UseNormalMap, NormalScale, DiffuseMapIndex, NormalMapIndex, MsoMapIndex, EmissionMapIndex, LUTMapIndex)

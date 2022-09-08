@@ -318,6 +318,12 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::SliderFloat("Metallic", &currentMat->Metallic, 0, 1);
 					ImGui::SliderFloat("Occlusion", &currentMat->Occlusion, 0, 1);
 
+					bool useNormalMap = bool(currentMat->UseNormalMap);
+					ImGui::Checkbox("Use NormalMap", &useNormalMap);
+					currentMat->UseNormalMap = (int)useNormalMap;
+
+					ImGui::SliderFloat("NormalScale", &currentMat->NormalScale, 0, 1);
+
 					float EmissionColor[4] = {
 						currentMat->EmissionColor.R(),
 						currentMat->EmissionColor.G(),
