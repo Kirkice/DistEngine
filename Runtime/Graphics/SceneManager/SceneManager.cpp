@@ -269,7 +269,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Bunny = new Transform("Transform");
-	transform_Bunny->position = Vector3(0,0,1);
+	transform_Bunny->position = Vector3(0, -0.14,1);
 	transform_Bunny->eulerangle = Vector3(0,-60,0);
 	transform_Bunny->scale = Vector3(8,8,8);
 
@@ -294,7 +294,7 @@ void SceneManager::BuildRenderObejct(
 	mat_Sphere->Name = "Sphere01";
 	mat_Sphere->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	mat_Sphere->DiffuseColor = Color(-2.0f, 1.0f, -1.0f, 1.0f);
+	mat_Sphere->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mat_Sphere->Smoothness = 0.1f;
 	mat_Sphere->Metallic = 0.1f;
 	mat_Sphere->Occlusion = 1.0;
@@ -316,7 +316,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Sphere01 = new Transform("Transform");
-	transform_Sphere01->position = Vector3(0, 0, 0);
+	transform_Sphere01->position = Vector3(-2.0f, 1.0f, -1.0f);
 	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere01->scale = Vector3(2, 2, 2);
 
