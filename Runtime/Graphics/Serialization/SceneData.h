@@ -18,7 +18,7 @@ struct SceneData
 	//	设置灯光欧拉角
 	std::vector<float> MainLightEulerangle { 30, -60, -50 };
 	//	设置forward
-	std::vector<float> MainLightForward { 0.57f, -0.57f, 0.57f };
+	std::vector<float> MainLightForward { 0.57f, -0.57f, 0.57f }; 
 	//	主光源名字
 	std::string MainLightName = "Direction Light";
 
