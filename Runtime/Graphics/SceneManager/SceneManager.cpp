@@ -270,7 +270,7 @@ void SceneManager::BuildRenderObejct(
 	//	设置坐标
 	Transform* transform_Bunny = new Transform("Transform");
 	transform_Bunny->position = Vector3(0, -0.14,1);
-	transform_Bunny->eulerangle = Vector3(0,-60,0);
+	transform_Bunny->eulerangle = Vector3(0,-60,0); 
 	transform_Bunny->scale = Vector3(8,8,8);
 
 	//	创建碰撞盒子
