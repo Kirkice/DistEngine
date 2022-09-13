@@ -15,19 +15,7 @@ void SceneManager::BuildScene(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	switch (Type)
-	{
-	case SceneType::Default:BuildDefaultScene(mResourcesTextures, matCBIndexUtils);
-		break;
-	case SceneType::ConelBox:BuildConelBoxScene(mResourcesTextures, matCBIndexUtils);
-		break;
-	case SceneType::Toon:BuildToonScene(mResourcesTextures, matCBIndexUtils);
-		break;
-	case SceneType::Water:BuildWaterScene(mResourcesTextures, matCBIndexUtils);
-		break;
-	default:BuildDefaultScene(mResourcesTextures, matCBIndexUtils);
-		break;
-	}
+	BuildDefaultScene(mResourcesTextures, matCBIndexUtils);
 }
 
 void SceneManager::BuildDefaultScene(
@@ -46,6 +34,9 @@ void SceneManager::BuildDefaultScene(
 
 	//	渲染项
 	BuildRenderObejct(mResourcesTextures, matCBIndexUtils);
+
+	//	康奈尔盒子
+	BuildConelBoxScene(mResourcesTextures, matCBIndexUtils);
 }
 
 /// <summary>
@@ -290,33 +281,33 @@ void SceneManager::BuildRenderObejct(
 
 	auto RenderObjectSphere01 = std::make_unique<GameObject>("Sphere01");
 	// Build Material
-	Material* mat_Sphere = new Material();
-	mat_Sphere->Name = "Sphere01";
-	mat_Sphere->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	Material* mat_Sphere01 = new Material();
+	mat_Sphere01->Name = "Sphere01";
+	mat_Sphere01->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	mat_Sphere->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-	mat_Sphere->Smoothness = 0.1f;
-	mat_Sphere->Metallic = 0.1f;
-	mat_Sphere->Occlusion = 1.0;
-	mat_Sphere->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
-	mat_Sphere->EmissionStrength = 0.0f;
-	mat_Sphere->UseNormalMap = 0;
-	mat_Sphere->NormalScale = 1;
-	mat_Sphere->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
-	mat_Sphere->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
-	mat_Sphere->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
-	mat_Sphere->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
-	mat_Sphere->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+	mat_Sphere01->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_Sphere01->Smoothness = 0.1f;
+	mat_Sphere01->Metallic = 0.1f;
+	mat_Sphere01->Occlusion = 1.0;
+	mat_Sphere01->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_Sphere01->EmissionStrength = 0.0f;
+	mat_Sphere01->UseNormalMap = 0;
+	mat_Sphere01->NormalScale = 1;
+	mat_Sphere01->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere01->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere01->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere01->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere01->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
 	//	加载模型
 	MeshFliter* mesh_Sphere01 = new MeshFliter("MeshFliter");
 	mesh_Sphere01->CreateSphere(1.0f, 20.0f, 20.0f);
 
-	MeshRender* meshRender_Sphere01 = new MeshRender(mesh_Sphere01, mat_Sphere, "MeshRender");
+	MeshRender* meshRender_Sphere01 = new MeshRender(mesh_Sphere01, mat_Sphere01, "MeshRender");
 
 	//	设置坐标
 	Transform* transform_Sphere01 = new Transform("Transform");
-	transform_Sphere01->position = Vector3(-2.0f, 1.0f, -1.0f);
+	transform_Sphere01->position = Vector3(-2.0f, 1.0f, -2.0f);
 	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere01->scale = Vector3(2, 2, 2);
 
@@ -332,17 +323,49 @@ void SceneManager::BuildRenderObejct(
 	RenderObjectSphere01->name = "Sphere01";
 	mRenderObjects.push_back(std::move(RenderObjectSphere01));
 
+	auto RenderObjectSphere02 = std::make_unique<GameObject>("Sphere02");
+	// Build Material
+	Material* mat_Sphere02 = new Material();
+	mat_Sphere02->Name = "Sphere02";
+	mat_Sphere02->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_Sphere02->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_Sphere02->Smoothness = 0.1f;
+	mat_Sphere02->Metallic = 0.1f;
+	mat_Sphere02->Occlusion = 1.0;
+	mat_Sphere02->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_Sphere02->EmissionStrength = 0.0f;
+	mat_Sphere02->UseNormalMap = 0;
+	mat_Sphere02->NormalScale = 1;
+	mat_Sphere02->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere02->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere02->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere02->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Sphere02->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
+	//	加载模型
+	MeshFliter* mesh_Sphere02 = new MeshFliter("MeshFliter");
+	mesh_Sphere02->CreateSphere(1.0f, 20.0f, 20.0f);
 
+	MeshRender* meshRender_Sphere02 = new MeshRender(mesh_Sphere02, mat_Sphere02, "MeshRender");
 
+	//	设置坐标
+	Transform* transform_Sphere02 = new Transform("Transform");
+	transform_Sphere02->position = Vector3(-7.0f, 1.0f, -1.0f);
+	transform_Sphere02->eulerangle = Vector3(0, 0, 0);
+	transform_Sphere02->scale = Vector3(1, 1, 1);
 
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_Sphere02 = new DistBound::BoundingBox("BoundingBox");
+	bound_Sphere02->aabb = BoundingAABB(mesh_Bunny->data);
 
+	RenderObjectSphere02->AddComponent(transform_Sphere02);
+	RenderObjectSphere02->AddComponent(meshRender_Sphere02);
+	RenderObjectSphere02->AddComponent(bound_Sphere02);
+	RenderObjectSphere02->Enable = true;
 
-
-
-
-
-
+	RenderObjectSphere02->name = "Sphere02";
+	mRenderObjects.push_back(std::move(RenderObjectSphere02));
 
 }
 
@@ -351,22 +374,53 @@ void SceneManager::BuildConelBoxScene(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
+	// Build Material
+	Material* mat_White = new Material();
+	mat_White->Name = "Sphere02";
+	mat_White->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_White->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	mat_White->Smoothness = 0.15f;
+	mat_White->Metallic = 0.2f;
+	mat_White->Occlusion = 1.0;
+	mat_White->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_White->EmissionStrength = 0.0f;
+	mat_White->UseNormalMap = 0;
+	mat_White->NormalScale = 1;
+	mat_White->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_White->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_White->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_White->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_White->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-}
+	//	加载模型
+	MeshFliter* mesh_Plane = new MeshFliter("MeshFliter");
+	mesh_Plane->CreateGrid(6, 6, 24, 24);
 
-void SceneManager::BuildToonScene(
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
-	MaterialIndexUtils& matCBIndexUtils
-)
-{
 
-}
+	MeshRender* meshRender_PlaneWhite = new MeshRender(mesh_Plane, mat_White, "MeshRender");
 
-void SceneManager::BuildWaterScene(
-	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
-	MaterialIndexUtils& matCBIndexUtils
-)
-{
+	//	设置坐标
+	Transform* transform_Plane01 = new Transform("Transform");
+	transform_Plane01->position = Vector3(0.0f, 0.0f, 0.0f);
+	transform_Plane01->eulerangle = Vector3(0, 0, 0);
+	transform_Plane01->scale = Vector3(1, 1, 1);
+
+
+	//	创建碰撞盒子
+	DistBound::BoundingBox* bound_Plane01 = new DistBound::BoundingBox("BoundingBox");
+	bound_Plane01->aabb = BoundingAABB(mesh_Plane->data);
+
+	auto RenderObjectPlaneWhite = std::make_unique<GameObject>("White01");
+	RenderObjectPlaneWhite->AddComponent(transform_Plane01);
+	RenderObjectPlaneWhite->AddComponent(meshRender_PlaneWhite);
+	RenderObjectPlaneWhite->AddComponent(bound_Plane01);
+	RenderObjectPlaneWhite->Enable = true;
+
+	RenderObjectPlaneWhite->name = "Plane01";
+	mRenderObjects.push_back(std::move(RenderObjectPlaneWhite));
+
+
 
 }
 
@@ -378,19 +432,7 @@ void SceneManager::UpdateSceneMaterialBuffer(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	switch (Type)
-	{
-	case SceneType::Default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
-		break;
-	case SceneType::ConelBox:UpdateConelBoxSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
-		break;
-	case SceneType::Toon:UpdateToonSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
-		break;
-	case SceneType::Water:UpdateWaterSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
-		break;
-	default:UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
-		break;
-	}
+	UpdateDefaultSceneMaterialBuffer(PBRMaterialBuffer, SkyMaterialBuffer, matCBIndexUtils);
 }
 
 void SceneManager::UpdateDefaultSceneMaterialBuffer(
@@ -440,34 +482,6 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 		}
 	}
 }
-
-void SceneManager::UpdateConelBoxSceneMaterialBuffer(
-	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-	MaterialIndexUtils& matCBIndexUtils
-)
-{
-
-}
-
-void SceneManager::UpdateToonSceneMaterialBuffer(
-	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-	MaterialIndexUtils& matCBIndexUtils
-)
-{
-
-}
-
-void SceneManager::UpdateWaterSceneMaterialBuffer(UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-	MaterialIndexUtils& matCBIndexUtils
-)
-{
-
-}
-
-
 
 
 //	创建RenderItem

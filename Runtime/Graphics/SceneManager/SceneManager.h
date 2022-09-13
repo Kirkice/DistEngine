@@ -94,31 +94,8 @@ private:
 		std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
 		MaterialIndexUtils& matCBIndexUtils
 	);
-	void BuildToonScene(
-		std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
-		MaterialIndexUtils& matCBIndexUtils
-	);
-	void BuildWaterScene(
-		std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
-		MaterialIndexUtils& matCBIndexUtils
-	);
 
 	void UpdateDefaultSceneMaterialBuffer(
-		UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-		UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-		MaterialIndexUtils& matCBIndexUtils
-	);
-	void UpdateConelBoxSceneMaterialBuffer(
-		UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-		UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-		MaterialIndexUtils& matCBIndexUtils
-	);
-	void UpdateToonSceneMaterialBuffer(
-		UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
-		UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
-		MaterialIndexUtils& matCBIndexUtils
-	);
-	void UpdateWaterSceneMaterialBuffer(
 		UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
 		UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
 		MaterialIndexUtils& matCBIndexUtils

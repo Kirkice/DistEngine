@@ -7,8 +7,8 @@
   "MainLightName": "Direction Light",
   "RenderObjectName": "ak47",
   "mMaterialType": 0,
-  "MaterialPath": "E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat",
-  "MeshPath": "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj",
+  "MaterialPath": "Asset/Materials/ak47.mat",
+  "MeshPath": "Asset/Mesh/ak47.obj",
   "RenderObjectPosition": [ 0.0, 3.0, 0.0 ],
   "RenderObjectEulerAngle": [ 0.0, 0.0, 0.0 ],
   "RenderObjectScale": [ 1.0, 1.0, 1.0 ]

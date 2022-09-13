@@ -27,8 +27,8 @@ struct SceneData
 	/////////////////////////////
 	std::string RenderObjectName = "ak47";
 	int mMaterialType = 0;
-	std::string MaterialPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat";
-	std::string MeshPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj";
+	std::string MaterialPath = "Asset/Materials/ak47.mat";
+	std::string MeshPath = "Asset/Mesh/ak47.obj";
 	std::vector<float> RenderObjectPosition { 0, 0, 0 };
 	std::vector<float> RenderObjectEulerAngle { 0, 0, 0 };
 	std::vector<float> RenderObjectScale { 1, 1, 1 };

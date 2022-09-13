@@ -2,6 +2,7 @@
 #include "DX12Utils.h"
 #include <string>
 
+const std::string ApplicationPath = "D:/MyEngine/DistEngine/DistEngine/";
 
 	/// <summary>
 	/// RESOURCES
@@ -9,12 +10,12 @@
 
 const std::vector<std::string> mMaterialPath =
 {
-	"E:/Engine Project/DistEngine/DistEngine/Asset/Materials/ak47.mat",
+	ApplicationPath + "Asset/Materials/ak47.mat",
 };
 
 const std::vector<std::string> mScenePath =
 {
-	"E:/Engine Project/DistEngine/DistEngine/Asset/Scene/Default.scene",
+	ApplicationPath + "Asset/Scene/Default.scene",
 };
 
 
@@ -318,21 +319,21 @@ const std::vector<std::string> mScenePath =
 
 	 
 	//	Mesh Path
-	const std::string mAk47ObjPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj";
+	const std::string mAk47ObjPath = ApplicationPath + "Asset/Mesh/ak47.obj";
 
-	const std::string mBunnyObjPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/Bunny.obj";
+	const std::string mBunnyObjPath = ApplicationPath + "Asset/Mesh/Bunny.obj";
 
-	const std::string mPositionUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_x.obj";
-	const std::string mPositionUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_y.obj";
-	const std::string mPositionUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_z.obj";
+	const std::string mPositionUCSGizmoXPath = ApplicationPath + "Asset/Mesh/position_x.obj";
+	const std::string mPositionUCSGizmoYPath = ApplicationPath + "Asset/Mesh/position_y.obj";
+	const std::string mPositionUCSGizmoZPath = ApplicationPath + "Asset/Mesh/position_z.obj";
 
-	const std::string mRotationUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_x.obj";
-	const std::string mRotationUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_y.obj";
-	const std::string mRotationUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_z.obj";
+	const std::string mRotationUCSGizmoXPath = ApplicationPath + "Asset/Mesh/rotation_x.obj";
+	const std::string mRotationUCSGizmoYPath = ApplicationPath + "Asset/Mesh/rotation_y.obj";
+	const std::string mRotationUCSGizmoZPath = ApplicationPath + "Asset/Mesh/rotation_z.obj";
 
-	const std::string mScaleUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_x.obj";
-	const std::string mScaleUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_y.obj";
-	const std::string mScaleUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_z.obj";
+	const std::string mScaleUCSGizmoXPath = ApplicationPath + "Asset/Mesh/scale_x.obj";
+	const std::string mScaleUCSGizmoYPath = ApplicationPath + "Asset/Mesh/scale_y.obj";
+	const std::string mScaleUCSGizmoZPath = ApplicationPath + "Asset/Mesh/scale_z.obj";
 
 
 	  
