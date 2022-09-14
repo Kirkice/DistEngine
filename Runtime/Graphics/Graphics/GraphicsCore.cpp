@@ -137,8 +137,6 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
-	//	更新CB
-	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().MainLight->GetComponent<Transform>(1), mSceneManager.getInstance().mRenderObjects[1]);
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 

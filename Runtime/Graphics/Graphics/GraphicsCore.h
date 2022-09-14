@@ -30,11 +30,11 @@ public:
 	~GraphicsCore();
 
 	virtual bool Initialize()override;
+	virtual void Update(const GameTimer& gt)override;
 
 private:
 	virtual void CreateRtvAndDsvDescriptorHeaps()override;
 	virtual void OnResize()override;
-	virtual void Update(const GameTimer& gt)override;
 
 public:
 	//	更新灯光

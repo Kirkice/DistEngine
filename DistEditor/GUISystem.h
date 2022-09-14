@@ -35,6 +35,11 @@ private:
 
 	virtual void Draw(const GameTimer& gt)override;
 
+	virtual void Update(const GameTimer& gt)override;
+
+	void UpdateGizmosObjectCBs();
+
+
 	bool show_app_dockspace = true;
 
 	bool show_app_overlay = true;

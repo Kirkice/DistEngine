@@ -24,6 +24,33 @@ bool GUISystem::Initialize()
 	return true;
 }
 
+void GUISystem::Update(const GameTimer& gt)
+{
+	RenderCore::Update(gt);
+	UpdateGizmosObjectCBs();
+}
+
+void GUISystem::UpdateGizmosObjectCBs()
+{
+	int index = 1;
+	for (size_t i = 0; i < mHierachyItems.size(); i++)
+	{
+		if (mHierachyItems[i]->selected)
+		{
+			index = mHierachyItems[i]->MeshRenderIndex;
+		}
+	}
+	
+	std::unique_ptr<GameObject>& mTargetRender = mSceneManager.getInstance().mRenderObjects[index];
+
+	//	¸üÐÂCB
+	mGizmoManager.getInstance().UpdateObjectBuffer(
+		mAllRitems,
+		mSceneManager.getInstance().MainLight->GetComponent<Transform>(1),
+		mTargetRender
+	);
+}
+
 void GUISystem::Draw(const GameTimer& gt)
 {
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
