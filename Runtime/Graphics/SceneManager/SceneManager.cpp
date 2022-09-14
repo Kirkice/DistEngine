@@ -239,7 +239,7 @@ void SceneManager::BuildRenderObejct(
 	mat_Bunny->Name = "Bunny";
 	mat_Bunny->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
-	mat_Bunny->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	mat_Bunny->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mat_Bunny->Smoothness = 0.54f;
 	mat_Bunny->Metallic = 0.78f;
 	mat_Bunny->Occlusion = 1.0;
@@ -260,9 +260,9 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Bunny = new Transform("Transform");
-	transform_Bunny->position = Vector3(-1, -1.5, 5);
+	transform_Bunny->position = Vector3(-5, -1.5, 8);
 	transform_Bunny->eulerangle = Vector3(0,-45,0); 
-	transform_Bunny->scale = Vector3(10,10,10);
+	transform_Bunny->scale = Vector3(12,12,12);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
@@ -307,9 +307,9 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Sphere01 = new Transform("Transform");
-	transform_Sphere01->position = Vector3(-2.0f, 2.0f, -3.0f);
+	transform_Sphere01->position = Vector3(-3.0f, 3.0f, -8.0f);
 	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
-	transform_Sphere01->scale = Vector3(2, 2, 2);
+	transform_Sphere01->scale = Vector3(3, 3, 3);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_Sphere01 = new DistBound::BoundingBox("BoundingBox");
@@ -351,9 +351,9 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Sphere02 = new Transform("Transform");
-	transform_Sphere02->position = Vector3(-4.0f, 1.0f, -1.0f);
+	transform_Sphere02->position = Vector3(-8.0f, 2.0f, -3.0f);
 	transform_Sphere02->eulerangle = Vector3(0, 0, 0);
-	transform_Sphere02->scale = Vector3(1, 1, 1);
+	transform_Sphere02->scale = Vector3(2, 2, 2);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_Sphere02 = new DistBound::BoundingBox("BoundingBox");

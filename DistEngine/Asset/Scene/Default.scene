@@ -9,7 +9,7 @@
   "mMaterialType": 0,
   "MaterialPath": "Asset/Materials/ak47.mat",
   "MeshPath": "Asset/Mesh/ak47.obj",
-  "RenderObjectPosition": [ 3.0, 4.0, 0.0 ],
+  "RenderObjectPosition": [ 6.0, 10.0, 0.0 ],
   "RenderObjectEulerAngle": [ 0.0, 0.0, 0.0 ],
   "RenderObjectScale": [ 1.1, 1.1, 1.1 ]
 }
