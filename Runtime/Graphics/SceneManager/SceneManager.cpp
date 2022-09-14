@@ -260,9 +260,9 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Bunny = new Transform("Transform");
-	transform_Bunny->position = Vector3(0, -0.14,1);
-	transform_Bunny->eulerangle = Vector3(0,-60,0); 
-	transform_Bunny->scale = Vector3(8,8,8);
+	transform_Bunny->position = Vector3(-1, -1.5, 5);
+	transform_Bunny->eulerangle = Vector3(0,-45,0); 
+	transform_Bunny->scale = Vector3(10,10,10);
 
 	//	创建碰撞盒子
 	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
@@ -307,7 +307,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Sphere01 = new Transform("Transform");
-	transform_Sphere01->position = Vector3(-2.0f, 1.0f, -2.0f);
+	transform_Sphere01->position = Vector3(-2.0f, 2.0f, -3.0f);
 	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere01->scale = Vector3(2, 2, 2);
 
@@ -351,7 +351,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	设置坐标
 	Transform* transform_Sphere02 = new Transform("Transform");
-	transform_Sphere02->position = Vector3(-7.0f, 1.0f, -1.0f);
+	transform_Sphere02->position = Vector3(-4.0f, 1.0f, -1.0f);
 	transform_Sphere02->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere02->scale = Vector3(1, 1, 1);
 
@@ -376,7 +376,7 @@ void SceneManager::BuildConelBoxScene(
 {
 	// Build Material
 	Material* mat_White = new Material();
-	mat_White->Name = "Sphere02";
+	mat_White->Name = "White";
 	mat_White->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_White->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -393,35 +393,136 @@ void SceneManager::BuildConelBoxScene(
 	mat_White->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_White->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
+
+	Material* mat_Red = new Material();
+	mat_Red->Name = "Red";
+	mat_Red->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_Red->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	mat_Red->Smoothness = 0.15f;
+	mat_Red->Metallic = 0.2f;
+	mat_Red->Occlusion = 1.0;
+	mat_Red->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_Red->EmissionStrength = 0.0f;
+	mat_Red->UseNormalMap = 0;
+	mat_Red->NormalScale = 1;
+	mat_Red->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Red->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Red->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Red->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Red->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+
+	Material* mat_Green = new Material();
+	mat_Green->Name = "Green";
+	mat_Green->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
+	matCBIndexUtils.getInstance().OffsetIndex();
+	mat_Green->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
+	mat_Green->Smoothness = 0.15f;
+	mat_Green->Metallic = 0.2f;
+	mat_Green->Occlusion = 1.0;
+	mat_Green->EmissionColor = Color(1.0f, 0.0f, 0.0f, 0.0f);
+	mat_Green->EmissionStrength = 0.0f;
+	mat_Green->UseNormalMap = 0;
+	mat_Green->NormalScale = 1;
+	mat_Green->DiffuseMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Green->NormalMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Green->MsoMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Green->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
+	mat_Green->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
+
 	//	加载模型
 	MeshFliter* mesh_Plane = new MeshFliter("MeshFliter");
 	mesh_Plane->CreateGrid(6, 6, 24, 24);
 
-
 	MeshRender* meshRender_PlaneWhite = new MeshRender(mesh_Plane, mat_White, "MeshRender");
+	MeshRender* meshRender_PlaneRed = new MeshRender(mesh_Plane, mat_Red, "MeshRender");
+	MeshRender* meshRender_PlaneGreen = new MeshRender(mesh_Plane, mat_Green, "MeshRender");
 
 	//	设置坐标
 	Transform* transform_Plane01 = new Transform("Transform");
 	transform_Plane01->position = Vector3(0.0f, 0.0f, 0.0f);
 	transform_Plane01->eulerangle = Vector3(0, 0, 0);
-	transform_Plane01->scale = Vector3(1, 1, 1);
+	transform_Plane01->scale = Vector3(4, 1, 4);
 
 
 	//	创建碰撞盒子
-	DistBound::BoundingBox* bound_Plane01 = new DistBound::BoundingBox("BoundingBox");
-	bound_Plane01->aabb = BoundingAABB(mesh_Plane->data);
+	DistBound::BoundingBox* bound_Plane = new DistBound::BoundingBox("BoundingBox");
+	bound_Plane->aabb = BoundingAABB(mesh_Plane->data);
 
-	auto RenderObjectPlaneWhite = std::make_unique<GameObject>("White01");
-	RenderObjectPlaneWhite->AddComponent(transform_Plane01);
-	RenderObjectPlaneWhite->AddComponent(meshRender_PlaneWhite);
-	RenderObjectPlaneWhite->AddComponent(bound_Plane01);
-	RenderObjectPlaneWhite->Enable = true;
+	auto RenderObjectPlane01 = std::make_unique<GameObject>("White01");
+	RenderObjectPlane01->AddComponent(transform_Plane01);
+	RenderObjectPlane01->AddComponent(meshRender_PlaneWhite);
+	RenderObjectPlane01->AddComponent(bound_Plane);
+	RenderObjectPlane01->Enable = true;
 
-	RenderObjectPlaneWhite->name = "Plane01";
-	mRenderObjects.push_back(std::move(RenderObjectPlaneWhite));
+	RenderObjectPlane01->name = "Plane01";
+	mRenderObjects.push_back(std::move(RenderObjectPlane01));
 
 
 
+
+	//	设置坐标
+	Transform* transform_Plane02 = new Transform("Transform");
+	transform_Plane02->position = Vector3(12.0f, 12.0f, 0.0f);
+	transform_Plane02->eulerangle = Vector3(90, -90, 0);
+	transform_Plane02->scale = Vector3(4, 1, 4);
+
+	auto RenderObjectPlane02 = std::make_unique<GameObject>("White02");
+	RenderObjectPlane02->AddComponent(transform_Plane02);
+	RenderObjectPlane02->AddComponent(meshRender_PlaneWhite);
+	RenderObjectPlane02->AddComponent(bound_Plane);
+	RenderObjectPlane02->Enable = true;
+
+	RenderObjectPlane02->name = "Plane02";
+	mRenderObjects.push_back(std::move(RenderObjectPlane02));
+
+
+	//	设置坐标
+	Transform* transform_Plane03 = new Transform("Transform");
+	transform_Plane03->position = Vector3(0.0f, 24.0f, 0.0f);
+	transform_Plane03->eulerangle = Vector3(0, 0, 180);
+	transform_Plane03->scale = Vector3(4, 1, 4);
+
+	auto RenderObjectPlane03 = std::make_unique<GameObject>("White03");
+	RenderObjectPlane03->AddComponent(transform_Plane03);
+	RenderObjectPlane03->AddComponent(meshRender_PlaneWhite);
+	RenderObjectPlane03->AddComponent(bound_Plane);
+	RenderObjectPlane03->Enable = true;
+
+	RenderObjectPlane03->name = "Plane03";
+	mRenderObjects.push_back(std::move(RenderObjectPlane03));
+
+
+	//	设置坐标
+	Transform* transform_Plane04 = new Transform("Transform");
+	transform_Plane04->position = Vector3(0.0f, 12.0f, -12.0f);
+	transform_Plane04->eulerangle = Vector3(90, 0, 0);
+	transform_Plane04->scale = Vector3(4, 1, 4);
+
+	auto RenderObjectPlane04 = std::make_unique<GameObject>("Red");
+	RenderObjectPlane04->AddComponent(transform_Plane04);
+	RenderObjectPlane04->AddComponent(meshRender_PlaneRed);
+	RenderObjectPlane04->AddComponent(bound_Plane);
+	RenderObjectPlane04->Enable = true;
+
+	RenderObjectPlane04->name = "Plane04";
+	mRenderObjects.push_back(std::move(RenderObjectPlane04));
+
+
+	//	设置坐标
+	Transform* transform_Plane05 = new Transform("Transform");
+	transform_Plane05->position = Vector3(0.0f, 12.0f, 12.0f);
+	transform_Plane05->eulerangle = Vector3(-90, 0, 0);
+	transform_Plane05->scale = Vector3(4, 1, 4);
+
+	auto RenderObjectPlane05 = std::make_unique<GameObject>("Green");
+	RenderObjectPlane05->AddComponent(transform_Plane05);
+	RenderObjectPlane05->AddComponent(meshRender_PlaneGreen);
+	RenderObjectPlane05->AddComponent(bound_Plane);
+	RenderObjectPlane05->Enable = true;
+
+	RenderObjectPlane05->name = "Plane05";
+	mRenderObjects.push_back(std::move(RenderObjectPlane05));
 }
 
 
