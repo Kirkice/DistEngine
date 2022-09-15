@@ -359,7 +359,7 @@ void SceneManager::BuildRenderObejct(
 	DistBound::BoundingBox* bound_Sphere02 = new DistBound::BoundingBox("BoundingBox");
 	bound_Sphere02->aabb = BoundingAABB(mesh_Bunny->data);
 
-	RenderObjectSphere02->AddComponent(transform_Sphere02);
+	RenderObjectSphere02->AddComponent(transform_Sphere02); 
 	RenderObjectSphere02->AddComponent(meshRender_Sphere02);
 	RenderObjectSphere02->AddComponent(bound_Sphere02);
 	RenderObjectSphere02->Enable = true;
