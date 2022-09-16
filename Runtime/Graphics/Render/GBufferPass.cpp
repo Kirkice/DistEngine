@@ -22,7 +22,7 @@ GBuffer::GBuffer(
 }
 
 
-void GBuffer::BuildResource()
+void GBuffer::BuildResource() 
 {
 	D3D12_RESOURCE_DESC texDesc;
 	ZeroMemory(&texDesc, 0, sizeof(D3D12_RESOURCE_DESC));
