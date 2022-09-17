@@ -5,6 +5,8 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
+const int GBufferSize = 4;
+
 GBuffer::GBuffer(
 	ID3D12Device* device,
 	UINT width,
@@ -13,16 +15,38 @@ GBuffer::GBuffer(
 {
 	md3dDevice = device;
 
-	mWidth = width;
-	mHeight = height;
+	OnResize(width, height);
 
-	mViewport = { 0.0f, 0.0f, (float)width, (float)height, 0.0f, 1.0f };
-	mScissorRect = { 0, 0, (int)width, (int)height };
-	BuildResource();
 }
 
+/// <summary>
+/// 检查宽高
+/// </summary>
+/// <param name="newWidth"></param>
+/// <param name="newHeight"></param>
+void GBuffer::OnResize(UINT newWidth, UINT newHeight)
+{
+	if (mWidth != newWidth || mHeight != newHeight)
+	{
+		mWidth = newWidth;
+		mHeight = newHeight;
 
-void GBuffer::BuildResource()
+		// We render to ambient map at half the resolution.
+		mViewport.TopLeftX = 0.0f;
+		mViewport.TopLeftY = 0.0f;
+		mViewport.Width = mWidth / 2.0f;
+		mViewport.Height = mHeight / 2.0f;
+		mViewport.MinDepth = 0.0f;
+		mViewport.MaxDepth = 1.0f;
+
+		mScissorRect = { 0, 0, (int)mWidth / 2, (int)mHeight / 2 };
+
+		BuildResources();
+	}
+}
+
+//Build Resource
+void GBuffer::BuildResources()
 {
 	D3D12_RESOURCE_DESC texDesc;
 	ZeroMemory(&texDesc, 0, sizeof(D3D12_RESOURCE_DESC));
@@ -39,50 +63,81 @@ void GBuffer::BuildResource()
 	texDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
 
-	D3D12_CLEAR_VALUE stClear = {};
-	stClear.Format = mFormat;
-	const float clearColor[4] = { 1, 1, 1, 1 };
-	memcpy(stClear.Color, &clearColor, 4 * sizeof(float));
+	float ClearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	CD3DX12_CLEAR_VALUE optClear(mFormat, ClearColor);
 
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&texDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear,
-		IID_PPV_ARGS(&GBuffer0)));
-
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&texDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear,
-		IID_PPV_ARGS(&GBuffer1)));
-
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&texDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear,
-		IID_PPV_ARGS(&GBuffer2)));
-
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-		D3D12_HEAP_FLAG_NONE,
-		&texDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		&stClear,
-		IID_PPV_ARGS(&GBuffer3)));
+	for (size_t i = 0; i < GBufferSize; i++)
+	{
+		ThrowIfFailed(md3dDevice->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE,
+			&texDesc,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+			&optClear,
+			IID_PPV_ARGS(&GBufferResources[i])));
+	}
 }
 
+/// <summary>
+/// 获取GBuffer Resources
+/// </summary>
+/// <param name="index"></param>
+/// <returns></returns>
+ID3D12Resource* GBuffer::GetGBuffer(int index)
+{
+	return GBufferResources[index].Get();
+}
 
+/// <summary>
+/// 获取GBuffer的CPU SRV
+/// </summary>
+/// <param name="index"></param>
+/// <returns></returns>
+CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_CPU_SRV(int index)const
+{
+	return mhGBufferCpuSrv[index];
+}
+
+/// <summary>
+/// 获取GBuffer的GPU SRV
+/// </summary>
+/// <param name="index"></param>
+/// <returns></returns>
+CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_GPU_SRV(int index)const
+{
+	return mhGBufferGpuSrv[index];
+}
+
+/// <summary>
+/// 构建描述符
+/// </summary>
+/// <param name="CPUDescriptor"></param>
+/// <param name="GPUDescriptor"></param>
+/// <param name="mCbvSrvUavDescriptorSize"></param>
 void GBuffer::BuildDescriptors(
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
-	UINT mCbvSrvUavDescriptorSize
+	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPURtv,
+	UINT mCbvSrvUavDescriptorSize,
+	UINT rtvDescriptorSize
 )
+{
+	for (size_t i = 0; i < GBufferSize; i++)
+	{
+		mhGBufferCpuSrv[i] = CPUDescriptor;
+		CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+		mhGBufferGpuSrv[i] = GPUDescriptor;
+		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+		mhGBufferCpuRtv[i] = CPURtv;
+		CPURtv.Offset(1, rtvDescriptorSize);
+	}
+
+	RebuildDescriptors();
+}
+
+void GBuffer::RebuildDescriptors()
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -91,67 +146,16 @@ void GBuffer::BuildDescriptors(
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	mhGBuffer0CpuSrv = CPUDescriptor;
-	mhGBuffer0GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer0.Get(), &srvDesc, mhGBuffer0CpuSrv);
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = mFormat;
+	rtvDesc.Texture2D.MipSlice = 0;
+	rtvDesc.Texture2D.PlaneSlice = 0;
 
-	mhGBuffer1CpuSrv = CPUDescriptor;
-	mhGBuffer1GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer1.Get(), &srvDesc, mhGBuffer1CpuSrv);
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+	for (size_t i = 0; i < GBufferSize; i++)
+	{
+		md3dDevice->CreateShaderResourceView(GBufferResources[i].Get(), &srvDesc, mhGBufferCpuSrv[i]);
 
-	mhGBuffer2CpuSrv = CPUDescriptor;
-	mhGBuffer2GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer2.Get(), &srvDesc, mhGBuffer2CpuSrv);
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-	mhGBuffer3CpuSrv = CPUDescriptor;
-	mhGBuffer3GpuSrv = GPUDescriptor;
-	md3dDevice->CreateShaderResourceView(GBuffer3.Get(), &srvDesc, mhGBuffer3CpuSrv);
-	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-}
-
-ID3D12Resource* GBuffer::GetGBuffer0()
-{
-	return GBuffer0.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer1()
-{
-	return GBuffer1.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer2()
-{
-	return GBuffer2.Get();
-}
-
-ID3D12Resource* GBuffer::GetGBuffer3()
-{
-	return GBuffer3.Get();
-}
-
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer0Srv()const
-{
-	return mhGBuffer0GpuSrv;
-}
-
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer1Srv()const
-{
-	return mhGBuffer1GpuSrv;
-}
-
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer2Srv()const
-{
-	return mhGBuffer2GpuSrv;
-}
-
-CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GBuffer3Srv()const
-{
-	return mhGBuffer3GpuSrv;
+		md3dDevice->CreateRenderTargetView(GBufferResources[i].Get(), &rtvDesc, mhGBufferCpuRtv[i]);
+	}
 }
