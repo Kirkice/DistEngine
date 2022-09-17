@@ -2,7 +2,7 @@
 #include "DX12Utils.h"
 #include <string>
 
-const std::string ApplicationPath = "E:/Engine Project/DistEngine/DistEngine/";
+const std::string ApplicationPath = "D:/MyEngine/DistEngine/DistEngine/";
 
 	/// <summary>
 	/// RESOURCES
@@ -205,10 +205,7 @@ const std::vector<std::string> mScenePath =
 		"standardVS",
 		"outlineVS",
 		"litVS",
-		"gbuffer0VS",
-		"gbuffer1VS",
-		"gbuffer2VS",
-		"gbuffer3VS",
+		"gbufferVS",
 		"gizmoVS",
 		"unlitVS",
 		"lineVS",
@@ -245,10 +242,7 @@ const std::vector<std::string> mScenePath =
 		"opaquePS",
 		"outlinePS",
 		"litPS",
-		"gbuffer0PS",
-		"gbuffer1PS",
-		"gbuffer2PS",
-		"gbuffer3PS",
+		"gbufferPS",
 		"gizmoPS",
 		"unlitPS",
 		"linePS",
@@ -285,10 +279,7 @@ const std::vector<std::string> mScenePath =
 		L"Asset\\Shaders\\Default.hlsl",
 		L"Asset\\Shaders\\OutLine.hlsl",
 		L"Asset\\Shaders\\LitPass.hlsl",
-		L"Asset\\Shaders\\GBuffer0.hlsl",
-		L"Asset\\Shaders\\GBuffer1.hlsl",
-		L"Asset\\Shaders\\GBuffer2.hlsl",
-		L"Asset\\Shaders\\GBuffer3.hlsl",
+		L"Asset\\Shaders\\GBuffer.hlsl",
 		L"Asset\\Shaders\\GizmoPass.hlsl",
 		L"Asset\\Shaders\\Unlit.hlsl",
 		L"Asset\\Shaders\\Line.hlsl",

@@ -1,16 +1,16 @@
-/* $Header: GBuffer1.hlsl                                            6/26/21 20:55p KirkZhu $ */
+/* $Header: GBuffer.hlsl                                           	 6/26/21 20:55p KirkZhu $ */
 /*--------------------------------------------------------------------------------------------*
 *                                                                                             *
 *                 Project Name : DistEngine                                                   *
 *                                                                                             *
-*                    File Name : GBuffer1.hlsl                                                *
+*                    File Name : GBuffer.hlsl                                                 *
 *                                                                                             *
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/
 
-#ifndef GBUFFER1_INCLUDE
-#define GBUFFER1_INCLUDE
+#ifndef GBUFFER_INCLUDE
+#define GBUFFER_INCLUDE
 
 #include "GBufferFunction.hlsl"
 
@@ -28,7 +28,21 @@ struct VertexOut
     float3 NormalW                                      : NORMAL;
 	float3 TangentW                                     : TANGENT;
 	float2 TexC                                         : TEXCOORD;
+    float4 ShadowPosH                                   : POSITION0;
+    float3 PosW                                         : POSITION1;
+    float3 View                                         : POSITION2;
 };
+
+void InitializeInputData(VertexOut input, half3 normalTS, out InputData inputData)
+{
+    inputData                                           = (InputData)0;
+    half3 viewDirWS                                     = SafeNormalize(input.View);
+    inputData.NormalW                                   = normalTS;
+    inputData.ViewW                                     = viewDirWS;
+    inputData.ShadowCoord                               = CalcShadowFactor(input.ShadowPosH);
+    half3 reflectVector                                 = reflect(-input.View, input.NormalW);
+    inputData.bakedGI                                   = gCubeIBL.Sample(gsamLinearWrap, reflectVector);
+}
 
 VertexOut VS(VertexIn vin)
 {
@@ -36,19 +50,34 @@ VertexOut VS(VertexIn vin)
 
 	PBRMaterialData matData                             = gMaterialData[gMaterialIndex];
 
+
+    vout.PosW                                           = TransformObjectToWorld(vin.PosL);
     vout.NormalW                                        = TransformObjectToWorldNormal(vin.NormalL);
 	vout.TangentW                                       = TransformObjectToWorld(vin.TangentL);
     vout.PosH                                           = TransformObjectToHClip(vin.PosL);
+
 	float4 texC                                         = mul(float4(vin.TexC, 0.0f, 1.0f), gTexTransform);
 	vout.TexC                                           = mul(texC, matData.MatTransform).xy;
+
+    vout.ShadowPosH                                     = mul(float4(vout.PosW,1), gShadowTransform);
+
+    vout.View                                           = normalize(GetCameraPositionWS() - vout.PosW);
+
     return vout;
 }
 
-float4 PS(VertexOut pin) : SV_Target
+PS_OUT PS(VertexOut pin)
 {
+    PS_OUT output;
+
     SurfaceData surfaceData; 
     InitializeStandardLitSurfaceData(pin.TexC, pin.NormalW, pin.TangentW, surfaceData);
-    return                                              half4(surfaceData.Metallic, surfaceData.Smoothness,surfaceData.Occlusion,1);
+    InputData inputData;
+    InitializeInputData(pin, surfaceData.Normal, inputData); 
+    float3 outColor                                     = RED_SBS_GlobalIllumination(surfaceData.Albedo.rgb, surfaceData.Metallic, surfaceData.Smoothness, surfaceData.Occlusion, inputData.NormalW, inputData.ViewW);
+
+
+    return                                              BRDFDataToGbuffer(surfaceData, inputData, ShadowFactory(inputData), outColor + surfaceData.Emission.rgb);
 }
 
 #endif
