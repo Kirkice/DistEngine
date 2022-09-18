@@ -16,6 +16,32 @@ DistRenderPipeline::~DistRenderPipeline()
 		FlushCommandQueue();
 }
 
+/// <summary>
+/// ≥ı ºªØ
+/// </summary>
+void DistRenderPipeline::Init()
+{
+	mGBufferPass = std::make_unique<GBuffer>(
+		md3dDevice.Get(),
+		mClientWidth, mClientHeight
+		);
+}
+
+/// <summary>
+/// ÷ÿ÷√
+/// </summary>
+void DistRenderPipeline::Resize()
+{
+	if (mGBufferPass != nullptr)
+	{
+		mGBufferPass->OnResize(mClientWidth, mClientHeight);
+		mGBufferPass->RebuildDescriptors();
+	}
+}
+
+/// <summary>
+/// ‰÷»æ
+/// </summary>
 void DistRenderPipeline::Render()
 {
 	//	…Ë÷√√Ë ˆ∂—

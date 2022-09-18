@@ -13,6 +13,7 @@
 #include "../Shaders/ShaderManager.h"
 #include "PipelineStateObject.h"
 #include "../Render/RenderTarget.h"
+#include "../Render/GBufferPass.h"
 #include "../SceneManager/GizmosManager.h"
 #include "../SceneManager/PostProcessManager.h"
 
@@ -138,6 +139,8 @@ public:
 	std::unique_ptr<RenderTarget> mRenderTarget;
 	std::unique_ptr<ShadowMap> mShadowMap;
 	std::unique_ptr<DepthPass> mDepthPass;
+	std::unique_ptr<GBuffer> mGBufferPass;
+
 
 	DirectX::BoundingSphere mSceneBounds;
 
