@@ -27,7 +27,7 @@ public:
 
 	void BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor, 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE& CpuRtv,
 		UINT mCbvSrvUavDescriptorSize,
 		UINT rtvDescriptorSize

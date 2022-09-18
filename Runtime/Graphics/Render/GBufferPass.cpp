@@ -159,3 +159,8 @@ void GBuffer::RebuildDescriptors()
 		md3dDevice->CreateRenderTargetView(GBufferResources[i].Get(), &rtvDesc, mhGBufferCpuRtv[i]);
 	}
 }
+
+void GBuffer::SetPSOs(ID3D12PipelineState* gbufferPSO)
+{
+	mGBufferPSO = gbufferPSO;
+}
