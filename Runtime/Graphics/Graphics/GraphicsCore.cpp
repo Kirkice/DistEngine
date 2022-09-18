@@ -37,9 +37,6 @@ bool GraphicsCore::Initialize()
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
-	//GBuffer
-	mGBuffer = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
-
 	BuildRootSignature();
 	BuildDescriptorHeaps();
 	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());
@@ -487,12 +484,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GPUDescriptor,
 		mCbvSrvUavDescriptorSize
 	);
-
-	mGBuffer->BuildDescriptors(
-		CPUDescriptor,
-		GPUDescriptor,
-		mCbvSrvUavDescriptorSize
-	);
 }
 
 
@@ -536,30 +527,6 @@ void GraphicsCore::BuildPSOs()
 	LitTransparentObject.BuildDefault(mShaderManager, mRootSignature);
 	LitTransparentObject.SetDefaultBlend();
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LitTransparentObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["transparent"])));
-
-	// GBuffer0 for Lit.
-	PipelineStateObject GBuffer0Object = PipelineStateObject();
-	GBuffer0Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer0Object.SetShader(mShaderManager, mRootSignature, "gbuffer0VS", "gbuffer0PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer0Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer0"])));
-
-	// GBuffer1 for Lit.
-	PipelineStateObject GBuffer1Object = PipelineStateObject();
-	GBuffer1Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer1Object.SetShader(mShaderManager, mRootSignature, "gbuffer1VS", "gbuffer1PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer1Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer1"])));
-
-	// GBuffer2 for Lit.
-	PipelineStateObject GBuffer2Object = PipelineStateObject();
-	GBuffer2Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer2Object.SetShader(mShaderManager, mRootSignature, "gbuffer2VS", "gbuffer2PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer2Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer2"])));
-
-	// GBuffer3 for Lit.
-	PipelineStateObject GBuffer3Object = PipelineStateObject();
-	GBuffer3Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer3Object.SetShader(mShaderManager, mRootSignature, "gbuffer3VS", "gbuffer3PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer3Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer3"])));
 
 	// PSO for shadow map pass.
 	PipelineStateObject SmapObject = PipelineStateObject();

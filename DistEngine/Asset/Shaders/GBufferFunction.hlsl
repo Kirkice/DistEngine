@@ -81,10 +81,10 @@ PS_OUT BRDFDataToGbuffer(SurfaceData surfaceData, InputData inputData, float Sha
     float3 packedNormalWS                                   = PackNormal(inputData.NormalW);
 
     PS_OUT output;
-    output.GBuffer0 = half4(surfaceData.Albedo.rgb, surfaceData.Occlusion);                         // Diffuse              Occlusion
-    output.GBuffer1 = half4(surfaceData.Metallic, inputData.ViewW);                                 // metallic             View
-    output.GBuffer2 = half4(packedNormalWS, surfaceData.Smoothness);                             // encoded-normal       smoothness
-    output.GBuffer3 = half4(globalIllumination, ShadowMask);                                        // GI                   ShadowMask
+    output.GBuffer0 = float4(surfaceData.Albedo.rgb, 1);                                                                            // diffuse                  diffuse                 diffuse                 1          
+    output.GBuffer1 = float4(surfaceData.Metallic, surfaceData.Smoothness,surfaceData.Occlusion,1);                                 // metallic                 smoothness              occlusion               1
+    output.GBuffer2 = float4(packedNormalWS, 1);                                                                                    // encoded-normal           encoded-normal          encoded-normal          1
+    output.GBuffer3 = float4(globalIllumination, 1);                                                                                // GI                       GI                      GI                      ShadowMask
 
     return output;
 }
