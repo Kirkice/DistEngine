@@ -484,6 +484,14 @@ void GraphicsCore::BuildDescriptorHeaps()
 		GPUDescriptor,
 		mCbvSrvUavDescriptorSize
 	);
+
+	mGBufferPass->BuildDescriptors(
+		CPUDescriptor,
+		GPUDescriptor,
+		GetRtv(SwapChainBufferCount),
+		mCbvSrvUavDescriptorSize,
+		mRtvDescriptorSize
+	);
 }
 
 
@@ -516,6 +524,12 @@ void GraphicsCore::BuildPSOs()
 	AxisObject.SetDefaultBlend();
 	AxisObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_ALWAYS);
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(AxisObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Axis"])));
+
+	//	PSO for GBuffer
+	PipelineStateObject GBufferObject = PipelineStateObject();
+	GBufferObject.BuildDefault(mShaderManager, mRootSignature);
+	GBufferObject.SetShader(mShaderManager, mRootSignature, "gbufferVS", "gbufferPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBufferObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer"])));
 
 	// PSO for Lit.
 	PipelineStateObject LitObject = PipelineStateObject();

@@ -113,6 +113,12 @@ private:
 	//	设置为渲染目标
 	void SetRenderTarget();
 
+	//	设置GBuffer的渲染目标
+	void SetGBufferTarget();
+
+	//	清除GBuffer的渲染目标
+	void ClearGBufferTarget();
+
 	//	设置CBuffer
 	void SetCBuffer();
 
