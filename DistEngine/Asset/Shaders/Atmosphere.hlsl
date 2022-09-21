@@ -8,7 +8,7 @@
 *                   Programmer : Kirk Zhu                                                     *
 *                                                                                             *
 *---------------------------------------------------------------------------------------------*/ 
-#include "Core.hlsl" 
+#include "Core.hlsl"  
 
 #define smooth(x) x*x*(3.0-2.0*x)
 
