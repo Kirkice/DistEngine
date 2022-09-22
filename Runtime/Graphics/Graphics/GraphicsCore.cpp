@@ -37,6 +37,9 @@ bool GraphicsCore::Initialize()
 	//RenderTarget Init
 	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
+	//GBuffer Init
+	mGBufferPass = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
+
 	BuildRootSignature();
 	BuildDescriptorHeaps();
 	GraphicsUtils::IMGUIInit(mhMainWnd, md3dDevice, mSrvDescriptorHeap.GetDescriptorHeap());
@@ -96,6 +99,13 @@ void GraphicsCore::OnResize()
 	DX12GameApp::OnResize();
 
 	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
+
+	//	GBuffer OnResize
+	if (mGBufferPass != nullptr)
+	{
+		mGBufferPass->OnResize(mClientWidth, mClientHeight);
+		mGBufferPass->RebuildDescriptors();
+	}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -488,9 +498,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mGBufferPass->BuildDescriptors(
 		CPUDescriptor,
 		GPUDescriptor,
-		GetRtv(SwapChainBufferCount),
-		mCbvSrvUavDescriptorSize,
-		mRtvDescriptorSize
+		mCbvSrvUavDescriptorSize
 	);
 }
 

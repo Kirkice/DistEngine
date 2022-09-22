@@ -16,7 +16,6 @@ GBuffer::GBuffer(
 	md3dDevice = device;
 
 	OnResize(width, height);
-
 }
 
 /// <summary>
@@ -117,9 +116,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_GPU_SRV(int index)const
 void GBuffer::BuildDescriptors(
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
-	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPURtv,
-	UINT mCbvSrvUavDescriptorSize,
-	UINT rtvDescriptorSize
+	UINT mCbvSrvUavDescriptorSize
 )
 {
 	for (size_t i = 0; i < GBufferSize; i++)
@@ -129,9 +126,6 @@ void GBuffer::BuildDescriptors(
 
 		mhGBufferGpuSrv[i] = GPUDescriptor;
 		GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
-
-		mhGBufferCpuRtv[i] = CPURtv;
-		CPURtv.Offset(1, rtvDescriptorSize);
 	}
 
 	RebuildDescriptors();
@@ -146,17 +140,9 @@ void GBuffer::RebuildDescriptors()
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format = mFormat;
-	rtvDesc.Texture2D.MipSlice = 0;
-	rtvDesc.Texture2D.PlaneSlice = 0;
-
 	for (size_t i = 0; i < GBufferSize; i++)
 	{
 		md3dDevice->CreateShaderResourceView(GBufferResources[i].Get(), &srvDesc, mhGBufferCpuSrv[i]);
-
-		md3dDevice->CreateRenderTargetView(GBufferResources[i].Get(), &rtvDesc, mhGBufferCpuRtv[i]);
 	}
 }
 

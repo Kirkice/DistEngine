@@ -28,9 +28,7 @@ public:
 	void BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor, 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE& CpuRtv,
-		UINT mCbvSrvUavDescriptorSize,
-		UINT rtvDescriptorSize
+		UINT mCbvSrvUavDescriptorSize
 	);
 
 	void RebuildDescriptors();
@@ -51,7 +49,6 @@ private:
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuSrv[4];
 	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBufferGpuSrv[4];
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuRtv[4];
 
 	DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 

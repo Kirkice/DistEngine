@@ -31,10 +31,10 @@ public:
 
 	virtual bool Initialize()override;
 	virtual void Update(const GameTimer& gt)override;
+	virtual void OnResize()override;
 
 private:
 	virtual void CreateRtvAndDsvDescriptorHeaps()override;
-	virtual void OnResize()override;
 
 public:
 	//	更新灯光

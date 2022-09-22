@@ -24,11 +24,8 @@ public:
 	~DistRenderPipeline();
 
 public:
-	void Init();
 
 	void Render();
-
-	void Resize();
 
 private:
 
