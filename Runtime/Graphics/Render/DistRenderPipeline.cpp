@@ -45,6 +45,12 @@ void DistRenderPipeline::Render()
 	//	设置环境贴图到跟描述符表
 	SetCubeMapRootDescriptorTable();
 
+	//SetGBufferTarget();
+
+	//RenderGBuffer();
+
+	//ClearGBufferTarget();
+
 	//	渲染不透明物体
 	RenderOpaquePass();
 
@@ -83,7 +89,8 @@ void DistRenderPipeline::DepthPrePass()
 //	渲染GBuffer
 void DistRenderPipeline::RenderGBuffer()
 {
-
+	SetMatBuffer(MatBufferType::PBR);
+	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
 }
 
 //	渲染不透明物体
