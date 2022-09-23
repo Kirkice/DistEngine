@@ -19,7 +19,7 @@ DistRenderPipeline::~DistRenderPipeline()
 /// <summary>
 /// äÖÈ¾
 /// </summary>
-void DistRenderPipeline::Render()
+void DistRenderPipeline::Render() 
 {
 	//	ÉèÖÃÃèÊö¶Ñ
 	SetDescriptorHeap();
