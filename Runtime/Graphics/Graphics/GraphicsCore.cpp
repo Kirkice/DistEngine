@@ -477,7 +477,6 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mRenderTarget->BuildDescriptors(
 		CPUDescriptor,
 		GPUDescriptor,
-		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize
 	);
 
@@ -498,7 +497,9 @@ void GraphicsCore::BuildDescriptorHeaps()
 	mGBufferPass->BuildDescriptors(
 		CPUDescriptor,
 		GPUDescriptor,
-		mCbvSrvUavDescriptorSize
+		GetRtv(SwapChainBufferCount),
+		mCbvSrvUavDescriptorSize,
+		mRtvDescriptorSize
 	);
 }
 

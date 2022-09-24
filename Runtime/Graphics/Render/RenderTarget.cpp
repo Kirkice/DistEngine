@@ -38,11 +38,6 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::CpuSrv()const
 	return mhCpuSrv;
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::Rtv()const
-{
-	return mhCpuRtv;
-}
-
 D3D12_VIEWPORT RenderTarget::Viewport()const  
 {
 	return mViewport;
@@ -56,14 +51,12 @@ D3D12_RECT RenderTarget::ScissorRect()const
 void RenderTarget::BuildDescriptors(
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
-	CD3DX12_CPU_DESCRIPTOR_HANDLE hCpuRtv,
 	UINT mCbvSrvUavDescriptorSize
 )
 {
 	// Save references to the descriptors. 
 	mhCpuSrv = CPUDescriptor;
 	mhGpuSrv = GPUDescriptor;
-	mhCpuRtv = hCpuRtv;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;

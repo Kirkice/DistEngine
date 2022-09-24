@@ -34,16 +34,16 @@ void DistRenderPipeline::Render()
 	SetViewAndRect();
 
 	//	资源屏障 - 展示到目标
-	SetPresentToTarget(CurrentBackBuffer());
+	//SetPresentToTarget(CurrentBackBuffer());
 
 	//	设置为渲染目标
-	SetRenderTarget();
+	//SetRenderTarget();
 
 	//	设置CBuffer
-	SetCBuffer();
+	//SetCBuffer();
 
 	//	设置环境贴图到跟描述符表
-	SetCubeMapRootDescriptorTable();
+	//SetCubeMapRootDescriptorTable();
 
 	//SetGBufferTarget();
 
@@ -51,20 +51,20 @@ void DistRenderPipeline::Render()
 
 	//ClearGBufferTarget();
 
-	//	渲染不透明物体
-	RenderOpaquePass();
+	////	渲染不透明物体
+	//RenderOpaquePass();
 
-	//	渲染坐标轴
-	RenderAxisPass();
+	////	渲染坐标轴
+	//RenderAxisPass();
 
-	//	渲染天空球
-	RenderSkyBoxPass();
+	////	渲染天空球
+	//RenderSkyBoxPass();
 
-	//	渲染图标
-	RenderGizmosPass();
+	////	渲染图标
+	//RenderGizmosPass();
 
 	//	资源屏障 - 设置目标到展示
-	SetTargetToPresnet(CurrentBackBuffer());
+	//SetTargetToPresnet(CurrentBackBuffer());
 
 	//	拷贝Pass
 	CopyColorPass();
@@ -89,6 +89,26 @@ void DistRenderPipeline::DepthPrePass()
 //	渲染GBuffer
 void DistRenderPipeline::RenderGBuffer()
 {
+	float clearValue[] = {0.0f, 0.0f, 1.0f, 0.0f};
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		mCommandList->ClearRenderTargetView(mGBufferPass->GET_GBUFFER_CPU_RTV(i), clearValue, 0, nullptr);
+	}
+
+	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+
+	D3D12_CPU_DESCRIPTOR_HANDLE rtCPUDescriptors[4] = {};
+	UINT descriptorsCount = 0;
+	for (UINT i = 0; i < 4; ++i)
+	{
+		descriptorsCount++;
+		rtCPUDescriptors[i] = mGBufferPass->GET_GBUFFER_CPU_SRV(i);
+	}
+
+	mCommandList->OMSetRenderTargets(descriptorsCount, rtCPUDescriptors, true, nullptr);
+
 	SetMatBuffer(MatBufferType::PBR);
 	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
 }
