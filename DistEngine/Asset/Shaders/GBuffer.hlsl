@@ -13,7 +13,7 @@
 #define GBUFFER_INCLUDE
 
 #include "GBufferFunction.hlsl"
-
+ 
 struct VertexIn
 { 
 	float3 PosL                                         : POSITION;
