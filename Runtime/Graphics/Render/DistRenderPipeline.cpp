@@ -76,7 +76,7 @@ void DistRenderPipeline::Render()
 //	‰÷»æ“ı”∞
 void DistRenderPipeline::RenderShadowPass()
 {
-	SetMatBuffer(MatBufferType::PBR);
+	SetMatBuffer(MatBufferType::PBR);  
 	DrawSceneToShadowMap();
 }
 
