@@ -34,16 +34,16 @@ void DistRenderPipeline::Render()
 	SetViewAndRect();
 
 	//	资源屏障 - 展示到目标
-	//SetPresentToTarget(CurrentBackBuffer());
+	SetPresentToTarget(CurrentBackBuffer());
 
 	//	设置为渲染目标
-	//SetRenderTarget();
+	SetRenderTarget();
 
 	//	设置CBuffer
-	//SetCBuffer();
+	SetCBuffer();
 
 	//	设置环境贴图到跟描述符表
-	//SetCubeMapRootDescriptorTable();
+	SetCubeMapRootDescriptorTable();
 
 	//SetGBufferTarget();
 
@@ -51,20 +51,20 @@ void DistRenderPipeline::Render()
 
 	//ClearGBufferTarget();
 
-	////	渲染不透明物体
-	//RenderOpaquePass();
+	//	渲染不透明物体
+	RenderOpaquePass();
 
-	////	渲染坐标轴
-	//RenderAxisPass();
+	//	渲染坐标轴
+	RenderAxisPass();
 
-	////	渲染天空球
-	//RenderSkyBoxPass();
+	//	渲染天空球
+	RenderSkyBoxPass();
 
-	////	渲染图标
-	//RenderGizmosPass();
+	//	渲染图标
+	RenderGizmosPass();
 
 	//	资源屏障 - 设置目标到展示
-	//SetTargetToPresnet(CurrentBackBuffer());
+	SetTargetToPresnet(CurrentBackBuffer());
 
 	//	拷贝Pass
 	CopyColorPass();
@@ -86,32 +86,32 @@ void DistRenderPipeline::DepthPrePass()
 
 }
 
-//	渲染GBuffer
-void DistRenderPipeline::RenderGBuffer()
-{
-	float clearValue[] = {0.0f, 0.0f, 1.0f, 0.0f};
-
-	for (size_t i = 0; i < 4; i++)
-	{
-		mCommandList->ClearRenderTargetView(mGBufferPass->GET_GBUFFER_CPU_RTV(i), clearValue, 0, nullptr);
-	}
-
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-
-	D3D12_CPU_DESCRIPTOR_HANDLE rtCPUDescriptors[4] = {};
-	UINT descriptorsCount = 0;
-	for (UINT i = 0; i < 4; ++i)
-	{
-		descriptorsCount++;
-		rtCPUDescriptors[i] = mGBufferPass->GET_GBUFFER_CPU_SRV(i);
-	}
-
-	mCommandList->OMSetRenderTargets(descriptorsCount, rtCPUDescriptors, true, nullptr);
-
-	SetMatBuffer(MatBufferType::PBR);
-	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
-}
+////	渲染GBuffer
+//void DistRenderPipeline::RenderGBuffer()
+//{
+//	float clearValue[] = {0.0f, 0.0f, 1.0f, 0.0f};
+//
+//	for (size_t i = 0; i < 4; i++)
+//	{
+//		mCommandList->ClearRenderTargetView(mGBufferPass->GET_GBUFFER_CPU_RTV(i), clearValue, 0, nullptr);
+//	}
+//
+//	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+//
+//
+//	D3D12_CPU_DESCRIPTOR_HANDLE rtCPUDescriptors[4] = {};
+//	UINT descriptorsCount = 0;
+//	for (UINT i = 0; i < 4; ++i)
+//	{
+//		descriptorsCount++;
+//		rtCPUDescriptors[i] = mGBufferPass->GET_GBUFFER_CPU_SRV(i);
+//	}
+//
+//	mCommandList->OMSetRenderTargets(descriptorsCount, rtCPUDescriptors, true, nullptr);
+//
+//	SetMatBuffer(MatBufferType::PBR);
+//	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
+//}
 
 //	渲染不透明物体
 void DistRenderPipeline::RenderOpaquePass()
@@ -164,7 +164,7 @@ void DistRenderPipeline::RenderGizmosPass()
 //	渲染后处理
 void DistRenderPipeline::RenderPostProcessPass()
 {
-	//mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
+	//mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTexture->GpuSrv());
 	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	render_target_descriptor.Offset(UINT(25), mCbvSrvUavDescriptorSize);
 	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
@@ -185,15 +185,15 @@ void DistRenderPipeline::DrawVolumeFog()
 
 	SetTargetToPresnet(CurrentBackBuffer());
 
-	SetReadToDest(mRenderTarget->Resource());
+	SetReadToDest(mRenderTexture->Resource());
 
 	SetPresentToSource(CurrentBackBuffer());
 
-	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
+	CopyBlit(mRenderTexture->Resource(), CurrentBackBuffer());
 
 	SetSourceToPresent(CurrentBackBuffer());
 
-	SetDestToRead(mRenderTarget->Resource());
+	SetDestToRead(mRenderTexture->Resource());
 }
 
 //	渲染快速近似抗锯齿
@@ -203,15 +203,15 @@ void DistRenderPipeline::DrawFxAA()
 
 	SetTargetToPresnet(CurrentBackBuffer());
 
-	SetReadToDest(mRenderTarget->Resource());
+	SetReadToDest(mRenderTexture->Resource());
 
 	SetPresentToSource(CurrentBackBuffer());
 
-	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
+	CopyBlit(mRenderTexture->Resource(), CurrentBackBuffer());
 
 	SetSourceToPresent(CurrentBackBuffer());
 
-	SetDestToRead(mRenderTarget->Resource());
+	SetDestToRead(mRenderTexture->Resource());
 }
 
 
@@ -273,44 +273,44 @@ void DistRenderPipeline::SetRenderTarget()
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 }
 
-//	设置GBuffer的渲染目标
-void DistRenderPipeline::SetGBufferTarget()
-{
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
-		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
-		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
-		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
-		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
-	};
-
-	mCommandList->ResourceBarrier((UINT)barriers.size(), barriers.data());
-}
-
-//	清除GBuffer的渲染目标
-void DistRenderPipeline::ClearGBufferTarget()
-{
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
-	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
-	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
-	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
-	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET)
-	};
-
-	mCommandList->ResourceBarrier((UINT)barriers.size(), barriers.data());
-}
+////	设置GBuffer的渲染目标
+//void DistRenderPipeline::SetGBufferTarget()
+//{
+//	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
+//	};
+//
+//	mCommandList->ResourceBarrier((UINT)barriers.size(), barriers.data());
+//}
+//
+////	清除GBuffer的渲染目标
+//void DistRenderPipeline::ClearGBufferTarget()
+//{
+//	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET)
+//	};
+//
+//	mCommandList->ResourceBarrier((UINT)barriers.size(), barriers.data());
+//}
 
 //	拷贝Pass
 void DistRenderPipeline::CopyColorPass()
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTexture->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
 
-	mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+	mCommandList->CopyResource(mRenderTexture->Resource(), CurrentBackBuffer());
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTexture->Resource(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 

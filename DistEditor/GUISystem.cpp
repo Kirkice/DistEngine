@@ -592,7 +592,7 @@ void GUISystem::DrawPhysicsSettings()
 void GUISystem::DrawSceneGameView()
 {
 	ImGui::Begin("View");
-	ImGui::Image((ImTextureID)mRenderTarget->GpuSrv().ptr, ImVec2(1383, 778));
+	ImGui::Image((ImTextureID)mRenderTexture->GpuSrv().ptr, ImVec2(1383, 778));
 	ImGui::End();
 }
 
@@ -710,25 +710,25 @@ void GUISystem::DrawFrameDebugger()
 		ImGui::Image((ImTextureID)mDepthPass->Srv().ptr, ImVec2(256, 144));
 	}
 
-	if (ImGui::CollapsingHeader("GBuffer0"))
-	{
-		ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(0), ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer0"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(0), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer1"))
-	{
-		ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(1), ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer1"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(1), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer2"))
-	{
-		ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(2), ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer2"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(2), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer3"))
-	{
-		ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(3), ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer3"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(3), ImVec2(256, 144));
+	//}
 	ImGui::End();
 }
 

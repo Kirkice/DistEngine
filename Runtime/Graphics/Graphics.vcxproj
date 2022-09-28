@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
-    <ClCompile Include="Graphics\CommandListManager.cpp" />
+    <ClCompile Include="Graphics\RenderTargetManager.cpp" />
     <ClCompile Include="Physics\BoundingAABB.cpp" />
     <ClCompile Include="Physics\BoundingBox.cpp" />
     <ClCompile Include="Physics\BoundingOBB.cpp" />
@@ -167,6 +167,7 @@
     <ClCompile Include="Render\DistRenderPipeline.cpp" />
     <ClCompile Include="Render\GBufferPass.cpp" />
     <ClCompile Include="Render\RenderCore.cpp" />
+    <ClCompile Include="Render\RenderTexture.cpp" />
     <ClCompile Include="SceneManager\GizmosManager.cpp" />
     <ClCompile Include="Graphics\GraphicsCore.cpp" />
     <ClCompile Include="Graphics\GraphicsUtils.cpp" />
@@ -174,7 +175,6 @@
     <ClCompile Include="Geometry\ObjLoader.cpp" />
     <ClCompile Include="Graphics\PipelineStateObject.cpp" />
     <ClCompile Include="SceneManager\PostProcessManager.cpp" />
-    <ClCompile Include="Render\RenderTarget.cpp" />
     <ClCompile Include="File\ResourcesManager.cpp" />
     <ClCompile Include="File\ResourcesPath.cpp" />
     <ClCompile Include="Graphics\RootSignature.cpp" />
@@ -187,7 +187,7 @@
   <ItemGroup>
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
-    <ClInclude Include="Graphics\CommandListManager.h" />
+    <ClInclude Include="Graphics\RenderTargetManager.h" />
     <ClInclude Include="Physics\BoundingAABB.h" />
     <ClInclude Include="Physics\BoundingBox.h" />
     <ClInclude Include="Physics\BoundingOBB.h" />
@@ -208,6 +208,7 @@
     <ClInclude Include="Render\DistRenderPipeline.h" />
     <ClInclude Include="Render\GBufferPass.h" />
     <ClInclude Include="Render\RenderCore.h" />
+    <ClInclude Include="Render\RenderTexture.h" />
     <ClInclude Include="SceneManager\GizmosManager.h" />
     <ClInclude Include="Graphics\GraphicsCore.h" />
     <ClInclude Include="Graphics\GraphicsUtils.h" />
@@ -216,7 +217,6 @@
     <ClInclude Include="Geometry\ObjLoader.h" />
     <ClInclude Include="Graphics\PipelineStateObject.h" />
     <ClInclude Include="SceneManager\PostProcessManager.h" />
-    <ClInclude Include="Render\RenderTarget.h" />
     <ClInclude Include="File\ResourcesManager.h" />
     <ClInclude Include="File\ResourcesPath.h" />
     <ClInclude Include="Graphics\RootSignature.h" />

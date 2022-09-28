@@ -35,10 +35,10 @@ bool GraphicsCore::Initialize()
 	mDepthPass = std::make_unique<DepthPass>(md3dDevice.Get());
 
 	//RenderTarget Init
-	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
+	mRenderTexture = std::make_unique<RenderTexture>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
 	//GBuffer Init
-	mGBufferPass = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
+	//mGBufferPass = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
 	BuildRootSignature();
 	BuildDescriptorHeaps();
@@ -100,12 +100,12 @@ void GraphicsCore::OnResize()
 
 	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
 
-	//	GBuffer OnResize
-	if (mGBufferPass != nullptr)
-	{
-		mGBufferPass->OnResize(mClientWidth, mClientHeight);
-		mGBufferPass->RebuildDescriptors();
-	}
+	////	GBuffer OnResize
+	//if (mGBufferPass != nullptr)
+	//{
+	//	mGBufferPass->OnResize(mClientWidth, mClientHeight);
+	//	mGBufferPass->RebuildDescriptors();
+	//}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -474,7 +474,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_diffuseIBL");
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_specularIBL");
 
-	mRenderTarget->BuildDescriptors(
+	mRenderTexture->BuildDescriptors(
 		CPUDescriptor,
 		GPUDescriptor,
 		mCbvSrvUavDescriptorSize
@@ -494,13 +494,13 @@ void GraphicsCore::BuildDescriptorHeaps()
 		mCbvSrvUavDescriptorSize
 	);
 
-	mGBufferPass->BuildDescriptors(
-		CPUDescriptor,
-		GPUDescriptor,
-		GetRtv(SwapChainBufferCount),
-		mCbvSrvUavDescriptorSize,
-		mRtvDescriptorSize
-	);
+	//mGBufferPass->BuildDescriptors(
+	//	CPUDescriptor,
+	//	GPUDescriptor,
+	//	GetRtv(SwapChainBufferCount),
+	//	mCbvSrvUavDescriptorSize,
+	//	mRtvDescriptorSize
+	//);
 }
 
 

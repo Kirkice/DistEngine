@@ -2,14 +2,14 @@
 
 #include "DX12Utils.h"
 
-class RenderTarget
+class RenderTexture
 {
 public:
-	RenderTarget(ID3D12Device* device, UINT width, UINT height);
+	RenderTexture(ID3D12Device* device, UINT width, UINT height);
 
-	RenderTarget(const RenderTarget& rhs) = delete;
-	RenderTarget& operator=(const RenderTarget& rhs) = delete;
-	~RenderTarget() = default;
+	RenderTexture(const RenderTexture& rhs) = delete;
+	RenderTexture& operator=(const RenderTexture& rhs) = delete;
+	~RenderTexture() = default;
 
 	UINT Width()const;
 	UINT Height()const;
@@ -43,5 +43,5 @@ private:
 	UINT mHeight = 0;
 
 	DXGI_FORMAT mTargetFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTarget;
+	Microsoft::WRL::ComPtr<ID3D12Resource> mRenderTexture;
 };

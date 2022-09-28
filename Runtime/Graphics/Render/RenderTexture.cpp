@@ -1,6 +1,6 @@
-#include "RenderTarget.h"
+#include "RenderTexture.h"
 
-RenderTarget::RenderTarget(ID3D12Device* device, UINT width, UINT height)
+RenderTexture::RenderTexture(ID3D12Device* device, UINT width, UINT height)
 {
 	md3dDevice = device;
 
@@ -13,42 +13,42 @@ RenderTarget::RenderTarget(ID3D12Device* device, UINT width, UINT height)
 	BuildResource();
 }
 
-UINT RenderTarget::Width()const
+UINT RenderTexture::Width()const
 {
 	return mWidth;
 }
 
-UINT RenderTarget::Height()const
+UINT RenderTexture::Height()const
 {
 	return mHeight;
 }
 
-ID3D12Resource* RenderTarget::Resource()
+ID3D12Resource* RenderTexture::Resource()
 {
-	return mRenderTarget.Get();
+	return mRenderTexture.Get();
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE RenderTarget::GpuSrv()const
+CD3DX12_GPU_DESCRIPTOR_HANDLE RenderTexture::GpuSrv()const
 {
 	return mhGpuSrv;
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTarget::CpuSrv()const
+CD3DX12_CPU_DESCRIPTOR_HANDLE RenderTexture::CpuSrv()const
 {
 	return mhCpuSrv;
 }
 
-D3D12_VIEWPORT RenderTarget::Viewport()const  
+D3D12_VIEWPORT RenderTexture::Viewport()const  
 {
 	return mViewport;
 }
 
-D3D12_RECT RenderTarget::ScissorRect()const 
+D3D12_RECT RenderTexture::ScissorRect()const 
 {
 	return mScissorRect;
 }
 
-void RenderTarget::BuildDescriptors(
+void RenderTexture::BuildDescriptors(
 	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
 	UINT mCbvSrvUavDescriptorSize
@@ -64,14 +64,14 @@ void RenderTarget::BuildDescriptors(
 	srvDesc.Format = mTargetFormat;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	md3dDevice->CreateShaderResourceView(mRenderTarget.Get(), &srvDesc, CPUDescriptor);
+	md3dDevice->CreateShaderResourceView(mRenderTexture.Get(), &srvDesc, CPUDescriptor);
 
 	CPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 	GPUDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
 }
 
 //Build Resource
-void RenderTarget::BuildResource()
+void RenderTexture::BuildResource()
 {
 	D3D12_RESOURCE_DESC texDesc;
 	ZeroMemory(&texDesc, 0, sizeof(D3D12_RESOURCE_DESC));
@@ -99,5 +99,5 @@ void RenderTarget::BuildResource()
 		&texDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 		&stClear,
-		IID_PPV_ARGS(&mRenderTarget)));
+		IID_PPV_ARGS(&mRenderTexture)));
 }

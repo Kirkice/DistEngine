@@ -25,9 +25,6 @@
     <ClCompile Include="Geometry\ObjLoader.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\CommandListManager.cpp">
-      <Filter>GraphicsSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\DescriptorHeap.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
       <Filter>RenderPass</Filter>
     </ClCompile>
     <ClCompile Include="Render\ShadowMap.cpp">
-      <Filter>RenderPass</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\RenderTarget.cpp">
       <Filter>RenderPass</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\FrameResource.cpp">
@@ -77,6 +71,8 @@
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
     <ClCompile Include="Serialization\JsonManager.cpp" />
     <ClCompile Include="Serialization\YamlManager.cpp" />
+    <ClCompile Include="Graphics\RenderTargetManager.cpp" />
+    <ClCompile Include="Render\RenderTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputSystem.h">
@@ -106,9 +102,6 @@
     <ClInclude Include="Geometry\ObjLoader.h">
       <Filter>ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\CommandListManager.h">
-      <Filter>GraphicsSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\DescriptorHeap.h">
       <Filter>GraphicsSystem</Filter>
     </ClInclude>
@@ -125,9 +118,6 @@
       <Filter>RenderPass</Filter>
     </ClInclude>
     <ClInclude Include="Render\ShadowMap.h">
-      <Filter>RenderPass</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\RenderTarget.h">
       <Filter>RenderPass</Filter>
     </ClInclude>
     <ClInclude Include="Geometry\MeshGeometry.h">
@@ -163,6 +153,8 @@
     <ClInclude Include="Serialization\JsonManager.h" />
     <ClInclude Include="Serialization\YamlManager.h" />
     <ClInclude Include="Serialization\SceneData.h" />
+    <ClInclude Include="Graphics\RenderTargetManager.h" />
+    <ClInclude Include="Render\RenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">

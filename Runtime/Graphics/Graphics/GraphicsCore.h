@@ -12,8 +12,8 @@
 #include "DescriptorHeap.h"
 #include "../Shaders/ShaderManager.h"
 #include "PipelineStateObject.h"
-#include "../Render/RenderTarget.h"
-#include "../Render/GBufferPass.h"
+#include "../Render/RenderTexture.h"
+//#include "../Render/GBufferPass.h"
 #include "../SceneManager/GizmosManager.h"
 #include "../SceneManager/PostProcessManager.h"
 
@@ -136,10 +136,10 @@ public:
 	PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 	PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
-	std::unique_ptr<RenderTarget> mRenderTarget;
+	std::unique_ptr<RenderTexture> mRenderTexture;
 	std::unique_ptr<ShadowMap> mShadowMap;
 	std::unique_ptr<DepthPass> mDepthPass;
-	std::unique_ptr<GBuffer> mGBufferPass;
+	//std::unique_ptr<GBuffer> mGBufferPass;
 
 
 	DirectX::BoundingSphere mSceneBounds;
