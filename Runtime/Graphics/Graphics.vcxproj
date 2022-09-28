@@ -146,7 +146,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
+    <ClCompile Include="Graphics\ComputePipelineState.cpp" />
     <ClCompile Include="Graphics\RenderTargetManager.cpp" />
+    <ClCompile Include="Graphics\RootSignatureManager.cpp" />
     <ClCompile Include="Physics\BoundingAABB.cpp" />
     <ClCompile Include="Physics\BoundingBox.cpp" />
     <ClCompile Include="Physics\BoundingOBB.cpp" />
@@ -187,7 +189,9 @@
   <ItemGroup>
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
+    <ClInclude Include="Graphics\ComputePipelineState.h" />
     <ClInclude Include="Graphics\RenderTargetManager.h" />
+    <ClInclude Include="Graphics\RootSignatureManager.h" />
     <ClInclude Include="Physics\BoundingAABB.h" />
     <ClInclude Include="Physics\BoundingBox.h" />
     <ClInclude Include="Physics\BoundingOBB.h" />
@@ -227,6 +231,7 @@
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Render\ShadowMap.h" />
     <ClInclude Include="File\Texture2D.h" />
+    <ClInclude Include="Shaders\Shaders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -73,6 +73,8 @@
     <ClCompile Include="Serialization\YamlManager.cpp" />
     <ClCompile Include="Graphics\RenderTargetManager.cpp" />
     <ClCompile Include="Render\RenderTexture.cpp" />
+    <ClCompile Include="Graphics\ComputePipelineState.cpp" />
+    <ClCompile Include="Graphics\RootSignatureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputSystem.h">
@@ -155,6 +157,9 @@
     <ClInclude Include="Serialization\SceneData.h" />
     <ClInclude Include="Graphics\RenderTargetManager.h" />
     <ClInclude Include="Render\RenderTexture.h" />
+    <ClInclude Include="Graphics\ComputePipelineState.h" />
+    <ClInclude Include="Graphics\RootSignatureManager.h" />
+    <ClInclude Include="Shaders\Shaders.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">

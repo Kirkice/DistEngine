@@ -24,6 +24,7 @@
 #include <comdef.h>
 #include <fstream>
 #include "AppUtils.h"
+#include "CommandList.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace std;
