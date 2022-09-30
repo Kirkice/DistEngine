@@ -24,7 +24,7 @@ bool GraphicsCore::Initialize()
 		return false;
 
 	// Reset the command list to prep for initialization commands.
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
+	_forwardPassCmdList->Reset();
 
 	mCamera.getInstance().SetPosition(0.0f, 2.0f, -15.0f);
 
@@ -55,8 +55,8 @@ bool GraphicsCore::Initialize()
 	BuildPSOs();
 
 	// Execute the initialization commands.
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	_forwardPassCmdList->Close();
+	ID3D12CommandList* cmdsLists[] = { _forwardPassCmdList->GetInternal().Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Wait until initialization is complete.
@@ -464,7 +464,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 			tex->TexIndex = TextureIndex;
 			TextureIndex++;
 			ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
-				mCommandList.Get(), tex->Path.c_str(),
+				_forwardPassCmdList->GetInternal().Get(), tex->Path.c_str(),
 				tex->Resource, tex->UploadHeap));
 
 			mCubeMapTextures[tex->Name] = std::move(tex);
@@ -693,9 +693,9 @@ void GraphicsCore::BuildFrameResources()
 
 void GraphicsCore::BuildRenderItems()
 {
-	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
-	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
-	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size() + mSceneManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
+	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal());
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal(), mGizmoManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
+	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal(), mGizmoManager.getInstance().mRenderObjects.size() + mSceneManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
@@ -725,33 +725,33 @@ void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std
 
 void GraphicsCore::DrawSceneToShadowMap()
 {
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
-	mCommandList->RSSetViewports(1, &mShadowMap->Viewport());
-	mCommandList->RSSetScissorRects(1, &mShadowMap->ScissorRect());
+	_forwardPassCmdList->GetInternal()->RSSetViewports(1, &mShadowMap->Viewport());
+	_forwardPassCmdList->GetInternal()->RSSetScissorRects(1, &mShadowMap->ScissorRect());
 
 	// Change to DEPTH_WRITE.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearDepthStencilView(mShadowMap->Dsv(),
+	_forwardPassCmdList->GetInternal()->ClearDepthStencilView(mShadowMap->Dsv(),
 		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
-	mCommandList->OMSetRenderTargets(0, nullptr, false, &mShadowMap->Dsv());
+	_forwardPassCmdList->GetInternal()->OMSetRenderTargets(0, nullptr, false, &mShadowMap->Dsv());
 
 	// Bind the pass constant buffer for the shadow map pass.
 	UINT passCBByteSize = DX12Utils::CalcConstantBufferByteSize(sizeof(PassConstants));
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootConstantBufferView(2, passCBAddress);
 
-	mCommandList->SetPipelineState(mPSOs["shadow_opaque"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
+	_forwardPassCmdList->GetInternal()->SetPipelineState(mPSOs["shadow_opaque"].Get());
+	DrawRenderItems(_forwardPassCmdList->GetInternal().Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 
 	// Change back to GENERIC_READ so we can read the texture in a shader.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 

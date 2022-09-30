@@ -56,14 +56,14 @@ void GUISystem::Draw(const GameTimer& gt)
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
 
 	ThrowIfFailed(cmdListAlloc->Reset());
-	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
+	ThrowIfFailed(_forwardPassCmdList->GetInternal()->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 
 	RenderCore::Draw(gt);
 
 	DrawEditor();
 
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	_forwardPassCmdList->Close();
+	ID3D12CommandList* cmdsLists[] = { _forwardPassCmdList->GetInternal().Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	ThrowIfFailed(mSwapChain->Present(0, 0));
@@ -124,9 +124,9 @@ void GUISystem::DrawEditor()
 	//	Overlay
 	DrawOverLayButton(&show_app_overlay);
 
-	mCommandList->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
+	_forwardPassCmdList->GetInternal()->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
 	ImGui::Render();
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _forwardPassCmdList->GetInternal().Get());
 }
 
 void GUISystem::InitHierachyItems()
