@@ -17,7 +17,7 @@ DistRenderPipeline::~DistRenderPipeline()
 }
 
 /// <summary>
-/// ‰÷»æ
+/// ‰÷»æ  
 /// </summary>
 void DistRenderPipeline::Render() 
 {
