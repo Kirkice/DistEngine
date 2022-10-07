@@ -624,7 +624,7 @@ void SceneManager::BuildRenderItem(
 }
 
 /// <summary>
-/// 更新CBuffer
+/// 更新CBuffer 
 /// </summary>
 void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize)
 {
