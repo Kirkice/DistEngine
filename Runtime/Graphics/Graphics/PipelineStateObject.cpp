@@ -126,7 +126,7 @@ void PipelineStateObject::SetShader(
 }
 
 /// <summary>
-/// SetRasterizerState
+/// SetRasterizerState  
 /// </summary>
 void PipelineStateObject::SetRasterizerState(
 	D3D12_FILL_MODE fillMode, 
