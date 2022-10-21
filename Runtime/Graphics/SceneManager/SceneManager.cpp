@@ -639,4 +639,4 @@ void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& 
 			}
 		}
 	}
-}
+} 
