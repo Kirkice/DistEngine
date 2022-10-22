@@ -48,5 +48,5 @@ private:
 	ComPtr<ID3D12CommandAllocator>      _allocator = nullptr;
 	ComPtr<ID3D12Device>                _device = nullptr;
 	ComPtr<ID3D12PipelineState>         _initialState = nullptr;
-	CommandListType                     _type = CommandListType::Direct;
+	CommandListType                     _type = CommandListType::Direct; 
 };
