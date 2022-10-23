@@ -49,4 +49,4 @@ private:
 	ComPtr<ID3D12Device>                _device = nullptr;
 	ComPtr<ID3D12PipelineState>         _initialState = nullptr;
 	CommandListType                     _type = CommandListType::Direct; 
-};
+};  
