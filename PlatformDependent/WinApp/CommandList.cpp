@@ -17,7 +17,7 @@
 CommandList::CommandList(CommandListType type, ComPtr<ID3D12Device> pDevice)
 	: CommandList(type, pDevice, nullptr)
 {
-}
+} 
 
 CommandList::CommandList(CommandListType type, ComPtr<ID3D12Device> pDevice, ComPtr<ID3D12PipelineState> pInitialState)
 	: _type(type)
