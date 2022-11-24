@@ -41,7 +41,7 @@ void CommandList::Reset()
 	ThrowIfFailed(_allocator->Reset());
 	ThrowIfFailed(_commandList->Reset(_allocator.Get(), _initialState.Get()));
 }
-
+ 
 void CommandList::Close()
 {
 	ThrowIfFailed(_commandList->Close());
