@@ -28,7 +28,7 @@ void DistRenderPipeline::Render()
 	SetRootSignature();
 
 	//	绘制阴影Pass
-	RenderShadowPass();
+	RenderShadowPass(); 
 
 	//	设置View和Rect
 	SetViewAndRect();
