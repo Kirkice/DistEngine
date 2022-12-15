@@ -2,4 +2,4 @@
 /cmake-build-debug/*
 /3rd_party/boost_1_80_0/*
 /3rd_party/fbxsdk/*
-
+/PlatformDepedent/Core/cmake-build-debug/*
