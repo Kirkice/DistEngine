@@ -55,6 +55,6 @@ file(GLOB SOURCE_FILES
         )
 
 # 指定生成lib
-add_library(Core ${SOURCE_FILES} ${SOURCES})
+add_library(Core ${SOURCES} ${SOURCE_FILES})
 
 target_link_libraries(Core libboost_thread-vc142-mt-x64-1_80 libboost_system-vc142-mt-x64-1_80)

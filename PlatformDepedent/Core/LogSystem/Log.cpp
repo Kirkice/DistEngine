@@ -24,7 +24,7 @@ namespace LogSystem
     {
         spdlog::set_pattern("%^[%T] %n: %v%$");
 
-        CoreLogger = spdlog::stdout_color_mt("SheeEngine");
+        CoreLogger = spdlog::stdout_color_mt("Dist Engine");
         CoreLogger->set_level(spdlog::level::trace);
 
         ClientLogger = spdlog::stdout_color_mt("Application");
