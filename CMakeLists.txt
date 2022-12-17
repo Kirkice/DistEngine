@@ -34,7 +34,7 @@ set(boost_link 3rd_party/boost_1_80_0/lib/)             #Boost lib path
 set(core_link cmake-build-debug/Core)                   #Boost lib
 
 # 引入库文件
-link_directories(
+link_directories(  
         ${boost_link}
         ${core_link}
 )
