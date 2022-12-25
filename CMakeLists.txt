@@ -18,7 +18,7 @@ set(imgui_include 3rd_party/imgui/)                     #Imgui
 # 设置子工程头文件路径
 set(core_include PlatformDepedent/Core/)                #Core 头文件
 
-
+  
 # 引入头文件
 include_directories(
         ${spd_log_include}
@@ -34,7 +34,7 @@ set(boost_link 3rd_party/boost_1_80_0/lib/)             #Boost lib path
 set(core_link cmake-build-debug/Core)                   #Boost lib
 
 # 引入库文件
-link_directories(  
+link_directories(
         ${boost_link}
         ${core_link}
 )
