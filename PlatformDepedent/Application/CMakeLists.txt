@@ -30,15 +30,26 @@ file(GLOB SOURCES
         AppConfig.h
         DXErr.h
         PCH.h
+        Assert.h
+        Exceptions.h
+        Containers.h
+        Window.h
         )
 
 # 源文件
 file(GLOB SOURCE_FILES
         DXErr.cpp
+        PCH.cpp
+        Window.cpp
         )
 
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
+add_definitions ( -DUNICODE -D_UNICODE )
+
+#add_definitions(-D_DEBUG)
+#add_definitions(-D_WINDOSW)
 
 # 指定生成lib
 add_library(Application ${SOURCES} ${SOURCE_FILES})

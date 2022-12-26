@@ -107,15 +107,15 @@ typedef uint32_t bool32;
 // DirectX Tex
 #include "..\\..\\3rd_party\\DirectXTex July 2017\\Include\\DirectXTex.h"
 #ifdef _DEBUG
-#pragma comment(lib, "..\\3rd_party\\DirectXTex July 2017\\Lib 2017\\Debug\\DirectXTex.lib")
+#pragma comment(lib, "..\\..\\3rd_party\\DirectXTex July 2017\\Lib 2017\\Debug\\DirectXTex.lib")
 #else
-#pragma comment(lib, "..\\3rd_party\\DirectXTex July 2017\\Lib 2017\\Release\\DirectXTex.lib")
+#pragma comment(lib, "..\\..\\3rd_party\\DirectXTex July 2017\\Lib 2017\\Release\\DirectXTex.lib")
 #endif
 
 // Pix for Windows
 #define USE_PIX
 #include "..\\..\\3rd_party\\WinPixEventRuntime\\Include\\WinPixEventRuntime\\pix3.h"
-#pragma comment(lib, "..\\3rd_party\\WinPixEventRuntime\\bin\\WinPixEventRuntime.lib")
+#pragma comment(lib, "..\\..\\3rd_party\\WinPixEventRuntime\\bin\\WinPixEventRuntime.lib")
 
 // Un-define min and max from the windows headers
 #ifdef min
@@ -163,7 +163,7 @@ typedef uint32_t bool32;
 #include "..\\..\\3rd_party\\Assimp-3.1.1\\include\\Importer.hpp"
 #include "..\\..\\3rd_party\\Assimp-3.1.1\\include\\scene.h"
 #include "..\\..\\3rd_party\\Assimp-3.1.1\\include\\postprocess.h"
-#pragma comment(lib, "..\\3rd_party\\Assimp-3.1.1\\lib\\assimp.lib")
+#pragma comment(lib, "..\\..\\3rd_party\\Assimp-3.1.1\\lib\\assimp.lib")
 
 // Embree
 #if EnableEmbree_
@@ -185,7 +185,7 @@ typedef uint32_t bool32;
 
 #if EnableShaderModel6_
 #include "..\\..\\3rd_party\\DXCompiler\\Include\\dxcapi.h"
-    #pragma comment(lib, "..\\3rd_party\\DXCompiler\\Lib\\dxcompiler.lib")
+    #pragma comment(lib, "..\\..\\3rd_party\\DXCompiler\\Lib\\dxcompiler.lib")
 #else
 #pragma comment(lib, "d3dcompiler.lib")
 #endif
