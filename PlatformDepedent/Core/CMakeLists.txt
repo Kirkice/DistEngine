@@ -14,15 +14,13 @@ set(imgui_include ../../3rd_party/imgui/)
 
 #引入头文件
 include_directories(
-        ${mathf_include}
-        ${log_system_include}
         ${spd_log_include}
         ${boost_include}
         ${imgui_include}
 )
 
 # 设置链接库路径
-set(boost_link ../3rd_party/boost_1_80_0/lib/)
+set(boost_link ../../3rd_party/boost_1_80_0/lib/)
 
 # 引入库文件
 link_directories(${boost_link})

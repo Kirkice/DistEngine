@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)                              #C++17版本
 
 # 指定生成子项目
 add_subdirectory(PlatformDepedent/Core Core)            #编译子工程 Core
+add_subdirectory(PlatformDepedent/Application Application) #编译子工程 Application
 
 # 设置第三方库头文件路径
 set(spd_log_include 3rd_party/Spdlog/include/)          #SpdLog
@@ -17,7 +18,7 @@ set(imgui_include 3rd_party/imgui/)                     #Imgui
 
 # 设置子工程头文件路径
 set(core_include PlatformDepedent/Core/)                #Core 头文件
-
+set(application_include PlatformDepedent/Application/)  #Application 头文件
   
 # 引入头文件
 include_directories(
@@ -25,18 +26,21 @@ include_directories(
         ${boost_include}
         ${imgui_include}
         ${core_include}
+        ${application_include}
 )
 
 # 设置第三方库链接库路径
 set(boost_link 3rd_party/boost_1_80_0/lib/)             #Boost lib path
 
 # 设置子工程链接库路径
-set(core_link cmake-build-debug/Core)                   #Boost lib
+set(core_link cmake-build-debug/Core)                   #Core lib
+set(application_link cmake-build-debug/Application)     #Application lib
 
 # 引入库文件
 link_directories(
         ${boost_link}
         ${core_link}
+        ${application_link}
 )
 
 # 指定编译子目录
