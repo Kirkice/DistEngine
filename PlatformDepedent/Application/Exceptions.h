@@ -46,12 +46,12 @@ inline std::string GetWin32ErrorStringAnsi(DWORD errorCode)
 
 inline std::wstring GetDXErrorString(HRESULT hr)
 {
-    const uint32 errStringSize = 1024;
-    wchar errorString[errStringSize];
-    DXGetErrorDescriptionW(hr, errorString, errStringSize);
+//    const uint32 errStringSize = 1024;
+//    wchar errorString[errStringSize];
+//    DXGetErrorDescriptionW(hr, errorString, errStringSize);
 
     std::wstring message = L"DirectX Error: ";
-    message += errorString;
+//    message += errorString;
     return message;
 }
 

@@ -7,6 +7,9 @@ project(Application)
 #Cpp 版本
 set(CMAKE_CXX_STANDARD 17)
 
+# Windows SDK 版本
+set(MIN_SDK_VERSION "10.0.22621.0")
+
 #设置头文件路径
 set(spd_log_include ../../3rd_party/Spdlog/include/)
 set(boost_include ../../3rd_party/boost_1_80_0/include/)
@@ -48,8 +51,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_definitions ( -DUNICODE -D_UNICODE )
 
-#add_definitions(-D_DEBUG)
-#add_definitions(-D_WINDOSW)
+add_definitions(-D_DEBUG)
 
 # 指定生成lib
 add_library(Application ${SOURCES} ${SOURCE_FILES})

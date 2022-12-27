@@ -167,7 +167,7 @@ typedef uint32_t bool32;
 
 // Embree
 #if EnableEmbree_
-#include "..\\..\\3rd_party\\Embree-2.8\\include\\embree2\\rtcore.h"
+    #include "..\\..\\3rd_party\\Embree-2.8\\include\\embree2\\rtcore.h"
     #include "..\\..\\3rd_party\\Embree-2.8\\include\\embree2\\rtcore_ray.h"
     #pragma comment(lib, "..\\3rd_party\\Embree-2.8\\lib\\embree.lib")
 #endif
