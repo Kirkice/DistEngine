@@ -37,6 +37,8 @@ file(GLOB SOURCES
         Mathf/Vector2.h
         Mathf/Vector3.h
         Mathf/Vector4.h
+        Mathf/Uint.h
+        Mathf/Int.h
         )
 
 # 源文件
@@ -50,6 +52,8 @@ file(GLOB SOURCE_FILES
         Mathf/Vector2.cpp
         Mathf/Vector3.cpp
         Mathf/Vector4.cpp
+        Mathf/Uint.cpp
+        Mathf/Int.cpp
         )
 
 # 指定生成lib
