@@ -8,6 +8,7 @@
 /ThirdParty/stb/x64/*
 /ThirdParty/Tinyobjloader/x64/*
 /ThirdParty/Jolt/x64/*
+/ThirdParty/boost_1_80_0/*
 /DistEngine/x64/*
 /DistEngine/.vs/*
 /PlatformDependent/Core/x64/*

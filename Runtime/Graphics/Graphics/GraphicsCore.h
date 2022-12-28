@@ -49,10 +49,10 @@ public:
 	void UpdateMainPassCB(const GameTimer& gt);
 	//	更新ShadowPass
 	void UpdateShadowPassCB(const GameTimer& gt);
-	//	更新渲染项
+	//	更新渲染�?
 	void UpdateRenderItems(const GameTimer& gt);
 
-	//	构建根签名
+	//	构建根签�?
 	void BuildRootSignature();
 	//	构建描述符堆
 	void BuildDescriptorHeaps();
@@ -60,9 +60,9 @@ public:
 	void BuildShadersAndInputLayout();
 	//	构建PSO
 	void BuildPSOs();
-	//	构建帧资源
+	//	构建帧资�?
 	void BuildFrameResources();
-	//	构建渲染项
+	//	构建渲染�?
 	void BuildRenderItems();
 
 	void OnMouseMoveAndSelect(WPARAM btnState, int x, int y);
@@ -93,7 +93,7 @@ public:
 	FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 
-	//	根签名
+	//	根签�?
 	RootSignature mRootSignature = RootSignature();
 
 	//	描述符堆

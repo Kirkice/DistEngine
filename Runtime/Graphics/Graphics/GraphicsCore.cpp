@@ -147,9 +147,9 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 
-	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩阵
+	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩�?
 	auto viewDeterminant = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩阵 
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩�?
 
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
@@ -163,10 +163,10 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		
 		//	视锥剔除
 		XMMATRIX viewToLocal = XMMatrixMultiply(invView, InvWorld);
-		//	创建视锥体
+		//	创建视锥�?
 		BoundingFrustum localSpaceFrustum;
 		localSpaceFrustum.CreateFromMatrix(localSpaceFrustum, mCamera.GetProj());
-		//	将视锥体从观察空间变换到局部空间
+		//	将视锥体从观察空间变换到局部空�?
 		localSpaceFrustum.Transform(localSpaceFrustum, viewToLocal);
 
 		bool enable = e->Enable;
