@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GUISystem">
+      <UniqueIdentifier>{245eb4be-3cbb-4faf-be91-77789e2cfa53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUIUtils">
+      <UniqueIdentifier>{467de3cc-d02e-4368-8ae8-f0c290afc296}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GUISystem.h">
+      <Filter>GUISystem</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIUtils.h">
+      <Filter>GUIUtils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GUISystem.cpp">
+      <Filter>GUISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIUtils.cpp">
+      <Filter>GUIUtils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

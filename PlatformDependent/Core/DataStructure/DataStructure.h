@@ -1,0 +1,13 @@
+#pragma once
+#include "LinkedList.h"
+#include "DoubleLinkList.h"
+#include "CircularList.h"
+#include "CircularQueue.h"
+#include "Queue.h"
+#include "Stack.h"
+#include "BinaryTree.h"
+#include "AVLTree.h"
+#include "BTree.h"
+#include "RBTree.h"
+#include "SearchBinaryTree.h"
+#include "Heap.h"
