@@ -118,7 +118,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;../../ThirdParty/Json11/include/;../../ThirdParty/Json11/single_include/;../../ThirdParty/YamlCpp/include/;../../boost_1_80_0/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;../../ThirdParty/Json11/include/;../../ThirdParty/Json11/single_include/;../../ThirdParty/YamlCpp/include/;../../ThirdParty/boost_1_80_0/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -182,7 +182,12 @@
     <ClCompile Include="Graphics\RootSignature.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Serialization\JsonManager.cpp" />
+    <ClCompile Include="Serialization\Property.cpp" />
     <ClCompile Include="Serialization\YamlManager.cpp" />
+    <ClCompile Include="Shaders\AnalyseShader.cpp" />
+    <ClCompile Include="Shaders\GenerateHlslCode.cpp" />
+    <ClCompile Include="Shaders\LoadShader.cpp" />
+    <ClCompile Include="Shaders\Shader.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Render\ShadowMap.cpp" />
   </ItemGroup>
@@ -226,12 +231,18 @@
     <ClInclude Include="Graphics\RootSignature.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Serialization\JsonManager.h" />
+    <ClInclude Include="Serialization\Property.h" />
     <ClInclude Include="Serialization\SceneData.h" />
     <ClInclude Include="Serialization\YamlManager.h" />
+    <ClInclude Include="Shaders\AnalyseShader.h" />
+    <ClInclude Include="Shaders\GenerateHlslCode.h" />
+    <ClInclude Include="Shaders\LoadShader.h" />
+    <ClInclude Include="Shaders\Shader.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Render\ShadowMap.h" />
     <ClInclude Include="File\Texture2D.h" />
-    <ClInclude Include="Shaders\Shaders.h" />
+    <ClInclude Include="Shaders\ShaderStruct.h" />
+    <ClInclude Include="Shaders\ShadersUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -75,6 +75,11 @@
     <ClCompile Include="Render\RenderTexture.cpp" />
     <ClCompile Include="Graphics\ComputePipelineState.cpp" />
     <ClCompile Include="Graphics\RootSignatureManager.cpp" />
+    <ClCompile Include="Serialization\Property.cpp" />
+    <ClCompile Include="Shaders\Shader.cpp" />
+    <ClCompile Include="Shaders\LoadShader.cpp" />
+    <ClCompile Include="Shaders\AnalyseShader.cpp" />
+    <ClCompile Include="Shaders\GenerateHlslCode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\InputSystem.h">
@@ -159,7 +164,13 @@
     <ClInclude Include="Render\RenderTexture.h" />
     <ClInclude Include="Graphics\ComputePipelineState.h" />
     <ClInclude Include="Graphics\RootSignatureManager.h" />
-    <ClInclude Include="Shaders\Shaders.h" />
+    <ClInclude Include="Shaders\ShadersUtils.h" />
+    <ClInclude Include="Serialization\Property.h" />
+    <ClInclude Include="Shaders\Shader.h" />
+    <ClInclude Include="Shaders\ShaderStruct.h" />
+    <ClInclude Include="Shaders\LoadShader.h" />
+    <ClInclude Include="Shaders\AnalyseShader.h" />
+    <ClInclude Include="Shaders\GenerateHlslCode.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputSystem">
