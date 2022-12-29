@@ -89,6 +89,8 @@ void GUISystem::DrawEditor()
 
 	ImGui::NewFrame();
 
+	//ImGuizmo::BeginFrame();
+
 	//	Draw Stylize
 	SetDefaultStyle();
 	SetDockSpace(&show_app_dockspace);
