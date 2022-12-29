@@ -171,29 +171,8 @@ void DistRenderPipeline::RenderPostProcessPass()
 
 	SetMatBuffer(MatBufferType::PostProcess);
 
-	if (mPostProcessSwitch.ShowVolumeFog)
-		DrawVolumeFog();
-
 	if (mPostProcessSwitch.ShowFxAA)
 		DrawFxAA();
-}
-
-//	渲染体积雾
-void DistRenderPipeline::DrawVolumeFog()
-{
-	DrawRenderItemFormLayer("VolumeFog", (int)RenderLayer::PostProcess);
-
-	SetTargetToPresnet(CurrentBackBuffer());
-
-	SetReadToDest(mRenderTexture->Resource());
-
-	SetPresentToSource(CurrentBackBuffer());
-
-	CopyBlit(mRenderTexture->Resource(), CurrentBackBuffer());
-
-	SetSourceToPresent(CurrentBackBuffer());
-
-	SetDestToRead(mRenderTexture->Resource());
 }
 
 //	渲染快速近似抗锯齿

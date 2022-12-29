@@ -135,7 +135,6 @@ struct AntialiasingSettings
 
 struct PostProcessSwitch
 {
-	bool ShowVolumeFog = false;
 	bool ShowFxAA = true;
 };
 

@@ -230,7 +230,6 @@ const std::vector<std::string> mScenePath =
 		"oilPaintVS",
 		"reliefVS",
 		"edgeDetectionVS",
-		"volumeFogVS",
 		"FastApproximateAntialiasingVS",
 	};
 
@@ -267,7 +266,6 @@ const std::vector<std::string> mScenePath =
 		"oilPaintPS",
 		"reliefPS",
 		"edgeDetectionPS",
-		"volumeFogPS",
 		"FastApproximateAntialiasingPS",
 	};
 
@@ -304,7 +302,6 @@ const std::vector<std::string> mScenePath =
 		L"Asset\\Shaders\\OilPaint.hlsl",
 		L"Asset\\Shaders\\Relief.hlsl",
 		L"Asset\\Shaders\\EdgeDetection.hlsl",
-		L"Asset\\Shaders\\VolumeFog.hlsl",
 		L"Asset\\Shaders\\FastApproximateAntialiasing.hlsl",
 	};
 

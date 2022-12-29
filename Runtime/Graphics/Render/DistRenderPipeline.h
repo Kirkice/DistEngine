@@ -59,9 +59,6 @@ private:
 	//	渲染后处理
 	void RenderPostProcessPass();
 
-	//	渲染体积雾
-	void DrawVolumeFog();
-
 	//	渲染快速近似抗锯齿
 	void DrawFxAA();
 
