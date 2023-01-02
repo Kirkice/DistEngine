@@ -16,7 +16,10 @@ DistRenderPipeline::~DistRenderPipeline()
 		FlushCommandQueue();
 }
 
-void DistRenderPipeline::Render()
+/// <summary>
+/// 渲染  
+/// </summary>
+void DistRenderPipeline::Render() 
 {
 	//	设置描述堆
 	SetDescriptorHeap();
@@ -41,6 +44,12 @@ void DistRenderPipeline::Render()
 
 	//	设置环境贴图到跟描述符表
 	SetCubeMapRootDescriptorTable();
+
+	//SetGBufferTarget();
+
+	//RenderGBuffer();
+
+	//ClearGBufferTarget();
 
 	//	渲染不透明物体
 	RenderOpaquePass();
@@ -67,7 +76,7 @@ void DistRenderPipeline::Render()
 //	渲染阴影
 void DistRenderPipeline::RenderShadowPass()
 {
-	SetMatBuffer(MatBufferType::PBR);
+	SetMatBuffer(MatBufferType::PBR);  
 	DrawSceneToShadowMap();
 }
 
@@ -77,11 +86,32 @@ void DistRenderPipeline::DepthPrePass()
 
 }
 
-//	渲染GBuffer
-void DistRenderPipeline::RenderGBuffer()
-{
-
-}
+////	渲染GBuffer
+//void DistRenderPipeline::RenderGBuffer()
+//{
+//	float clearValue[] = {0.0f, 0.0f, 1.0f, 0.0f};
+//
+//	for (size_t i = 0; i < 4; i++)
+//	{
+//		_forwardPassCmdList->GetInternal()->ClearRenderTargetView(mGBufferPass->GET_GBUFFER_CPU_RTV(i), clearValue, 0, nullptr);
+//	}
+//
+//	_forwardPassCmdList->GetInternal()->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+//
+//
+//	D3D12_CPU_DESCRIPTOR_HANDLE rtCPUDescriptors[4] = {};
+//	UINT descriptorsCount = 0;
+//	for (UINT i = 0; i < 4; ++i)
+//	{
+//		descriptorsCount++;
+//		rtCPUDescriptors[i] = mGBufferPass->GET_GBUFFER_CPU_SRV(i);
+//	}
+//
+//	_forwardPassCmdList->GetInternal()->OMSetRenderTargets(descriptorsCount, rtCPUDescriptors, true, nullptr);
+//
+//	SetMatBuffer(MatBufferType::PBR);
+//	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
+//}
 
 //	渲染不透明物体
 void DistRenderPipeline::RenderOpaquePass()
@@ -134,36 +164,15 @@ void DistRenderPipeline::RenderGizmosPass()
 //	渲染后处理
 void DistRenderPipeline::RenderPostProcessPass()
 {
-	//mCommandList->SetGraphicsRootDescriptorTable(4, mRenderTarget->GpuSrv());
+	//_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mRenderTexture->GpuSrv());
 	CD3DX12_GPU_DESCRIPTOR_HANDLE render_target_descriptor(mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 	render_target_descriptor.Offset(UINT(25), mCbvSrvUavDescriptorSize);
-	mCommandList->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, render_target_descriptor);
 
 	SetMatBuffer(MatBufferType::PostProcess);
 
-	if (mPostProcessSwitch.ShowVolumeFog)
-		DrawVolumeFog();
-
 	if (mPostProcessSwitch.ShowFxAA)
 		DrawFxAA();
-}
-
-//	渲染体积雾
-void DistRenderPipeline::DrawVolumeFog()
-{
-	DrawRenderItemFormLayer("VolumeFog", (int)RenderLayer::PostProcess);
-
-	SetTargetToPresnet(CurrentBackBuffer());
-
-	SetReadToDest(mRenderTarget->Resource());
-
-	SetPresentToSource(CurrentBackBuffer());
-
-	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
-
-	SetSourceToPresent(CurrentBackBuffer());
-
-	SetDestToRead(mRenderTarget->Resource());
 }
 
 //	渲染快速近似抗锯齿
@@ -173,15 +182,15 @@ void DistRenderPipeline::DrawFxAA()
 
 	SetTargetToPresnet(CurrentBackBuffer());
 
-	SetReadToDest(mRenderTarget->Resource());
+	SetReadToDest(mRenderTexture->Resource());
 
 	SetPresentToSource(CurrentBackBuffer());
 
-	CopyBlit(mRenderTarget->Resource(), CurrentBackBuffer());
+	CopyBlit(mRenderTexture->Resource(), CurrentBackBuffer());
 
 	SetSourceToPresent(CurrentBackBuffer());
 
-	SetDestToRead(mRenderTarget->Resource());
+	SetDestToRead(mRenderTexture->Resource());
 }
 
 
@@ -193,13 +202,13 @@ void DistRenderPipeline::DrawFxAA()
 void DistRenderPipeline::SetDescriptorHeap()
 {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get() };
-	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	_forwardPassCmdList->GetInternal()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 }
 
 //	设置根签名
 void DistRenderPipeline::SetRootSignature()
 {
-	mCommandList->SetGraphicsRootSignature(mRootSignature.GetSignature());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootSignature(mRootSignature.GetSignature());
 }
 
 
@@ -218,43 +227,69 @@ void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 	default: mMatBuffer = mCurrFrameResource->PBRMaterialBuffer->Resource();
 		break;
 	}
-	mCommandList->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 }
 
 //	设置ViewheRect
 void DistRenderPipeline::SetViewAndRect()
 {
-	mCommandList->RSSetViewports(1, &mScreenViewport);
-	mCommandList->RSSetScissorRects(1, &mScissorRect);
+	_forwardPassCmdList->GetInternal()->RSSetViewports(1, &mScreenViewport);
+	_forwardPassCmdList->GetInternal()->RSSetScissorRects(1, &mScissorRect);
 }
 
 //	资源屏障 - 展示到目标
 void DistRenderPipeline::SetPresentToTarget(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 }
 
 //	设置为渲染目标
 void DistRenderPipeline::SetRenderTarget()
 {
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), mSceneManager.getInstance().mCameraSetting.SolidColor, 0, nullptr);
-	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	_forwardPassCmdList->GetInternal()->ClearRenderTargetView(CurrentBackBufferView(), mSceneManager.getInstance().mCameraSetting.SolidColor, 0, nullptr);
+	_forwardPassCmdList->GetInternal()->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
+	_forwardPassCmdList->GetInternal()->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 }
+
+////	设置GBuffer的渲染目标
+//void DistRenderPipeline::SetGBufferTarget()
+//{
+//	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE),
+//		CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
+//	};
+//
+//	_forwardPassCmdList->GetInternal()->ResourceBarrier((UINT)barriers.size(), barriers.data());
+//}
+//
+////	清除GBuffer的渲染目标
+//void DistRenderPipeline::ClearGBufferTarget()
+//{
+//	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(1), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(2), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET),
+//	CD3DX12_RESOURCE_BARRIER::Transition(mGBufferPass->GetGBuffer(3), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET)
+//	};
+//
+//	_forwardPassCmdList->GetInternal()->ResourceBarrier((UINT)barriers.size(), barriers.data());
+//}
 
 //	拷贝Pass
 void DistRenderPipeline::CopyColorPass()
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTexture->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
 
-	mCommandList->CopyResource(mRenderTarget->Resource(), CurrentBackBuffer());
+	_forwardPassCmdList->GetInternal()->CopyResource(mRenderTexture->Resource(), CurrentBackBuffer());
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
 
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->Resource(),
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTexture->Resource(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
@@ -262,56 +297,56 @@ void DistRenderPipeline::CopyColorPass()
 void DistRenderPipeline::SetCBuffer()
 {
 	auto passCB = mCurrFrameResource->PassCB->Resource();
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 }
 
 //	设置环境贴图到跟描述符表
 void DistRenderPipeline::SetCubeMapRootDescriptorTable()
 {
-	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
-	mCommandList->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
 }
 
 //	资源屏障 - 设置目标到展示
 void DistRenderPipeline::SetTargetToPresnet(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 }
 
 //	资源屏障 - 设置读取到目标
 void DistRenderPipeline::SetReadToDest(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 }
 
 //	绘制渲染项目 Layer
 void DistRenderPipeline::DrawRenderItemFormLayer(std::string PSO, int Layer)
 {
-	mCommandList->SetPipelineState(mPSOs[PSO].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[Layer]);
+	_forwardPassCmdList->GetInternal()->SetPipelineState(mPSOs[PSO].Get());
+	DrawRenderItems(_forwardPassCmdList->GetInternal().Get(), mRitemLayer[Layer]);
 }
 
 //	资源屏障 - 设置展示到源
 void DistRenderPipeline::SetPresentToSource(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
 }
 
 //	资源屏障 - 设置源到展示
 void DistRenderPipeline::SetSourceToPresent(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
 }
 
 //	资源屏障 - 设置目标到读取
 void DistRenderPipeline::SetDestToRead(ID3D12Resource* Resource)
 {
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource,
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
 //	拷贝复制
 void DistRenderPipeline::CopyBlit(ID3D12Resource* dest, ID3D12Resource* source)
 {
-	mCommandList->CopyResource(dest, source);
+	_forwardPassCmdList->GetInternal()->CopyResource(dest, source);
 }

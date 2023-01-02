@@ -24,19 +24,46 @@ bool GUISystem::Initialize()
 	return true;
 }
 
+void GUISystem::Update(const GameTimer& gt)
+{
+	RenderCore::Update(gt);
+	UpdateGizmosObjectCBs();
+}
+
+void GUISystem::UpdateGizmosObjectCBs()
+{
+	int index = 1;
+	for (size_t i = 0; i < mHierachyItems.size(); i++)
+	{
+		if (mHierachyItems[i]->selected)
+		{
+			index = mHierachyItems[i]->MeshRenderIndex;
+		}
+	}
+	
+	std::unique_ptr<GameObject>& mTargetRender = mSceneManager.getInstance().mRenderObjects[index];
+
+	//	¸üÐÂCB
+	mGizmoManager.getInstance().UpdateObjectBuffer(
+		mAllRitems,
+		mSceneManager.getInstance().MainLight->GetComponent<Transform>(1),
+		mTargetRender
+	);
+}
+
 void GUISystem::Draw(const GameTimer& gt)
 {
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
 
 	ThrowIfFailed(cmdListAlloc->Reset());
-	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
+	ThrowIfFailed(_forwardPassCmdList->GetInternal()->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 
 	RenderCore::Draw(gt);
 
 	DrawEditor();
 
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	_forwardPassCmdList->Close();
+	ID3D12CommandList* cmdsLists[] = { _forwardPassCmdList->GetInternal().Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	ThrowIfFailed(mSwapChain->Present(0, 0));
@@ -61,6 +88,8 @@ void GUISystem::DrawEditor()
 	ImGui_ImplWin32_NewFrame();
 
 	ImGui::NewFrame();
+
+	//ImGuizmo::BeginFrame();
 
 	//	Draw Stylize
 	SetDefaultStyle();
@@ -97,9 +126,9 @@ void GUISystem::DrawEditor()
 	//	Overlay
 	DrawOverLayButton(&show_app_overlay);
 
-	mCommandList->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
+	_forwardPassCmdList->GetInternal()->SetDescriptorHeaps(1, mSrvDescriptorHeap.GetDescriptorHeap().GetAddressOf());
 	ImGui::Render();
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.Get());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _forwardPassCmdList->GetInternal().Get());
 }
 
 void GUISystem::InitHierachyItems()
@@ -317,6 +346,12 @@ void GUISystem::DrawInspectorEditor()
 					ImGui::SliderFloat("Smoothness", &currentMat->Smoothness, 0, 1);
 					ImGui::SliderFloat("Metallic", &currentMat->Metallic, 0, 1);
 					ImGui::SliderFloat("Occlusion", &currentMat->Occlusion, 0, 1);
+
+					bool useNormalMap = bool(currentMat->UseNormalMap);
+					ImGui::Checkbox("Use NormalMap", &useNormalMap);
+					currentMat->UseNormalMap = (int)useNormalMap;
+
+					ImGui::SliderFloat("NormalScale", &currentMat->NormalScale, 0, 1);
 
 					float EmissionColor[4] = {
 						currentMat->EmissionColor.R(),
@@ -559,7 +594,7 @@ void GUISystem::DrawPhysicsSettings()
 void GUISystem::DrawSceneGameView()
 {
 	ImGui::Begin("View");
-	ImGui::Image((ImTextureID)mRenderTarget->GpuSrv().ptr, ImVec2(1383, 778));
+	ImGui::Image((ImTextureID)mRenderTexture->GpuSrv().ptr, ImVec2(1383, 778));
 	ImGui::End();
 }
 
@@ -625,25 +660,6 @@ void GUISystem::DrawRenderSetting()
 		ImGui::SliderFloat("Step", &mFogSettings.FogStep, 0, 1);  
 		ImGui::InputFloat("MinHeight", &mFogSettings.HeightMin);
 		ImGui::InputFloat("MaxHeight", &mFogSettings.HeightMax);
-
-		//	Volume Fog
-		ImGui::Text("Volume Fog");
-		ImGui::Checkbox("VolumeFog Enable", &(mPostProcessSwitch.ShowVolumeFog));
-
-		ImGui::SliderFloat("NoiseStrength", &mFogSettings.NoiseStrength, -5, 5);
-
-		float cubePosArray[3] = { mFogSettings.CubePos.x,mFogSettings.CubePos.y,mFogSettings.CubePos.z };
-		ImGui::InputFloat3("FogPosition", cubePosArray);
-		mFogSettings.CubePos = Vector3(cubePosArray[0], cubePosArray[1], cubePosArray[2]);
-
-		float cubeScaleArray[3] = { mFogSettings.CubeScale.x,mFogSettings.CubeScale.y,mFogSettings.CubeScale.z };
-		ImGui::InputFloat3("FogScale", cubeScaleArray);
-		mFogSettings.CubeScale = Vector4(cubeScaleArray[0], cubeScaleArray[1], cubeScaleArray[2],1);
-
-
-		//float cameraDirArray[3] = { mFogSettings.CameraDir.x,mFogSettings.CameraDir.y,mFogSettings.CameraDir.z };
-		//ImGui::InputFloat3("CameraDir", cameraDirArray);
-		//mFogSettings.CameraDir = Vector4(cameraDirArray[0], cameraDirArray[1], cameraDirArray[2], 1);
 	}
 
 	if (ImGui::CollapsingHeader("Antialiasing Settings"))
@@ -677,25 +693,25 @@ void GUISystem::DrawFrameDebugger()
 		ImGui::Image((ImTextureID)mDepthPass->Srv().ptr, ImVec2(256, 144));
 	}
 
-	if (ImGui::CollapsingHeader("GBuffer0"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer0Srv().ptr, ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer0"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(0), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer1"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer1Srv().ptr, ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer1"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(1), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer2"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer2Srv().ptr, ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer2"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(2), ImVec2(256, 144));
+	//}
 
-	if (ImGui::CollapsingHeader("GBuffer3"))
-	{
-		ImGui::Image((ImTextureID)mGBuffer->GBuffer3Srv().ptr, ImVec2(256, 144));
-	}
+	//if (ImGui::CollapsingHeader("GBuffer3"))
+	//{
+	//	ImGui::Image((ImTextureID)mGBufferPass->GetGBuffer(3), ImVec2(256, 144));
+	//}
 	ImGui::End();
 }
 

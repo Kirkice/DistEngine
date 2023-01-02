@@ -2,6 +2,7 @@
 #include "DX12Utils.h"
 #include <string>
 
+const std::string ApplicationPath = "E:/Engine Project/DistEngine/DistEngine/";
 
 	/// <summary>
 	/// RESOURCES
@@ -9,13 +10,13 @@
 
 const std::vector<std::string> mMaterialPath =
 {
-	"Asset/Materials/ak47.mat",
+	ApplicationPath + "Asset/Materials/ak47.mat",
 };
 
-    const std::vector<std::string> mScenePath =
-    {
-    	"Assets/Scene/Default.scene",
-    };
+const std::vector<std::string> mScenePath =
+{
+	ApplicationPath + "Asset/Scene/Default.scene",
+};
 
 
 
@@ -103,7 +104,7 @@ const std::vector<std::string> mMaterialPath =
 		"Asset/Textures/DefaultTextures/sampleLUT.png",
 
 		"Asset/Textures/DefaultTextures/black.png",
-		"Asset/Textures/DefaultTextures/white.png"
+		"Asset/Textures/DefaultTextures/white.png",
 	};
 
 
@@ -204,10 +205,7 @@ const std::vector<std::string> mMaterialPath =
 		"standardVS",
 		"outlineVS",
 		"litVS",
-		"gbuffer0VS",
-		"gbuffer1VS",
-		"gbuffer2VS",
-		"gbuffer3VS",
+		"gbufferVS",
 		"gizmoVS",
 		"unlitVS",
 		"lineVS",
@@ -232,7 +230,6 @@ const std::vector<std::string> mMaterialPath =
 		"oilPaintVS",
 		"reliefVS",
 		"edgeDetectionVS",
-		"volumeFogVS",
 		"FastApproximateAntialiasingVS",
 	};
 
@@ -244,10 +241,7 @@ const std::vector<std::string> mMaterialPath =
 		"opaquePS",
 		"outlinePS",
 		"litPS",
-		"gbuffer0PS",
-		"gbuffer1PS",
-		"gbuffer2PS",
-		"gbuffer3PS",
+		"gbufferPS",
 		"gizmoPS",
 		"unlitPS",
 		"linePS",
@@ -272,7 +266,6 @@ const std::vector<std::string> mMaterialPath =
 		"oilPaintPS",
 		"reliefPS",
 		"edgeDetectionPS",
-		"volumeFogPS",
 		"FastApproximateAntialiasingPS",
 	};
 
@@ -284,10 +277,7 @@ const std::vector<std::string> mMaterialPath =
 		L"Asset\\Shaders\\Default.hlsl",
 		L"Asset\\Shaders\\OutLine.hlsl",
 		L"Asset\\Shaders\\LitPass.hlsl",
-		L"Asset\\Shaders\\GBuffer0.hlsl",
-		L"Asset\\Shaders\\GBuffer1.hlsl",
-		L"Asset\\Shaders\\GBuffer2.hlsl",
-		L"Asset\\Shaders\\GBuffer3.hlsl",
+		L"Asset\\Shaders\\GBuffer.hlsl",
 		L"Asset\\Shaders\\GizmoPass.hlsl",
 		L"Asset\\Shaders\\Unlit.hlsl",
 		L"Asset\\Shaders\\Line.hlsl",
@@ -312,25 +302,26 @@ const std::vector<std::string> mMaterialPath =
 		L"Asset\\Shaders\\OilPaint.hlsl",
 		L"Asset\\Shaders\\Relief.hlsl",
 		L"Asset\\Shaders\\EdgeDetection.hlsl",
-		L"Asset\\Shaders\\VolumeFog.hlsl",
 		L"Asset\\Shaders\\FastApproximateAntialiasing.hlsl",
 	};
 
 	 
 	//	Mesh Path
-	const std::string mAk47ObjPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/ak47.obj";
+	const std::string mAk47ObjPath = ApplicationPath + "Asset/Mesh/ak47.obj";
 
-	const std::string mPositionUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_x.obj";
-	const std::string mPositionUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_y.obj";
-	const std::string mPositionUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/position_z.obj";
+	const std::string mBunnyObjPath = ApplicationPath + "Asset/Mesh/Bunny.obj";
 
-	const std::string mRotationUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_x.obj";
-	const std::string mRotationUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_y.obj";
-	const std::string mRotationUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/rotation_z.obj";
+	const std::string mPositionUCSGizmoXPath = ApplicationPath + "Asset/Mesh/position_x.obj";
+	const std::string mPositionUCSGizmoYPath = ApplicationPath + "Asset/Mesh/position_y.obj";
+	const std::string mPositionUCSGizmoZPath = ApplicationPath + "Asset/Mesh/position_z.obj";
 
-	const std::string mScaleUCSGizmoXPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_x.obj";
-	const std::string mScaleUCSGizmoYPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_y.obj";
-	const std::string mScaleUCSGizmoZPath = "E:/Engine Project/DistEngine/DistEngine/Asset/Mesh/scale_z.obj";
+	const std::string mRotationUCSGizmoXPath = ApplicationPath + "Asset/Mesh/rotation_x.obj";
+	const std::string mRotationUCSGizmoYPath = ApplicationPath + "Asset/Mesh/rotation_y.obj";
+	const std::string mRotationUCSGizmoZPath = ApplicationPath + "Asset/Mesh/rotation_z.obj";
+
+	const std::string mScaleUCSGizmoXPath = ApplicationPath + "Asset/Mesh/scale_x.obj";
+	const std::string mScaleUCSGizmoYPath = ApplicationPath + "Asset/Mesh/scale_y.obj";
+	const std::string mScaleUCSGizmoZPath = ApplicationPath + "Asset/Mesh/scale_z.obj";
 
 
 	  

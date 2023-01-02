@@ -55,9 +55,6 @@ struct PassConstants
     Vector4 FogColor = { 1.0f,1.0f,1.0f,1.0f};
     Vector4 LinearFogParam = { 0.0f, 5.0f, 0.08f, 0 };
     Vector4 HeightFogParam = { 0.5f, 0.5f, 0, 5};
-    Vector4 VolumeFogParam0 = { 0,8,-5 ,1};
-    Vector4 VolumeFogParam1 = { 8,8,8,1 };
-    Vector4 VolumeFogParam2 = { 0,0,8,1 };
     //  PARMAES 01 --- EnableScatteringSky/SunHeight/ZenithOffset/density
     //  Parames02 --- MultiScatterPhase/AnisotropicIntensity
     Vector4 Parames01 = Vector4(0, 0.45f, 0.1f, 0.7f);
@@ -87,7 +84,8 @@ struct PBRMaterialData
     float Occlusion = 0.0f;
     Vector4 EmissionColor = { 0.0f, 0.0f, 0.0f, 1.0f };
     float EmissionStrength = 0.0f;
-
+    float UseNormalMap = 0.0f;
+    float NormalScale = 1.0f;
 	// Used in texture mapping.
 	DirectX::XMFLOAT4X4 MatTransform = Mathf::Identity4x4();
 

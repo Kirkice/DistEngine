@@ -24,7 +24,7 @@ bool GraphicsCore::Initialize()
 		return false;
 
 	// Reset the command list to prep for initialization commands.
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
+	_forwardPassCmdList->Reset();
 
 	mCamera.getInstance().SetPosition(0.0f, 2.0f, -15.0f);
 
@@ -35,10 +35,10 @@ bool GraphicsCore::Initialize()
 	mDepthPass = std::make_unique<DepthPass>(md3dDevice.Get());
 
 	//RenderTarget Init
-	mRenderTarget = std::make_unique<RenderTarget>(md3dDevice.Get(), mClientWidth, mClientHeight);
+	mRenderTexture = std::make_unique<RenderTexture>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
-	//GBuffer
-	mGBuffer = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
+	//GBuffer Init
+	//mGBufferPass = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
 	BuildRootSignature();
 	BuildDescriptorHeaps();
@@ -55,8 +55,8 @@ bool GraphicsCore::Initialize()
 	BuildPSOs();
 
 	// Execute the initialization commands.
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	_forwardPassCmdList->Close();
+	ID3D12CommandList* cmdsLists[] = { _forwardPassCmdList->GetInternal().Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Wait until initialization is complete.
@@ -99,6 +99,13 @@ void GraphicsCore::OnResize()
 	DX12GameApp::OnResize();
 
 	mCamera.getInstance().SetLens((mSceneManager.getInstance().mCameraSetting.mCamFov / 180) * Mathf::Pi, AspectRatio(), mSceneManager.getInstance().mCameraSetting.mCamClipN, mSceneManager.getInstance().mCameraSetting.mCamClipF);
+
+	////	GBuffer OnResize
+	//if (mGBufferPass != nullptr)
+	//{
+	//	mGBufferPass->OnResize(mClientWidth, mClientHeight);
+	//	mGBufferPass->RebuildDescriptors();
+	//}
 }
 
 void GraphicsCore::Update(const GameTimer& gt)
@@ -137,14 +144,12 @@ void GraphicsCore::UpdateLights(const GameTimer& gt)
 
 void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 {
-	//	更新CB
-	mGizmoManager.getInstance().UpdateObjectBuffer(mAllRitems, mSceneManager.getInstance().MainLight->GetComponent<Transform>(1), mSceneManager.getInstance().mRenderObjects[1]);
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 
-	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩阵
+	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩�?
 	auto viewDeterminant = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩阵 
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩�?
 
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
@@ -158,10 +163,10 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		
 		//	视锥剔除
 		XMMATRIX viewToLocal = XMMatrixMultiply(invView, InvWorld);
-		//	创建视锥体
+		//	创建视锥�?
 		BoundingFrustum localSpaceFrustum;
 		localSpaceFrustum.CreateFromMatrix(localSpaceFrustum, mCamera.GetProj());
-		//	将视锥体从观察空间变换到局部空间
+		//	将视锥体从观察空间变换到局部空�?
 		localSpaceFrustum.Transform(localSpaceFrustum, viewToLocal);
 
 		bool enable = e->Enable;
@@ -277,9 +282,6 @@ void GraphicsCore::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.FogColor = mFogSettings.FogColor;
 	mMainPassCB.LinearFogParam = Vector4(mFogSettings.fogStrat, mFogSettings.fogEnd, mFogSettings.FogDensity, mFogSettings.EnableHeightFog);
 	mMainPassCB.HeightFogParam = Vector4(mFogSettings.FogFeather,mFogSettings.FogStep,mFogSettings.HeightMin,mFogSettings.HeightMax);
-	mMainPassCB.VolumeFogParam0 = Vector4(mFogSettings.CubePos, mFogSettings.NoiseStrength);
-	mMainPassCB.VolumeFogParam1 = Vector4(mFogSettings.CubeScale);
-	mMainPassCB.VolumeFogParam2 = Vector4(mFogSettings.CameraDir);
 
 	//Scattering
 	mMainPassCB.Parames01 = Vector4(mSceneManager.getInstance().mSkyBoxSetting.EnableScatteringSky, mSceneManager.getInstance().mSkyBoxSetting.SunHeight, mSceneManager.getInstance().mSkyBoxSetting.ZenithOffset, mSceneManager.getInstance().mSkyBoxSetting.Density);
@@ -459,7 +461,7 @@ void GraphicsCore::BuildDescriptorHeaps()
 			tex->TexIndex = TextureIndex;
 			TextureIndex++;
 			ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
-				mCommandList.Get(), tex->Path.c_str(),
+				_forwardPassCmdList->GetInternal().Get(), tex->Path.c_str(),
 				tex->Resource, tex->UploadHeap));
 
 			mCubeMapTextures[tex->Name] = std::move(tex);
@@ -469,10 +471,9 @@ void GraphicsCore::BuildDescriptorHeaps()
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_diffuseIBL");
 	GraphicsUtils::BuildTextureCubeSrvDesc(md3dDevice, mCbvSrvUavDescriptorSize, CPUDescriptor, GPUDescriptor, mCubeMapTextures, "Sky_specularIBL");
 
-	mRenderTarget->BuildDescriptors(
+	mRenderTexture->BuildDescriptors(
 		CPUDescriptor,
 		GPUDescriptor,
-		GetRtv(SwapChainBufferCount),
 		mCbvSrvUavDescriptorSize
 	);
 
@@ -490,11 +491,13 @@ void GraphicsCore::BuildDescriptorHeaps()
 		mCbvSrvUavDescriptorSize
 	);
 
-	mGBuffer->BuildDescriptors(
-		CPUDescriptor,
-		GPUDescriptor,
-		mCbvSrvUavDescriptorSize
-	);
+	//mGBufferPass->BuildDescriptors(
+	//	CPUDescriptor,
+	//	GPUDescriptor,
+	//	GetRtv(SwapChainBufferCount),
+	//	mCbvSrvUavDescriptorSize,
+	//	mRtvDescriptorSize
+	//);
 }
 
 
@@ -528,6 +531,12 @@ void GraphicsCore::BuildPSOs()
 	AxisObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_ALWAYS);
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(AxisObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Axis"])));
 
+	//	PSO for GBuffer
+	PipelineStateObject GBufferObject = PipelineStateObject();
+	GBufferObject.BuildDefault(mShaderManager, mRootSignature);
+	GBufferObject.SetShader(mShaderManager, mRootSignature, "gbufferVS", "gbufferPS");
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBufferObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer"])));
+
 	// PSO for Lit.
 	PipelineStateObject LitObject = PipelineStateObject();
 	LitObject.BuildDefault(mShaderManager, mRootSignature);
@@ -538,30 +547,6 @@ void GraphicsCore::BuildPSOs()
 	LitTransparentObject.BuildDefault(mShaderManager, mRootSignature);
 	LitTransparentObject.SetDefaultBlend();
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(LitTransparentObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["transparent"])));
-
-	// GBuffer0 for Lit.
-	PipelineStateObject GBuffer0Object = PipelineStateObject();
-	GBuffer0Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer0Object.SetShader(mShaderManager, mRootSignature, "gbuffer0VS", "gbuffer0PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer0Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer0"])));
-
-	// GBuffer1 for Lit.
-	PipelineStateObject GBuffer1Object = PipelineStateObject();
-	GBuffer1Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer1Object.SetShader(mShaderManager, mRootSignature, "gbuffer1VS", "gbuffer1PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer1Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer1"])));
-
-	// GBuffer2 for Lit.
-	PipelineStateObject GBuffer2Object = PipelineStateObject();
-	GBuffer2Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer2Object.SetShader(mShaderManager, mRootSignature, "gbuffer2VS", "gbuffer2PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer2Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer2"])));
-
-	// GBuffer3 for Lit.
-	PipelineStateObject GBuffer3Object = PipelineStateObject();
-	GBuffer3Object.BuildDefault(mShaderManager, mRootSignature);
-	GBuffer3Object.SetShader(mShaderManager, mRootSignature, "gbuffer3VS", "gbuffer3PS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(GBuffer3Object.GetPSODesc(), IID_PPV_ARGS(&mPSOs["GBuffer3"])));
 
 	// PSO for shadow map pass.
 	PipelineStateObject SmapObject = PipelineStateObject();
@@ -666,12 +651,6 @@ void GraphicsCore::BuildPSOs()
 	EdgeDetectionObject.SetShader(mShaderManager, mRootSignature, "edgeDetectionVS", "edgeDetectionPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(EdgeDetectionObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
-	// 	PSO for VolumeFog
-	PipelineStateObject VolumeFogObject = PipelineStateObject();
-	VolumeFogObject.BuildDefault(mShaderManager, mRootSignature);
-	VolumeFogObject.SetShader(mShaderManager, mRootSignature, "volumeFogVS", "volumeFogPS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VolumeFogObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["VolumeFog"])));
-
 	// 	PSO for FxAA
 	PipelineStateObject FxAAObject = PipelineStateObject();
 	FxAAObject.BuildDefault(mShaderManager, mRootSignature);
@@ -705,9 +684,9 @@ void GraphicsCore::BuildFrameResources()
 
 void GraphicsCore::BuildRenderItems()
 {
-	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList);
-	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
-	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, mCommandList, mGizmoManager.getInstance().mRenderObjects.size() + mSceneManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
+	mGizmoManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal());
+	mSceneManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal(), mGizmoManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
+	mPostProcessManager.getInstance().BuildRenderItem(mRitemLayer, mAllRitems, md3dDevice, _forwardPassCmdList->GetInternal(), mGizmoManager.getInstance().mRenderObjects.size() + mSceneManager.getInstance().mRenderObjects.size(), matCBIndexUtils);
 }
 
 void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
@@ -737,33 +716,33 @@ void GraphicsCore::DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std
 
 void GraphicsCore::DrawSceneToShadowMap()
 {
-	mCommandList->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(5, mSrvDescriptorHeap.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
-	mCommandList->RSSetViewports(1, &mShadowMap->Viewport());
-	mCommandList->RSSetScissorRects(1, &mShadowMap->ScissorRect());
+	_forwardPassCmdList->GetInternal()->RSSetViewports(1, &mShadowMap->Viewport());
+	_forwardPassCmdList->GetInternal()->RSSetScissorRects(1, &mShadowMap->ScissorRect());
 
 	// Change to DEPTH_WRITE.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearDepthStencilView(mShadowMap->Dsv(),
+	_forwardPassCmdList->GetInternal()->ClearDepthStencilView(mShadowMap->Dsv(),
 		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
-	mCommandList->OMSetRenderTargets(0, nullptr, false, &mShadowMap->Dsv());
+	_forwardPassCmdList->GetInternal()->OMSetRenderTargets(0, nullptr, false, &mShadowMap->Dsv());
 
 	// Bind the pass constant buffer for the shadow map pass.
 	UINT passCBByteSize = DX12Utils::CalcConstantBufferByteSize(sizeof(PassConstants));
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
-	mCommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootConstantBufferView(2, passCBAddress);
 
-	mCommandList->SetPipelineState(mPSOs["shadow_opaque"].Get());
-	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
+	_forwardPassCmdList->GetInternal()->SetPipelineState(mPSOs["shadow_opaque"].Get());
+	DrawRenderItems(_forwardPassCmdList->GetInternal().Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 
 	// Change back to GENERIC_READ so we can read the texture in a shader.
-	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
+	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mShadowMap->Resource(),
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 

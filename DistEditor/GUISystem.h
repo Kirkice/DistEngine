@@ -8,6 +8,11 @@
 #include "../ThirdParty/ImGUI/imgui.h"
 #include "../ThirdParty/ImGUI/imgui_impl_win32.h"
 #include "../ThirdParty/ImGUI/imgui_impl_dx12.h"
+#include "../ThirdParty/ImGUI/ImGuizmo.h"
+#include "../ThirdParty/ImGUI/ImSequencer.h"
+#include "../ThirdParty/ImGUI/ImZoomSlider.h"
+#include "../ThirdParty/ImGUI/ImCurveEdit.h"
+#include "../ThirdParty/ImGUI/GraphEditor.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -34,6 +39,11 @@ public:
 private:
 
 	virtual void Draw(const GameTimer& gt)override;
+
+	virtual void Update(const GameTimer& gt)override;
+
+	void UpdateGizmosObjectCBs();
+
 
 	bool show_app_dockspace = true;
 

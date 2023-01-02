@@ -3,40 +3,6 @@
 void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 {
 	/// <summary>
-	/// 体积雾
-	/// </summary>
-	/// <param name="matCBIndexUtils"></param>
-	auto VolumeFog = std::make_unique<GameObject>("VolumeFog");
-
-	//构建材质
-	Material* mat_volumeFog = new Material();
-	mat_volumeFog->Name = "VolumeFog_mat";
-	mat_volumeFog->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
-	matCBIndexUtils.getInstance().OffsetIndex();
-
-	//	创建平面网格
-	MeshFliter* mesh_volumeFog = new MeshFliter("MeshFliter");
-	mesh_volumeFog->CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-	MeshRender* meshRender_volumeFog = new MeshRender(mesh_volumeFog, mat_volumeFog, "MeshRender");
-
-	//	设置坐标
-	Transform* transform_volumeFog = new Transform("Transform");
-	transform_volumeFog->position = Vector3(0, 0, 0);
-	transform_volumeFog->eulerangle = Vector3(0, 0, 0);
-	transform_volumeFog->scale = Vector3(1, 1, 1);
-
-	//	创建碰撞盒子
-	DistBound::BoundingBox* bound_volumeFog = new DistBound::BoundingBox("BoundingBox");
-	bound_volumeFog->aabb = BoundingAABB(mesh_volumeFog->data);
-
-	VolumeFog->AddComponent(transform_volumeFog);
-	VolumeFog->AddComponent(meshRender_volumeFog);
-	VolumeFog->AddComponent(bound_volumeFog);
-
-	VolumeFog->Enable = true;
-	mRenderObjects.push_back(std::move(VolumeFog));
-
-	/// <summary>
 	/// FxAA
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>

@@ -19,45 +19,41 @@ public:
 	GBuffer& operator=(const GBuffer& rhs) = delete;
 	~GBuffer() = default;
 
-	ID3D12Resource* GetGBuffer0();
-	ID3D12Resource* GetGBuffer1();
-	ID3D12Resource* GetGBuffer2();
-	ID3D12Resource* GetGBuffer3();
+	ID3D12Resource* GetGBuffer(int index);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer0Srv()const;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer1Srv()const;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer2Srv()const;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer3Srv()const;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE GET_GBUFFER_CPU_SRV(int index)const;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GET_GBUFFER_GPU_SRV(int index)const;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE GET_GBUFFER_CPU_RTV(int index)const;
 
 	void BuildDescriptors(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
-		UINT mCbvSrvUavDescriptorSize
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPURtv,
+		UINT mCbvSrvUavDescriptorSize,
+		UINT rtvDescriptorSize
 	);
 
+	void RebuildDescriptors();
+
+	void SetPSOs(ID3D12PipelineState* gbufferPSO);
+
+	void OnResize(UINT newWidth, UINT newHeight);
+
 private:
+	void BuildResources();
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBuffer0CpuSrv;
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBuffer1CpuSrv;
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBuffer2CpuSrv;
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBuffer3CpuSrv;
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBuffer0GpuSrv;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBuffer1GpuSrv;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBuffer2GpuSrv;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBuffer3GpuSrv;
-
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer0;
-	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer1;
-	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer2;
-	Microsoft::WRL::ComPtr<ID3D12Resource> GBuffer3;
+private:
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> mGBufferRootSig;
+	Microsoft::WRL::ComPtr<ID3D12Resource> GBufferResources[4];
 
 	ID3D12Device* md3dDevice = nullptr;
+	ID3D12PipelineState* mGBufferPSO;
 
-	void BuildResource();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuSrv[4];
+	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBufferGpuSrv[4];
+	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuRtv[4];
 
-	DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 	D3D12_VIEWPORT mViewport;
 	D3D12_RECT mScissorRect;

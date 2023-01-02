@@ -146,16 +146,17 @@ XMFLOAT4X4 Transform::GetWorldXMMatrix()
 {
 	XMFLOAT4X4 Mat = Mathf::Identity4x4();
 
-	//	位移
-	XMMATRIX world = XMLoadFloat4x4(&Mat);
-	world = XMMatrixTranslation(position.x, position.y, position.z);
-
-	//// 旋转
-	XMMATRIX RotMat = XMMatrixRotationX((eulerangle.x / 180) * Pi) * XMMatrixRotationY((eulerangle.y / 180) * Pi) * XMMatrixRotationZ((eulerangle.z / 180) * Pi);
-	world = world * RotMat;
-
 	//	缩放
-	world = world * XMMatrixScaling(scale.x, scale.y, scale.z);
+	XMMATRIX world = XMLoadFloat4x4(&Mat);
+	world = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+	//	旋转
+	Quaternion quaternion = Quaternion::FromEuler((eulerangle.x / 180) * Pi, (eulerangle.y / 180) * Pi, (eulerangle.z / 180) * Pi);
+	float4x4 RotMat = quaternion.ToFloat4x4();
+	world = world * RotMat.ToSIMD();
+
+	//	位移
+	world = world * XMMatrixTranslation(position.x, position.y, position.z);
 	XMStoreFloat4x4(&Mat, world);
 
 	return Mat;

@@ -118,7 +118,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;../../ThirdParty/Json11/include/;../../ThirdParty/Json11/single_include/;../../ThirdParty/YamlCpp/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../PlatformDependent/Core;../../ThirdParty/ImGUI;../../ThirdParty/Fbxsdk/include;../../PlatformDependent/Core/Mathf;../../ThirdParty/Stb;../../ThirdParty/Tinyobjloader;../../PlatformDependent/WinApp;../../ThirdParty/Spdlog/include/;../../ThirdParty/Json11/include/;../../ThirdParty/Json11/single_include/;../../ThirdParty/YamlCpp/include/;../../ThirdParty/boost_1_80_0/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -146,7 +146,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Geometry\GeometryGenerator.cpp" />
-    <ClCompile Include="Graphics\CommandListManager.cpp" />
+    <ClCompile Include="Graphics\ComputePipelineState.cpp" />
+    <ClCompile Include="Graphics\RenderTargetManager.cpp" />
+    <ClCompile Include="Graphics\RootSignatureManager.cpp" />
     <ClCompile Include="Physics\BoundingAABB.cpp" />
     <ClCompile Include="Physics\BoundingBox.cpp" />
     <ClCompile Include="Physics\BoundingOBB.cpp" />
@@ -167,6 +169,7 @@
     <ClCompile Include="Render\DistRenderPipeline.cpp" />
     <ClCompile Include="Render\GBufferPass.cpp" />
     <ClCompile Include="Render\RenderCore.cpp" />
+    <ClCompile Include="Render\RenderTexture.cpp" />
     <ClCompile Include="SceneManager\GizmosManager.cpp" />
     <ClCompile Include="Graphics\GraphicsCore.cpp" />
     <ClCompile Include="Graphics\GraphicsUtils.cpp" />
@@ -174,20 +177,26 @@
     <ClCompile Include="Geometry\ObjLoader.cpp" />
     <ClCompile Include="Graphics\PipelineStateObject.cpp" />
     <ClCompile Include="SceneManager\PostProcessManager.cpp" />
-    <ClCompile Include="Render\RenderTarget.cpp" />
     <ClCompile Include="File\ResourcesManager.cpp" />
     <ClCompile Include="File\ResourcesPath.cpp" />
     <ClCompile Include="Graphics\RootSignature.cpp" />
     <ClCompile Include="SceneManager\SceneManager.cpp" />
     <ClCompile Include="Serialization\JsonManager.cpp" />
+    <ClCompile Include="Serialization\Property.cpp" />
     <ClCompile Include="Serialization\YamlManager.cpp" />
+    <ClCompile Include="Shaders\AnalyseShader.cpp" />
+    <ClCompile Include="Shaders\GenerateHlslCode.cpp" />
+    <ClCompile Include="Shaders\LoadShader.cpp" />
+    <ClCompile Include="Shaders\Shader.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Render\ShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Geometry\GeometryGenerator.h" />
-    <ClInclude Include="Graphics\CommandListManager.h" />
+    <ClInclude Include="Graphics\ComputePipelineState.h" />
+    <ClInclude Include="Graphics\RenderTargetManager.h" />
+    <ClInclude Include="Graphics\RootSignatureManager.h" />
     <ClInclude Include="Physics\BoundingAABB.h" />
     <ClInclude Include="Physics\BoundingBox.h" />
     <ClInclude Include="Physics\BoundingOBB.h" />
@@ -208,6 +217,7 @@
     <ClInclude Include="Render\DistRenderPipeline.h" />
     <ClInclude Include="Render\GBufferPass.h" />
     <ClInclude Include="Render\RenderCore.h" />
+    <ClInclude Include="Render\RenderTexture.h" />
     <ClInclude Include="SceneManager\GizmosManager.h" />
     <ClInclude Include="Graphics\GraphicsCore.h" />
     <ClInclude Include="Graphics\GraphicsUtils.h" />
@@ -216,17 +226,23 @@
     <ClInclude Include="Geometry\ObjLoader.h" />
     <ClInclude Include="Graphics\PipelineStateObject.h" />
     <ClInclude Include="SceneManager\PostProcessManager.h" />
-    <ClInclude Include="Render\RenderTarget.h" />
     <ClInclude Include="File\ResourcesManager.h" />
     <ClInclude Include="File\ResourcesPath.h" />
     <ClInclude Include="Graphics\RootSignature.h" />
     <ClInclude Include="SceneManager\SceneManager.h" />
     <ClInclude Include="Serialization\JsonManager.h" />
+    <ClInclude Include="Serialization\Property.h" />
     <ClInclude Include="Serialization\SceneData.h" />
     <ClInclude Include="Serialization\YamlManager.h" />
+    <ClInclude Include="Shaders\AnalyseShader.h" />
+    <ClInclude Include="Shaders\GenerateHlslCode.h" />
+    <ClInclude Include="Shaders\LoadShader.h" />
+    <ClInclude Include="Shaders\Shader.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Render\ShadowMap.h" />
     <ClInclude Include="File\Texture2D.h" />
+    <ClInclude Include="Shaders\ShaderStruct.h" />
+    <ClInclude Include="Shaders\ShadersUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,13 +12,13 @@ struct SceneData
 	//	设为主光源
 	bool isMainLight = true;
 	//	灯光颜色
-	float MainLightColor[4] = { 1, 0.9568627f, 0.8392157f, 1 };
+	std::vector<float> MainLightColor { 1, 0.9568627f, 0.8392157f, 1 };
 	//	设置灯光位置
-	float MainLightPosition[3] = { -20, 30, 20 };
+	std::vector<float> MainLightPosition { -20, 30, 20 };
 	//	设置灯光欧拉角
-	float MainLightEulerangle[3] = { 30, -60, -50 };
+	std::vector<float> MainLightEulerangle { 30, -60, -50 };
 	//	设置forward
-	float MainLightForward[3] = { 0.57f, -0.57f, 0.57f };
+	std::vector<float> MainLightForward { 0.57f, -0.57f, 0.57f }; 
 	//	主光源名字
 	std::string MainLightName = "Direction Light";
 
@@ -27,11 +27,11 @@ struct SceneData
 	/////////////////////////////
 	std::string RenderObjectName = "ak47";
 	int mMaterialType = 0;
-	std::wstring MaterialPath = L"Asset/Materials/ak47.mat";
-	std::wstring MeshPath = L"Asset/Mesh/ak47.obj";
-	float RenderObjectPosition[3] = { 0, 0, 0 };
-	float RenderObjectEulerAngle[3] = { 0, 0, 0 };
-	float RenderObjectScale[3] = { 1, 1, 1 };
+	std::string MaterialPath = "Asset/Materials/ak47.mat";
+	std::string MeshPath = "Asset/Mesh/ak47.obj";
+	std::vector<float> RenderObjectPosition { 0, 0, 0 };
+	std::vector<float> RenderObjectEulerAngle { 0, 0, 0 };
+	std::vector<float> RenderObjectScale { 1, 1, 1 };
 };
 
 struct MaterialLitData
@@ -52,7 +52,10 @@ struct MaterialLitData
 	float EmissionStrength = 0.0f;
 	//	自发光颜色
 	float EmissionColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
+	//	使用法线贴图
+	float UseNormalMap = 0;
+	//	法线贴图强度
+	float NormalScale = 1.0f;
 	//	Diffuse贴图Index
 	UINT DiffuseMapIndex = 0;
 	//	法线贴图Index

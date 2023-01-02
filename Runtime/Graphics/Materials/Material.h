@@ -31,7 +31,10 @@ public:
 	float EmissionStrength;
 	//	自发光颜色
 	Color EmissionColor;
-
+	//	使用法线贴图
+	float UseNormalMap;
+	//	法线贴图强度
+	float NormalScale;
 	// 纹理映射矩阵
 	DirectX::XMFLOAT4X4 MatTransform;
 

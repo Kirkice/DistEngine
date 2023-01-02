@@ -1,1 +1,15 @@
-{"MainLightColor":[1.0,0.9568626880645752,0.8392156958580017,1.0],"MainLightEulerangle":[30.0,-60.0,-50.0],"MainLightForward":[0.5699999928474426,-0.5699999928474426,0.5699999928474426],"MainLightName":"Direction Light","MainLightPosition":[-20.0,30.0,20.0],"MaterialPath":[65,115,115,101,116,47,77,97,116,101,114,105,97,108,115,47,97,107,52,55,46,109,97,116],"MeshPath":[65,115,115,101,116,47,77,101,115,104,47,97,107,52,55,46,111,98,106],"RenderObjectEulerAngle":[0.0,0.0,0.0],"RenderObjectName":"ak47","RenderObjectPosition":[0.0,0.0,0.0],"RenderObjectScale":[1.0,1.0,1.0],"isMainLight":true,"mMaterialType":0}
+{
+  "isMainLight": true,
+  "MainLightColor": [ 1.0, 0.9568626880645752, 0.8392156958580017, 1.0 ],
+  "MainLightPosition": [ -20.0, 30.0, 20.0 ],
+  "MainLightEulerangle": [ 30.0, -60.0, -50.0 ],
+  "MainLightForward": [ 0.5699999928474426, -0.5699999928474426, 0.5699999928474426 ],
+  "MainLightName": "Direction Light",
+  "RenderObjectName": "ak47",
+  "mMaterialType": 0,
+  "MaterialPath": "Asset/Materials/ak47.mat",
+  "MeshPath": "Asset/Mesh/ak47.obj",
+  "RenderObjectPosition": [ 6.0, 10.0, 0.0 ],
+  "RenderObjectEulerAngle": [ 0.0, 0.0, 0.0 ],
+  "RenderObjectScale": [ 1.1, 1.1, 1.1 ]
+}

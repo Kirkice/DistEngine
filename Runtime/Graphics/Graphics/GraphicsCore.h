@@ -12,8 +12,8 @@
 #include "DescriptorHeap.h"
 #include "../Shaders/ShaderManager.h"
 #include "PipelineStateObject.h"
-#include "../Render/RenderTarget.h"
-#include "../Render/GBufferPass.h"
+#include "../Render/RenderTexture.h"
+//#include "../Render/GBufferPass.h"
 #include "../SceneManager/GizmosManager.h"
 #include "../SceneManager/PostProcessManager.h"
 
@@ -30,11 +30,11 @@ public:
 	~GraphicsCore();
 
 	virtual bool Initialize()override;
+	virtual void Update(const GameTimer& gt)override;
+	virtual void OnResize()override;
 
 private:
 	virtual void CreateRtvAndDsvDescriptorHeaps()override;
-	virtual void OnResize()override;
-	virtual void Update(const GameTimer& gt)override;
 
 public:
 	//	更新灯光
@@ -49,10 +49,10 @@ public:
 	void UpdateMainPassCB(const GameTimer& gt);
 	//	更新ShadowPass
 	void UpdateShadowPassCB(const GameTimer& gt);
-	//	更新渲染项
+	//	更新渲染�?
 	void UpdateRenderItems(const GameTimer& gt);
 
-	//	构建根签名
+	//	构建根签�?
 	void BuildRootSignature();
 	//	构建描述符堆
 	void BuildDescriptorHeaps();
@@ -60,9 +60,9 @@ public:
 	void BuildShadersAndInputLayout();
 	//	构建PSO
 	void BuildPSOs();
-	//	构建帧资源
+	//	构建帧资�?
 	void BuildFrameResources();
-	//	构建渲染项
+	//	构建渲染�?
 	void BuildRenderItems();
 
 	void OnMouseMoveAndSelect(WPARAM btnState, int x, int y);
@@ -93,7 +93,7 @@ public:
 	FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 
-	//	根签名
+	//	根签�?
 	RootSignature mRootSignature = RootSignature();
 
 	//	描述符堆
@@ -136,10 +136,11 @@ public:
 	PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 	PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
-	std::unique_ptr<RenderTarget> mRenderTarget;
+	std::unique_ptr<RenderTexture> mRenderTexture;
 	std::unique_ptr<ShadowMap> mShadowMap;
 	std::unique_ptr<DepthPass> mDepthPass;
-	std::unique_ptr<GBuffer> mGBuffer;
+	//std::unique_ptr<GBuffer> mGBufferPass;
+
 
 	DirectX::BoundingSphere mSceneBounds;
 

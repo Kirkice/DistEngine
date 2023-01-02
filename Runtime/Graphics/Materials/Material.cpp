@@ -14,6 +14,8 @@ Material::Material()
 	Occlusion = 1;
 	EmissionStrength = 0;
 	EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	UseNormalMap = 0;
+	NormalScale = 1;
 
 	MatTransform = Mathf::Identity4x4();
 

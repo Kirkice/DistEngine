@@ -1,1 +1,18 @@
-{"DiffuseColor":[1.0,1.0,1.0,1.0],"DiffuseMapIndex":0,"EmissionColor":[0.0,0.0,0.0,1.0],"EmissionMapIndex":0,"EmissionStrength":0.0,"LUTMapIndex":0,"MatCBIndex":-1,"Metallic":0.0,"MsoMapIndex":0,"Name":"ak47_mat","NormalMapIndex":0,"NumFramesDirty":3,"Occlusion":1.0,"Smoothness":0.5}
+{
+  "Name": "ak47_mat",
+  "MatCBIndex": -1,
+  "NumFramesDirty": 3,
+  "DiffuseColor": [ 1.0, 1.0, 1.0, 1.0 ],
+  "Smoothness": 1.0,
+  "Metallic": 1.0,
+  "Occlusion": 1.0,
+  "EmissionStrength": 0.0,
+  "EmissionColor": [ 0.0, 0.0, 0.0, 1.0 ],
+  "UseNormalMap": 1,
+  "NormalScale": 1,
+  "DiffuseMapIndex": 19,
+  "NormalMapIndex": 21,
+  "MsoMapIndex": 20,
+  "EmissionMapIndex": 24,
+  "LUTMapIndex": 22
+}
