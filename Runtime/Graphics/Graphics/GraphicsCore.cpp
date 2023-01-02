@@ -658,7 +658,7 @@ void GraphicsCore::BuildPSOs()
 	PipelineStateObject VolumeFogObject = PipelineStateObject();
 	VolumeFogObject.BuildDefault(mShaderManager, mRootSignature);
 	VolumeFogObject.SetShader(mShaderManager, mRootSignature, "volumeFogVS", "volumeFogPS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VolumeFogObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["VolumeFog"])));
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(VolumeFogObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["VolumeFog"]))); 
 
 	// 	PSO for FxAA
 	PipelineStateObject FxAAObject = PipelineStateObject();
