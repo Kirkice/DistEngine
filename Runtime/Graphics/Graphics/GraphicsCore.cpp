@@ -658,7 +658,7 @@ void GraphicsCore::BuildPSOs()
 	PipelineStateObject ReliefObject = PipelineStateObject();
 	ReliefObject.BuildDefault(mShaderManager, mRootSignature);
 	ReliefObject.SetShader(mShaderManager, mRootSignature, "reliefVS", "reliefPS");
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(ReliefObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Relief"])));
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(ReliefObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["Relief"]))); 
 
 	// 	PSO for EdgeDetection
 	PipelineStateObject EdgeDetectionObject = PipelineStateObject();
