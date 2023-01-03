@@ -36,7 +36,7 @@ struct SceneData
 
 struct MaterialLitData
 {
-	std::string Name = "ak47_mat";
+	std::string Name = "ak47_mat"; 
 	int MatCBIndex = -1;
 	int NumFramesDirty = gNumFrameResources;
 
