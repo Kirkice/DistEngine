@@ -36,5 +36,5 @@ void DepthPass::BuildDescriptors(ID3D12Resource* depthStencilBuffer)
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	md3dDevice->CreateShaderResourceView(depthStencilBuffer, &srvDesc, mhCpuSrv);
+	md3dDevice->CreateShaderResourceView(depthStencilBuffer, &srvDesc, mhCpuSrv );
 }
