@@ -147,9 +147,9 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 	mSceneManager.getInstance().UpdateObjectBuffer(mAllRitems, mGizmoManager.getInstance().mRenderObjects.size());
 
 
-	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView的变换矩�?
+	XMMATRIX view = mCamera.getInstance().GetView();				//WorldToView皁E��换矩�?
 	auto viewDeterminant = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld的变换矩�?
+	XMMATRIX invView = XMMatrixInverse(&viewDeterminant, view);		//ViewToWorld皁E��换矩�?
 
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 
@@ -161,12 +161,12 @@ void GraphicsCore::UpdateObjectCBs(const GameTimer& gt)
 		XMMATRIX InvWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 		XMMATRIX texTransform = XMLoadFloat4x4(&e->TexTransform);
 		
-		//	视锥剔除
+		//	见E��剔除
 		XMMATRIX viewToLocal = XMMatrixMultiply(invView, InvWorld);
-		//	创建视锥�?
+		//	创建见E���?
 		BoundingFrustum localSpaceFrustum;
 		localSpaceFrustum.CreateFromMatrix(localSpaceFrustum, mCamera.GetProj());
-		//	将视锥体从观察空间变换到局部空�?
+		//	封E��E��体从观察空间变换到局部空�?
 		localSpaceFrustum.Transform(localSpaceFrustum, viewToLocal);
 
 		bool enable = e->Enable;
@@ -195,7 +195,7 @@ void GraphicsCore::UpdateMaterialBuffer(const GameTimer& gt)
 	//	更新场景材质Buffer
 	mSceneManager.getInstance().UpdateSceneMaterialBuffer(PBRMaterialBuffer, SkyBoxMaterialBuffer, matCBIndexUtils);
 
-	//	更新后处理材质Buffer
+	//	更新后夁E��材质Buffer
 	mPostProcessManager.getInstance().UpdateMaterialBuffer(PostProcessBuffer, matCBIndexUtils);
 }
 
@@ -660,7 +660,7 @@ void GraphicsCore::BuildPSOs()
 	// PSO for sky.
 	PipelineStateObject SkyBoxObject = PipelineStateObject();
 	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);
-	SkyBoxObject.SetShader(mShaderManager, mRootSignature, "skyVS", "skyPS");
+	SkyBoxObject.SetShader(mShaderManager, mRootSignature, "skyVS", "skyPS"); 
 	SkyBoxObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_LESS_EQUAL);
 	SkyBoxObject.SetRasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SkyBoxObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["sky"])));
