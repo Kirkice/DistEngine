@@ -669,7 +669,7 @@ void GraphicsCore::BuildPSOs()
 void GraphicsCore::BuildFrameResources()
 {
 	for (int i = 0; i < gNumFrameResources; ++i)
-	{
+	{ 
 		mFrameResources.push_back(
 			std::make_unique<FrameResource>(md3dDevice.Get(),
 			2, 
