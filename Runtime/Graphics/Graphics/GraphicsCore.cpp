@@ -666,7 +666,7 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(SkyBoxObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["sky"])));
 }
 
-void GraphicsCore::BuildFrameResources()
+void GraphicsCore::BuildFrameResources() 
 {
 	for (int i = 0; i < gNumFrameResources; ++i)
 	{ 
