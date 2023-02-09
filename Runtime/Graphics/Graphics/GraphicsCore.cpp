@@ -652,7 +652,7 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(EdgeDetectionObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
 	// 	PSO for FxAA
-	PipelineStateObject FxAAObject = PipelineStateObject();
+	PipelineStateObject FxAAObject = PipelineStateObject(); 
 	FxAAObject.BuildDefault(mShaderManager, mRootSignature);
 	FxAAObject.SetShader(mShaderManager, mRootSignature, "FastApproximateAntialiasingVS", "FastApproximateAntialiasingPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(FxAAObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["FxAA"])));
