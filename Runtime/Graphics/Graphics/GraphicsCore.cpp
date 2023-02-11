@@ -658,7 +658,7 @@ void GraphicsCore::BuildPSOs()
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(FxAAObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["FxAA"])));
 
 	// PSO for sky.
-	PipelineStateObject SkyBoxObject = PipelineStateObject();
+	PipelineStateObject SkyBoxObject = PipelineStateObject();  
 	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);
 	SkyBoxObject.SetShader(mShaderManager, mRootSignature, "skyVS", "skyPS"); 
 	SkyBoxObject.SetDepthStencilState(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_LESS_EQUAL);
