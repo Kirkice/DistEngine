@@ -208,7 +208,7 @@ void DistRenderPipeline::SetDescriptorHeap()
 //	ÉèÖÃ¸ùÇ©Ãû
 void DistRenderPipeline::SetRootSignature()
 {
-	_forwardPassCmdList->GetInternal()->SetGraphicsRootSignature(mRootSignature.GetSignature());
+	_forwardPassCmdList->GetInternal()->SetGraphicsRootSignature(mRootSignature.GetSignature()); 
 }
 
 
