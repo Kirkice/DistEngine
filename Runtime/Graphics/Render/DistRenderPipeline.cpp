@@ -228,7 +228,7 @@ void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 		break;
 	}
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
-}  
+}
 
 //	…Ë÷√ViewheRect
 void DistRenderPipeline::SetViewAndRect()
