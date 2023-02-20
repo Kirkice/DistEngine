@@ -648,7 +648,7 @@ void GraphicsCore::BuildPSOs()
 	// 	PSO for EdgeDetection
 	PipelineStateObject EdgeDetectionObject = PipelineStateObject();
 	EdgeDetectionObject.BuildDefault(mShaderManager, mRootSignature);
-	EdgeDetectionObject.SetShader(mShaderManager, mRootSignature, "edgeDetectionVS", "edgeDetectionPS");
+	EdgeDetectionObject.SetShader(mShaderManager, mRootSignature, "edgeDetectionVS", "edgeDetectionPS"); 
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(EdgeDetectionObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["EdgeDetection"])));
 
 	// 	PSO for FxAA
