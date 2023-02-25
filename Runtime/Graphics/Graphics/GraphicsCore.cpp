@@ -657,7 +657,7 @@ void GraphicsCore::BuildPSOs()
 	FxAAObject.SetShader(mShaderManager, mRootSignature, "FastApproximateAntialiasingVS", "FastApproximateAntialiasingPS");
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(FxAAObject.GetPSODesc(), IID_PPV_ARGS(&mPSOs["FxAA"])));
 
-	// PSO for sky.   
+	// PSO for sky.
 	PipelineStateObject SkyBoxObject = PipelineStateObject();
 	SkyBoxObject.BuildDefault(mShaderManager, mRootSignature);
 	SkyBoxObject.SetShader(mShaderManager, mRootSignature, "skyVS", "skyPS"); 
