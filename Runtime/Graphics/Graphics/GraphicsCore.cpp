@@ -667,7 +667,7 @@ void GraphicsCore::BuildPSOs()
 }
 
 void GraphicsCore::BuildFrameResources() 
-{
+{  
 	for (int i = 0; i < gNumFrameResources; ++i)
 	{ 
 		mFrameResources.push_back(
