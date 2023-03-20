@@ -120,10 +120,6 @@ void analyse_shader::set_d3d12_blend(D3D12_BLEND& blend_mode, std::string compar
 			blend_mode = D3D12_BLEND_SRC1_ALPHA;
 		else if (equals(trim_copy(value), "D3D12_BLEND_INV_SRC1_ALPHA"))
 			blend_mode = D3D12_BLEND_INV_SRC1_ALPHA;
-		else if (equals(trim_copy(value), "D3D12_BLEND_ALPHA_FACTOR"))
-			blend_mode = D3D12_BLEND_ALPHA_FACTOR;
-		else
-			blend_mode = D3D12_BLEND_INV_ALPHA_FACTOR;
 	}
 }
 
