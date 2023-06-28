@@ -128,8 +128,8 @@ struct FogSetting
 struct AntialiasingSettings
 {
 	float AbsoluteLumaThreshold = 0.08f;
-	float RelativeLumaThreshold = 0.25f;
-	float ConsoleCharpness = 4;
+	float RelativeLumaThreshold = 0.166f;
+	float ConsoleCharpness = 0.75f;
 	float DebugMode = 0;
 };
 

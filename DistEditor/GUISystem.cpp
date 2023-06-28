@@ -671,7 +671,7 @@ void GUISystem::DrawRenderSetting()
 		mAntialiasingSettings.DebugMode = (int)DebugMode;
 		ImGui::SliderFloat("AbsoluteLumaThreshold", &mAntialiasingSettings.AbsoluteLumaThreshold, 0.01f, 0.5f);
 		ImGui::SliderFloat("RelativeLumaThreshold", &mAntialiasingSettings.RelativeLumaThreshold, 0.1f, 0.5f);
-		ImGui::SliderFloat("ConsoleCharpness", &mAntialiasingSettings.ConsoleCharpness, 0.1f, 10.0f);
+		ImGui::SliderFloat("SubpixelBlending", &mAntialiasingSettings.ConsoleCharpness, 0.1f, 10.0f);
 	}
 
 	ImGui::End();
