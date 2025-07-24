@@ -3,7 +3,7 @@
 
 void ObjLoader::LoadObj(MeshData& data, char* filename)
 {
-	//	tinyObj∂¡»°OBJ
+	//	tinyObjÔøΩÔøΩ»°OBJ
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -11,7 +11,7 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 	std::string err;
 	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename);
 
-	//º”‘ÿ ß∞‹
+	//ÔøΩÔøΩÔøΩÔøΩ ßÔøΩÔøΩ
 	if (!warn.empty()) {
 		std::cout << "WARN: " << warn << std::endl;
 	}
@@ -24,10 +24,10 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 		printf("Failed to load/parse .obj.\n");
 	}
 
-	//’‚¿Ô∂‘Ã˘ÕºUV◊ˆ“ª∏ˆ–ﬁ’˝£∫∑¥◊™V÷·£∫
+	//ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÕºUVÔøΩÔøΩ“ªÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ◊™VÔøΩ·£∫
 	for (int i = 0; i < attrib.texcoords.size(); i++)
 	{
-		if (i % 2 == 1)	//µ⁄0∏ˆ «u£¨µ⁄1∏ˆ «v
+		if (i % 2 == 1)	//ÔøΩÔøΩ0ÔøΩÔøΩÔøΩÔøΩuÔøΩÔøΩÔøΩÔøΩ1ÔøΩÔøΩÔøΩÔøΩv
 			attrib.texcoords[i] = 1.0f - attrib.texcoords[i];
 	}
 
@@ -75,23 +75,30 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 void ObjLoader::ReconStructNormals(MeshData& data)
 {
 	// iterator over faces (given by index triplets) and calculate normals for each incident vertex //
-	for (size_t i = 0; i < data.Indices32.size() - 2; i += 3)
+	for (size_t i = 0; i + 2 < data.Indices32.size(); i += 3)
 	{
+		size_t idx0 = data.Indices32[i];
+		size_t idx1 = data.Indices32[i + 1];
+		size_t idx2 = data.Indices32[i + 2];
+		if (idx0 >= data.Vertices.size() || idx1 >= data.Vertices.size() || idx2 >= data.Vertices.size()) {
+			// Á¥¢ÂºïÈùûÊ≥ïÔºåË∑≥Ëøá
+			continue;
+		}
 		// face edges incident with vertex 0 //
-		Vector3 edge0 = { data.Vertices[data.Indices32[i + 1]].Position[0] - data.Vertices[data.Indices32[i]].Position[0],
-						   data.Vertices[data.Indices32[i + 1]].Position[1] - data.Vertices[data.Indices32[i]].Position[1],
-						   data.Vertices[data.Indices32[i + 1]].Position[2] - data.Vertices[data.Indices32[i]].Position[2] };
-		Vector3 edge1 = { data.Vertices[data.Indices32[i + 2]].Position[0] - data.Vertices[data.Indices32[i]].Position[0],
-						   data.Vertices[data.Indices32[i + 2]].Position[1] - data.Vertices[data.Indices32[i]].Position[1],
-						   data.Vertices[data.Indices32[i + 2]].Position[2] - data.Vertices[data.Indices32[i]].Position[2] };
+		Vector3 edge0 = { data.Vertices[idx1].Position[0] - data.Vertices[idx0].Position[0],
+					   data.Vertices[idx1].Position[1] - data.Vertices[idx0].Position[1],
+					   data.Vertices[idx1].Position[2] - data.Vertices[idx0].Position[2] };
+		Vector3 edge1 = { data.Vertices[idx2].Position[0] - data.Vertices[idx0].Position[0],
+					   data.Vertices[idx2].Position[1] - data.Vertices[idx0].Position[1],
+					   data.Vertices[idx2].Position[2] - data.Vertices[idx0].Position[2] };
 
 		edge0 = Vector3::Normalize(edge0);
 		edge1 = Vector3::Normalize(edge1);
 
 		// compute normal using cross product //
 		Vector3 normal = { edge0[1] * edge1[2] - edge0[2] * edge1[1],
-							 edge0[2] * edge1[0] - edge0[0] * edge1[2],
-							 edge0[0] * edge1[1] - edge0[1] * edge1[0] };
+						 edge0[2] * edge1[0] - edge0[0] * edge1[2],
+						 edge0[0] * edge1[1] - edge0[1] * edge1[0] };
 
 		normal = Vector3::Normalize(normal);
 
@@ -99,21 +106,21 @@ void ObjLoader::ReconStructNormals(MeshData& data)
 		for (int j = 0; j < 3; ++j) {
 			if (j == 0)
 			{
-				data.Vertices[data.Indices32[i]].Normal.x += normal[j];
-				data.Vertices[data.Indices32[i + 1]].Normal.x += normal[j];
-				data.Vertices[data.Indices32[i + 2]].Normal.x += normal[j];
+				data.Vertices[idx0].Normal.x += normal[j];
+				data.Vertices[idx1].Normal.x += normal[j];
+				data.Vertices[idx2].Normal.x += normal[j];
 			}
 			else if (j == 1)
 			{
-				data.Vertices[data.Indices32[i]].Normal.y += normal[j];
-				data.Vertices[data.Indices32[i + 1]].Normal.y += normal[j];
-				data.Vertices[data.Indices32[i + 2]].Normal.y += normal[j];
+				data.Vertices[idx0].Normal.y += normal[j];
+				data.Vertices[idx1].Normal.y += normal[j];
+				data.Vertices[idx2].Normal.y += normal[j];
 			}
 			else if (j == 2)
 			{
-				data.Vertices[data.Indices32[i]].Normal.z += normal[j];
-				data.Vertices[data.Indices32[i + 1]].Normal.z += normal[j];
-				data.Vertices[data.Indices32[i + 2]].Normal.z += normal[j];
+				data.Vertices[idx0].Normal.z += normal[j];
+				data.Vertices[idx1].Normal.z += normal[j];
+				data.Vertices[idx2].Normal.z += normal[j];
 			}
 		}
 	}
@@ -126,21 +133,28 @@ void ObjLoader::ReconStructNormals(MeshData& data)
 
 void ObjLoader::ComputeTangentSpace(MeshData& data)
 {
-	//	Compute Normal Tangent
-	for (size_t i = 0; i < data.Indices32.size() - 2; i += 3)
+	// Compute Normal Tangent
+	for (size_t i = 0; i + 2 < data.Indices32.size(); i += 3)
 	{
-		PVertex& v0 = data.Vertices[data.Indices32[i]];
-		PVertex& v1 = data.Vertices[data.Indices32[i + 1]];
-		PVertex& v2 = data.Vertices[data.Indices32[i + 2]];
+		size_t idx0 = data.Indices32[i];
+		size_t idx1 = data.Indices32[i + 1];
+		size_t idx2 = data.Indices32[i + 2];
+		if (idx0 >= data.Vertices.size() || idx1 >= data.Vertices.size() || idx2 >= data.Vertices.size()) {
+			// Á¥¢ÂºïÈùûÊ≥ïÔºåË∑≥Ëøá
+			continue;
+		}
+		PVertex& v0 = data.Vertices[idx0];
+		PVertex& v1 = data.Vertices[idx1];
+		PVertex& v2 = data.Vertices[idx2];
 
 		// compute traingle edges Q1, Q2 //
 		Vector3 Q1 = { v1.Position.x - v0.Position.x,
-					   v1.Position.y - v0.Position.y,
-					   v1.Position.z - v0.Position.z };
+				   v1.Position.y - v0.Position.y,
+				   v1.Position.z - v0.Position.z };
 
 		Vector3 Q2 = { v2.Position.x - v0.Position.x,
-					   v2.Position.y - v0.Position.y,
-					   v2.Position.z - v0.Position.z };
+				   v2.Position.y - v0.Position.y,
+				   v2.Position.z - v0.Position.z };
 
 		// compute dU and dV //
 		float du1 = v1.TexC.x - v0.TexC.x;

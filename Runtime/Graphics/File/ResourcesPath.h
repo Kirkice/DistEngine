@@ -2,7 +2,7 @@
 #include "DX12Utils.h"
 #include <string>
 
-const std::string ApplicationPath = "E:/Engine Project/DistEngine/DistEngine/";
+const std::string ApplicationPath = "F:/Project/CppProject/DistEngine/DistEngine/";
 
 	/// <summary>
 	/// RESOURCES

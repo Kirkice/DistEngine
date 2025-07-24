@@ -1066,7 +1066,7 @@ void GUISystem::DrawPostProcessingSettings()
 	//	currentMat->NumFramesDirty++;
 	//}
 
-	//ImGui::End();
+	ImGui::End();
 }
 
 void GUISystem::SetDefaultStyle()
