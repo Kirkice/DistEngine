@@ -13,7 +13,16 @@
     <ClCompile Include="SceneManager\SceneManager.cpp">
       <Filter>SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsCore.cpp">
+    <ClCompile Include="Graphics\GraphicsCoreLifecycle.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsCoreRendering.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsCoreResources.cpp">
+      <Filter>GraphicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsCoreUpdate.cpp">
       <Filter>GraphicsSystem</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsUtils.cpp">

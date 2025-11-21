@@ -10,7 +10,7 @@ public:
 	void SetRootSignature(const RootSignature& pRootSignature);
 	void SetShaderCode(ComPtr<ID3DBlob> pShaderCode);
 
-	ComPtr<ID3D12PipelineState> GetPSO();
+	ComPtr<ID3D12PipelineState> GetPSO() const;
 	void Finalize(ComPtr<ID3D12Device> pDevice);
 
 private:

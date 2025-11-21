@@ -39,13 +39,14 @@ void RootParameter::InitAsDescriptorsTable(UINT numRanges, D3D12_SHADER_VISIBILI
 	_parameter.ShaderVisibility = visibility;
 	_parameter.DescriptorTable.NumDescriptorRanges = numRanges;
 
-	_ranges.reset(new D3D12_DESCRIPTOR_RANGE[numRanges]);
-	_parameter.DescriptorTable.pDescriptorRanges = _ranges.get();
+	_ranges.clear();
+	_ranges.resize(numRanges);
+	_parameter.DescriptorTable.pDescriptorRanges = _ranges.data();
 }
 
 void RootParameter::InitTableRange(UINT rangeNumber, UINT baseRegister, UINT descriptorsCount, D3D12_DESCRIPTOR_RANGE_TYPE rangeType)
 {
-	if (!_ranges || _parameter.DescriptorTable.NumDescriptorRanges <= rangeNumber)
+	if (_ranges.empty() || _parameter.DescriptorTable.NumDescriptorRanges <= rangeNumber)
 	{
 		assert(false);
 		return;
@@ -101,8 +102,10 @@ StaticSampler::operator D3D12_STATIC_SAMPLER_DESC& ()
 
 void RootSignature::Init(UINT parametersCount, UINT staticSamplersCount)
 {
-	_parameters.reset(new RootParameter[parametersCount]);
-	_samplers.reset(new StaticSampler[staticSamplersCount]);
+	_parameters.clear();
+	_parameters.resize(parametersCount);
+	_samplers.clear();
+	_samplers.resize(staticSamplersCount);
 
 	_description.NumParameters = parametersCount;
 	_description.NumStaticSamplers = staticSamplersCount;
@@ -128,25 +131,29 @@ const RootParameter& RootSignature::operator[] (size_t parameter) const
 
 void RootSignature::Finalize(ComPtr<ID3D12Device> pDevice, D3D12_ROOT_SIGNATURE_FLAGS flags /*= D3D12_ROOT_SIGNATURE_FLAG_NONE*/)
 {
-	// create more optimal way to do this
-	std::unique_ptr<D3D12_ROOT_PARAMETER[]> descParameters;
-	descParameters.reset(new D3D12_ROOT_PARAMETER[_description.NumParameters]);
+	std::vector<D3D12_ROOT_PARAMETER> descParameters(_description.NumParameters);
 	for (UINT i = 0; i < _description.NumParameters; ++i)
 		descParameters[i] = _parameters[i];
 
-	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> descSamplers;
-	descSamplers.reset(new D3D12_STATIC_SAMPLER_DESC[_description.NumStaticSamplers]);
+	std::vector<D3D12_STATIC_SAMPLER_DESC> descSamplers(_description.NumStaticSamplers);
 	for (UINT i = 0; i < _description.NumStaticSamplers; ++i)
 		descSamplers[i] = _samplers[i];
 
 	_description.Flags = flags;
-	_description.pParameters = descParameters.get();
-	_description.pStaticSamplers = descSamplers.get();
+	_description.pParameters = descParameters.empty() ? nullptr : descParameters.data();
+	_description.pStaticSamplers = descSamplers.empty() ? nullptr : descSamplers.data();
 
 	ComPtr<ID3DBlob> signatureBlob = nullptr;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
-	if (FAILED(D3D12SerializeRootSignature(&_description, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob)))
-		MessageBoxA(NULL, (const char*)errorBlob->GetBufferPointer(), NULL, NULL);
+	HRESULT hr = D3D12SerializeRootSignature(&_description, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr))
+	{
+		if (errorBlob)
+		{
+			OutputDebugStringA(static_cast<const char*>(errorBlob->GetBufferPointer()));
+		}
+		ThrowIfFailed(hr);
+	}
 
 	ThrowIfFailed(pDevice->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&_signature)));
 }
@@ -155,3 +162,5 @@ ComPtr<ID3D12RootSignature> RootSignature::GetInternal() const
 {
 	return _signature;
 }
+
+

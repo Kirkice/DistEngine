@@ -3,29 +3,29 @@
 void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 {
 	/// <summary>
-	/// Ìå»ýÎí
+	/// ï¿½ï¿½ï¿½ï¿½ï¿½
 	/// </summary>
 	/// <param name="matCBIndexUtils"></param>
 	auto VolumeFog = std::make_unique<GameObject>("VolumeFog");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_volumeFog = new Material();
 	mat_volumeFog->Name = "VolumeFog_mat";
 	mat_volumeFog->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 
-	//	´´½¨Æ½ÃæÍø¸ñ
+	//	ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	MeshFliter* mesh_volumeFog = new MeshFliter("MeshFliter");
 	mesh_volumeFog->CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 	MeshRender* meshRender_volumeFog = new MeshRender(mesh_volumeFog, mat_volumeFog, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_volumeFog = new Transform("Transform");
 	transform_volumeFog->position = Vector3(0, 0, 0);
 	transform_volumeFog->eulerangle = Vector3(0, 0, 0);
 	transform_volumeFog->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_volumeFog = new DistBound::BoundingBox("BoundingBox");
 	bound_volumeFog->aabb = BoundingAABB(mesh_volumeFog->data);
 
@@ -42,24 +42,24 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 	/// <param name="matCBIndexUtils"></param>
 	auto FastApproximateAntialiasing = std::make_unique<GameObject>("FastApproximateAntialiasing");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_fxaa = new Material();
 	mat_fxaa->Name = "FastApproximateAntialiasing_mat";
 	mat_fxaa->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 
-	//	´´½¨Æ½ÃæÍø¸ñ
+	//	ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	MeshFliter* mesh_fxaa = new MeshFliter("MeshFliter");
 	mesh_fxaa->CreateQuad(0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 	MeshRender* meshRender_fxaa = new MeshRender(mesh_fxaa, mat_fxaa, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_fxaa = new Transform("Transform");
 	transform_fxaa->position = Vector3(0, 0, 0);
 	transform_fxaa->eulerangle = Vector3(0, 0, 0);
 	transform_fxaa->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½
 	DistBound::BoundingBox* bound_fxaa = new DistBound::BoundingBox("BoundingBox");
 	bound_fxaa->aabb = BoundingAABB(mesh_fxaa->data);
 
@@ -135,13 +135,13 @@ void PostProcessManager::BuildRenderItem(
 {
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		//	´´½¨äÖÈ¾Ïî
+		//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½
 		auto Ritem = std::make_unique<RenderItem>();
 		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
 		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Geo = GraphicsUtils::BuildMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice.Get(), mCommandList.Get()).release();
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;

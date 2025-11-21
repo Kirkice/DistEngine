@@ -1,4 +1,5 @@
 #include "RootSignature.h"
+#include <vector>
 
 RootSignature::RootSignature()
 {
@@ -11,22 +12,18 @@ RootSignature::~RootSignature()
 void RootSignature::Build(
 	RootSignatureType type,
 	Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
+	UINT descriptorCount0,
 	UINT baseShaderRegister0,
 	UINT registerSpace0,
-	UINT offsetInDescriptorsFromTableStart0,
+	UINT descriptorCount1,
 	UINT baseShaderRegister1,
-	UINT registerSpace1,
-	UINT offsetInDescriptorsFromTableStart1
+	UINT registerSpace1
 )
 {
-	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, baseShaderRegister0, registerSpace0, offsetInDescriptorsFromTableStart0);
+	CD3DX12_DESCRIPTOR_RANGE texTable0 = CreateSrvTable(descriptorCount0, baseShaderRegister0, registerSpace0);
+	CD3DX12_DESCRIPTOR_RANGE texTable1 = CreateSrvTable(descriptorCount1, baseShaderRegister1, registerSpace1);
 
-	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, baseShaderRegister1, registerSpace1, offsetInDescriptorsFromTableStart1);
-
-	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
+	std::array<CD3DX12_ROOT_PARAMETER, 6> slotRootParameter;
 
 	// Perfomance TIP: Order from most frequent to least frequent.
 	slotRootParameter[0].InitAsConstantBufferView(0);
@@ -36,10 +33,22 @@ void RootSignature::Build(
 	slotRootParameter[4].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[5].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL);
 
-	auto staticSamplers = GetStaticSamplers();
+	const bool useSSAOSamplers = (type == RootSignatureType::SSAO);
+	
+	std::vector<CD3DX12_STATIC_SAMPLER_DESC> staticSamplers;
+	if (useSSAOSamplers)
+	{
+		auto samplers = GetSSAOSamplers();
+		staticSamplers.assign(samplers.begin(), samplers.end());
+	}
+	else
+	{
+		auto samplers = GetStaticSamplers();
+		staticSamplers.assign(samplers.begin(), samplers.end());
+	}
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(6, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(static_cast<UINT>(slotRootParameter.size()), slotRootParameter.data(),
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -60,6 +69,13 @@ void RootSignature::Build(
 		serializedRootSig->GetBufferPointer(),
 		serializedRootSig->GetBufferSize(),
 		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
+}
+
+CD3DX12_DESCRIPTOR_RANGE RootSignature::CreateSrvTable(UINT descriptorCount, UINT baseRegister, UINT registerSpace)
+{
+	CD3DX12_DESCRIPTOR_RANGE range;
+	range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descriptorCount, baseRegister, registerSpace);
+	return range;
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> RootSignature::GetStaticSamplers()

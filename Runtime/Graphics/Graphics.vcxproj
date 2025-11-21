@@ -171,7 +171,10 @@
     <ClCompile Include="Render\RenderCore.cpp" />
     <ClCompile Include="Render\RenderTexture.cpp" />
     <ClCompile Include="SceneManager\GizmosManager.cpp" />
-    <ClCompile Include="Graphics\GraphicsCore.cpp" />
+    <ClCompile Include="Graphics\GraphicsCoreLifecycle.cpp" />
+    <ClCompile Include="Graphics\GraphicsCoreRendering.cpp" />
+    <ClCompile Include="Graphics\GraphicsCoreResources.cpp" />
+    <ClCompile Include="Graphics\GraphicsCoreUpdate.cpp" />
     <ClCompile Include="Graphics\GraphicsUtils.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Geometry\ObjLoader.cpp" />

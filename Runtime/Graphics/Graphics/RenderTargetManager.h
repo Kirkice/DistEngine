@@ -1,5 +1,5 @@
 #pragma once
-#include "DX12GameApp.h"
+#include "DX12Utils.h"
 
 struct RenderTarget
 {
@@ -73,6 +73,15 @@ public:
 		CommandList& cmdList);
 
 private:
+	static constexpr size_t kMaxDescriptors = 100;
+
+	void EnsureDescriptorBudget(size_t nextIndex, size_t additionalDescriptors = 1) const;
+	static D3D12_RESOURCE_DESC MakeTextureDesc(DXGI_FORMAT format, UINT64 width, UINT height, D3D12_RESOURCE_FLAGS flags);
+	static D3D12_CLEAR_VALUE MakeColorClearValue(DXGI_FORMAT format, const D3D12_CLEAR_VALUE* overrideValue);
+	static D3D12_CLEAR_VALUE MakeDepthClearValue(DXGI_FORMAT format, const D3D12_CLEAR_VALUE* overrideValue);
+	ComPtr<ID3D12Resource> CreateTexture(const D3D12_RESOURCE_DESC& desc, const D3D12_CLEAR_VALUE& clearValue, D3D12_RESOURCE_STATES initialState, const std::wstring& resourceName) const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetHeapHandle(D3D12_DESCRIPTOR_HEAP_TYPE type, size_t index) const;
+
 	ComPtr<ID3D12DescriptorHeap>    _rtvDescriptorHeap = nullptr;
 	ComPtr<ID3D12DescriptorHeap>    _dsvDescriptorHeap = nullptr;
 	ComPtr<ID3D12Device>            _device = nullptr;

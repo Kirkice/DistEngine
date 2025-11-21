@@ -30,7 +30,7 @@ struct RenderItem
 	Material* Mat = nullptr;
 	MeshGeometry* Geo = nullptr;
 
-	D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	BoundingBox Bound;
 	bool Enable;
@@ -53,7 +53,7 @@ enum class RenderLayer : int
 	Count
 };
 
-//	³¡¾°ÀàÐÍ
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 enum class SceneType
 {
 	Default,
@@ -62,7 +62,7 @@ enum class SceneType
 	Water,
 };
 
-//	Ìì¿ÕºÐÉèÖÃ	´óÆøäÖÈ¾
+//	ï¿½ï¿½Õºï¿½ï¿½ï¿½ï¿½ï¿½	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾
 struct SkyBoxSetting
 {
 	Color Tint;
@@ -79,7 +79,7 @@ struct SkyBoxSetting
 	float AnisotropicIntensity = 0;
 };
 
-//	µÆ¹âÉèÖÃ
+//	ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½
 struct LightSetting
 {
 	Color ShadowColor;
@@ -94,7 +94,7 @@ struct LightSetting
 	float Step;
 };
 
-//	Ïà»úÉèÖÃ
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 struct CameraSetting
 {
 	float mCamFov = 45;
@@ -142,7 +142,7 @@ struct PostProcessSwitch
 class GraphicsUtils
 {
 public:
-	static MeshGeometry* BuidlMeshGeometryFromMeshData(std::string name, MeshData data, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList);
+	static std::unique_ptr<MeshGeometry> BuildMeshGeometryFromMeshData(std::string name, const MeshData& data, ID3D12Device* md3dDevice, ID3D12GraphicsCommandList* mCommandList);
 
 	static void BuildTextureCubeSrvDesc(
 		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,

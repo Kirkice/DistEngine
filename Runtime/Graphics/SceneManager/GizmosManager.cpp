@@ -3,31 +3,31 @@
 
 void GizmosManager::BuildWirePlane(MaterialIndexUtils& matCBIndexUtils)
 {
-	//	´æ´¢ÀàÐÍmatCB¿ªÊ¼Öµ
+	//	ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½matCBï¿½ï¿½Ê¼Öµ
 	matCBIndexUtils.getInstance().SaveTypeIndex("Gizmo", matCBIndexUtils.getInstance().GetIndex());
 
 	auto planeRenderObject = std::make_unique<GameObject>("plane");
 	planeRenderObject->name = "plane";
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_plane = new Material();
 	mat_plane->Name = "Plane_mat";
 	mat_plane->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_plane->DiffuseColor = Color(0.8f, 0.8f, 0.8f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_plane = new MeshFliter("MeshFliter");
 	mesh_plane->CreateGrid(60, 60, 240, 240);
 	MeshRender* meshRender_plane = new MeshRender(mesh_plane, mat_plane, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_plane = new Transform("Transform");
 	transform_plane->position = Vector3(0, 0, 0);
 	transform_plane->eulerangle = Vector3(0, 0, 0);
 	transform_plane->scale = Vector3(10, 10, 10);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_plane = new DistBound::BoundingBox("BoundingBox");
 	bound_plane->aabb = BoundingAABB(mesh_plane->data);
 
@@ -46,7 +46,7 @@ void GizmosManager::BuildLightGizmo(
 {
 	auto directionLightGizmoObject = std::make_unique<GameObject>("DirectionLightGizmo");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_dirGizmo = new Material();
 	mat_dirGizmo->Name = "DirGizmo";
 	mat_dirGizmo->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
@@ -54,18 +54,18 @@ void GizmosManager::BuildLightGizmo(
 	mat_dirGizmo->DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mat_dirGizmo->DiffuseMapIndex = mGizmosTextures["DirectionalLight"]->TexIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_dirGizmo = new MeshFliter("MeshFliter");
 	mesh_dirGizmo->CreateGrid(6, 6, 4, 4);
 	MeshRender* meshRender_plane = new MeshRender(mesh_dirGizmo, mat_dirGizmo, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_dirGizmo = new Transform("Transform");
 	transform_dirGizmo->position = Vector3(-20, 30, 20);
 	transform_dirGizmo->eulerangle = Vector3(0, 0, 0);
 	transform_dirGizmo->scale = Vector3(0.5f, 0.5f, 0.5f);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_dirGizmo = new DistBound::BoundingBox("BoundingBox");
 	bound_dirGizmo->aabb = BoundingAABB(mesh_dirGizmo->data);
 
@@ -80,31 +80,31 @@ void GizmosManager::BuildLightGizmo(
 void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 {
 	//---------------------------------------------------------------
-	//						×ø±ê
+	//						ï¿½ï¿½ï¿½ï¿½
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("PositionUCS", matCBIndexUtils.getInstance().GetIndex());
 
 	auto PositionUCSGizmoX = std::make_unique<GameObject>("PositionUCSGizmoX");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoX = new Material();
 	mat_ucsGizmoX->Name = "PositionUCS";
 	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mPositionUCSGizmoXPath.c_str());
 	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoX = new Transform("Transform");
 	transform_ucsGizmoX->position = Vector3(0, 0, 0);
 	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
@@ -122,25 +122,25 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 
 	auto PositionUCSGizmoY = std::make_unique<GameObject>("PositionUCSGizmoY");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoY = new Material();
 	mat_ucsGizmoY->Name = "PositionUCS";
 	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mPositionUCSGizmoYPath.c_str());
 	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoY = new Transform("Transform");
 	transform_ucsGizmoY->position = Vector3(0, 0, 0);
 	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
@@ -158,25 +158,25 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 
 	auto PositionUCSGizmoZ = std::make_unique<GameObject>("PositionUCSGizmoZ");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoZ = new Material();
 	mat_ucsGizmoZ->Name = "PositionUCS";
 	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mPositionUCSGizmoZPath.c_str());
 	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoZ = new Transform("Transform");
 	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
@@ -194,31 +194,31 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 {
 	//---------------------------------------------------------------
-	//						Ðý×ª
+	//						ï¿½ï¿½×ª
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("RotationUCS", matCBIndexUtils.getInstance().GetIndex());
 
 	auto RotationUCSGizmoX = std::make_unique<GameObject>("RotationUCSGizmoX");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoX = new Material();
 	mat_ucsGizmoX->Name = "RotationUCS";
 	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mRotationUCSGizmoXPath.c_str());
 	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoX = new Transform("Transform");
 	transform_ucsGizmoX->position = Vector3(0, 0, 0);
 	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
@@ -236,25 +236,25 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 
 	auto RotationUCSGizmoY = std::make_unique<GameObject>("RotationUCSGizmoY");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoY = new Material();
 	mat_ucsGizmoY->Name = "RotationUCS";
 	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mRotationUCSGizmoYPath.c_str());
 	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoY = new Transform("Transform");
 	transform_ucsGizmoY->position = Vector3(0, 0, 0);
 	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
@@ -272,25 +272,25 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 
 	auto RotationUCSGizmoZ = std::make_unique<GameObject>("RotationUCSGizmoZ");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoZ = new Material();
 	mat_ucsGizmoZ->Name = "RotationUCS";
 	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mRotationUCSGizmoZPath.c_str());
 	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoZ = new Transform("Transform");
 	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
@@ -308,31 +308,31 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 {
 
 	//---------------------------------------------------------------
-	//						Ëõ·Å
+	//						ï¿½ï¿½ï¿½ï¿½
 	//---------------------------------------------------------------
 	matCBIndexUtils.getInstance().SaveTypeIndex("ScaleUCS", matCBIndexUtils.getInstance().GetIndex());
 
 	auto ScaleUCSGizmoX = std::make_unique<GameObject>("ScaleUCSGizmoX");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoX = new Material();
 	mat_ucsGizmoX->Name = "ScaleUCS";
 	mat_ucsGizmoX->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoX->DiffuseColor = Color(1.0f, 0.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoX = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoX->data, (char*)mScaleUCSGizmoXPath.c_str());
 	MeshRender* meshRender_ucsGizmoX = new MeshRender(mesh_ucsGizmoX, mat_ucsGizmoX, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoX = new Transform("Transform");
 	transform_ucsGizmoX->position = Vector3(0, 0, 0);
 	transform_ucsGizmoX->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoX->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
@@ -350,25 +350,25 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 
 	auto ScaleUCSGizmoY = std::make_unique<GameObject>("ScaleUCSGizmoY");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoY = new Material();
 	mat_ucsGizmoY->Name = "ScaleUCS";
 	mat_ucsGizmoY->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoY->DiffuseColor = Color(0.0f, 1.0f, 0.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoY = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoY->data, (char*)mScaleUCSGizmoYPath.c_str());
 	MeshRender* meshRender_ucsGizmoY = new MeshRender(mesh_ucsGizmoY, mat_ucsGizmoY, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoY = new Transform("Transform");
 	transform_ucsGizmoY->position = Vector3(0, 0, 0);
 	transform_ucsGizmoY->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoY->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
@@ -386,25 +386,25 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 
 	auto ScaleUCSGizmoZ = std::make_unique<GameObject>("ScaleUCSGizmoZ");
 
-	//¹¹½¨²ÄÖÊ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Material* mat_ucsGizmoZ = new Material();
 	mat_ucsGizmoZ->Name = "ScaleUCS";
 	mat_ucsGizmoZ->MatCBIndex = matCBIndexUtils.getInstance().GetIndex();
 	matCBIndexUtils.getInstance().OffsetIndex();
 	mat_ucsGizmoZ->DiffuseColor = Color(0.0f, 0.0f, 1.0f, 1.0f);
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ucsGizmoZ = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ucsGizmoZ->data, (char*)mScaleUCSGizmoZPath.c_str());
 	MeshRender* meshRender_ucsGizmoZ = new MeshRender(mesh_ucsGizmoZ, mat_ucsGizmoZ, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ucsGizmoZ = new Transform("Transform");
 	transform_ucsGizmoZ->position = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->eulerangle = Vector3(0, 0, 0);
 	transform_ucsGizmoZ->scale = Vector3(1, 1, 1);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
 	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
@@ -477,7 +477,7 @@ void GizmosManager::BuildRenderItem(
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = i;
 		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Geo = GraphicsUtils::BuildMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice.Get(), mCommandList.Get()).release();
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
 		Ritem->BaseVertexLocation = Ritem->Geo->DrawArgs["mesh"].BaseVertexLocation;
@@ -505,7 +505,7 @@ void GizmosManager::BuildRenderItem(
 }
 
 /// <summary>
-/// ¸üÐÂCBuffer
+/// ï¿½ï¿½ï¿½ï¿½CBuffer
 /// </summary>
 void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, Transform* mMainLightPos, std::unique_ptr<GameObject>& mTargetRender)
 {
@@ -524,7 +524,7 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 					mAllRitems[i]->World = mRenderObjects[j]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 				}
 			}
-			//	×ø±ê
+			//	ï¿½ï¿½ï¿½ï¿½
 			else if (j >= 2 && j < 5)
 			{
 				if (mAllRitems[i]->ObjCBIndex == j)
@@ -557,7 +557,7 @@ void GizmosManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>&
 }
 
 /// <summary>
-/// ÏÔÊ¾×ø±ê
+/// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 void GizmosManager::ShowPosition()
 {
@@ -576,7 +576,7 @@ void GizmosManager::ShowPosition()
 }
 
 /// <summary>
-/// ÏÔÊ¾Ðý×ª
+/// ï¿½ï¿½Ê¾ï¿½ï¿½×ª
 /// </summary>
 void GizmosManager::ShowRotation()
 {
@@ -595,7 +595,7 @@ void GizmosManager::ShowRotation()
 }
 
 /// <summary>
-/// ÏÔÊ¾Ëõ·Å
+/// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 void GizmosManager::ShowScale()
 {

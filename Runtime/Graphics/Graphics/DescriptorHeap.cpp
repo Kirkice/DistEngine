@@ -17,6 +17,8 @@ void DescriptorHeap::Build(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int 
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
+
+	mDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 /// <summary>
@@ -32,11 +34,10 @@ ComPtr<ID3D12DescriptorHeap> DescriptorHeap::GetDescriptorHeap()
 /// GetCpuSrv
 /// </summary>
 /// <returns></returns>
-CD3DX12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetCpuSrv(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int index)
+CD3DX12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetCpuSrv(int index)
 {
-	UINT mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	auto srv = CD3DX12_CPU_DESCRIPTOR_HANDLE(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-	srv.Offset(index, mCbvSrvUavDescriptorSize);
+	srv.Offset(index, mDescriptorSize);
 	return srv;
 }
 
@@ -44,10 +45,9 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetCpuSrv(Microsoft::WRL::ComPtr<I
 /// GetCpuSrv
 /// </summary>
 /// <returns></returns>
-CD3DX12_GPU_DESCRIPTOR_HANDLE DescriptorHeap::GetGpuSrv(Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, int index)
+CD3DX12_GPU_DESCRIPTOR_HANDLE DescriptorHeap::GetGpuSrv(int index)
 {
-	UINT mCbvSrvUavDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	auto srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	srv.Offset(index, mCbvSrvUavDescriptorSize);
+	srv.Offset(index, mDescriptorSize);
 	return srv;
 }

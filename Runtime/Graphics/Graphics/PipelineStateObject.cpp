@@ -26,8 +26,8 @@ PipelineStateObject::~PipelineStateObject()
 void PipelineStateObject::Build(
 	ShaderManager& mShaderManager,
 	RootSignature& mRootSignature,
-	std::string VS,
-	std::string PS,
+	const std::string& VS,
+	const std::string& PS,
 	int NumRenderTargets,
 	DXGI_FORMAT RTVFormat,
 	bool MsAAState,
@@ -35,25 +35,8 @@ void PipelineStateObject::Build(
 	DXGI_FORMAT DSVFormat
 )
 {
-	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	PSODesc.pRootSignature = mRootSignature.GetSignature();
-	PSODesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders[VS]->GetBufferPointer()),
-		mShaderManager.mShaders[VS]->GetBufferSize()
-	};
-	PSODesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders[PS]->GetBufferPointer()),
-		mShaderManager.mShaders[PS]->GetBufferSize()
-	};
-
-	PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	PSODesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	PSODesc.SampleMask = UINT_MAX;
-	PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	InitializeDefaults(mShaderManager, mRootSignature);
+	ApplyShaders(mShaderManager, VS, PS);
 	PSODesc.NumRenderTargets = NumRenderTargets;
 	PSODesc.RTVFormats[0] = RTVFormat;
 	PSODesc.SampleDesc.Count = MsAAState ? 4 : 1;
@@ -71,30 +54,7 @@ void PipelineStateObject::BuildDefault(
 	RootSignature& mRootSignature
 )
 {
-	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
-	PSODesc.pRootSignature = mRootSignature.GetSignature();
-	PSODesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litVS"]->GetBufferPointer()),
-		mShaderManager.mShaders["litVS"]->GetBufferSize()
-	};
-	PSODesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders["litPS"]->GetBufferPointer()),
-		mShaderManager.mShaders["litPS"]->GetBufferSize()
-	};
-
-	PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	PSODesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	PSODesc.SampleMask = UINT_MAX;
-	PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PSODesc.NumRenderTargets = 1;
-	PSODesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	PSODesc.SampleDesc.Count = 1;
-	PSODesc.SampleDesc.Quality = 0;
-	PSODesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	Build(mShaderManager, mRootSignature, "litVS", "litPS", 1);
 }
 
 /// <summary>
@@ -107,22 +67,13 @@ void PipelineStateObject::BuildDefault(
 void PipelineStateObject::SetShader(
 	ShaderManager& mShaderManager,
 	RootSignature& mRootSignature,
-	std::string VS,
-	std::string PS
+	const std::string& VS,
+	const std::string& PS
 )
 {
 	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
 	PSODesc.pRootSignature = mRootSignature.GetSignature();
-	PSODesc.VS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders[VS]->GetBufferPointer()),
-		mShaderManager.mShaders[VS]->GetBufferSize()
-	};
-	PSODesc.PS =
-	{
-		reinterpret_cast<BYTE*>(mShaderManager.mShaders[PS]->GetBufferPointer()),
-		mShaderManager.mShaders[PS]->GetBufferSize()
-	};
+	ApplyShaders(mShaderManager, VS, PS);
 }
 
 /// <summary>
@@ -160,7 +111,7 @@ void PipelineStateObject::SetRasterizerDepth(
 /// <param name="Type"></param>
 void PipelineStateObject::SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE Type)
 {
-	PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	PSODesc.PrimitiveTopologyType = Type;
 }
 
 /// <summary>
@@ -177,18 +128,7 @@ void PipelineStateObject::SetBlend(
 	D3D12_BLEND_OP BlendOp
 )
 {
-	D3D12_RENDER_TARGET_BLEND_DESC AlphaBlendDesc;
-	AlphaBlendDesc.BlendEnable = enable;
-	AlphaBlendDesc.LogicOpEnable = false;
-	AlphaBlendDesc.SrcBlend = SrcBlend;
-	AlphaBlendDesc.DestBlend = DestBlend;
-	AlphaBlendDesc.BlendOp = BlendOp;
-	AlphaBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	AlphaBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	AlphaBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	AlphaBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
-	AlphaBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	PSODesc.BlendState.RenderTarget[0] = AlphaBlendDesc;
+	PSODesc.BlendState.RenderTarget[0] = MakeBlendDesc(enable, SrcBlend, DestBlend, BlendOp);
 }
 
 /// <summary>
@@ -196,18 +136,11 @@ void PipelineStateObject::SetBlend(
 /// </summary>
 void PipelineStateObject::SetDefaultBlend()
 {
-	D3D12_RENDER_TARGET_BLEND_DESC AlphaBlendDesc;
-	AlphaBlendDesc.BlendEnable = true;
-	AlphaBlendDesc.LogicOpEnable = false;
-	AlphaBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	AlphaBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-	AlphaBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-	AlphaBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-	AlphaBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	AlphaBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	AlphaBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
-	AlphaBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	PSODesc.BlendState.RenderTarget[0] = AlphaBlendDesc;
+	PSODesc.BlendState.RenderTarget[0] = MakeBlendDesc(
+		true,
+		D3D12_BLEND_SRC_ALPHA,
+		D3D12_BLEND_INV_SRC_ALPHA,
+		D3D12_BLEND_OP_ADD);
 }
 
 /// <summary>
@@ -230,20 +163,54 @@ void PipelineStateObject::SetDepthStencilState(
 /// GetPSODesc
 /// </summary>
 /// <returns></returns>
-D3D12_GRAPHICS_PIPELINE_STATE_DESC* PipelineStateObject::GetPSODesc()
+const D3D12_GRAPHICS_PIPELINE_STATE_DESC* PipelineStateObject::GetPSODesc() const
 {
 	return &PSODesc;
 }
 
-/// <summary>
-/// SetGraphicsPipelineState
-/// </summary>
-/// <param name="md3dDevice"></param>
-void PipelineStateObject::SetGraphicsPipelineState(
-	Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
-	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs,
-	std::string Name
-)
+void PipelineStateObject::InitializeDefaults(ShaderManager& mShaderManager, RootSignature& mRootSignature)
 {
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&PSODesc, IID_PPV_ARGS(&mPSOs[Name])));
+	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
+	PSODesc.pRootSignature = mRootSignature.GetSignature();
+	PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	PSODesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	PSODesc.SampleMask = UINT_MAX;
+	PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PSODesc.NumRenderTargets = 1;
+	PSODesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	PSODesc.SampleDesc.Count = 1;
+	PSODesc.SampleDesc.Quality = 0;
+	PSODesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+}
+
+void PipelineStateObject::ApplyShaders(ShaderManager& mShaderManager, const std::string& VS, const std::string& PS)
+{
+	PSODesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[VS]->GetBufferPointer()),
+		mShaderManager.mShaders[VS]->GetBufferSize()
+	};
+	PSODesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaderManager.mShaders[PS]->GetBufferPointer()),
+		mShaderManager.mShaders[PS]->GetBufferSize()
+	};
+}
+
+D3D12_RENDER_TARGET_BLEND_DESC PipelineStateObject::MakeBlendDesc(bool enable, D3D12_BLEND SrcBlend, D3D12_BLEND DestBlend, D3D12_BLEND_OP BlendOp)
+{
+	D3D12_RENDER_TARGET_BLEND_DESC desc{};
+	desc.BlendEnable = enable;
+	desc.LogicOpEnable = false;
+	desc.SrcBlend = SrcBlend;
+	desc.DestBlend = DestBlend;
+	desc.BlendOp = BlendOp;
+	desc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	desc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	desc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	desc.LogicOp = D3D12_LOGIC_OP_NOOP;
+	desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	return desc;
 }

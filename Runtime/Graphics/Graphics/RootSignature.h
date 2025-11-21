@@ -22,12 +22,12 @@ public:
 	void Build(
 		RootSignatureType type,
 		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
+		UINT descriptorCount0,
 		UINT baseShaderRegister0,
 		UINT registerSpace0,
-		UINT offsetInDescriptorsFromTableStart0,
+		UINT descriptorCount1,
 		UINT baseShaderRegister1,
-		UINT registerSpace1,
-		UINT offsetInDescriptorsFromTableStart1
+		UINT registerSpace1
 	);
 	ID3D12RootSignature* GetSignature();
 
@@ -35,4 +35,5 @@ private:
 	ComPtr<ID3D12RootSignature> mRootSignature;
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GetStaticSamplers();
 	std::array<const CD3DX12_STATIC_SAMPLER_DESC, 4> GetSSAOSamplers();
+	static CD3DX12_DESCRIPTOR_RANGE CreateSrvTable(UINT descriptorCount, UINT baseRegister, UINT registerSpace);
 };

@@ -1,7 +1,6 @@
 #include "RenderTargetManager.h"
 
-// for example, I think it is enough
-static const size_t maxDescriptorsCount = 100;
+#include <stdexcept>
 
 RenderTargetManager::RenderTargetManager(ComPtr<ID3D12Device> device)
 	: _device(device)
@@ -9,14 +8,14 @@ RenderTargetManager::RenderTargetManager(ComPtr<ID3D12Device> device)
 	assert(device);
 
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-	rtvHeapDesc.NumDescriptors = maxDescriptorsCount;
+	rtvHeapDesc.NumDescriptors = static_cast<UINT>(kMaxDescriptors);
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	rtvHeapDesc.NodeMask = 0;
 	ThrowIfFailed(device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&_rtvDescriptorHeap)));
 
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	dsvHeapDesc.NumDescriptors = maxDescriptorsCount;
+	dsvHeapDesc.NumDescriptors = static_cast<UINT>(kMaxDescriptors);
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	dsvHeapDesc.NodeMask = 0;
@@ -30,65 +29,21 @@ std::shared_ptr<RenderTarget> RenderTargetManager::CreateRenderTarget(DXGI_FORMA
 	bool isUAV /*= false*/,
 	const D3D12_CLEAR_VALUE* clearValue /*= nullptr*/)
 {
-	size_t descriptorsCount = _rtvDescriptors.size();
-	if (descriptorsCount == maxDescriptorsCount)
-		throw std::runtime_error("Not enough space for RT descriptors");
+	const size_t descriptorIndex = _rtvDescriptors.size();
+	EnsureDescriptorBudget(descriptorIndex);
 
-	D3D12_HEAP_PROPERTIES heapProperties = {};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	const auto flags = isUAV
+		? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+		: D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	const auto resourceDesc = MakeTextureDesc(format, width, height, flags);
+	const auto resolvedClearValue = MakeColorClearValue(format, clearValue);
+	auto resource = CreateTexture(resourceDesc, resolvedClearValue, D3D12_RESOURCE_STATE_RENDER_TARGET, rtName);
 
-	D3D12_RESOURCE_DESC resourceDesc = {};
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resourceDesc.Format = format;
-	resourceDesc.Width = width;
-	resourceDesc.Height = height;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.Alignment = 0;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.SampleDesc.Quality = 0;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	if (!isUAV)
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	else
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-	D3D12_CLEAR_VALUE defaultClearValue = {};
-	if (!clearValue)
-	{
-		defaultClearValue.Format = format;
-		defaultClearValue.Color[0] = 0.0f;
-		defaultClearValue.Color[1] = 0.0f;
-		defaultClearValue.Color[2] = 0.0f;
-		defaultClearValue.Color[3] = 1.0f;
-	}
-	else
-	{
-		defaultClearValue = *clearValue;
-	}
-
-	ComPtr<ID3D12Resource> resource = nullptr;
-
-	ThrowIfFailed(_device->CreateCommittedResource(&heapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		&defaultClearValue,
-		IID_PPV_ARGS(&resource)));
-
-	if (!rtName.empty())
-		resource->SetName(rtName.c_str());
-
-	UINT incSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = _rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handle.ptr += descriptorsCount * incSize;
-
+	const auto handle = GetHeapHandle(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, descriptorIndex);
 	_device->CreateRenderTargetView(resource.Get(), nullptr, handle);
 
-	_rtvDescriptors[descriptorsCount] = handle;
-	std::shared_ptr<RenderTarget> outPtr = std::make_shared<RenderTarget>(descriptorsCount, resource, defaultClearValue);
-	return outPtr;
+	_rtvDescriptors[descriptorIndex] = handle;
+	return std::make_shared<RenderTarget>(descriptorIndex, resource, resolvedClearValue);
 }
 
 std::shared_ptr<DepthStencil> RenderTargetManager::CreateDepthStencil(UINT64 width,
@@ -99,57 +54,17 @@ std::shared_ptr<DepthStencil> RenderTargetManager::CreateDepthStencil(UINT64 wid
 	bool isUAV /*= false*/,
 	const D3D12_CLEAR_VALUE* clearValue /*= nullptr*/)
 {
-	size_t descriptorsCount = _dsvDescriptors.size();
-	if (descriptorsCount == maxDescriptorsCount)
-		throw std::runtime_error("Not enough space for DS descriptors");
+	const size_t descriptorIndex = _dsvDescriptors.size();
+	EnsureDescriptorBudget(descriptorIndex);
 
-	D3D12_HEAP_PROPERTIES heapProperties = {};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	const auto flags = isUAV
+		? D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+		: D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	const auto resourceDesc = MakeTextureDesc(format, width, height, flags);
+	const auto resolvedClearValue = MakeDepthClearValue(viewFormat, clearValue);
+	auto resource = CreateTexture(resourceDesc, resolvedClearValue, D3D12_RESOURCE_STATE_COMMON, dsName);
 
-	D3D12_RESOURCE_DESC resourceDesc = {};
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resourceDesc.Format = format;
-	resourceDesc.Width = width;
-	resourceDesc.Height = height;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.Alignment = 0;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.SampleDesc.Quality = 0;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	if (!isUAV)
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	else
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-	D3D12_CLEAR_VALUE defaultClearValue = {};
-	if (!clearValue)
-	{
-		defaultClearValue.Format = viewFormat;
-		defaultClearValue.DepthStencil.Depth = 1.0f;
-		defaultClearValue.DepthStencil.Stencil = 0;
-	}
-	else
-	{
-		defaultClearValue = *clearValue;
-	}
-
-	ComPtr<ID3D12Resource> resource = nullptr;
-
-	ThrowIfFailed(_device->CreateCommittedResource(&heapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,
-		D3D12_RESOURCE_STATE_COMMON,
-		&defaultClearValue,
-		IID_PPV_ARGS(&resource)));
-
-	if (!dsName.empty())
-		resource->SetName(dsName.c_str());
-
-	UINT incSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = _dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handle.ptr += descriptorsCount * incSize;
+	const auto handle = GetHeapHandle(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, descriptorIndex);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC viewDescription = {};
 	viewDescription.Format = viewFormat;
@@ -157,29 +72,22 @@ std::shared_ptr<DepthStencil> RenderTargetManager::CreateDepthStencil(UINT64 wid
 
 	_device->CreateDepthStencilView(resource.Get(), &viewDescription, handle);
 
-	_dsvDescriptors[descriptorsCount] = handle;
-	std::shared_ptr<DepthStencil> outPtr = std::make_shared<DepthStencil>(descriptorsCount, resource, defaultClearValue);
-	return outPtr;
+	_dsvDescriptors[descriptorIndex] = handle;
+	return std::make_shared<DepthStencil>(descriptorIndex, resource, resolvedClearValue);
 }
 
 std::vector<std::shared_ptr<RenderTarget>> RenderTargetManager::CreateRenderTargetsForSwapChain(ComPtr<IDXGISwapChain> swapChain)
 {
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = _rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	size_t descriptorsCount = _rtvDescriptors.size();
-	UINT incSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	handle.ptr += descriptorsCount * incSize;
-
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	ThrowIfFailed(swapChain->GetDesc(&swapChainDesc));
 
-	std::vector<std::shared_ptr<RenderTarget>> outVector = {};
+	const size_t startIndex = _rtvDescriptors.size();
+	EnsureDescriptorBudget(startIndex, swapChainDesc.BufferCount);
 
-	D3D12_CLEAR_VALUE defaultClearValue = {};
-	defaultClearValue.Format = swapChainDesc.BufferDesc.Format;
-	defaultClearValue.Color[0] = 0.0f;
-	defaultClearValue.Color[1] = 0.0f;
-	defaultClearValue.Color[2] = 0.0f;
-	defaultClearValue.Color[3] = 1.0f;
+	std::vector<std::shared_ptr<RenderTarget>> outVector = {};
+	outVector.reserve(swapChainDesc.BufferCount);
+
+	const auto clearValue = MakeColorClearValue(swapChainDesc.BufferDesc.Format, nullptr);
 
 	for (UINT i = 0; i < swapChainDesc.BufferCount; ++i)
 	{
@@ -188,13 +96,14 @@ std::vector<std::shared_ptr<RenderTarget>> RenderTargetManager::CreateRenderTarg
 		D3D12_RENDER_TARGET_VIEW_DESC viewDesc = {};
 		viewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+		const size_t descriptorIndex = startIndex + i;
+		const auto handle = GetHeapHandle(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, descriptorIndex);
 		_device->CreateRenderTargetView(resource.Get(), &viewDesc, handle);
 		resource->SetName(L"SwapChain RT");
 
-		_rtvDescriptors[descriptorsCount] = handle;
-		outVector.emplace_back(std::make_shared<RenderTarget>(descriptorsCount, resource, defaultClearValue));
-		descriptorsCount++;
-		handle.ptr += incSize;
+		_rtvDescriptors[descriptorIndex] = handle;
+		outVector.emplace_back(std::make_shared<RenderTarget>(descriptorIndex, resource, clearValue));
 	}
 
 	return outVector;
@@ -238,4 +147,90 @@ void RenderTargetManager::ClearDepthStencil(DepthStencil& depthStencil, CommandL
 		depthStencil._clearValue.DepthStencil.Stencil,
 		0,
 		nullptr);
+}
+
+void RenderTargetManager::EnsureDescriptorBudget(size_t nextIndex, size_t additionalDescriptors) const
+{
+	if (nextIndex + additionalDescriptors > kMaxDescriptors)
+	{
+		throw std::runtime_error("Not enough space for descriptors");
+	}
+}
+
+D3D12_RESOURCE_DESC RenderTargetManager::MakeTextureDesc(DXGI_FORMAT format, UINT64 width, UINT height, D3D12_RESOURCE_FLAGS flags)
+{
+	D3D12_RESOURCE_DESC desc = {};
+	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	desc.Format = format;
+	desc.Width = width;
+	desc.Height = height;
+	desc.DepthOrArraySize = 1;
+	desc.MipLevels = 1;
+	desc.Alignment = 0;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	desc.Flags = flags;
+	return desc;
+}
+
+D3D12_CLEAR_VALUE RenderTargetManager::MakeColorClearValue(DXGI_FORMAT format, const D3D12_CLEAR_VALUE* overrideValue)
+{
+	if (overrideValue)
+	{
+		return *overrideValue;
+	}
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = format;
+	clearValue.Color[0] = 0.0f;
+	clearValue.Color[1] = 0.0f;
+	clearValue.Color[2] = 0.0f;
+	clearValue.Color[3] = 1.0f;
+	return clearValue;
+}
+
+D3D12_CLEAR_VALUE RenderTargetManager::MakeDepthClearValue(DXGI_FORMAT format, const D3D12_CLEAR_VALUE* overrideValue)
+{
+	if (overrideValue)
+	{
+		return *overrideValue;
+	}
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = format;
+	clearValue.DepthStencil.Depth = 1.0f;
+	clearValue.DepthStencil.Stencil = 0;
+	return clearValue;
+}
+
+ComPtr<ID3D12Resource> RenderTargetManager::CreateTexture(const D3D12_RESOURCE_DESC& desc, const D3D12_CLEAR_VALUE& clearValue, D3D12_RESOURCE_STATES initialState, const std::wstring& resourceName) const
+{
+	D3D12_HEAP_PROPERTIES heapProperties = {};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+
+	ComPtr<ID3D12Resource> resource;
+	ThrowIfFailed(_device->CreateCommittedResource(&heapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&desc,
+		initialState,
+		&clearValue,
+		IID_PPV_ARGS(&resource)));
+
+	if (!resourceName.empty())
+	{
+		resource->SetName(resourceName.c_str());
+	}
+
+	return resource;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetManager::GetHeapHandle(D3D12_DESCRIPTOR_HEAP_TYPE type, size_t index) const
+{
+	ID3D12DescriptorHeap* heap = (type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV) ? _rtvDescriptorHeap.Get() : _dsvDescriptorHeap.Get();
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = heap->GetCPUDescriptorHandleForHeapStart();
+	const UINT increment = _device->GetDescriptorHandleIncrementSize(type);
+	handle.ptr += index * increment;
+	return handle;
 }

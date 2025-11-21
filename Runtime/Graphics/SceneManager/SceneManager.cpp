@@ -9,7 +9,7 @@ SceneManager::SceneManager(SceneType tp)
 }
 
 
-//	¹¹½¨³¡¾°
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void SceneManager::BuildScene(
 	std::unordered_map<std::string, std::unique_ptr<Texture2D>>& mResourcesTextures,
 	MaterialIndexUtils& matCBIndexUtils
@@ -23,28 +23,28 @@ void SceneManager::BuildDefaultScene(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	//	´´½¨ÉèÖÃÈ«¾ÖÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	BuildGlobalConfig();
 
-	//	´´½¨Ö÷¹âÔ´
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
 	BuildMainLight();
 
-	//	´´½¨Ìì¿ÕºÐ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õºï¿½
 	BuildSkyBox(matCBIndexUtils);
 
-	//	äÖÈ¾Ïî
+	//	ï¿½ï¿½È¾ï¿½ï¿½
 	BuildRenderObejct(mResourcesTextures, matCBIndexUtils);
 
-	//	¿µÄÎ¶ûºÐ×Ó
+	//	ï¿½ï¿½ï¿½Î¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	BuildConelBoxScene(mResourcesTextures, matCBIndexUtils);
 }
 
 /// <summary>
-/// È«¾ÖÉèÖÃ
+/// È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 void SceneManager::BuildGlobalConfig()
 {
-	//	Ìì¿ÕÇòÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mSkyBoxSetting.Exposure = 1.0f;
 	mSkyBoxSetting.Rotation = 0.0f;
@@ -57,7 +57,7 @@ void SceneManager::BuildGlobalConfig()
 	mSkyBoxSetting.MultiScatterPhase = 0.1f;
 	mSkyBoxSetting.AnisotropicIntensity = 0;
 
-	//	µÆ¹âÉèÖÃ 
+	//	ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	mLightSetting.ShadowColor = Color(0.3f, 0.3f, 0.3f, 1.0f);
 	mLightSetting.AmbientColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 	mLightSetting.UseLinearFog = 0;
@@ -69,7 +69,7 @@ void SceneManager::BuildGlobalConfig()
 	mLightSetting.Feather = 0;
 	mLightSetting.Step = 0;
 
-	//	Ïà»úÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	mCameraSetting.mCamFov = 45;
 	mCameraSetting.mCamClipN = 0.3;
 	mCameraSetting.mCamClipF = 1000;
@@ -78,7 +78,7 @@ void SceneManager::BuildGlobalConfig()
 
 void SceneManager::BuildMainLight()
 {
-	//	¶ÁÈ¡JSON
+	//	ï¿½ï¿½È¡JSON
 	nl::json jsonValue;
 	ifstream jfile(mScenePath[0]);
 	jfile >> jsonValue;
@@ -87,35 +87,35 @@ void SceneManager::BuildMainLight()
 	nl::from_json(jsonValue, data);
 
 	Transform* mTransform = new Transform("Transform");
-	//	ÉèÖÃµÆ¹âÎ»ÖÃ
+	//	ï¿½ï¿½ï¿½ÃµÆ¹ï¿½Î»ï¿½ï¿½
 	mTransform->position = Vector3(data.MainLightPosition[0], data.MainLightPosition[1], data.MainLightPosition[2]);
-	//	ÉèÖÃµÆ¹âÅ·À­½Ç
+	//	ï¿½ï¿½ï¿½ÃµÆ¹ï¿½Å·ï¿½ï¿½ï¿½ï¿½
 	mTransform->eulerangle = Vector3(data.MainLightEulerangle[0], data.MainLightEulerangle[1], data.MainLightEulerangle[2]);
-	//	ÉèÖÃforward
+	//	ï¿½ï¿½ï¿½ï¿½forward
 	mTransform->forward = Vector3(data.MainLightForward[0], data.MainLightForward[1], data.MainLightForward[2]);
 	MainLight->AddComponent(mTransform);
 
 	DirectionLight* mDirectionLight = new DirectionLight("DirectionLight");
-	//	ÉèÎªÖ÷¹âÔ´
+	//	ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Ô´
 	mDirectionLight->isMainLight = data.isMainLight;
-	//	µÆ¹âÑÕÉ«
+	//	ï¿½Æ¹ï¿½ï¿½ï¿½É«
 	mDirectionLight->color = Color(data.MainLightColor[0], data.MainLightColor[1], data.MainLightColor[2], data.MainLightColor[3]);
-	//	µÆ¹âÇ¿¶È
+	//	ï¿½Æ¹ï¿½Ç¿ï¿½ï¿½
 	mDirectionLight->intensity = 1.0;
 
 	MainLight->AddComponent(mDirectionLight);
 
-	//	Ö÷¹âÔ´Ãû×Ö
+	//	ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½
 	MainLight->name = data.MainLightName;
 }
 
 /// <summary>
-/// Ìì¿ÕÇò
+/// ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="matCBIndexUtils"></param>
 void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
 {
-	//	´æ´¢ÀàÐÍmatCB¿ªÊ¼Öµ
+	//	ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½matCBï¿½ï¿½Ê¼Öµ
 	matCBIndexUtils.getInstance().SaveTypeIndex("Sky", matCBIndexUtils.getInstance().GetIndex());
 
 	auto skyRenderObject = std::make_unique<GameObject>("sky");
@@ -130,18 +130,18 @@ void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
 	mat_sky->Rotation = mSkyBoxSetting.Rotation;
 	mat_sky->ACES = mSkyBoxSetting.ACES;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_sky = new MeshFliter("MeshFliter");
 	mesh_sky->CreateSphere(0.5f, 20.0f, 20.0f);
 	MeshRender* meshRender_sky = new MeshRender(mesh_sky, mat_sky, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_sky = new Transform("Transform");
 	transform_sky->position = Vector3(0, 0, 0);
 	transform_sky->eulerangle = Vector3(0, 0, 0);
 	transform_sky->scale = Vector3(5000, 5000, 5000);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_sky = new DistBound::BoundingBox("BoundingBox");
 	bound_sky->aabb = BoundingAABB(mesh_sky->data);
 
@@ -155,7 +155,7 @@ void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
 }
 
 /// <summary>
-/// äÖÈ¾Item
+/// ï¿½ï¿½È¾Item
 /// </summary>
 /// <param name="mResourcesTextures"></param>
 /// <param name="matCBIndexUtils"></param>
@@ -164,14 +164,14 @@ void SceneManager::BuildRenderObejct(
 	MaterialIndexUtils& matCBIndexUtils
 )
 {
-	//	¶ÁÈ¡³¡¾°JSON
+	//	ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½JSON
 	nl::json sceneData;
 	ifstream sceneFile(mScenePath[0]);
 	sceneFile >> sceneData;
 	SceneData scene_data;
 	nl::from_json(sceneData, scene_data);
 
-	//	¶ÁÈ¡²ÄÖÊJSON
+	//	ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½JSON
 	nl::json matData;
 	ifstream matFile(scene_data.MaterialPath);
 	matFile >> matData;
@@ -201,18 +201,18 @@ void SceneManager::BuildRenderObejct(
 	mat_ak47->EmissionMapIndex = mat_data.EmissionMapIndex;
 	mat_ak47->LUTMapIndex = mat_data.LUTMapIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_ak47 = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_ak47->data, (char*)scene_data.MeshPath.c_str());
 	MeshRender* meshRender_ak47 = new MeshRender(mesh_ak47, mat_ak47, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_ak47 = new Transform("Transform");
 	transform_ak47->position = Vector3(scene_data.RenderObjectPosition[0], scene_data.RenderObjectPosition[1], scene_data.RenderObjectPosition[2]);
 	transform_ak47->eulerangle = Vector3(scene_data.RenderObjectEulerAngle[0], scene_data.RenderObjectEulerAngle[1], scene_data.RenderObjectEulerAngle[2]);
 	transform_ak47->scale = Vector3(scene_data.RenderObjectScale[0], scene_data.RenderObjectScale[1], scene_data.RenderObjectScale[2]);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_ak47 = new DistBound::BoundingBox("BoundingBox");
 	bound_ak47->aabb = BoundingAABB(mesh_ak47->data);
 
@@ -253,18 +253,18 @@ void SceneManager::BuildRenderObejct(
 	mat_Bunny->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Bunny->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_Bunny = new MeshFliter("MeshFliter");
 	ObjLoader::LoadObj(mesh_Bunny->data, (char*)mBunnyObjPath.c_str());
 	MeshRender* meshRender_Bunny = new MeshRender(mesh_Bunny, mat_Bunny, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Bunny = new Transform("Transform");
 	transform_Bunny->position = Vector3(-5, -1.5, 8);
 	transform_Bunny->eulerangle = Vector3(0,-45,0); 
 	transform_Bunny->scale = Vector3(12,12,12);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
 	bound_Bunny->aabb = BoundingAABB(mesh_Bunny->data);
 
@@ -299,19 +299,19 @@ void SceneManager::BuildRenderObejct(
 	mat_Sphere01->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Sphere01->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_Sphere01 = new MeshFliter("MeshFliter");
 	mesh_Sphere01->CreateSphere(1.0f, 20.0f, 20.0f);
 
 	MeshRender* meshRender_Sphere01 = new MeshRender(mesh_Sphere01, mat_Sphere01, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Sphere01 = new Transform("Transform");
 	transform_Sphere01->position = Vector3(-3.0f, 3.0f, -8.0f);
 	transform_Sphere01->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere01->scale = Vector3(3, 3, 3);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_Sphere01 = new DistBound::BoundingBox("BoundingBox");
 	bound_Sphere01->aabb = BoundingAABB(mesh_Bunny->data);
 
@@ -343,19 +343,19 @@ void SceneManager::BuildRenderObejct(
 	mat_Sphere02->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Sphere02->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_Sphere02 = new MeshFliter("MeshFliter");
 	mesh_Sphere02->CreateSphere(1.0f, 20.0f, 20.0f);
 
 	MeshRender* meshRender_Sphere02 = new MeshRender(mesh_Sphere02, mat_Sphere02, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Sphere02 = new Transform("Transform");
 	transform_Sphere02->position = Vector3(-8.0f, 2.0f, -3.0f);
 	transform_Sphere02->eulerangle = Vector3(0, 0, 0);
 	transform_Sphere02->scale = Vector3(2, 2, 2);
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_Sphere02 = new DistBound::BoundingBox("BoundingBox");
 	bound_Sphere02->aabb = BoundingAABB(mesh_Bunny->data);
 
@@ -430,7 +430,7 @@ void SceneManager::BuildConelBoxScene(
 	mat_Green->EmissionMapIndex = mResourcesTextures["white"]->TexIndex;
 	mat_Green->LUTMapIndex = mResourcesTextures["sampleLUT"]->TexIndex;
 
-	//	¼ÓÔØÄ£ÐÍ
+	//	ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	MeshFliter* mesh_Plane = new MeshFliter("MeshFliter");
 	mesh_Plane->CreateGrid(6, 6, 24, 24);
 
@@ -438,14 +438,14 @@ void SceneManager::BuildConelBoxScene(
 	MeshRender* meshRender_PlaneRed = new MeshRender(mesh_Plane, mat_Red, "MeshRender");
 	MeshRender* meshRender_PlaneGreen = new MeshRender(mesh_Plane, mat_Green, "MeshRender");
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Plane01 = new Transform("Transform");
 	transform_Plane01->position = Vector3(0.0f, 0.0f, 0.0f);
 	transform_Plane01->eulerangle = Vector3(0, 0, 0);
 	transform_Plane01->scale = Vector3(4, 1, 4);
 
 
-	//	´´½¨Åö×²ºÐ×Ó
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½
 	DistBound::BoundingBox* bound_Plane = new DistBound::BoundingBox("BoundingBox");
 	bound_Plane->aabb = BoundingAABB(mesh_Plane->data);
 
@@ -461,7 +461,7 @@ void SceneManager::BuildConelBoxScene(
 
 
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Plane02 = new Transform("Transform");
 	transform_Plane02->position = Vector3(12.0f, 12.0f, 0.0f);
 	transform_Plane02->eulerangle = Vector3(90, -90, 0);
@@ -477,7 +477,7 @@ void SceneManager::BuildConelBoxScene(
 	mRenderObjects.push_back(std::move(RenderObjectPlane02));
 
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Plane03 = new Transform("Transform");
 	transform_Plane03->position = Vector3(0.0f, 24.0f, 0.0f);
 	transform_Plane03->eulerangle = Vector3(0, 0, 180);
@@ -493,7 +493,7 @@ void SceneManager::BuildConelBoxScene(
 	mRenderObjects.push_back(std::move(RenderObjectPlane03));
 
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Plane04 = new Transform("Transform");
 	transform_Plane04->position = Vector3(0.0f, 12.0f, -12.0f);
 	transform_Plane04->eulerangle = Vector3(90, 0, 0);
@@ -509,7 +509,7 @@ void SceneManager::BuildConelBoxScene(
 	mRenderObjects.push_back(std::move(RenderObjectPlane04));
 
 
-	//	ÉèÖÃ×ø±ê
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Transform* transform_Plane05 = new Transform("Transform");
 	transform_Plane05->position = Vector3(0.0f, 12.0f, 12.0f);
 	transform_Plane05->eulerangle = Vector3(-90, 0, 0);
@@ -526,7 +526,7 @@ void SceneManager::BuildConelBoxScene(
 }
 
 
-//	¸üÐÂ³¡¾°²ÄÖÊ
+//	ï¿½ï¿½ï¿½Â³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void SceneManager::UpdateSceneMaterialBuffer(
 	UploadBuffer<PBRMaterialData>* PBRMaterialBuffer, 
 	UploadBuffer<SkyBoxMaterialData>* SkyMaterialBuffer,
@@ -585,7 +585,7 @@ void SceneManager::UpdateDefaultSceneMaterialBuffer(
 }
 
 
-//	´´½¨RenderItem
+//	ï¿½ï¿½ï¿½ï¿½RenderItem
 void SceneManager::BuildRenderItem(
 	std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count], 
 	std::vector<std::unique_ptr<RenderItem>>& mAllRitems, 
@@ -597,13 +597,13 @@ void SceneManager::BuildRenderItem(
 {
 	for (size_t i = 0; i < mRenderObjects.size(); i++)
 	{
-		//	´´½¨äÖÈ¾Ïî
+		//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½
 		auto Ritem = std::make_unique<RenderItem>();
 		Ritem->World = mRenderObjects[i]->GetComponent<Transform>(1)->GetWorldXMMatrix();
 		Ritem->TexTransform = Mathf::Identity4x4();
 		Ritem->ObjCBIndex = CurrentSize + i;
 		Ritem->Mat = mRenderObjects[i]->GetComponent<MeshRender>(2)->mat;
-		Ritem->Geo = GraphicsUtils::BuidlMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice, mCommandList);
+		Ritem->Geo = GraphicsUtils::BuildMeshGeometryFromMeshData(mRenderObjects[i]->name, mRenderObjects[i]->GetComponent<MeshRender>(2)->mesh->data, md3dDevice.Get(), mCommandList.Get()).release();
 		Ritem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		Ritem->IndexCount = Ritem->Geo->DrawArgs["mesh"].IndexCount;
 		Ritem->StartIndexLocation = Ritem->Geo->DrawArgs["mesh"].StartIndexLocation;
@@ -624,7 +624,7 @@ void SceneManager::BuildRenderItem(
 }
 
 /// <summary>
-/// ¸üÐÂCBuffer 
+/// ï¿½ï¿½ï¿½ï¿½CBuffer 
 /// </summary>
 void SceneManager::UpdateObjectBuffer(std::vector<std::unique_ptr<RenderItem>>& mAllRitems, UINT CurrentSize)
 {

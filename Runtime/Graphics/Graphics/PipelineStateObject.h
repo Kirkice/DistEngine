@@ -3,7 +3,7 @@
 #include "../Shaders/ShaderManager.h"
 #include "../File/ResourcesManager.h"
 #include "../Core/Mathf/Mathf.h"
-#include "DX12GameApp.h"
+#include "DX12Utils.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -18,8 +18,8 @@ public:
 	void Build(
 		ShaderManager& mShaderManager,
 		RootSignature& mRootSignature,
-		std::string VS,
-		std::string PS,
+		const std::string& VS,
+		const std::string& PS,
 		int NumRenderTargets,
 		DXGI_FORMAT RTVFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
 		bool MsAAState = false,
@@ -35,8 +35,8 @@ public:
 	void SetShader(
 		ShaderManager& mShaderManager,
 		RootSignature& mRootSignature,
-		std::string VS,
-		std::string PS
+		const std::string& VS,
+		const std::string& PS
 	);
 
 	void SetBlend(
@@ -67,13 +67,12 @@ public:
 		D3D12_COMPARISON_FUNC DepthFunc = D3D12_COMPARISON_FUNC_LESS
 	);
 
-	void SetGraphicsPipelineState(
-		Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice,
-		std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs,
-		std::string Name
-	);
+	const D3D12_GRAPHICS_PIPELINE_STATE_DESC* GetPSODesc() const;
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC* GetPSODesc();
+private:
+	void InitializeDefaults(ShaderManager& mShaderManager, RootSignature& mRootSignature);
+	void ApplyShaders(ShaderManager& mShaderManager, const std::string& VS, const std::string& PS);
+	static D3D12_RENDER_TARGET_BLEND_DESC MakeBlendDesc(bool enable, D3D12_BLEND SrcBlend, D3D12_BLEND DestBlend, D3D12_BLEND_OP BlendOp);
 
 private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PSODesc;

@@ -1,5 +1,6 @@
 #pragma once
 #include "DX12Utils.h"
+#include <vector>
 
 class RootParameter
 {
@@ -7,9 +8,34 @@ public:
 	RootParameter() = default;
 
 	RootParameter(const RootParameter&) = delete;
-	RootParameter(RootParameter&&) = delete;
-	RootParameter operator=(const RootParameter&) = delete;
-	RootParameter operator=(RootParameter&&) = delete;
+	RootParameter(RootParameter&& other)
+		: _parameter(other._parameter), _ranges(std::move(other._ranges))
+	{
+		if (_parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+		{
+			_parameter.DescriptorTable.pDescriptorRanges = _ranges.empty() ? nullptr : _ranges.data();
+		}
+		other._parameter.DescriptorTable.pDescriptorRanges = nullptr;
+		other._parameter.DescriptorTable.NumDescriptorRanges = 0;
+	}
+
+	RootParameter& operator=(const RootParameter&) = delete;
+	RootParameter& operator=(RootParameter&& other)
+	{
+		if (this != &other)
+		{
+			_parameter = other._parameter;
+			_ranges = std::move(other._ranges);
+
+			if (_parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+			{
+				_parameter.DescriptorTable.pDescriptorRanges = _ranges.empty() ? nullptr : _ranges.data();
+			}
+			other._parameter.DescriptorTable.pDescriptorRanges = nullptr;
+			other._parameter.DescriptorTable.NumDescriptorRanges = 0;
+		}
+		return *this;
+	}
 
 	void InitAsConstants(UINT valuesCount, UINT shaderRegister, D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL);
 
@@ -26,7 +52,7 @@ public:
 
 private:
 	D3D12_ROOT_PARAMETER                        _parameter = {};
-	std::unique_ptr<D3D12_DESCRIPTOR_RANGE[]>   _ranges = nullptr;
+	std::vector<D3D12_DESCRIPTOR_RANGE>         _ranges;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,7 +97,7 @@ public:
 
 private:
 	ComPtr<ID3D12RootSignature> _signature = nullptr;
-	std::unique_ptr<RootParameter[]> _parameters = nullptr;
-	std::unique_ptr<StaticSampler[]> _samplers = nullptr;
+	std::vector<RootParameter> _parameters;
+	std::vector<StaticSampler> _samplers;
 	D3D12_ROOT_SIGNATURE_DESC _description = {};
 };

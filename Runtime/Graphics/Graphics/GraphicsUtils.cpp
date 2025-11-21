@@ -1,9 +1,9 @@
 #include "GraphicsUtils.h"
 
-//	´ÓMeshData¼ÓÔØMeshGeometry
-MeshGeometry* GraphicsUtils::BuidlMeshGeometryFromMeshData(std::string name, MeshData data, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList)
+//	ï¿½ï¿½MeshDataï¿½ï¿½ï¿½ï¿½MeshGeometry
+std::unique_ptr<MeshGeometry> GraphicsUtils::BuildMeshGeometryFromMeshData(std::string name, const MeshData& data, ID3D12Device* md3dDevice, ID3D12GraphicsCommandList* mCommandList)
 {
-	MeshGeometry* MeshGeo = new MeshGeometry;
+	auto MeshGeo = std::make_unique<MeshGeometry>();
 	MeshGeo->Name = name;
 
 	SubmeshGeometry Submesh;
@@ -38,11 +38,11 @@ MeshGeometry* GraphicsUtils::BuidlMeshGeometryFromMeshData(std::string name, Mes
 	ThrowIfFailed(D3DCreateBlob(ibByteSize, &MeshGeo->IndexBufferCPU));
 	CopyMemory(MeshGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
-	MeshGeo->VertexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), vertices.data(), vbByteSize, MeshGeo->VertexBufferUploader);
+	MeshGeo->VertexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice,
+		mCommandList, vertices.data(), vbByteSize, MeshGeo->VertexBufferUploader);
 
-	MeshGeo->IndexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), indices.data(), ibByteSize, MeshGeo->IndexBufferUploader);
+	MeshGeo->IndexBufferGPU = DX12Utils::CreateDefaultBuffer(md3dDevice,
+		mCommandList, indices.data(), ibByteSize, MeshGeo->IndexBufferUploader);
 
 	MeshGeo->VertexByteStride = sizeof(Vertex);
 	MeshGeo->VertexBufferByteSize = vbByteSize;

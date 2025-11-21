@@ -22,7 +22,7 @@ using namespace Mathf;
 using uint16 = std::uint16_t;
 using uint32 = std::uint32_t;
 
-//	¶¥µã
+//	ï¿½ï¿½ï¿½ï¿½
 struct PVertex
 {
 	PVertex() {}
@@ -60,13 +60,13 @@ struct Subset
 	UINT FaceCount = 0;
 };
 
-//	MeshÊý¾Ý
+//	Meshï¿½ï¿½ï¿½ï¿½
 struct MeshData
 {
 	std::vector<PVertex> Vertices;
 	std::vector<uint32> Indices32;
 	std::vector<Subset> Subsetes;
-	std::vector<uint16>& GetIndices16()
+	const std::vector<uint16>& GetIndices16() const
 	{
 		if (mIndices16.empty())
 		{
@@ -79,7 +79,7 @@ struct MeshData
 	}
 
 private:
-	std::vector<uint16> mIndices16;
+	mutable std::vector<uint16> mIndices16;
 };
 
 class MeshFliter : public Component
@@ -91,22 +91,22 @@ public:
 	MeshFliter(std::string _name);
 	~MeshFliter();
 
-	//	´´½¨Box
+	//	ï¿½ï¿½ï¿½ï¿½Box
 	void CreateBox(float width, float height, float depth, uint32 numSubdivisions);
 
-	//	´´½¨Çò
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void CreateSphere(float radius, uint32 sliceCount, uint32 stackCount);
 
-	//	´´½¨GeoÇò
+	//	ï¿½ï¿½ï¿½ï¿½Geoï¿½ï¿½
 	void CreateGeosphere(float radius, uint32 numSubdivisions);
 
-	//	´´½¨Ô²ÖùÌå
+	//	ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½
 	void CreateCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount);
 
-	//	´´½¨Ãæ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void CreateGrid(float width, float depth, uint32 m, uint32 n);
 
-	//	´´½¨Quad
+	//	ï¿½ï¿½ï¿½ï¿½Quad
 	void CreateQuad(float x, float y, float w, float h, float depth);
 
 private:

@@ -1,7 +1,6 @@
 #include "ComputePipelineState.h"
 
 ComputePipelineState::ComputePipelineState()
-	: ComputePipelineState(RootSignature{})
 {
 }
 
@@ -20,7 +19,7 @@ void ComputePipelineState::SetShaderCode(ComPtr<ID3DBlob> pShaderCode)
 	_description.CS = { pShaderCode->GetBufferPointer(), pShaderCode->GetBufferSize() };
 }
 
-ComPtr<ID3D12PipelineState> ComputePipelineState::GetPSO()
+ComPtr<ID3D12PipelineState> ComputePipelineState::GetPSO() const
 {
 	assert(_pso);
 	return _pso;
@@ -28,5 +27,6 @@ ComPtr<ID3D12PipelineState> ComputePipelineState::GetPSO()
 
 void ComputePipelineState::Finalize(ComPtr<ID3D12Device> pDevice)
 {
+	assert(_description.pRootSignature != nullptr);
 	ThrowIfFailed(pDevice->CreateComputePipelineState(&_description, IID_PPV_ARGS(&_pso)));
 }
