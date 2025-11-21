@@ -1,23 +1,25 @@
 #include "DepthPass.h"
 
-DepthPass::DepthPass(ID3D12Device* device)
+namespace DistRender
 {
-	md3dDevice = device;
-}
+	DepthPass::DepthPass(ID3D12Device* device)
+	{
+		md3dDevice = device;
+	}
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE DepthPass::Srv()const
-{
-	return mhGpuSrv;
-}
+	CD3DX12_GPU_DESCRIPTOR_HANDLE DepthPass::Srv()const
+	{
+		return mhGpuSrv;
+	}
 
-void DepthPass::BuildDescriptors(
-	ID3D12Resource* depthStencilBuffer,
-	CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
-	CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
-	UINT mCbvSrvUavDescriptorSize
-)
-{
-	// Save references to the descriptors. 
+	void DepthPass::BuildDescriptors(
+		ID3D12Resource* depthStencilBuffer,
+		CD3DX12_CPU_DESCRIPTOR_HANDLE& CPUDescriptor,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE& GPUDescriptor,
+		UINT mCbvSrvUavDescriptorSize
+	)
+	{
+		// Save references to the descriptors. 
 	mhCpuSrv = CPUDescriptor;
 	mhGpuSrv = GPUDescriptor;
 
@@ -37,4 +39,5 @@ void DepthPass::BuildDescriptors(ID3D12Resource* depthStencilBuffer)
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
 	md3dDevice->CreateShaderResourceView(depthStencilBuffer, &srvDesc, mhCpuSrv);
+	}
 }

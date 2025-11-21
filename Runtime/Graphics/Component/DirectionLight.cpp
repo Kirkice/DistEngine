@@ -16,38 +16,38 @@
 #include <string>
 
 
-DirectionLight::DirectionLight(std::string _name = "DirectionLight") : Component(_name)
+DirectionLight::DirectionLight(std::string _name = "DirectionLight") : Light(_name)
 {
 	isMainLight = false;
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	intensity = 1;
 }
 
-DirectionLight::DirectionLight(bool isMain, std::string _name = "DirectionLight") : Component(_name)
+DirectionLight::DirectionLight(bool isMain, std::string _name = "DirectionLight") : Light(_name)
 {
 	isMainLight = isMain;
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	intensity = 1;
 }
 
-DirectionLight::DirectionLight(Color color, std::string _name = "DirectionLight") : Component(_name)
+DirectionLight::DirectionLight(Color color, std::string _name = "DirectionLight") : Light(_name)
 {
 	isMainLight = false;
-	color = color;
+	this->color = color;
 	intensity = 1;
 }
 
-DirectionLight::DirectionLight(bool isMain, Color color, std::string _name = "DirectionLight") : Component(_name)
+DirectionLight::DirectionLight(bool isMain, Color color, std::string _name = "DirectionLight") : Light(_name)
 {
 	isMainLight = isMain;
-	color = color;
+	this->color = color;
 	intensity = 1;
 }
 
-DirectionLight::DirectionLight(bool isMain, Color color, float inten, std::string _name = "DirectionLight") : Component(_name)
+DirectionLight::DirectionLight(bool isMain, Color color, float inten, std::string _name = "DirectionLight") : Light(_name)
 {
 	isMainLight = isMain;
-	color = color;
+	this->color = color;
 	intensity = inten;
 }
 

@@ -2,22 +2,23 @@
 #include "../Core/Mathf/Mathf.h"
 #include "../Graphics/GraphicsCore.h"
 
-using Microsoft::WRL::ComPtr;
-using namespace DirectX;
-using namespace DirectX::PackedVector;
- 
-
-//Render Layer
-enum class MatBufferType : int
+namespace DistRender
 {
-	PBR = 0,
-	SkyBox = 1,
-	PostProcess = 2,
-};
+	using Microsoft::WRL::ComPtr;
+	using namespace DirectX;
+	using namespace DirectX::PackedVector;
 
-class DistRenderPipeline: public GraphicsCore
-{
-public:
+	//Render Layer
+	enum class MatBufferType : int
+	{
+		PBR = 0,
+		SkyBox = 1,
+		PostProcess = 2,
+	};
+
+	class DistRenderPipeline : public GraphicsCore
+	{
+	public:
 	DistRenderPipeline(HINSTANCE hInstance);
 	DistRenderPipeline(const DistRenderPipeline& rhs) = delete;
 	DistRenderPipeline& operator=(const DistRenderPipeline& rhs) = delete;
@@ -29,99 +30,100 @@ public:
 
 private:
 
-	//	äÖÈ¾ÒõÓ°
+	//	ï¿½ï¿½È¾ï¿½ï¿½Ó°
 	void RenderShadowPass();
 
-	//	ÌáÇ°Éî¶È
+	//	ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 	void DepthPrePass();
 
-	//	äÖÈ¾GBuffer
+	//	ï¿½ï¿½È¾GBuffer
 	void RenderGBuffer();
 
-	//	äÖÈ¾²»Í¸Ã÷ÎïÌå
+	//	ï¿½ï¿½È¾ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void RenderOpaquePass();
 
-	//	ÑÓ³ÙäÖÈ¾
+	//	ï¿½Ó³ï¿½ï¿½ï¿½È¾
 	void DeferredRenderPass();
 
-	//	äÖÈ¾Ìì¿ÕÇò
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 	void RenderSkyBoxPass();
 
-	//	äÖÈ¾Í¸Ã÷ÎïÌå
+	//	ï¿½ï¿½È¾Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void RenderTransparentPass();
 
-	//	äÖÈ¾×ø±êÖá
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void RenderAxisPass();
 
-	//	äÖÈ¾Í¼±ê
+	//	ï¿½ï¿½È¾Í¼ï¿½ï¿½
 	void RenderGizmosPass();
 
-	//	äÖÈ¾ºó´¦Àí
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½
 	void RenderPostProcessPass();
 
-	//	äÖÈ¾Ìå»ıÎí
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 	void DrawVolumeFog();
 
-	//	äÖÈ¾¿ìËÙ½üËÆ¿¹¾â³İ
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½Ù½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
 	void DrawFxAA();
 
 
 	//	RenderUtils
 
-	//	²ÄÖÊBuffer
+	//	ï¿½ï¿½ï¿½ï¿½Buffer
 	ID3D12Resource* mMatBuffer = nullptr;
 
-	//	ÉèÖÃÃèÊö·û¶Ñ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void SetDescriptorHeap();
 
-	//	ÉèÖÃ¸ùÇ©Ãû
+	//	ï¿½ï¿½ï¿½Ã¸ï¿½Ç©ï¿½ï¿½
 	void SetRootSignature();
 
-	//	ÉèÖÃ²ÄÖÊBuffer
+	//	ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½Buffer
 	void SetMatBuffer(MatBufferType type);
 
-	//	¿½±´Pass
+	//	ï¿½ï¿½ï¿½ï¿½Pass
 	void CopyColorPass();
 
-	//	ÉèÖÃViewheRect
+	//	ï¿½ï¿½ï¿½ï¿½ViewheRect
 	void SetViewAndRect();
 
-	//	×ÊÔ´ÆÁÕÏ - Õ¹Ê¾µ½Ä¿±ê
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - Õ¹Ê¾ï¿½ï¿½Ä¿ï¿½ï¿½
 	void SetPresentToTarget(ID3D12Resource* Resource);
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÄ¿±êµ½Õ¹Ê¾
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êµ½Õ¹Ê¾
 	void SetTargetToPresnet(ID3D12Resource* Resource);
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃ¶ÁÈ¡µ½Ä¿±ê
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ã¶ï¿½È¡ï¿½ï¿½Ä¿ï¿½ï¿½
 	void SetReadToDest(ID3D12Resource* Resource);
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÕ¹Ê¾µ½Ô´
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½Ô´
 	void SetPresentToSource(ID3D12Resource* Resource);
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÔ´µ½Õ¹Ê¾
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½Õ¹Ê¾
 	void SetSourceToPresent(ID3D12Resource* Resource);
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÄ¿±êµ½¶ÁÈ¡
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êµ½ï¿½ï¿½È¡
 	void SetDestToRead(ID3D12Resource* Resource);
 
-	//	¿½±´¸´ÖÆ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void CopyBlit(ID3D12Resource* dest, ID3D12Resource* source);
 
-	//	ÉèÖÃÎªäÖÈ¾Ä¿±ê
+	//	ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½È¾Ä¿ï¿½ï¿½
 	void SetRenderTarget();
 
-	//	ÉèÖÃGBufferµÄäÖÈ¾Ä¿±ê
+	//	ï¿½ï¿½ï¿½ï¿½GBufferï¿½ï¿½ï¿½ï¿½È¾Ä¿ï¿½ï¿½
 	void SetGBufferTarget();
 
-	//	Çå³ıGBufferµÄäÖÈ¾Ä¿±ê
+	//	ï¿½ï¿½ï¿½GBufferï¿½ï¿½ï¿½ï¿½È¾Ä¿ï¿½ï¿½
 	void ClearGBufferTarget();
 
-	//	ÉèÖÃCBuffer
+	//	ï¿½ï¿½ï¿½ï¿½CBuffer
 	void SetCBuffer();
 
-	//	ÉèÖÃ»·¾³ÌùÍ¼µ½¸úÃèÊö·û±í
+	//	ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void SetCubeMapRootDescriptorTable();
 
-	//	»æÖÆäÖÈ¾ÏîÄ¿ Layer
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½Ä¿ Layer
 	void DrawRenderItemFormLayer(std::string PSO, int Layer);
-};
+	};
+}

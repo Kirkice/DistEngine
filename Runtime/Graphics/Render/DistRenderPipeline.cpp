@@ -6,43 +6,45 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-DistRenderPipeline::DistRenderPipeline(HINSTANCE hInstance) : GraphicsCore(hInstance)
+namespace DistRender
 {
-}
+	DistRenderPipeline::DistRenderPipeline(HINSTANCE hInstance) : GraphicsCore(hInstance)
+	{
+	}
 
-DistRenderPipeline::~DistRenderPipeline()
-{
-	if (md3dDevice != nullptr)
-		FlushCommandQueue();
-}
+	DistRenderPipeline::~DistRenderPipeline()
+	{
+		if (md3dDevice != nullptr)
+			FlushCommandQueue();
+	}
 
 /// <summary>
-/// äÖÈ¾  
+/// ï¿½ï¿½È¾  
 /// </summary>
 void DistRenderPipeline::Render() 
 {
-	//	ÉèÖÃÃèÊö¶Ñ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SetDescriptorHeap();
 
-	//	ÉèÖÃ¸ùÇ©Ãû
+	//	ï¿½ï¿½ï¿½Ã¸ï¿½Ç©ï¿½ï¿½
 	SetRootSignature();
 
-	//	»æÖÆÒõÓ°Pass
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°Pass
 	RenderShadowPass(); 
 
-	//	ÉèÖÃViewºÍRect
+	//	ï¿½ï¿½ï¿½ï¿½Viewï¿½ï¿½Rect
 	SetViewAndRect();
 
-	//	×ÊÔ´ÆÁÕÏ - Õ¹Ê¾µ½Ä¿±ê
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - Õ¹Ê¾ï¿½ï¿½Ä¿ï¿½ï¿½
 	SetPresentToTarget(CurrentBackBuffer());
 
-	//	ÉèÖÃÎªäÖÈ¾Ä¿±ê
+	//	ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½È¾Ä¿ï¿½ï¿½
 	SetRenderTarget();
 
-	//	ÉèÖÃCBuffer
+	//	ï¿½ï¿½ï¿½ï¿½CBuffer
 	SetCBuffer();
 
-	//	ÉèÖÃ»·¾³ÌùÍ¼µ½¸úÃèÊö·û±í
+	//	ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SetCubeMapRootDescriptorTable();
 
 	//SetGBufferTarget();
@@ -51,42 +53,42 @@ void DistRenderPipeline::Render()
 
 	//ClearGBufferTarget();
 
-	//	äÖÈ¾²»Í¸Ã÷ÎïÌå
+	//	ï¿½ï¿½È¾ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	RenderOpaquePass();
 
-	//	äÖÈ¾×ø±êÖá
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	RenderAxisPass();
 
-	//	äÖÈ¾Ìì¿ÕÇò
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 	RenderSkyBoxPass();
 
-	//	äÖÈ¾Í¼±ê
+	//	ï¿½ï¿½È¾Í¼ï¿½ï¿½
 	RenderGizmosPass();
 
-	//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÄ¿±êµ½Õ¹Ê¾
+	//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êµ½Õ¹Ê¾
 	SetTargetToPresnet(CurrentBackBuffer());
 
-	//	¿½±´Pass
+	//	ï¿½ï¿½ï¿½ï¿½Pass
 	CopyColorPass();
 
-	//	äÖÈ¾ºó´¦Àí
+	//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½
 	RenderPostProcessPass();
 }
 
-//	äÖÈ¾ÒõÓ°
+//	ï¿½ï¿½È¾ï¿½ï¿½Ó°
 void DistRenderPipeline::RenderShadowPass()
 {
 	SetMatBuffer(MatBufferType::PBR);  
 	DrawSceneToShadowMap();
 }
 
-//	ÌáÇ°Éî¶È
+//	ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 void DistRenderPipeline::DepthPrePass()
 {
 
 }
 
-////	äÖÈ¾GBuffer
+////	ï¿½ï¿½È¾GBuffer
 //void DistRenderPipeline::RenderGBuffer()
 //{
 //	float clearValue[] = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -113,20 +115,20 @@ void DistRenderPipeline::DepthPrePass()
 //	DrawRenderItemFormLayer("GBuffer", (int)RenderLayer::Opaque);
 //}
 
-//	äÖÈ¾²»Í¸Ã÷ÎïÌå
+//	ï¿½ï¿½È¾ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::RenderOpaquePass()
 {
 	SetMatBuffer(MatBufferType::PBR);
 	DrawRenderItemFormLayer("litOpaque", (int)RenderLayer::Opaque);
 }
 
-//	ÑÓ³ÙäÖÈ¾
+//	ï¿½Ó³ï¿½ï¿½ï¿½È¾
 void DistRenderPipeline::DeferredRenderPass()
 {
 
 }
 
-//	äÖÈ¾Ìì¿ÕÇò
+//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::RenderSkyBoxPass()
 {
 	if (mSceneManager.getInstance().mCameraSetting.renderSkyBox)
@@ -136,19 +138,19 @@ void DistRenderPipeline::RenderSkyBoxPass()
 	}
 }
 
-//	äÖÈ¾Í¸Ã÷ÎïÌå
+//	ï¿½ï¿½È¾Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::RenderTransparentPass()
 {
 
 }
 
-//	äÖÈ¾×ø±êÖá
+//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::RenderAxisPass()
 {
 	DrawRenderItemFormLayer("Axis", (int)RenderLayer::Axis);
 }
 
-//	äÖÈ¾Í¼±ê
+//	ï¿½ï¿½È¾Í¼ï¿½ï¿½
 void DistRenderPipeline::RenderGizmosPass()
 {
 	if (ShowGizmos || ShowWire)
@@ -161,7 +163,7 @@ void DistRenderPipeline::RenderGizmosPass()
 		DrawRenderItemFormLayer("Line", (int)RenderLayer::Line);
 }
 
-//	äÖÈ¾ºó´¦Àí
+//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::RenderPostProcessPass()
 {
 	//_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mRenderTexture->GpuSrv());
@@ -178,7 +180,7 @@ void DistRenderPipeline::RenderPostProcessPass()
 		DrawFxAA();
 }
 
-//	äÖÈ¾Ìå»ýÎí
+//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::DrawVolumeFog()
 {
 	DrawRenderItemFormLayer("VolumeFog", (int)RenderLayer::PostProcess);
@@ -196,7 +198,7 @@ void DistRenderPipeline::DrawVolumeFog()
 	SetDestToRead(mRenderTexture->Resource());
 }
 
-//	äÖÈ¾¿ìËÙ½üËÆ¿¹¾â³Ý
+//	ï¿½ï¿½È¾ï¿½ï¿½ï¿½Ù½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::DrawFxAA()
 {
 	DrawRenderItemFormLayer("FxAA", (int)RenderLayer::PostProcess);
@@ -219,21 +221,21 @@ void DistRenderPipeline::DrawFxAA()
 //	RenderUtils
 /// </summary>
 
-//	ÉèÖÃÃèÊö·û¶Ñ
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::SetDescriptorHeap()
 {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mSrvDescriptorHeap.GetDescriptorHeap().Get() };
 	_forwardPassCmdList->GetInternal()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 }
 
-//	ÉèÖÃ¸ùÇ©Ãû
+//	ï¿½ï¿½ï¿½Ã¸ï¿½Ç©ï¿½ï¿½
 void DistRenderPipeline::SetRootSignature()
 {
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootSignature(mRootSignature.GetSignature());
 }
 
 
-//	ÉèÖÃ²ÄÖÊBuffer
+//	ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½Buffer
 void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 {
 	switch (type)
@@ -251,20 +253,20 @@ void DistRenderPipeline::SetMatBuffer(MatBufferType type)
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootShaderResourceView(3, mMatBuffer->GetGPUVirtualAddress());
 }
 
-//	ÉèÖÃViewheRect
+//	ï¿½ï¿½ï¿½ï¿½ViewheRect
 void DistRenderPipeline::SetViewAndRect()
 {
 	_forwardPassCmdList->GetInternal()->RSSetViewports(1, &mScreenViewport);
 	_forwardPassCmdList->GetInternal()->RSSetScissorRects(1, &mScissorRect);
 }
 
-//	×ÊÔ´ÆÁÕÏ - Õ¹Ê¾µ½Ä¿±ê
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - Õ¹Ê¾ï¿½ï¿½Ä¿ï¿½ï¿½
 void DistRenderPipeline::SetPresentToTarget(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 }
 
-//	ÉèÖÃÎªäÖÈ¾Ä¿±ê
+//	ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½È¾Ä¿ï¿½ï¿½
 void DistRenderPipeline::SetRenderTarget()
 {
 	_forwardPassCmdList->GetInternal()->ClearRenderTargetView(CurrentBackBufferView(), mSceneManager.getInstance().mCameraSetting.SolidColor, 0, nullptr);
@@ -273,7 +275,7 @@ void DistRenderPipeline::SetRenderTarget()
 	_forwardPassCmdList->GetInternal()->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 }
 
-////	ÉèÖÃGBufferµÄäÖÈ¾Ä¿±ê
+////	ï¿½ï¿½ï¿½ï¿½GBufferï¿½ï¿½ï¿½ï¿½È¾Ä¿ï¿½ï¿½
 //void DistRenderPipeline::SetGBufferTarget()
 //{
 //	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
@@ -286,7 +288,7 @@ void DistRenderPipeline::SetRenderTarget()
 //	_forwardPassCmdList->GetInternal()->ResourceBarrier((UINT)barriers.size(), barriers.data());
 //}
 //
-////	Çå³ýGBufferµÄäÖÈ¾Ä¿±ê
+////	ï¿½ï¿½ï¿½GBufferï¿½ï¿½ï¿½ï¿½È¾Ä¿ï¿½ï¿½
 //void DistRenderPipeline::ClearGBufferTarget()
 //{
 //	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {
@@ -299,7 +301,7 @@ void DistRenderPipeline::SetRenderTarget()
 //	_forwardPassCmdList->GetInternal()->ResourceBarrier((UINT)barriers.size(), barriers.data());
 //}
 
-//	¿½±´Pass
+//	ï¿½ï¿½ï¿½ï¿½Pass
 void DistRenderPipeline::CopyColorPass()
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mRenderTexture->Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
@@ -314,60 +316,61 @@ void DistRenderPipeline::CopyColorPass()
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
-//	ÉèÖÃCBuffer
+//	ï¿½ï¿½ï¿½ï¿½CBuffer
 void DistRenderPipeline::SetCBuffer()
 {
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 }
 
-//	ÉèÖÃ»·¾³ÌùÍ¼µ½¸úÃèÊö·û±í
+//	ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::SetCubeMapRootDescriptorTable()
 {
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_specularIBL"]->GpuHandle);
 	_forwardPassCmdList->GetInternal()->SetGraphicsRootDescriptorTable(4, mCubeMapTextures["Sky_diffuseIBL"]->GpuHandle);
 }
 
-//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÄ¿±êµ½Õ¹Ê¾
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êµ½Õ¹Ê¾
 void DistRenderPipeline::SetTargetToPresnet(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 }
 
-//	×ÊÔ´ÆÁÕÏ - ÉèÖÃ¶ÁÈ¡µ½Ä¿±ê
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ã¶ï¿½È¡ï¿½ï¿½Ä¿ï¿½ï¿½
 void DistRenderPipeline::SetReadToDest(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_COPY_DEST));
 }
 
-//	»æÖÆäÖÈ¾ÏîÄ¿ Layer
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½Ä¿ Layer
 void DistRenderPipeline::DrawRenderItemFormLayer(std::string PSO, int Layer)
 {
 	_forwardPassCmdList->GetInternal()->SetPipelineState(mPSOs[PSO].Get());
 	DrawRenderItems(_forwardPassCmdList->GetInternal().Get(), mRitemLayer[Layer]);
 }
 
-//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÕ¹Ê¾µ½Ô´
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½Ô´
 void DistRenderPipeline::SetPresentToSource(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_SOURCE));
 }
 
-//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÔ´µ½Õ¹Ê¾
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½Õ¹Ê¾
 void DistRenderPipeline::SetSourceToPresent(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PRESENT));
 }
 
-//	×ÊÔ´ÆÁÕÏ - ÉèÖÃÄ¿±êµ½¶ÁÈ¡
+//	ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½êµ½ï¿½ï¿½È¡
 void DistRenderPipeline::SetDestToRead(ID3D12Resource* Resource)
 {
 	_forwardPassCmdList->GetInternal()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(Resource,
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 }
 
-//	¿½±´¸´ÖÆ
+//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void DistRenderPipeline::CopyBlit(ID3D12Resource* dest, ID3D12Resource* source)
-{
-	_forwardPassCmdList->GetInternal()->CopyResource(dest, source);
+	{
+		_forwardPassCmdList->GetInternal()->CopyResource(dest, source);
+	}
 }

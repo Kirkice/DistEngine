@@ -5,15 +5,17 @@
 #include "DX12Utils.h"
 #include "../Graphics/FrameResource.h"
 
-class GBuffer
+namespace DistRender
 {
-public:
+	class GBuffer
+	{
+	public:
 
-	GBuffer(
-		ID3D12Device* device,
-		UINT width,
-		UINT height
-	);
+		GBuffer(
+			ID3D12Device* device,
+			UINT width,
+			UINT height
+		);
 
 	GBuffer(const GBuffer& rhs) = delete;
 	GBuffer& operator=(const GBuffer& rhs) = delete;
@@ -39,27 +41,28 @@ public:
 
 	void OnResize(UINT newWidth, UINT newHeight);
 
-private:
-	void BuildResources();
+	private:
+		void BuildResources();
 
-private:
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> mGBufferRootSig;
-	Microsoft::WRL::ComPtr<ID3D12Resource> GBufferResources[4];
+	private:
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> mGBufferRootSig;
+		Microsoft::WRL::ComPtr<ID3D12Resource> GBufferResources[4];
 
-	ID3D12Device* md3dDevice = nullptr;
-	ID3D12PipelineState* mGBufferPSO;
+		ID3D12Device* md3dDevice = nullptr;
+		ID3D12PipelineState* mGBufferPSO;
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuSrv[4];
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBufferGpuSrv[4];
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuRtv[4];
+		CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuSrv[4];
+		CD3DX12_GPU_DESCRIPTOR_HANDLE mhGBufferGpuSrv[4];
+		CD3DX12_CPU_DESCRIPTOR_HANDLE mhGBufferCpuRtv[4];
 
-	DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		DXGI_FORMAT mFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
-	D3D12_VIEWPORT mViewport;
-	D3D12_RECT mScissorRect;
+		D3D12_VIEWPORT mViewport;
+		D3D12_RECT mScissorRect;
 
-	UINT mWidth = 0;
-	UINT mHeight = 0;
-};
+		UINT mWidth = 0;
+		UINT mHeight = 0;
+	};
+}
 
 #endif

@@ -15,7 +15,7 @@
 #include "SpotLight.h"
 #include <string>
 
-SpotLight::SpotLight(std::string _name = "SpotLight") : Component(_name)
+SpotLight::SpotLight(std::string _name = "SpotLight") : Light(_name)
 {
 	rangeFactory = 1;
 	intensity = 1;
@@ -23,36 +23,36 @@ SpotLight::SpotLight(std::string _name = "SpotLight") : Component(_name)
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-SpotLight::SpotLight(Color color, std::string _name = "SpotLight") : Component(_name)
+SpotLight::SpotLight(Color color, std::string _name = "SpotLight") : Light(_name)
 {
 	rangeFactory = 1;
 	intensity = 1;
 	spotAngle = 30;
-	color = color;
+	this->color = color;
 }
 
-SpotLight::SpotLight(Color color, float range, std::string _name = "SpotLight") : Component(_name)
+SpotLight::SpotLight(Color color, float range, std::string _name = "SpotLight") : Light(_name)
 {
 	rangeFactory = range;
 	intensity = 1;
 	spotAngle = 30;
-	color = color;
+	this->color = color;
 }
 
-SpotLight::SpotLight(Color color, float range, float inten, std::string _name = "SpotLight") : Component(_name)
+SpotLight::SpotLight(Color color, float range, float inten, std::string _name = "SpotLight") : Light(_name)
 {
 	rangeFactory = range;
 	intensity = inten;
 	spotAngle = 30;
-	color = color;
+	this->color = color;
 }
 
-SpotLight::SpotLight(Color color, float range, float inten, float Angle, std::string _name = "SpotLight") : Component(_name)
+SpotLight::SpotLight(Color color, float range, float inten, float Angle, std::string _name = "SpotLight") : Light(_name)
 {
 	rangeFactory = range;
 	intensity = inten;
 	spotAngle = Angle;
-	color = color;
+	this->color = color;
 }
 
 SpotLight::~SpotLight()

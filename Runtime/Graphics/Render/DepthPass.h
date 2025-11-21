@@ -2,9 +2,11 @@
 
 #include "DX12Utils.h"
 
-class DepthPass
+namespace DistRender
 {
-public:
+	class DepthPass
+	{
+	public:
 	DepthPass(ID3D12Device* device);
 	DepthPass(const DepthPass& rhs) = delete;
 	DepthPass& operator=(const DepthPass& rhs) = delete;
@@ -24,6 +26,7 @@ private:
 
 	ID3D12Device* md3dDevice = nullptr;
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
-};
+		CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuSrv;
+		CD3DX12_GPU_DESCRIPTOR_HANDLE mhGpuSrv;
+	};
+}

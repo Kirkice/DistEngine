@@ -15,32 +15,32 @@
 #include "PointLight.h"
 #include <string>
 
-PointLight::PointLight(std::string _name = "PointLight") : Component(_name)
+PointLight::PointLight(std::string _name = "PointLight") : Light(_name)
 {
 	rangeFactory = 1;
 	intensity = 1;
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-PointLight::PointLight(Color color, std::string _name = "PointLight") : Component(_name)
+PointLight::PointLight(Color color, std::string _name = "PointLight") : Light(_name)
 {
 	rangeFactory = 1;
 	intensity = 1;
-	color = color;
+	this->color = color;
 }
 
-PointLight::PointLight(Color color, float intens, std::string _name = "PointLight") : Component(_name)
+PointLight::PointLight(Color color, float intens, std::string _name = "PointLight") : Light(_name)
 {
 	rangeFactory = 1;
 	intensity = intens;
-	color = color;
+	this->color = color;
 }
 
-PointLight::PointLight(Color color, float intens, float range, std::string _name = "PointLight") : Component(_name)
+PointLight::PointLight(Color color, float intens, float range, std::string _name = "PointLight") : Light(_name)
 {
 	rangeFactory = range;
 	intensity = intens;
-	color = color;
+	this->color = color;
 }
 
 PointLight::~PointLight()

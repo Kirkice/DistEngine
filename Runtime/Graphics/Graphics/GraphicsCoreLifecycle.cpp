@@ -25,13 +25,13 @@ bool GraphicsCore::Initialize()
     mCamera.getInstance().SetPosition(0.0f, 2.0f, -15.0f);
 
     //ShadowMap Init
-    mShadowMap = std::make_unique<ShadowMap>(md3dDevice.Get(), 2048, 2048);
+    mShadowMap = std::make_unique<DistRender::ShadowMap>(md3dDevice.Get(), 2048, 2048);
 
     //DepthPass Init
-    mDepthPass = std::make_unique<DepthPass>(md3dDevice.Get());
+    mDepthPass = std::make_unique<DistRender::DepthPass>(md3dDevice.Get());
 
     //RenderTarget Init
-    mRenderTexture = std::make_unique<RenderTexture>(md3dDevice.Get(), mClientWidth, mClientHeight);
+    mRenderTexture = std::make_unique<DistRender::RenderTexture>(md3dDevice.Get(), mClientWidth, mClientHeight);
 
     //GBuffer Init
     //mGBufferPass = std::make_unique<GBuffer>(md3dDevice.Get(), mClientWidth, mClientHeight);

@@ -16,7 +16,7 @@ public:
 	~PipelineStateObject();
 
 	void Build(
-		ShaderManager& mShaderManager,
+		DistShader::ShaderManager& mShaderManager,
 		RootSignature& mRootSignature,
 		const std::string& VS,
 		const std::string& PS,
@@ -28,12 +28,12 @@ public:
 	);
 
 	void BuildDefault(
-		ShaderManager& mShaderManager,
+		DistShader::ShaderManager& mShaderManager,
 		RootSignature& mRootSignature
 	);
 
 	void SetShader(
-		ShaderManager& mShaderManager,
+		DistShader::ShaderManager& mShaderManager,
 		RootSignature& mRootSignature,
 		const std::string& VS,
 		const std::string& PS
@@ -70,8 +70,8 @@ public:
 	const D3D12_GRAPHICS_PIPELINE_STATE_DESC* GetPSODesc() const;
 
 private:
-	void InitializeDefaults(ShaderManager& mShaderManager, RootSignature& mRootSignature);
-	void ApplyShaders(ShaderManager& mShaderManager, const std::string& VS, const std::string& PS);
+	void InitializeDefaults(DistShader::ShaderManager& mShaderManager, RootSignature& mRootSignature);
+	void ApplyShaders(DistShader::ShaderManager& mShaderManager, const std::string& VS, const std::string& PS);
 	static D3D12_RENDER_TARGET_BLEND_DESC MakeBlendDesc(bool enable, D3D12_BLEND SrcBlend, D3D12_BLEND DestBlend, D3D12_BLEND_OP BlendOp);
 
 private:

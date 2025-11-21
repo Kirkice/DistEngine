@@ -5,21 +5,23 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
 
-const int GBufferSize = 4;
-
-GBuffer::GBuffer(
-	ID3D12Device* device,
-	UINT width,
-	UINT height
-)
+namespace DistRender
 {
-	md3dDevice = device;
+	const int GBufferSize = 4;
 
-	OnResize(width, height);
-}
+	GBuffer::GBuffer(
+		ID3D12Device* device,
+		UINT width,
+		UINT height
+	)
+	{
+		md3dDevice = device;
+
+		OnResize(width, height);
+	}
 
 /// <summary>
-/// ¼ì²é¿í¸ß
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="newWidth"></param>
 /// <param name="newHeight"></param>
@@ -78,7 +80,7 @@ void GBuffer::BuildResources()
 }
 
 /// <summary>
-/// »ñÈ¡GBuffer Resources
+/// ï¿½ï¿½È¡GBuffer Resources
 /// </summary>
 /// <param name="index"></param>
 /// <returns></returns>
@@ -88,7 +90,7 @@ ID3D12Resource* GBuffer::GetGBuffer(int index)
 }
 
 /// <summary>
-/// »ñÈ¡GBufferµÄCPU SRV
+/// ï¿½ï¿½È¡GBufferï¿½ï¿½CPU SRV
 /// </summary>
 /// <param name="index"></param>
 /// <returns></returns>
@@ -98,7 +100,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_CPU_SRV(int index)const
 }
 
 /// <summary>
-/// »ñÈ¡GBufferµÄGPU SRV
+/// ï¿½ï¿½È¡GBufferï¿½ï¿½GPU SRV
 /// </summary>
 /// <param name="index"></param>
 /// <returns></returns>
@@ -108,7 +110,7 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_GPU_SRV(int index)const
 }
 
 /// <summary>
-/// »ñÈ¡GBufferµÄCPU RTV
+/// ï¿½ï¿½È¡GBufferï¿½ï¿½CPU RTV
 /// </summary>
 /// <param name="index"></param>
 /// <returns></returns>
@@ -118,7 +120,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE GBuffer::GET_GBUFFER_CPU_RTV(int index)const
 }
 
 /// <summary>
-/// ¹¹½¨ÃèÊö·û
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="CPUDescriptor"></param>
 /// <param name="GPUDescriptor"></param>
@@ -171,4 +173,5 @@ void GBuffer::RebuildDescriptors()
 void GBuffer::SetPSOs(ID3D12PipelineState* gbufferPSO)
 {
 	mGBufferPSO = gbufferPSO;
+}
 }

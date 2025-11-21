@@ -29,7 +29,7 @@ void GizmosManager::BuildWirePlane(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_plane = new DistBound::BoundingBox("BoundingBox");
-	bound_plane->aabb = BoundingAABB(mesh_plane->data);
+	bound_plane->aabb = DistBound::BoundingAABB(mesh_plane->data);
 
 	planeRenderObject->AddComponent(transform_plane);
 	planeRenderObject->AddComponent(meshRender_plane);
@@ -67,7 +67,7 @@ void GizmosManager::BuildLightGizmo(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_dirGizmo = new DistBound::BoundingBox("BoundingBox");
-	bound_dirGizmo->aabb = BoundingAABB(mesh_dirGizmo->data);
+	bound_dirGizmo->aabb = DistBound::BoundingAABB(mesh_dirGizmo->data);
 
 	directionLightGizmoObject->AddComponent(transform_dirGizmo);
 	directionLightGizmoObject->AddComponent(meshRender_plane);
@@ -106,7 +106,7 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb = DistBound::BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 
@@ -142,7 +142,7 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb = DistBound::BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 
@@ -178,7 +178,7 @@ void GizmosManager::BuildUCSPosition(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb = DistBound::BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 
@@ -220,7 +220,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb = DistBound::BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 
@@ -256,7 +256,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb = DistBound::BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 
@@ -292,7 +292,7 @@ void GizmosManager::BuildUCSRotation(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb = DistBound::BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 
@@ -334,7 +334,7 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoX = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoX->aabb = BoundingAABB(mesh_ucsGizmoX->data);
+	bound_ucsGizmoX->aabb = DistBound::BoundingAABB(mesh_ucsGizmoX->data);
 	bound_ucsGizmoX->aabb.m_min = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 	bound_ucsGizmoX->aabb.m_max = transform_ucsGizmoX->GetWorldMatrix() * bound_ucsGizmoX->aabb.m_min;
 
@@ -370,7 +370,7 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoY = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoY->aabb = BoundingAABB(mesh_ucsGizmoY->data);
+	bound_ucsGizmoY->aabb = DistBound::BoundingAABB(mesh_ucsGizmoY->data);
 	bound_ucsGizmoY->aabb.m_min = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 	bound_ucsGizmoY->aabb.m_max = transform_ucsGizmoY->GetWorldMatrix() * bound_ucsGizmoY->aabb.m_min;
 
@@ -406,7 +406,7 @@ void GizmosManager::BuildUCSScale(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ucsGizmoZ = new DistBound::BoundingBox("BoundingBox");
-	bound_ucsGizmoZ->aabb = BoundingAABB(mesh_ucsGizmoZ->data);
+	bound_ucsGizmoZ->aabb = DistBound::BoundingAABB(mesh_ucsGizmoZ->data);
 	bound_ucsGizmoZ->aabb.m_min = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 	bound_ucsGizmoZ->aabb.m_max = transform_ucsGizmoZ->GetWorldMatrix() * bound_ucsGizmoZ->aabb.m_min;
 

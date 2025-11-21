@@ -3,8 +3,9 @@
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+using namespace DistRender;
 
-GUISystem::GUISystem(HINSTANCE hInstance) : RenderCore(hInstance)
+GUISystem::GUISystem(HINSTANCE hInstance) : DistRender::RenderCore(hInstance)
 {
 }
 
@@ -16,7 +17,7 @@ GUISystem::~GUISystem()
 
 bool GUISystem::Initialize()
 {
-	if (!RenderCore::Initialize())
+	if (!DistRender::RenderCore::Initialize())
 		return false;
 
 	InitHierachyItems();
@@ -26,7 +27,7 @@ bool GUISystem::Initialize()
 
 void GUISystem::Update(const GameTimer& gt)
 {
-	RenderCore::Update(gt);
+	DistRender::RenderCore::Update(gt);
 	UpdateGizmosObjectCBs();
 }
 
@@ -43,7 +44,7 @@ void GUISystem::UpdateGizmosObjectCBs()
 	
 	std::unique_ptr<GameObject>& mTargetRender = mSceneManager.getInstance().mRenderObjects[index];
 
-	//	¸üÐÂCB
+	//	ï¿½ï¿½ï¿½ï¿½CB
 	mGizmoManager.getInstance().UpdateObjectBuffer(
 		mAllRitems,
 		mSceneManager.getInstance().MainLight->GetComponent<Transform>(1),
@@ -138,7 +139,7 @@ void GUISystem::InitHierachyItems()
 
 	mHierachyItems.push_back(std::move(DirectionLightItem));
 
-	//	´Ó1 ¿ªÊ¼È¥µôÌì¿ÕÇò
+	//	ï¿½ï¿½1 ï¿½ï¿½Ê¼È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (size_t i = 1; i < mSceneManager.getInstance().mRenderObjects.size(); i++)
 	{
 		auto MeshRenderItem = std::make_unique<HierachyItem>();
@@ -150,7 +151,7 @@ void GUISystem::InitHierachyItems()
 	}
 }
 
-//	ÉèÖÃDockSpace
+//	ï¿½ï¿½ï¿½ï¿½DockSpace
 void GUISystem::SetDockSpace(bool* p_open)
 {
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -416,17 +417,17 @@ void GUISystem::DrawProjectEditor()
 
 	if (show_folder_panel)
 	{
-		//	ÏÔÊ¾ÎÆÀí½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Textures_panel = false;
-		//	ÏÔÊ¾Mesh½çÃæ
+		//	ï¿½ï¿½Ê¾Meshï¿½ï¿½ï¿½ï¿½
 		show_Mesh_panel = false;
-		//	ÏÔÊ¾²ÄÖÊ½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½
 		show_Materials_panel = false;
-		//	ÏÔÊ¾³¡¾°½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Scene_panel = false;
 
 
-		//	ÏÔÊ¾ÎÄ¼þ¼Ð
+		//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½ï¿½
 		GUIUtils::DrawProjetcFolder(
 			md3dDevice,
 			mSrvDescriptorHeap.GetDescriptorHeap(),
@@ -440,16 +441,16 @@ void GUISystem::DrawProjectEditor()
 	}
 	else if (show_Textures_panel)
 	{
-		//	ÏÔÊ¾ÎÄ¼þ¼Ð½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½Ð½ï¿½ï¿½ï¿½
 		show_folder_panel = false;
-		//	ÏÔÊ¾Mesh½çÃæ
+		//	ï¿½ï¿½Ê¾Meshï¿½ï¿½ï¿½ï¿½
 		show_Mesh_panel = false;
-		//	ÏÔÊ¾²ÄÖÊ½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½
 		show_Materials_panel = false;
-		//	ÏÔÊ¾³¡¾°½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Scene_panel = false;
 
-		//	ÏÔÊ¾ÎÆÀí½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		GUIUtils::DrawProjectTextures(
 			md3dDevice, 
 			mSrvDescriptorHeap.GetDescriptorHeap(),
@@ -465,16 +466,16 @@ void GUISystem::DrawProjectEditor()
 	}
 	else if (show_Mesh_panel)
 	{
-		//	ÏÔÊ¾ÎÄ¼þ¼Ð½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½Ð½ï¿½ï¿½ï¿½
 		show_folder_panel = false;
-		//	ÏÔÊ¾ÎÆÀí½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Textures_panel = false;
-		//	ÏÔÊ¾²ÄÖÊ½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½
 		show_Materials_panel = false;
-		//	ÏÔÊ¾³¡¾°½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Scene_panel = false;
 
-		//	ÏÔÊ¾Mesh
+		//	ï¿½ï¿½Ê¾Mesh
 		GUIUtils::DrawProjectMesh(
 			md3dDevice,
 			mSrvDescriptorHeap.GetDescriptorHeap(),
@@ -490,13 +491,13 @@ void GUISystem::DrawProjectEditor()
 	}
 	else if (show_Materials_panel)
 	{
-		//	ÏÔÊ¾ÎÄ¼þ¼Ð½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½Ð½ï¿½ï¿½ï¿½
 		show_folder_panel = false;
-		//	ÏÔÊ¾ÎÆÀí½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Textures_panel = false;
-		//	ÏÔÊ¾Mesh½çÃæ
+		//	ï¿½ï¿½Ê¾Meshï¿½ï¿½ï¿½ï¿½
 		show_Mesh_panel = false;
-		//	ÏÔÊ¾³¡¾°½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Scene_panel = false;
 
 		GUIUtils::DrawProjectMaterials(
@@ -513,13 +514,13 @@ void GUISystem::DrawProjectEditor()
 	}
 	else if (show_Scene_panel)
 	{
-		//	ÏÔÊ¾ÎÄ¼þ¼Ð½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½Ð½ï¿½ï¿½ï¿½
 		show_folder_panel = false;
-		//	ÏÔÊ¾ÎÆÀí½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		show_Textures_panel = false;
-		//	ÏÔÊ¾Mesh½çÃæ
+		//	ï¿½ï¿½Ê¾Meshï¿½ï¿½ï¿½ï¿½
 		show_Mesh_panel = false;
-		//	ÏÔÊ¾²ÄÖÊ½çÃæ
+		//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½
 		show_Materials_panel = false;
 
 		GUIUtils::DrawProjectScene(
@@ -1074,62 +1075,62 @@ void GUISystem::SetDefaultStyle()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImVec4* colors = style->Colors;
 
-	//	ÎÄ×ÖÑÕÉ«
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
 	colors[ImGuiCol_Text] = ImVec4(0.89f, 0.89f, 0.89f, 1.000f);
-	//	ÎÄ×Ö²»ÏÔÊ¾
+	//	ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½Ê¾
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.500f, 0.500f, 0.500f, 1.000f);
-	//	´°¿Ú±³¾°É«
+	//	ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½É«
 	colors[ImGuiCol_WindowBg] = ImVec4(0.1843f, 0.1882f, 0.2078f, 1.000f);
-	//	×Ó´°¿ÚÑÕÉ«
+	//	ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½É«
 	colors[ImGuiCol_ChildBg] = ImVec4(0.2431f, 0.2470f, 0.2745f, 0.000f);
-	//	µ¯³ö¿ò
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.8f);
-	//	±ß½çÏß
+	//	ï¿½ß½ï¿½ï¿½ï¿½
 	colors[ImGuiCol_Border] = ImVec4(0.1098f, 0.1137f, 0.1254f, 1.000f);
-	//	×Ó½áµã·Ö½ç¿ò
+	//	ï¿½Ó½ï¿½ï¿½Ö½ï¿½ï¿½
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.000f, 0.000f, 0.000f, 0.000f);
 
 	colors[ImGuiCol_FrameBg] = ImVec4(0.3137f, 0.3137f, 0.3456f, 1.000f); 
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.4431f, 0.4549f, 0.5019f, 1.000f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.4431f, 0.4549f, 0.5019f, 1.000f);
 
-	//	±êÌâ±³¾°
+	//	ï¿½ï¿½ï¿½â±³ï¿½ï¿½
 	colors[ImGuiCol_TitleBg] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
 	colors[ImGuiCol_TitleBgActive] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
 	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
 
-	//	Ö÷²Ëµ¥
+	//	ï¿½ï¿½ï¿½Ëµï¿½
 	colors[ImGuiCol_MenuBarBg] = ImVec4(0.1607f, 0.1568f, 0.1803f, 1.000f);
 
-	//	¹ö¶¯Ìõ 
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.1843f, 0.1882f, 0.2078f, 1.000f);
 	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.2470f, 0.2470f, 0.2745f, 1.000f);
 	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.2470f, 0.2470f, 0.2745f, 1.000f);
 	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
 
-	//	¸´Ñ¡¿ò
+	//	ï¿½ï¿½Ñ¡ï¿½ï¿½
 	colors[ImGuiCol_CheckMark] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
 
-	//	»¬¶¯Ìõ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	colors[ImGuiCol_SliderGrab] = ImVec4(0.3137f, 0.3137f, 0.3456f, 1.000f);
 	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
 
-	//	°´Å¥
+	//	ï¿½ï¿½Å¥
 	colors[ImGuiCol_Button] = ImVec4(1.000f, 1.000f, 1.000f, 0.000f);
 	colors[ImGuiCol_ButtonHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
 	colors[ImGuiCol_ButtonActive] = ImVec4(1.000f, 1.000f, 1.000f, 0.391f);
 
-	//	±êÌâ
+	//	ï¿½ï¿½ï¿½ï¿½
 	colors[ImGuiCol_Header] = ImVec4(0.1215f, 0.1176f, 0.1411f, 1.000f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.8f, 0.1568f, 0.1803f, 1.000f);
 
-	//	·Ö¸îÏß
+	//	ï¿½Ö¸ï¿½ï¿½ï¿½
 	colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
 	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.0862f, 0.0901f, 0.1058f, 1.000f);
 	colors[ImGuiCol_SeparatorActive] = ImVec4(0.0862f, 0.0901f, 0.1058f, 1.000f);
 
-	//	µ÷Õû´óÐ¡
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
 	colors[ImGuiCol_ResizeGrip] = ImVec4(1.000f, 1.000f, 1.000f, 0.250f);
 	colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.000f, 1.000f, 1.000f, 0.670f);
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
@@ -1147,7 +1148,7 @@ void GUISystem::SetDefaultStyle()
 	colors[ImGuiCol_PlotHistogram] = ImVec4(0.586f, 0.586f, 0.586f, 1.000f);
 	colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 
-	//	ÎÄ×ÖÑ¡ÖÐ
+	//	ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½
 	colors[ImGuiCol_TextSelectedBg] = ImVec4(1.000f, 1.000f, 1.000f, 0.156f);
 	colors[ImGuiCol_DragDropTarget] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);
 	colors[ImGuiCol_NavHighlight] = ImVec4(1.000f, 0.391f, 0.000f, 1.000f);

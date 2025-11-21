@@ -103,7 +103,7 @@ public:
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
 	//	ShaderManager
-	ShaderManager mShaderManager = ShaderManager();
+	DistShader::ShaderManager mShaderManager = DistShader::ShaderManager();
 
 	// List of all the render items.
 	std::vector<std::unique_ptr<RenderItem>> mAllRitems;
@@ -136,9 +136,9 @@ public:
 	PassConstants mMainPassCB;  // index 0 of pass cbuffer.
 	PassConstants mShadowPassCB;// index 1 of pass cbuffer.
 
-	std::unique_ptr<RenderTexture> mRenderTexture;
-	std::unique_ptr<ShadowMap> mShadowMap;
-	std::unique_ptr<DepthPass> mDepthPass;
+	std::unique_ptr<DistRender::RenderTexture> mRenderTexture;
+	std::unique_ptr<DistRender::ShadowMap> mShadowMap;
+	std::unique_ptr<DistRender::DepthPass> mDepthPass;
 	//std::unique_ptr<GBuffer> mGBufferPass;
 
 

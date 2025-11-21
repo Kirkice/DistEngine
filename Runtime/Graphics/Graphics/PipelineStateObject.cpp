@@ -24,7 +24,7 @@ PipelineStateObject::~PipelineStateObject()
 /// <param name="MsAAQuilty"></param>
 /// <param name="DSVFormat"></param>
 void PipelineStateObject::Build(
-	ShaderManager& mShaderManager,
+	DistShader::ShaderManager& mShaderManager,
 	RootSignature& mRootSignature,
 	const std::string& VS,
 	const std::string& PS,
@@ -50,7 +50,7 @@ void PipelineStateObject::Build(
 /// <param name="mShaderManager"></param>
 /// <param name="mRootSignature"></param>
 void PipelineStateObject::BuildDefault(
-	ShaderManager& mShaderManager,
+	DistShader::ShaderManager& mShaderManager,
 	RootSignature& mRootSignature
 )
 {
@@ -65,7 +65,7 @@ void PipelineStateObject::BuildDefault(
 /// <param name="VS"></param>
 /// <param name="PS"></param>
 void PipelineStateObject::SetShader(
-	ShaderManager& mShaderManager,
+	DistShader::ShaderManager& mShaderManager,
 	RootSignature& mRootSignature,
 	const std::string& VS,
 	const std::string& PS
@@ -168,7 +168,7 @@ const D3D12_GRAPHICS_PIPELINE_STATE_DESC* PipelineStateObject::GetPSODesc() cons
 	return &PSODesc;
 }
 
-void PipelineStateObject::InitializeDefaults(ShaderManager& mShaderManager, RootSignature& mRootSignature)
+void PipelineStateObject::InitializeDefaults(DistShader::ShaderManager& mShaderManager, RootSignature& mRootSignature)
 {
 	ZeroMemory(&PSODesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 	PSODesc.InputLayout = { mShaderManager.mInputLayout.data(), (UINT)mShaderManager.mInputLayout.size() };
@@ -185,7 +185,7 @@ void PipelineStateObject::InitializeDefaults(ShaderManager& mShaderManager, Root
 	PSODesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void PipelineStateObject::ApplyShaders(ShaderManager& mShaderManager, const std::string& VS, const std::string& PS)
+void PipelineStateObject::ApplyShaders(DistShader::ShaderManager& mShaderManager, const std::string& VS, const std::string& PS)
 {
 	PSODesc.VS =
 	{

@@ -6,18 +6,20 @@
 
 #include "DX12Utils.h"
 
-enum class CubeMapFace : int
+namespace DistRender
 {
-	PositiveX = 0,
-	NegativeX = 1,
-	PositiveY = 2,
-	NegativeY = 3,
-	PositiveZ = 4,
-	NegativeZ = 5
-};
+	enum class CubeMapFace : int
+	{
+		PositiveX = 0,
+		NegativeX = 1,
+		PositiveY = 2,
+		NegativeY = 3,
+		PositiveZ = 4,
+		NegativeZ = 5
+	};
 
-class ShadowMap
-{
+	class ShadowMap
+	{
 public:
 	ShadowMap(ID3D12Device* device,
 		UINT width, UINT height);
@@ -64,6 +66,6 @@ private:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE mhCpuDsv;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> mShadowMap = nullptr;
-};
+	};
+}
 
- 

@@ -7,18 +7,18 @@
 
 namespace DistBound
 {
-	class BoundingBox : public Component
-	{
-	public:
-		//	AABB°üÎ§ºÐ
-		BoundingAABB aabb;
-		//	Çò°üÎ§ºÐ
-		DistBound::BoundingSphere bound_sphere;
-		//	OBB°üÎ§ºÐ
-		BoundingOBB obb;
+    class BoundingBox : public Component
+    {
+    public:
+        // AABB
+        BoundingAABB aabb;
+        // Sphere
+        BoundingSphere bound_sphere;
+        // OBB
+        BoundingOBB obb;
 
-	public:
-		BoundingBox(std::string _name);
-		~BoundingBox();
-	};
+    public:
+        BoundingBox(std::string _name);
+        ~BoundingBox();
+    };
 }

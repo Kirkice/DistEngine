@@ -1,91 +1,54 @@
 #include "BoundingSphere.h"
-#include <vector>
 
-using namespace DistBound;
+using namespace Mathf;
 
-BoundingSphere::BoundingSphere()
+namespace DistBound
 {
-	x = y = z = w = 0.0f;
-}
+	BoundingSphere::BoundingSphere() : x(0), y(0), z(0), w(1.f) {}
 
-BoundingSphere::BoundingSphere(float x_, float y_, float z_, float w_)
-{
-	x = x_;
-	y = y_;
-	z = z_;
-	w = w_;
-}
+	BoundingSphere::BoundingSphere(float x, float y, float z, float r) : x(x), y(y), z(z), w(r) {}
 
-BoundingSphere::BoundingSphere(const Vector3& xyz, float radius_)
-{
-	x = xyz.x;
-	y = xyz.y;
-	z = xyz.z;
-	w = radius_;
-}
+	BoundingSphere::BoundingSphere(const Vector3& xyz, float radius) : x(xyz.x), y(xyz.y), z(xyz.z), w(radius) {}
 
-BoundingSphere::BoundingSphere(const XMFLOAT4& xyzw)
-{
-	x = xyzw.x;
-	y = xyzw.y;
-	z = xyzw.z; 
-	w = xyzw.w;
-}
+	BoundingSphere::BoundingSphere(const DirectX::XMFLOAT4& xyzw) : x(xyzw.x), y(xyzw.y), z(xyzw.z), w(xyzw.w) {}
 
-BoundingSphere::BoundingSphere(FXMVECTOR xyzw)
-{
-	XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(this), xyzw);
-}
+	BoundingSphere::BoundingSphere(DirectX::FXMVECTOR xyzw)
+	{
+		XMStoreFloat4(reinterpret_cast<XMFLOAT4*>(this), xyzw);
+	}
 
-BoundingSphere::BoundingSphere(Vector4 vec)
-{
-	x = vec.x;
-	y = vec.y;
-	z = vec.z;
-	w = vec.w;
-}
+	BoundingSphere::BoundingSphere(Vector4 sphere) : x(sphere.x), y(sphere.y), z(sphere.z), w(sphere.w) {}
 
-bool BoundingSphere::IsIntersect(const BoundingSphere& rhs)
-{
-	float dis = Vector3::Distance(this->GetCenter(), rhs.GetCenter());
-	float radiusSum = this->GetRadius() + rhs.GetRadius();
-	float radiusSub = abs(this->GetRadius() - rhs.GetRadius());
+	bool BoundingSphere::IsIntersect(const BoundingSphere& rhs)
+	{
+		float distSq = (x - rhs.x) * (x - rhs.x) + (y - rhs.y) * (y - rhs.y) + (z - rhs.z) * (z - rhs.z);
+		float radSum = w + rhs.w;
+		return distSq <= (radSum * radSum);
+	}
 
-	if (dis <= radiusSum && dis >= radiusSub)
+	bool BoundingSphere::IsContain(const BoundingSphere& rhs)
+	{
+		float distSq = (x - rhs.x) * (x - rhs.x) + (y - rhs.y) * (y - rhs.y) + (z - rhs.z) * (z - rhs.z);
+		float radDiff = w - rhs.w;
+		return (radDiff >= 0) && (distSq <= (radDiff * radDiff));
+	}
+
+	bool BoundingSphere::IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length)
+	{
+		Vector3 m = rayOri - GetCenter();
+		float b = Vector3::Dot(m, rayDir);
+		float c = Vector3::Dot(m, m) - w * w;
+
+		if (c > 0.0f && b > 0.0f) return false;
+
+		float discr = b * b - c;
+		if (discr < 0.0f) return false;
+
+		float t = -b - sqrt(discr);
+		if (t < 0.0f) t = 0.0f;
+
+		if (t > length) return false;
+
 		return true;
-	else
-		return false;
-}
-
-bool BoundingSphere::IsContain(const BoundingSphere& rhs)
-{
-	float dis = Vector3::Distance(this->GetCenter(), rhs.GetCenter());
-	float radiusSub = abs(this->GetRadius() - rhs.GetRadius());
-
-	if (dis < radiusSub)
-		return true;
-	else
-		return false;
-}
-
-bool SolvingQuadratics(double a, double b, double c)
-{
-	double delta = b * b - 4 * a * c;
-	if (delta < 0)
-		false;
-	else
-		return true;
-}
-
-bool BoundingSphere::IsIntersectWithRay(Vector3 rayOri, Vector3 rayDir, float length)
-{
-	Vector3 D = rayOri * length;
-
-	Vector3 Center = this->GetCenter();
-	float R = this->GetRadius();
-	double a = (D.x * D.x) + (D.y * D.y) + (D.z * D.z);
-	double b = (2 * D.x * (rayOri.x - Center.x) + 2 * D.y * (rayOri.y - Center.y) + 2 * D.z * (rayOri.z - Center.z));
-	double c = ((rayOri.x - Center.x) * (rayOri.x - Center.x) + (rayOri.y - Center.y) * (rayOri.y - Center.y) + (rayOri.z - Center.z) * (rayOri.z - Center.z)) - R * R;
-
-	return SolvingQuadratics(a, b, c);
+	}
 }

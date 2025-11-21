@@ -1,7 +1,7 @@
 #pragma once
 #include "GUIUtils.h"
 #include "../Core/Mathf/Mathf.h"
-#include "Render/RenderCore.h"
+#include "../Runtime/Graphics/Render/RenderCore.h"
 #include "Component/PointLight.h"
 #include "Component/SpotLight.h"
 
@@ -21,7 +21,7 @@ struct HierachyItem
 	int MeshRenderIndex; 
 };
 
-class GUISystem : public RenderCore
+class GUISystem : public DistRender::RenderCore
 {
 public:
 	GUISystem(HINSTANCE hInstance);
@@ -44,75 +44,75 @@ private:
 
 	bool show_app_overlay = true;
 
-	//	µÆ¹âÉèÖÃ
+	//	ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool show_lightSetting_panel = false;
-	//	ÎïÀíÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool show_physicsSetting_panel = false;
-	//	ºó´¦ÀíÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool show_postprocessingSetting_panel = false;
 	//	Frame Debugger
 	bool show_frame_debugger_panel = false;
 
-	//	ÏÔÊ¾ÎÄ¼ş¼Ğ½çÃæ
+	//	ï¿½ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½Ğ½ï¿½ï¿½ï¿½
 	bool show_folder_panel = true;
-	//	ÏÔÊ¾ÎÆÀí½çÃæ
+	//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool show_Textures_panel = false;
-	//	ÏÔÊ¾Mesh½çÃæ
+	//	ï¿½ï¿½Ê¾Meshï¿½ï¿½ï¿½ï¿½
 	bool show_Mesh_panel = false;
-	//	ÏÔÊ¾²ÄÖÊ½çÃæ
+	//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½
 	bool show_Materials_panel = false;
-	//	ÏÔÊ¾³¡¾°½çÃæ
+	//	ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool show_Scene_panel = false;
 
-	//	»æÖÆEditor
+	//	ï¿½ï¿½ï¿½ï¿½Editor
 	void DrawEditor();
 
-	//	»æÖÆÖ÷²Ëµ¥
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 	void DrawMenuEditor();
 
-	//	»æÖÆ³¡¾°ÁĞ±í
+	//	ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
 	void DrawHierachyEditor();
 
-	//	»æÖÆäÖÈ¾ÏîÄ¿
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½Ä¿
 	void DrawInspectorEditor();
 
-	//	»æÖÆÏà»úÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void DrawCameraEditor();
 
-	//	»æÖÆDebug
+	//	ï¿½ï¿½ï¿½ï¿½Debug
 	void DrawProjectEditor();
 
 	//	OverlayButton
 	void DrawOverLayButton(bool* p_open);
 
-	//	»æÖÆÎïÀíÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void DrawPhysicsSettings();
 
-	//	»æÖÆºó´¦ÀíÉèÖÃ
+	//	ï¿½ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void DrawPostProcessingSettings();
 
-	//	»æÖÆ·ç¸ñ
+	//	ï¿½ï¿½ï¿½Æ·ï¿½ï¿½
 	void SetDefaultStyle();
 
-	//	»æÖÆSceneºÍGame View
+	//	ï¿½ï¿½ï¿½ï¿½Sceneï¿½ï¿½Game View
 	void DrawSceneGameView();
 
-	//	»æÖÆäÖÈ¾ÉèÖÃ
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½
 	void DrawRenderSetting();
 
-	//	»æÖÆFrameDebugger
+	//	ï¿½ï¿½ï¿½ï¿½FrameDebugger
 	void DrawFrameDebugger();
 
-	//	»æÖÆĞÔÄÜ·ÖÎö
+	//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½
 	void DrawProfileView();
 
 
 
 
-	//	ÉèÖÃDockSpace
+	//	ï¿½ï¿½ï¿½ï¿½DockSpace
 	void SetDockSpace(bool* p_open);
 
-	//	³õÊ¼»¯³¡¾°Îï¼ş±í
+	//	ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void InitHierachyItems(); 
 
 private:
