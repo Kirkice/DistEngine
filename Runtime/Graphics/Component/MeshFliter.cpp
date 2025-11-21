@@ -14,6 +14,8 @@
 #include "MeshFliter.h"
 #include <algorithm>
 
+using namespace Mathf;
+
 MeshFliter::MeshFliter(std::string _name = "MeshFliter") : Component(_name)
 {
 
@@ -24,7 +26,7 @@ MeshFliter::~MeshFliter()
 }
 
 /// <summary>
-///	´´½¨Box
+///	ï¿½ï¿½ï¿½ï¿½Box
 /// </summary>
 /// <param name="width"></param>
 /// <param name="height"></param>
@@ -36,47 +38,47 @@ void MeshFliter::CreateBox(float width, float height, float depth, uint32 numSub
 	// Create the vertices.
 	//
 
-	PVertex v[24];
+	Vertex v[24];
 
 	float w2 = 0.5f * width;
 	float h2 = 0.5f * height;
 	float d2 = 0.5f * depth;
 
 	// Fill in the front face vertex data.
-	v[0] = PVertex(-w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[1] = PVertex(-w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[2] = PVertex(+w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	v[3] = PVertex(+w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[0] = Vertex(-w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[1] = Vertex(-w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[2] = Vertex(+w2, +h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[3] = Vertex(+w2, -h2, -d2, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 
 	// Fill in the back face vertex data.
-	v[4] = PVertex(-w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[5] = PVertex(+w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[6] = PVertex(+w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[7] = PVertex(-w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[4] = Vertex(-w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[5] = Vertex(+w2, -h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[6] = Vertex(+w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[7] = Vertex(-w2, +h2, +d2, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	// Fill in the top face vertex data.
-	v[8] = PVertex(-w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[9] = PVertex(-w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[10] = PVertex(+w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	v[11] = PVertex(+w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[8] = Vertex(-w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[9] = Vertex(-w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[10] = Vertex(+w2, +h2, +d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[11] = Vertex(+w2, +h2, -d2, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 
 	// Fill in the bottom face vertex data.
-	v[12] = PVertex(-w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	v[13] = PVertex(+w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[14] = PVertex(+w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	v[15] = PVertex(-w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	v[12] = Vertex(-w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	v[13] = Vertex(+w2, -h2, -d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[14] = Vertex(+w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	v[15] = Vertex(-w2, -h2, +d2, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	// Fill in the left face vertex data.
-	v[16] = PVertex(-w2, -h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[17] = PVertex(-w2, +h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[18] = PVertex(-w2, +h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-	v[19] = PVertex(-w2, -h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+	v[16] = Vertex(-w2, -h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+	v[17] = Vertex(-w2, +h2, +d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[18] = Vertex(-w2, +h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[19] = Vertex(-w2, -h2, -d2, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
 
 	// Fill in the right face vertex data.
-	v[20] = PVertex(+w2, -h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-	v[21] = PVertex(+w2, +h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-	v[22] = PVertex(+w2, +h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-	v[23] = PVertex(+w2, -h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	v[20] = Vertex(+w2, -h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+	v[21] = Vertex(+w2, +h2, -d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[22] = Vertex(+w2, +h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	v[23] = Vertex(+w2, -h2, +d2, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
 	data.Vertices.assign(&v[0], &v[24]);
 
@@ -120,7 +122,7 @@ void MeshFliter::CreateBox(float width, float height, float depth, uint32 numSub
 }
 
 /// <summary>
-/// ´´½¨ÇòÌå
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="radius"></param>
 /// <param name="sliceCount"></param>
@@ -134,10 +136,10 @@ void MeshFliter::CreateSphere(float radius, uint32 sliceCount, uint32 stackCount
 	// Poles: note that there will be texture coordinate distortion as there is
 	// not a unique point on the texture map to assign to the pole when mapping
 	// a rectangular texture onto a sphere.
-	PVertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	PVertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	Vertex toVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-	data.Vertices.push_back(topVertex);
+	data.Vertices.push_back(toVertex);
 
 	float phiStep = XM_PI / stackCount;
 	float thetaStep = 2.0f * XM_PI / sliceCount;
@@ -152,7 +154,7 @@ void MeshFliter::CreateSphere(float radius, uint32 sliceCount, uint32 stackCount
 		{
 			float theta = j * thetaStep;
 
-			PVertex v;
+			Vertex v;
 
 			// spherical to cartesian
 			v.Position.x = radius * sinf(phi) * cosf(theta);
@@ -233,7 +235,7 @@ void MeshFliter::CreateSphere(float radius, uint32 sliceCount, uint32 stackCount
 }
 
 /// <summary>
-/// GeoÇò
+/// Geoï¿½ï¿½
 /// </summary>
 /// <param name="radius"></param>
 /// <param name="numSubdivisions"></param>
@@ -309,7 +311,7 @@ void MeshFliter::CreateGeosphere(float radius, uint32 numSubdivisions)
 }
 
 /// <summary>
-/// ´´½¨Ô²ÖùÌå
+/// ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 /// <param name="bottomRadius"></param>
 /// <param name="topRadius"></param>
@@ -339,7 +341,7 @@ void MeshFliter::CreateCylinder(float bottomRadius, float topRadius, float heigh
 		float dTheta = 2.0f * XM_PI / sliceCount;
 		for (uint32 j = 0; j <= sliceCount; ++j)
 		{
-			PVertex vertex;
+			Vertex vertex;
 
 			float c = cosf(j * dTheta);
 			float s = sinf(j * dTheta);
@@ -407,7 +409,7 @@ void MeshFliter::CreateCylinder(float bottomRadius, float topRadius, float heigh
 
 
 /// <summary>
-/// Ô²ÖùÌåÉÏÃæµÄÔ²
+/// Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²
 /// </summary>
 /// <param name="bottomRadius"></param>
 /// <param name="topRadius"></param>
@@ -433,11 +435,11 @@ void MeshFliter::BuildCylinderTopCap(float bottomRadius, float topRadius, float 
 		float u = x / height + 0.5f;
 		float v = z / height + 0.5f;
 
-		meshData.Vertices.push_back(PVertex(x, y, z, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v));
+		meshData.Vertices.push_back(Vertex(x, y, z, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v));
 	}
 
 	// Cap center vertex.
-	meshData.Vertices.push_back(PVertex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f));
+	meshData.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f));
 
 	// Index of center vertex.
 	uint32 centerIndex = (uint32)meshData.Vertices.size() - 1;
@@ -451,7 +453,7 @@ void MeshFliter::BuildCylinderTopCap(float bottomRadius, float topRadius, float 
 }
 
 /// <summary>
-/// Ô²ÖùÌåÏÂÃæµÄÔ²
+/// Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²
 /// </summary>
 /// <param name="bottomRadius"></param>
 /// <param name="topRadius"></param>
@@ -481,11 +483,11 @@ void MeshFliter::BuildCylinderBottomCap(float bottomRadius, float topRadius, flo
 		float u = x / height + 0.5f;
 		float v = z / height + 0.5f;
 
-		meshData.Vertices.push_back(PVertex(x, y, z, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v));
+		meshData.Vertices.push_back(Vertex(x, y, z, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v));
 	}
 
 	// Cap center vertex.
-	meshData.Vertices.push_back(PVertex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f));
+	meshData.Vertices.push_back(Vertex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f));
 
 	// Cache the index of center vertex.
 	uint32 centerIndex = (uint32)meshData.Vertices.size() - 1;
@@ -499,7 +501,7 @@ void MeshFliter::BuildCylinderBottomCap(float bottomRadius, float topRadius, flo
 }
 
 /// <summary>
-/// ´´½¨Æ½Ãæ
+/// ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½
 /// </summary>
 /// <param name="width"></param>
 /// <param name="depth"></param>
@@ -567,7 +569,7 @@ void MeshFliter::CreateGrid(float width, float depth, uint32 m, uint32 n)
 }
 
 /// <summary>
-/// ´´½¨Quad
+/// ï¿½ï¿½ï¿½ï¿½Quad
 /// </summary>
 /// <param name="x"></param>
 /// <param name="y"></param>
@@ -580,25 +582,25 @@ void MeshFliter::CreateQuad(float x, float y, float w, float h, float depth)
 	data.Indices32.resize(6);
 
 	// Position coordinates specified in NDC space.
-	data.Vertices[0] = PVertex(
+	data.Vertices[0] = Vertex(
 		x - w, y - h, depth,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f);
 
-	data.Vertices[1] = PVertex(
+	data.Vertices[1] = Vertex(
 		x - w, y + h, depth,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f);
 
-	data.Vertices[2] = PVertex(
+	data.Vertices[2] = Vertex(
 		x + w, y + w, depth,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
 		1.0f, 0.0f);
 
-	data.Vertices[3] = PVertex(
+	data.Vertices[3] = Vertex(
 		x + w, y - h, depth,
 		0.0f, 0.0f, -1.0f,
 		1.0f, 0.0f, 0.0f,
@@ -635,17 +637,17 @@ void MeshFliter::Subdivide(MeshData& meshData)
 	uint32 numTris = (uint32)inputCopy.Indices32.size() / 3;
 	for (uint32 i = 0; i < numTris; ++i)
 	{
-		PVertex v0 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 0]];
-		PVertex v1 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 1]];
-		PVertex v2 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 2]];
+		Vertex v0 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 0]];
+		Vertex v1 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 1]];
+		Vertex v2 = inputCopy.Vertices[inputCopy.Indices32[i * 3 + 2]];
 
 		//
 		// Generate the midpoints.
 		//
 
-		PVertex m0 = MidPoint(v0, v1);
-		PVertex m1 = MidPoint(v1, v2);
-		PVertex m2 = MidPoint(v0, v2);
+		Vertex m0 = MidPoint(v0, v1);
+		Vertex m1 = MidPoint(v1, v2);
+		Vertex m2 = MidPoint(v0, v2);
 
 		//
 		// Add new geometry.
@@ -676,7 +678,7 @@ void MeshFliter::Subdivide(MeshData& meshData)
 	}
 }
 
-PVertex MeshFliter::MidPoint(const PVertex& v0, const PVertex& v1)
+Vertex MeshFliter::MidPoint(const Vertex& v0, const Vertex& v1)
 {
 	XMVECTOR p0 = v0.Position.ToSIMD();
 	XMVECTOR p1 = v1.Position.ToSIMD();
@@ -697,7 +699,7 @@ PVertex MeshFliter::MidPoint(const PVertex& v0, const PVertex& v1)
 	XMVECTOR tangent = XMVector3Normalize(0.5f * (tan0 + tan1));
 	XMVECTOR tex = 0.5f * (tex0 + tex1);
 
-	PVertex v;
+	Vertex v;
 	v.Position = Vector3(pos);
 	v.Normal = Vector3(normal);
 	v.TangentU = Vector3(tangent);

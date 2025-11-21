@@ -1,12 +1,13 @@
 #include "FbxLoader.h"
 
+using namespace Mathf;
 
 void GetVerticesAndIndicesData(
 	FbxNode* node,
 	UINT& numVertices,
 	UINT& numTriangles,
 	UINT& numSubMeshs,
-	std::vector<PVertex>& vertices,
+	std::vector<Vertex>& vertices,
 	std::vector<uint32>& indices
 )
 {
@@ -33,7 +34,7 @@ void GetVerticesAndIndicesData(
 				FbxVector4* controlPoints = mesh->GetControlPoints();
 				for (int i = 0; i < CtrlCount; i++)
 				{
-					PVertex vertex;
+					Vertex vertex;
 					FbxVector4 Pos = controlPoints[i];
 					vertex.Position.x = Pos[0];
 					vertex.Position.y = Pos[1];

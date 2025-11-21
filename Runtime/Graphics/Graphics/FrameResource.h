@@ -1,6 +1,7 @@
 #pragma once
 #include "DX12Utils.h"
 #include "../Core/Mathf/Mathf.h"
+#include "../Geometry/GeometryStructures.h"
 #include "UploadBuffer.h"
 
 using namespace Mathf;
@@ -204,14 +205,6 @@ struct PostprocessingData
 	float ResoultionLevel = 0;
 	float FSRSharpen = 0;
 
-};
-
-struct Vertex
-{
-    XMFLOAT3 Pos;
-    XMFLOAT3 Normal;
-    XMFLOAT2 TexC;
-    XMFLOAT3 TangentU;
 };
 
 struct SkinnedVertex

@@ -1,6 +1,8 @@
 #include "ObjLoader.h"
 #define TINYOBJLOADER_IMPLEMENTATION
 
+using namespace Mathf;
+
 void ObjLoader::LoadObj(MeshData& data, char* filename)
 {
 	//	tinyObj��ȡOBJ
@@ -36,7 +38,7 @@ void ObjLoader::LoadObj(MeshData& data, char* filename)
 	{
 		for (const auto& index : shape.mesh.indices) {
 
-			PVertex vert;
+			Vertex vert;
 			vert.Position.x = attrib.vertices[3 * index.vertex_index + 0];
 			vert.Position.y = attrib.vertices[3 * index.vertex_index + 1];
 			vert.Position.z = attrib.vertices[3 * index.vertex_index + 2];
@@ -81,7 +83,7 @@ void ObjLoader::ReconStructNormals(MeshData& data)
 		size_t idx1 = data.Indices32[i + 1];
 		size_t idx2 = data.Indices32[i + 2];
 		if (idx0 >= data.Vertices.size() || idx1 >= data.Vertices.size() || idx2 >= data.Vertices.size()) {
-			// 索引非法，跳过
+			// 索引非法，跳�?
 			continue;
 		}
 		// face edges incident with vertex 0 //
@@ -140,12 +142,12 @@ void ObjLoader::ComputeTangentSpace(MeshData& data)
 		size_t idx1 = data.Indices32[i + 1];
 		size_t idx2 = data.Indices32[i + 2];
 		if (idx0 >= data.Vertices.size() || idx1 >= data.Vertices.size() || idx2 >= data.Vertices.size()) {
-			// 索引非法，跳过
+			// 索引非法，跳�?
 			continue;
 		}
-		PVertex& v0 = data.Vertices[idx0];
-		PVertex& v1 = data.Vertices[idx1];
-		PVertex& v2 = data.Vertices[idx2];
+		Vertex& v0 = data.Vertices[idx0];
+		Vertex& v1 = data.Vertices[idx1];
+		Vertex& v2 = data.Vertices[idx2];
 
 		// compute traingle edges Q1, Q2 //
 		Vector3 Q1 = { v1.Position.x - v0.Position.x,

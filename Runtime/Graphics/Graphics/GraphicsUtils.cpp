@@ -13,18 +13,7 @@ std::unique_ptr<MeshGeometry> GraphicsUtils::BuildMeshGeometryFromMeshData(std::
 
 	auto totalVertexCount = data.Vertices.size();
 
-
-
-	std::vector<Vertex> vertices(totalVertexCount);
-	UINT k = 0;
-	for (size_t i = 0; i < data.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = data.Vertices[i].Position.ToXMFLOAT3();
-		vertices[k].Normal = data.Vertices[i].Normal.ToXMFLOAT3();
-		vertices[k].TexC = data.Vertices[i].TexC.ToXMFLOAT2();
-		vertices[k].TangentU = data.Vertices[i].TangentU.ToXMFLOAT3();
-	}
-
+	std::vector<Vertex> vertices = data.Vertices;
 
 	std::vector<std::uint16_t> indices;
 	indices.insert(indices.end(), std::begin(data.GetIndices16()), std::end(data.GetIndices16()));
