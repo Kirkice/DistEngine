@@ -13,24 +13,16 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #pragma once
-#include "DX12Utils.h"
-#include "Component.h";
-#include "Mathf.h"
+#include "Light.h"
 
-using namespace Mathf;
-
-class SpotLight : public Component
+class SpotLight : public Light
 {
 
 public:
-	//	范围
+	//	鑼冨洿
 	float rangeFactory;
-	//	强度值
-	float intensity;
-	//	开合角度
+	//	鑱氬厜瑙掑害
 	float spotAngle;
-	//	颜色
-	Color color;
 
 public:
 	SpotLight(std::string _name);

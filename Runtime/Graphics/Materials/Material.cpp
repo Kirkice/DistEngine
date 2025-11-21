@@ -8,12 +8,12 @@ Material::Material()
 	Name = "New Material";
 	MatCBIndex = -1;
 	NumFramesDirty = gNumFrameResources;
-	DiffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	DiffuseColor = Mathf::Color(1.0f, 1.0f, 1.0f, 1.0f);
 	Smoothness = 0.5f;
 	Metallic = 0.0f;
 	Occlusion = 1;
 	EmissionStrength = 0;
-	EmissionColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	EmissionColor = Mathf::Color(0.0f, 0.0f, 0.0f, 1.0f);
 	UseNormalMap = 0;
 	NormalScale = 1;
 
@@ -25,7 +25,7 @@ Material::Material()
 	EmissionMapIndex = 0;
 	LUTMapIndex = 0;
 
-	Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	Tint = Mathf::Color(1.0f, 1.0f, 1.0f, 1.0f);
 	Exposure = 1.0f;
 	Rotation = 0.0f;
 	ACES = 1.0f;

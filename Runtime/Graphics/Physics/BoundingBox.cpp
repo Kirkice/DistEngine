@@ -2,15 +2,11 @@
 
 namespace DistBound
 {
-	BoundingBox::BoundingBox(std::string _name = "BoundingBox") : Component(_name)
+	BoundingBox::BoundingBox(std::string _name) : Component(_name)
 	{
-		aabb = BoundingAABB();
-		bound_sphere = DistBound::BoundingSphere();
-		obb = BoundingOBB();
 	}
 
 	BoundingBox::~BoundingBox()
 	{
-
 	}
 }

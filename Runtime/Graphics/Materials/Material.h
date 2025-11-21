@@ -2,167 +2,140 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "Material.h"
 #include "DX12Utils.h"
 #include "Mathf.h"
 #include <string>
 #include <unordered_map>
 
-using namespace Mathf;
-//	PBR材质
+// PBR Material
 class Material
 {
 public:
-	//	名字
-	std::string Name;
-	//	Index 值
-	int MatCBIndex = -1;
-	//	材质变化值
-	int NumFramesDirty;
-	//	固有色
-	Color DiffuseColor;
-	//	粗糙度
-	float Smoothness;
-	//	金属度
-	float Metallic;
-	//	AO
-	float Occlusion;
-	//	自发光强度
-	float EmissionStrength;
-	//	自发光颜色
-	Color EmissionColor;
-	//	使用法线贴图
-	float UseNormalMap;
-	//	法线贴图强度
-	float NormalScale;
-	// 纹理映射矩阵
-	DirectX::XMFLOAT4X4 MatTransform;
+    // Name
+    std::string Name;
+    // Index Value
+    int MatCBIndex = -1;
+    // Dirty Frames
+    int NumFramesDirty;
+    
+    // PBR Parameters
+    Mathf::Color DiffuseColor;
+    float Smoothness;
+    float Metallic;
+    float Occlusion;
+    float EmissionStrength;
+    Mathf::Color EmissionColor;
+    
+    // Normal Map
+    float UseNormalMap;
+    float NormalScale;
+    
+    DirectX::XMFLOAT4X4 MatTransform;
 
-	//	Diffuse贴图Index
-	UINT DiffuseMapIndex;
-	//	法线贴图Index
-	UINT NormalMapIndex;
-	//	MSO贴图Index
-	UINT MsoMapIndex;
-	//	自发光贴图Index
-	UINT EmissionMapIndex;
-	//	LUT贴图Index
-	UINT LUTMapIndex;  
+    // Texture Indices
+    UINT DiffuseMapIndex;
+    UINT NormalMapIndex;
+    UINT MsoMapIndex;
+    UINT EmissionMapIndex;
+    UINT LUTMapIndex;
 
+    // Post Process Parameters
+    Mathf::Color Tint;
+    float Exposure;
+    float Rotation;
+    float ACES;
 
+    // RGBSplit / Decolor
+    float RGBSplitStrength = 0.02f;
+    float DecolorStrength = 0.5f;
 
-	//	固有色
-	Color Tint;
-	//	曝光度
-	float Exposure;
-	//	旋转
-	float Rotation;
-	//	ACES开启
-	float ACES;
+    // Bloom
+    float Threshold = 0.3f;
+    float SoftKnee = 0.1f;
+    float Radius = 3.5f;
+    float Intensity = 0.5f;
 
-	//RGBSplit   Decolourize (Turn Gray)
-	float RGBSplitStrength = 0.02f;
-	float DecolorStrength = 0.5;
+    // Brightness And Contrast
+    float Brightness = 1.2f;
+    float Contrast = 1.0f;
 
-	//Bloom
-	float Threshold = 0.3f;
-	float SoftKnee = 0.1f;
-	float Radius = 3.5f;
-	float Intensity = 0.5f;
+    // HSV
+    float Hue = 0;
+    float Saturation = 0;
+    float Value = 0;
 
-	//Brightness And Contrast
-	float Brightness = 1.2f;
-	float Contrast = 1.0f;
+    // Mosaic
+    float PixelSize = 80.01f;
 
-	//HSV
-	float Hue = 0;
-	float Saturation = 0;
-	float Value = 0;
+    // Radial Blur
+    float BlurFactory = 0.01f;
 
-	//Mosaic
-	float PixelSize = 80.01f;
+    // EdgeDetection
+    float EdgeWdith = 1.5f;
+    float EdgeNeonFade = 1.0f;
+    DirectX::XMFLOAT4 OutLineColor = { 0, 1.3f, 2.6f, 1 };
+    float BackgroundFade = 0;
+    DirectX::XMFLOAT4 BackgroundColor = { 0, 0.35f, 1, 1 };
 
-	//Radial Blur
-	float BlurFactory = 0.01f;
+    // WhiteBalance
+    float Temperature = 0;
+    float WhiteBalanceTint = 0;
 
-	//EdgeDetection
-	float EdgeWdith = 1.5f;
-	float EdgeNeonFade = 1.0f;
-	DirectX::XMFLOAT4 OutLineColor = { 0,1.3f,2.6f,1 };
-	float BackgroundFade = 0;
-	DirectX::XMFLOAT4 BackgroundColor = { 0,0.35f,1,1 };
+    // Vignette
+    DirectX::XMFLOAT4 VignetteColor = { 0, 0, 0, 1 };
+    float Width = 1.4f;
+    float Height = 0.7f;
+    float Smooth = 10;
+    float Alpha = 1;
 
-	//WhiteBalance
-	float Temperature = 0;
-	float WhiteBalanceTint = 0;
+    // Oil Paint
+    float ResoultionValue = 2.0f;
+    float OilPaintRadius = 3.0f;
 
-	//Sharpen
-	//Vignette
-	DirectX::XMFLOAT4 VignetteColor = { 0,0,0,1 };
+    // Sharpen
+    float SharpenStrength = 3.0f;
+    float SharpenThreshold = 0.5f;
 
-	//Oil Paint
-	float ResoultionValue = 2.0f;
+    // Spherize
+    float Spherify = 0.5f;
 
-	//Vignette
-	float Width = 1.4f;
-	float Height = 0.7f;
-	float Smooth = 10;
-	float Alpha = 1;
+    // Motion Blur
+    float MotionBlurAmount = 0;
 
-	//Sharpen
-	float SharpenStrength = 3.0f;
-	float SharpenThreshold = 0.5f;
+    // DOF
+    float Aperture = 0;
+    float FocalLength = 0;
+    float Distance = 0;
 
-	//Spherize
-	float Spherify = 0.5f;
-
-	float OilPaintRadius = 3.0f;
-
-	//Motion Blur
-	float MotionBlurAmount = 0;
-
-	//DOF
-	float Aperture = 0;
-	float FocalLength = 0;
-	float Distance = 0;
-
-	//FidelityFX Super Resolution
-	float ResoultionLevel = 0;
-	float FSRSharpen = 0;
-
+    // FidelityFX Super Resolution
+    float ResoultionLevel = 0;
+    float FSRSharpen = 0;
 
 public:
-	Material();
-	~Material();
+    Material();
+    ~Material();
 };
-
 
 class MaterialIndexUtils
 {
 public:
+    MaterialIndexUtils() = default;
+    ~MaterialIndexUtils() = default;
 
-	MaterialIndexUtils() = default;
-	~MaterialIndexUtils() = default;
-
-	static MaterialIndexUtils& getInstance() {
-		static MaterialIndexUtils instance;
-		return instance;
-	}
+    static MaterialIndexUtils& getInstance() {
+        static MaterialIndexUtils instance;
+        return instance;
+    }
 
 public:
-
-	void Init();
-
-	int GetIndex();
-	void OffsetIndex();
-
-	void SaveTypeIndex(std::string type, int Index);
-
-	int GetTypeIndexStart(std::string type);
+    void Init();
+    int GetIndex();
+    void OffsetIndex();
+    void SaveTypeIndex(std::string type, int Index);
+    int GetTypeIndexStart(std::string type);
 
 private:
-	int Index = -1;
-
-	std::unordered_map<std::string, int> mMatTypeIndexMap;
+    int Index = -1;
+    std::unordered_map<std::string, int> mMatTypeIndexMap;
 };
 #endif

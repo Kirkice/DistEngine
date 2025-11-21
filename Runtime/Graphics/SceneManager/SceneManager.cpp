@@ -29,7 +29,7 @@ void SceneManager::BuildDefaultScene(
 	//	��������Դ
 	BuildMainLight();
 
-	//	������պ�
+	//	������պ�?
 	BuildSkyBox(matCBIndexUtils);
 
 	//	��Ⱦ��
@@ -44,7 +44,7 @@ void SceneManager::BuildDefaultScene(
 /// </summary>
 void SceneManager::BuildGlobalConfig()
 {
-	//	���������
+	//	���������?
 	mSkyBoxSetting.Tint = Color(1.0f, 1.0f, 1.0f, 1.0f);
 	mSkyBoxSetting.Exposure = 1.0f;
 	mSkyBoxSetting.Rotation = 0.0f;
@@ -69,7 +69,7 @@ void SceneManager::BuildGlobalConfig()
 	mLightSetting.Feather = 0;
 	mLightSetting.Step = 0;
 
-	//	�������
+	//	�������?
 	mCameraSetting.mCamFov = 45;
 	mCameraSetting.mCamClipN = 0.3;
 	mCameraSetting.mCamClipF = 1000;
@@ -110,7 +110,7 @@ void SceneManager::BuildMainLight()
 }
 
 /// <summary>
-/// �����
+/// �����?
 /// </summary>
 /// <param name="matCBIndexUtils"></param>
 void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
@@ -143,7 +143,7 @@ void SceneManager::BuildSkyBox(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_sky = new DistBound::BoundingBox("BoundingBox");
-	bound_sky->aabb = BoundingAABB(mesh_sky->data);
+	bound_sky->aabb = DistBound::BoundingAABB(mesh_sky->data);
 
 	skyRenderObject->AddComponent(transform_sky);
 	skyRenderObject->AddComponent(meshRender_sky);
@@ -214,7 +214,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_ak47 = new DistBound::BoundingBox("BoundingBox");
-	bound_ak47->aabb = BoundingAABB(mesh_ak47->data);
+	bound_ak47->aabb = DistBound::BoundingAABB(mesh_ak47->data);
 
 	RenderObjectAk47->AddComponent(transform_ak47);
 	RenderObjectAk47->AddComponent(meshRender_ak47);
@@ -266,7 +266,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_Bunny = new DistBound::BoundingBox("BoundingBox");
-	bound_Bunny->aabb = BoundingAABB(mesh_Bunny->data);
+	bound_Bunny->aabb = DistBound::BoundingAABB(mesh_Bunny->data);
 
 	RenderObjectBunny->AddComponent(transform_Bunny);
 	RenderObjectBunny->AddComponent(meshRender_Bunny);
@@ -313,7 +313,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_Sphere01 = new DistBound::BoundingBox("BoundingBox");
-	bound_Sphere01->aabb = BoundingAABB(mesh_Bunny->data);
+	bound_Sphere01->aabb = DistBound::BoundingAABB(mesh_Bunny->data);
 
 	RenderObjectSphere01->AddComponent(transform_Sphere01);
 	RenderObjectSphere01->AddComponent(meshRender_Sphere01);
@@ -357,7 +357,7 @@ void SceneManager::BuildRenderObejct(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_Sphere02 = new DistBound::BoundingBox("BoundingBox");
-	bound_Sphere02->aabb = BoundingAABB(mesh_Bunny->data);
+	bound_Sphere02->aabb = DistBound::BoundingAABB(mesh_Bunny->data);
 
 	RenderObjectSphere02->AddComponent(transform_Sphere02); 
 	RenderObjectSphere02->AddComponent(meshRender_Sphere02);
@@ -447,7 +447,7 @@ void SceneManager::BuildConelBoxScene(
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_Plane = new DistBound::BoundingBox("BoundingBox");
-	bound_Plane->aabb = BoundingAABB(mesh_Plane->data);
+	bound_Plane->aabb = DistBound::BoundingAABB(mesh_Plane->data);
 
 	auto RenderObjectPlane01 = std::make_unique<GameObject>("White01");
 	RenderObjectPlane01->AddComponent(transform_Plane01);

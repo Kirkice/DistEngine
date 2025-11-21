@@ -14,21 +14,15 @@
 
 #pragma once
 
-#include "DX12Utils.h"
-#include "Component.h";
-#include "Mathf.h"
+#include "Light.h"
 
-using namespace Mathf;
-
-class DirectionLight : public Component
+class DirectionLight : public Light
 {
 public:
-	//	是否是主光源 产生阴影
+	//	锟角凤拷锟斤拷锟斤拷锟斤拷源 锟斤拷锟斤拷锟斤拷影
 	bool isMainLight;
-	//	强度值
-	float intensity;
-	//	颜色
-	Color color;
+	//	强锟斤拷值
+	//	锟斤拷色
 
 public:
 	DirectionLight(std::string _name);

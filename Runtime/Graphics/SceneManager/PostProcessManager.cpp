@@ -27,7 +27,7 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ����
 	DistBound::BoundingBox* bound_volumeFog = new DistBound::BoundingBox("BoundingBox");
-	bound_volumeFog->aabb = BoundingAABB(mesh_volumeFog->data);
+	bound_volumeFog->aabb = DistBound::BoundingAABB(mesh_volumeFog->data);
 
 	VolumeFog->AddComponent(transform_volumeFog);
 	VolumeFog->AddComponent(meshRender_volumeFog);
@@ -61,7 +61,7 @@ void PostProcessManager::Build(MaterialIndexUtils& matCBIndexUtils)
 
 	//	������ײ��
 	DistBound::BoundingBox* bound_fxaa = new DistBound::BoundingBox("BoundingBox");
-	bound_fxaa->aabb = BoundingAABB(mesh_fxaa->data);
+	bound_fxaa->aabb = DistBound::BoundingAABB(mesh_fxaa->data);
 
 	FastApproximateAntialiasing->AddComponent(transform_fxaa);
 	FastApproximateAntialiasing->AddComponent(meshRender_fxaa);

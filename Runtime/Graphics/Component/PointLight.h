@@ -13,21 +13,13 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 #pragma once
-#include "DX12Utils.h"
-#include "Component.h";
-#include "Mathf.h"
+#include "Light.h"
 
-using namespace Mathf;
-
-class PointLight : public Component
+class PointLight : public Light
 {
 public:
-	//	范围
+	//	鑼冨洿
 	float rangeFactory;
-	//	强度值
-	float intensity;
-	//	颜色
-	Color color;
 
 public:
 	PointLight(std::string _name);
